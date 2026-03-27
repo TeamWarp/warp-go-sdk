@@ -2,7 +2,7 @@ package apijson
 
 import (
 	"errors"
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
 	"reflect"
 
 	"github.com/tidwall/gjson"

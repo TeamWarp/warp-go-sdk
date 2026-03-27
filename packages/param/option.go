@@ -3,7 +3,7 @@ package param
 import (
 	"encoding/json"
 	"fmt"
-	shimjson "github.com/stainless-sdks/warp-hr-go/internal/encoding/json"
+	shimjson "github.com/TeamWarp/warp-go-sdk/internal/encoding/json"
 	"time"
 )
 

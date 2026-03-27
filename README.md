@@ -2,7 +2,7 @@
 
 <!-- x-release-please-start-version -->
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/warp-hr-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/warp-hr-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/TeamWarp/warp-go-sdk"><img src="https://pkg.go.dev/badge/github.com/TeamWarp/warp-go-sdk.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
 
@@ -22,17 +22,25 @@ Use the Warp Hr MCP Server to enable AI assistants to interact with this API, al
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/warp-hr-go" // imported as warphr
+	"github.com/TeamWarp/warp-go-sdk" // imported as warphr
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/warp-hr-go@v0.0.1'
+go get -u 'github.com/TeamWarp/warp-go-sdk@v0.0.2'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -49,8 +57,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/warp-hr-go"
-	"github.com/stainless-sdks/warp-hr-go/option"
+	"github.com/TeamWarp/warp-go-sdk"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 func main() {
@@ -277,7 +285,7 @@ client.TimeOff.Policies.List(context.TODO(), ...,
 
 The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/warp-hr-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/TeamWarp/warp-go-sdk/option).
 
 ### Pagination
 
@@ -508,7 +516,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/warp-hr-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/TeamWarp/warp-go-sdk/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

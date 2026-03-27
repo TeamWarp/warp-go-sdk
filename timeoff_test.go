@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/warp-hr-go"
-	"github.com/stainless-sdks/warp-hr-go/internal/testutil"
-	"github.com/stainless-sdks/warp-hr-go/option"
+	"github.com/TeamWarp/warp-go-sdk"
+	"github.com/TeamWarp/warp-go-sdk/internal/testutil"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 func TestTimeOffListAssignmentsWithOptionalParams(t *testing.T) {

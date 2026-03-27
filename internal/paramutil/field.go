@@ -1,8 +1,8 @@
 package paramutil
 
 import (
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
-	"github.com/stainless-sdks/warp-hr-go/packages/respjson"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 )
 
 func AddrIfPresent[T comparable](v param.Opt[T]) *T {
