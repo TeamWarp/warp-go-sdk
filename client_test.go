@@ -39,7 +39,7 @@ func TestUserAgentHeader(t *testing.T) {
 		}),
 	)
 	_, _ = client.TimeOff.Policies.List(context.Background(), warphr.TimeOffPolicyListParams{})
-	if userAgent != fmt.Sprintf("WarpHr/Go %s", internal.PackageVersion) {
+	if userAgent != fmt.Sprintf("Warp/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
 }

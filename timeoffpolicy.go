@@ -23,7 +23,7 @@ import (
 // are assigned to which policies, or worker remaining balances.
 //
 // TimeOffPolicyService contains methods and other services that help with
-// interacting with the warp-hr API.
+// interacting with the warp API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
