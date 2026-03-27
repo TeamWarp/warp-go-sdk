@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0 (2026-03-27)
+
+Full Changelog: [v0.0.2...v0.1.0](https://github.com/TeamWarp/warp-go-sdk/compare/v0.0.2...v0.1.0)
+
+### Features
+
+* **api:** api update ([eec6538](https://github.com/TeamWarp/warp-go-sdk/commit/eec65386699c3916c2b08b016459b56ba9d85971))
+
 ## 0.0.2 (2026-03-27)
 
 Full Changelog: [v0.0.1...v0.0.2](https://github.com/TeamWarp/warp-go-sdk/compare/v0.0.1...v0.0.2)
