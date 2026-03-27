@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/stainless-sdks/warp-hr-go/internal/apijson"
-	"github.com/stainless-sdks/warp-hr-go/internal/requestconfig"
-	"github.com/stainless-sdks/warp-hr-go/option"
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
-	"github.com/stainless-sdks/warp-hr-go/packages/respjson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 )
 
 // aliased to make [param.APIUnion] private when embedding

@@ -1,8 +1,8 @@
 package sentinel_test
 
 import (
-	"github.com/stainless-sdks/warp-hr-go/internal/encoding/json/sentinel"
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/encoding/json/sentinel"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
 	"reflect"
 	"slices"
 	"testing"

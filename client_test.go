@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/warp-hr-go"
-	"github.com/stainless-sdks/warp-hr-go/internal"
-	"github.com/stainless-sdks/warp-hr-go/option"
+	"github.com/TeamWarp/warp-go-sdk"
+	"github.com/TeamWarp/warp-go-sdk/internal"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 type closureTransport struct {

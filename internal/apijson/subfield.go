@@ -1,7 +1,7 @@
 package apijson
 
 import (
-	"github.com/stainless-sdks/warp-hr-go/packages/respjson"
+	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 	"reflect"
 )
 
