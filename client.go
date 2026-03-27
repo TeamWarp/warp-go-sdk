@@ -8,8 +8,8 @@ import (
 	"os"
 	"slices"
 
-	"github.com/stainless-sdks/warp-hr-go/internal/requestconfig"
-	"github.com/stainless-sdks/warp-hr-go/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // Client creates a struct with services and top level methods that help with

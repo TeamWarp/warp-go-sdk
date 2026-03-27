@@ -3,7 +3,7 @@
 package constant
 
 import (
-	shimjson "github.com/stainless-sdks/warp-hr-go/internal/encoding/json"
+	shimjson "github.com/TeamWarp/warp-go-sdk/internal/encoding/json"
 )
 
 type Constant[T any] interface {

@@ -10,13 +10,13 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/stainless-sdks/warp-hr-go/internal/apijson"
-	"github.com/stainless-sdks/warp-hr-go/internal/apiquery"
-	"github.com/stainless-sdks/warp-hr-go/internal/requestconfig"
-	"github.com/stainless-sdks/warp-hr-go/option"
-	"github.com/stainless-sdks/warp-hr-go/packages/pagination"
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
-	"github.com/stainless-sdks/warp-hr-go/packages/respjson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/packages/pagination"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 )
 
 // Endpoints for worker time off management. See time off requests, which workers

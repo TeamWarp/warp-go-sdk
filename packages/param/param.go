@@ -2,7 +2,7 @@ package param
 
 import (
 	"encoding/json"
-	"github.com/stainless-sdks/warp-hr-go/internal/encoding/json/sentinel"
+	"github.com/TeamWarp/warp-go-sdk/internal/encoding/json/sentinel"
 	"reflect"
 )
 

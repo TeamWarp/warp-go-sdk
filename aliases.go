@@ -3,8 +3,8 @@
 package warphr
 
 import (
-	"github.com/stainless-sdks/warp-hr-go/internal/apierror"
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/apierror"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
 )
 
 // aliased to make [param.APIUnion] private when embedding

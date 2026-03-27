@@ -3,8 +3,8 @@ package respjson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/warp-hr-go/internal/apijson"
-	rj "github.com/stainless-sdks/warp-hr-go/packages/respjson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	rj "github.com/TeamWarp/warp-go-sdk/packages/respjson"
 	"reflect"
 	"testing"
 )

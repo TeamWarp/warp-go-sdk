@@ -3,8 +3,8 @@ package apijson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/warp-hr-go/internal/apijson"
-	"github.com/stainless-sdks/warp-hr-go/packages/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/packages/param"
 	"reflect"
 	"testing"
 )
