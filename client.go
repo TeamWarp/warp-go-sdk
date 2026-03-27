@@ -13,8 +13,8 @@ import (
 )
 
 // Client creates a struct with services and top level methods that help with
-// interacting with the warp-hr API. You should not instantiate this client
-// directly, and instead use the [NewClient] method instead.
+// interacting with the warp API. You should not instantiate this client directly,
+// and instead use the [NewClient] method instead.
 type Client struct {
 	options []option.RequestOption
 	// Endpoints for worker time off management. See time off requests, which workers
@@ -31,11 +31,11 @@ type Client struct {
 	Workplaces WorkplaceService
 }
 
-// DefaultClientOptions read from the environment (WARP_API_KEY, WARP_HR_BASE_URL).
+// DefaultClientOptions read from the environment (WARP_API_KEY, WARP_BASE_URL).
 // This should be used to initialize new clients.
 func DefaultClientOptions() []option.RequestOption {
 	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
-	if o, ok := os.LookupEnv("WARP_HR_BASE_URL"); ok {
+	if o, ok := os.LookupEnv("WARP_BASE_URL"); ok {
 		defaults = append(defaults, option.WithBaseURL(o))
 	}
 	if o, ok := os.LookupEnv("WARP_API_KEY"); ok {
@@ -45,9 +45,9 @@ func DefaultClientOptions() []option.RequestOption {
 }
 
 // NewClient generates a new client with the default option read from the
-// environment (WARP_API_KEY, WARP_HR_BASE_URL). The option passed in as arguments
-// are applied after these default arguments, and all option will be passed down to
-// the services and requests that this client makes.
+// environment (WARP_API_KEY, WARP_BASE_URL). The option passed in as arguments are
+// applied after these default arguments, and all option will be passed down to the
+// services and requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
 
