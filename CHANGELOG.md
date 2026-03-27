@@ -1,0 +1,10 @@
+# Changelog
+
+## 0.0.2 (2026-03-27)
+
+Full Changelog: [v0.0.1...v0.0.2](https://github.com/TeamWarp/warp-go-sdk/compare/v0.0.1...v0.0.2)
+
+### Chores
+
+* configure new SDK language ([8dc14ec](https://github.com/TeamWarp/warp-go-sdk/commit/8dc14ecbba6683d8f8aaf719d4af3bd78a6bb889))
+* update SDK settings ([d217727](https://github.com/TeamWarp/warp-go-sdk/commit/d217727a6569fb3b7627ba2e5d5a674e6418af84))
