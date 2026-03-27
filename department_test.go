@@ -27,7 +27,7 @@ func TestDepartmentNew(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Departments.New(context.TODO(), warphr.DepartmentNewParams{
-		Name: "name",
+		Name: warphr.F("name"),
 	})
 	if err != nil {
 		var apierr *warphr.Error
@@ -55,7 +55,7 @@ func TestDepartmentUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"dpt_1234",
 		warphr.DepartmentUpdateParams{
-			Name: warphr.String("name"),
+			Name: warphr.F("name"),
 		},
 	)
 	if err != nil {
@@ -81,9 +81,9 @@ func TestDepartmentListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Departments.List(context.TODO(), warphr.DepartmentListParams{
-		AfterID:  warphr.String("dpt_1234"),
-		BeforeID: warphr.String("dpt_1234"),
-		Limit:    warphr.String("limit"),
+		AfterID:  warphr.F("dpt_1234"),
+		BeforeID: warphr.F("dpt_1234"),
+		Limit:    warphr.F("limit"),
 	})
 	if err != nil {
 		var apierr *warphr.Error

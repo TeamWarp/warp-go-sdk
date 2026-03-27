@@ -50,12 +50,12 @@ func TestWorkerListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Workers.List(context.TODO(), warphr.WorkerListParams{
-		AfterID:   warphr.String("wrk_1234"),
-		BeforeID:  warphr.String("wrk_1234"),
-		Limit:     warphr.String("limit"),
-		Statuses:  []string{"draft"},
-		Types:     []string{"employee"},
-		WorkEmail: warphr.String("workEmail"),
+		AfterID:   warphr.F("wrk_1234"),
+		BeforeID:  warphr.F("wrk_1234"),
+		Limit:     warphr.F("limit"),
+		Statuses:  warphr.F([]warphr.WorkerListParamsStatus{warphr.WorkerListParamsStatusDraft}),
+		Types:     warphr.F([]warphr.WorkerListParamsType{warphr.WorkerListParamsTypeEmployee}),
+		WorkEmail: warphr.F("workEmail"),
 	})
 	if err != nil {
 		var apierr *warphr.Error
@@ -103,24 +103,24 @@ func TestWorkerNewContractorWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Workers.NewContractor(context.TODO(), warphr.WorkerNewContractorParams{
-		DepartmentID: "dpt_1234",
-		Email:        "john@joinwarp.com",
-		EntityType:   warphr.WorkerNewContractorParamsEntityTypeIndividual,
-		FirstName:    "Melissa",
-		LastName:     "Jones",
-		ManagerID:    "wrk_1234",
-		Position:     "Design Consultant",
-		StartDate:    "2000-01-01",
-		WorkCountry:  warphr.WorkerNewContractorParamsWorkCountryAd,
-		BusinessName: warphr.String("Galt Enterprises, LLC"),
-		Compensation: warphr.WorkerNewContractorParamsCompensation{
-			Amount:   1,
-			Currency: "USD",
-			Per:      "hour",
-		},
-		PaySchedule: warphr.WorkerNewContractorParamsPayScheduleWeekly,
-		ScopeOfWork: warphr.String("Frontend development for the customer dashboard"),
-		WorkEmail:   warphr.String("john@joinwarp.com"),
+		DepartmentID: warphr.F("dpt_1234"),
+		Email:        warphr.F("john@joinwarp.com"),
+		EntityType:   warphr.F(warphr.WorkerNewContractorParamsEntityTypeIndividual),
+		FirstName:    warphr.F("Melissa"),
+		LastName:     warphr.F("Jones"),
+		ManagerID:    warphr.F("wrk_1234"),
+		Position:     warphr.F("Design Consultant"),
+		StartDate:    warphr.F("2000-01-01"),
+		WorkCountry:  warphr.F(warphr.WorkerNewContractorParamsWorkCountryAd),
+		BusinessName: warphr.F("Galt Enterprises, LLC"),
+		Compensation: warphr.F(warphr.WorkerNewContractorParamsCompensation{
+			Amount:   warphr.F(1.000000),
+			Currency: warphr.F(warphr.WorkerNewContractorParamsCompensationCurrencyUsd),
+			Per:      warphr.F(warphr.WorkerNewContractorParamsCompensationPerHour),
+		}),
+		PaySchedule: warphr.F(warphr.WorkerNewContractorParamsPayScheduleWeekly),
+		ScopeOfWork: warphr.F("Frontend development for the customer dashboard"),
+		WorkEmail:   warphr.F("john@joinwarp.com"),
 	})
 	if err != nil {
 		var apierr *warphr.Error
@@ -145,28 +145,26 @@ func TestWorkerNewEmployeeWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Workers.NewEmployee(context.TODO(), warphr.WorkerNewEmployeeParams{
-		Compensation: warphr.WorkerNewEmployeeParamsCompensation{
-			Amount: 1,
-			Per:    "hour",
-		},
-		DepartmentID: "dpt_1234",
-		Email:        "john@joinwarp.com",
-		FirstName:    "Jonathan",
-		LastName:     "Galt",
-		ManagerID:    "wrk_1234",
-		Position:     "Software Engineer",
-		StartDate:    "2000-01-01",
-		WorkLocation: warphr.WorkerNewEmployeeParamsWorkLocationUnion{
-			OfWorkerNewEmployeesWorkLocationOfficeWorkLocation: &warphr.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
-				Type:        "office",
-				WorkplaceID: "wkp_1234",
-			},
-		},
-		PaySchedule:       warphr.WorkerNewEmployeeParamsPayScheduleWeekly,
-		RequireI9:         warphr.Bool(true),
-		StateRegistration: warphr.WorkerNewEmployeeParamsStateRegistrationSelfManaged,
-		StockOptions:      warphr.Float(10000),
-		WorkEmail:         warphr.String("john@joinwarp.com"),
+		Compensation: warphr.F(warphr.WorkerNewEmployeeParamsCompensation{
+			Amount: warphr.F(1.000000),
+			Per:    warphr.F(warphr.WorkerNewEmployeeParamsCompensationPerHour),
+		}),
+		DepartmentID: warphr.F("dpt_1234"),
+		Email:        warphr.F("john@joinwarp.com"),
+		FirstName:    warphr.F("Jonathan"),
+		LastName:     warphr.F("Galt"),
+		ManagerID:    warphr.F("wrk_1234"),
+		Position:     warphr.F("Software Engineer"),
+		StartDate:    warphr.F("2000-01-01"),
+		WorkLocation: warphr.F[warphr.WorkerNewEmployeeParamsWorkLocationUnion](warphr.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
+			Type:        warphr.F(warphr.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationTypeOffice),
+			WorkplaceID: warphr.F("wkp_1234"),
+		}),
+		PaySchedule:       warphr.F(warphr.WorkerNewEmployeeParamsPayScheduleWeekly),
+		RequireI9:         warphr.F(true),
+		StateRegistration: warphr.F(warphr.WorkerNewEmployeeParamsStateRegistrationSelfManaged),
+		StockOptions:      warphr.F(10000.000000),
+		WorkEmail:         warphr.F("john@joinwarp.com"),
 	})
 	if err != nil {
 		var apierr *warphr.Error
