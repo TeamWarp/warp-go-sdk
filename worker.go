@@ -1085,13 +1085,13 @@ func init() {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type WorkerNewEmployeeParamsWorkLocationUnion struct {
-	OfWorkerNewEmployeesWorkLocationObject *WorkerNewEmployeeParamsWorkLocationObject `json:",omitzero,inline"`
-	OfVariant2                             *WorkerNewEmployeeParamsWorkLocationObject `json:",omitzero,inline"`
+	OfWorkerNewEmployeesWorkLocationOfficeWorkLocation *WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation `json:",omitzero,inline"`
+	OfWorkerNewEmployeesWorkLocationRemoteWorkLocation *WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u WorkerNewEmployeeParamsWorkLocationUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfWorkerNewEmployeesWorkLocationObject, u.OfVariant2)
+	return param.MarshalUnion(u, u.OfWorkerNewEmployeesWorkLocationOfficeWorkLocation, u.OfWorkerNewEmployeesWorkLocationRemoteWorkLocation)
 }
 func (u *WorkerNewEmployeeParamsWorkLocationUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -1100,7 +1100,7 @@ func (u *WorkerNewEmployeeParamsWorkLocationUnion) UnmarshalJSON(data []byte) er
 // Employee works from a company workplace.
 //
 // The properties Type, WorkplaceID are required.
-type WorkerNewEmployeeParamsWorkLocationObject struct {
+type WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation struct {
 	// Any of "office".
 	Type string `json:"type,omitzero" api:"required"`
 	// Public workplace identifier
@@ -1108,17 +1108,50 @@ type WorkerNewEmployeeParamsWorkLocationObject struct {
 	paramObj
 }
 
-func (r WorkerNewEmployeeParamsWorkLocationObject) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewEmployeeParamsWorkLocationObject
+func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) MarshalJSON() (data []byte, err error) {
+	type shadow WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *WorkerNewEmployeeParamsWorkLocationObject) UnmarshalJSON(data []byte) error {
+func (r *WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 func init() {
-	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationObject](
+	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation](
 		"type", "office",
+	)
+}
+
+// Employee works remotely from a US state.
+//
+// The properties State, Type are required.
+type WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation struct {
+	// The US state where the remote employee works. Required for tax purposes.
+	//
+	// Any of "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
+	// "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+	// "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR",
+	// "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY".
+	State string `json:"state,omitzero" api:"required"`
+	// Any of "remote".
+	Type string `json:"type,omitzero" api:"required"`
+	paramObj
+}
+
+func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) MarshalJSON() (data []byte, err error) {
+	type shadow WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation](
+		"state", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+	)
+	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation](
+		"type", "remote",
 	)
 }
 
