@@ -9,32 +9,28 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/packages/param"
-	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 )
 
-// aliased to make [param.APIUnion] private when embedding
-type paramUnion = param.APIUnion
-
-// aliased to make [param.APIObject] private when embedding
-type paramObj = param.APIObject
-
 type CursorPage[T any] struct {
-	Data []T `json:"data"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Data        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-	cfg *requestconfig.RequestConfig
-	res *http.Response
+	Data []T            `json:"data"`
+	JSON cursorPageJSON `json:"-"`
+	cfg  *requestconfig.RequestConfig
+	res  *http.Response
 }
 
-// Returns the unmodified JSON received from the API
-func (r CursorPage[T]) RawJSON() string { return r.JSON.raw }
-func (r *CursorPage[T]) UnmarshalJSON(data []byte) error {
+// cursorPageJSON contains the JSON metadata for the struct [CursorPage[T]]
+type cursorPageJSON struct {
+	Data        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CursorPage[T]) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r cursorPageJSON) RawJSON() string {
+	return r.raw
 }
 
 // GetNextPage returns the next page as defined by this pagination style. When
@@ -80,7 +76,6 @@ type CursorPageAutoPager[T any] struct {
 	idx  int
 	run  int
 	err  error
-	paramObj
 }
 
 func NewCursorPageAutoPager[T any](page *CursorPage[T], err error) *CursorPageAutoPager[T] {

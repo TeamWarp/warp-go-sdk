@@ -10,11 +10,10 @@ import (
 
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
 	"github.com/TeamWarp/warp-go-sdk/packages/pagination"
-	"github.com/TeamWarp/warp-go-sdk/packages/param"
-	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 )
 
 // Endpoints for worker time off management. See time off requests, which workers
@@ -27,18 +26,18 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewTimeOffService] method instead.
 type TimeOffService struct {
-	options []option.RequestOption
+	Options []option.RequestOption
 	// Endpoints for worker time off management. See time off requests, which workers
 	// are assigned to which policies, or worker remaining balances.
-	Policies TimeOffPolicyService
+	Policies *TimeOffPolicyService
 }
 
 // NewTimeOffService generates a new service that applies the given options to each
 // request. These options are applied after the parent client's options (if there
 // is one), and before any request-specific options.
-func NewTimeOffService(opts ...option.RequestOption) (r TimeOffService) {
-	r = TimeOffService{}
-	r.options = opts
+func NewTimeOffService(opts ...option.RequestOption) (r *TimeOffService) {
+	r = &TimeOffService{}
+	r.Options = opts
 	r.Policies = NewTimeOffPolicyService(opts...)
 	return
 }
@@ -48,7 +47,7 @@ func NewTimeOffService(opts ...option.RequestOption) (r TimeOffService) {
 // assigned to a given policy.
 func (r *TimeOffService) ListAssignments(ctx context.Context, query TimeOffListAssignmentsParams, opts ...option.RequestOption) (res *pagination.CursorPage[TimeOffListAssignmentsResponse], err error) {
 	var raw *http.Response
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/time_off/assignments"
 	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
@@ -73,7 +72,7 @@ func (r *TimeOffService) ListAssignmentsAutoPaging(ctx context.Context, query Ti
 // Get worker remaining time-off balances.
 func (r *TimeOffService) ListBalances(ctx context.Context, query TimeOffListBalancesParams, opts ...option.RequestOption) (res *pagination.CursorPage[TimeOffListBalancesResponse], err error) {
 	var raw *http.Response
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/time_off/balances"
 	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
@@ -96,7 +95,7 @@ func (r *TimeOffService) ListBalancesAutoPaging(ctx context.Context, query TimeO
 // Get the time off requests that workers in your company have made.
 func (r *TimeOffService) ListRequests(ctx context.Context, query TimeOffListRequestsParams, opts ...option.RequestOption) (res *pagination.CursorPage[TimeOffListRequestsResponse], err error) {
 	var raw *http.Response
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/time_off/requests"
 	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
@@ -123,22 +122,27 @@ type TimeOffListAssignmentsResponse struct {
 	// a string starting with "top\_"
 	PolicyID string `json:"policyId" api:"required"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		AssignedAt  respjson.Field
-		PolicyID    respjson.Field
-		WorkerID    respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
+	WorkerID string                             `json:"workerId" api:"required"`
+	JSON     timeOffListAssignmentsResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r TimeOffListAssignmentsResponse) RawJSON() string { return r.JSON.raw }
-func (r *TimeOffListAssignmentsResponse) UnmarshalJSON(data []byte) error {
+// timeOffListAssignmentsResponseJSON contains the JSON metadata for the struct
+// [TimeOffListAssignmentsResponse]
+type timeOffListAssignmentsResponseJSON struct {
+	ID          apijson.Field
+	AssignedAt  apijson.Field
+	PolicyID    apijson.Field
+	WorkerID    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListAssignmentsResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListAssignmentsResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 type TimeOffListBalancesResponse struct {
@@ -149,27 +153,32 @@ type TimeOffListBalancesResponse struct {
 	Holds           float64 `json:"holds" api:"required"`
 	LegacyWorkerID  string  `json:"legacyWorkerId" api:"required"`
 	// a string starting with "top\_"
-	PolicyID string  `json:"policyId" api:"required"`
-	Used     float64 `json:"used" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID              respjson.Field
-		AccruedLocked   respjson.Field
-		AccruedUnlocked respjson.Field
-		Available       respjson.Field
-		Holds           respjson.Field
-		LegacyWorkerID  respjson.Field
-		PolicyID        respjson.Field
-		Used            respjson.Field
-		ExtraFields     map[string]respjson.Field
-		raw             string
-	} `json:"-"`
+	PolicyID string                          `json:"policyId" api:"required"`
+	Used     float64                         `json:"used" api:"required"`
+	JSON     timeOffListBalancesResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r TimeOffListBalancesResponse) RawJSON() string { return r.JSON.raw }
-func (r *TimeOffListBalancesResponse) UnmarshalJSON(data []byte) error {
+// timeOffListBalancesResponseJSON contains the JSON metadata for the struct
+// [TimeOffListBalancesResponse]
+type timeOffListBalancesResponseJSON struct {
+	ID              apijson.Field
+	AccruedLocked   apijson.Field
+	AccruedUnlocked apijson.Field
+	Available       apijson.Field
+	Holds           apijson.Field
+	LegacyWorkerID  apijson.Field
+	PolicyID        apijson.Field
+	Used            apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
+}
+
+func (r *TimeOffListBalancesResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListBalancesResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 type TimeOffListRequestsResponse struct {
@@ -178,39 +187,43 @@ type TimeOffListRequestsResponse struct {
 	CreatedAt string `json:"createdAt" api:"required"`
 	// a string to be decoded into a Date
 	EndAt            string  `json:"endAt" api:"required"`
-	Reason           string  `json:"reason" api:"required"`
+	Reason           string  `json:"reason" api:"required,nullable"`
 	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
 	// a string to be decoded into a Date
-	StartAt string `json:"startAt" api:"required"`
-	// Any of "pending", "approved", "denied".
-	Status TimeOffListRequestsResponseStatus `json:"status" api:"required"`
+	StartAt string                            `json:"startAt" api:"required"`
+	Status  TimeOffListRequestsResponseStatus `json:"status" api:"required"`
 	// a string starting with "top\_"
 	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
 	// The time zone that the worker is requesting time off in.
-	TimeZone string `json:"timeZone" api:"required"`
+	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID               respjson.Field
-		CreatedAt        respjson.Field
-		EndAt            respjson.Field
-		Reason           respjson.Field
-		RequestedMinutes respjson.Field
-		StartAt          respjson.Field
-		Status           respjson.Field
-		TimeOffPolicyID  respjson.Field
-		TimeZone         respjson.Field
-		WorkerID         respjson.Field
-		ExtraFields      map[string]respjson.Field
-		raw              string
-	} `json:"-"`
+	WorkerID string                          `json:"workerId" api:"required"`
+	JSON     timeOffListRequestsResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r TimeOffListRequestsResponse) RawJSON() string { return r.JSON.raw }
-func (r *TimeOffListRequestsResponse) UnmarshalJSON(data []byte) error {
+// timeOffListRequestsResponseJSON contains the JSON metadata for the struct
+// [TimeOffListRequestsResponse]
+type timeOffListRequestsResponseJSON struct {
+	ID               apijson.Field
+	CreatedAt        apijson.Field
+	EndAt            apijson.Field
+	Reason           apijson.Field
+	RequestedMinutes apijson.Field
+	StartAt          apijson.Field
+	Status           apijson.Field
+	TimeOffPolicyID  apijson.Field
+	TimeZone         apijson.Field
+	WorkerID         apijson.Field
+	raw              string
+	ExtraFields      map[string]apijson.Field
+}
+
+func (r *TimeOffListRequestsResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListRequestsResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 type TimeOffListRequestsResponseStatus string
@@ -221,19 +234,26 @@ const (
 	TimeOffListRequestsResponseStatusDenied   TimeOffListRequestsResponseStatus = "denied"
 )
 
+func (r TimeOffListRequestsResponseStatus) IsKnown() bool {
+	switch r {
+	case TimeOffListRequestsResponseStatusPending, TimeOffListRequestsResponseStatusApproved, TimeOffListRequestsResponseStatusDenied:
+		return true
+	}
+	return false
+}
+
 type TimeOffListAssignmentsParams struct {
-	AfterID  param.Opt[string] `query:"afterId,omitzero" json:"-"`
-	BeforeID param.Opt[string] `query:"beforeId,omitzero" json:"-"`
+	AfterID  param.Field[string] `query:"afterId"`
+	BeforeID param.Field[string] `query:"beforeId"`
 	// a number less than or equal to 100
-	Limit     param.Opt[string] `query:"limit,omitzero" json:"-"`
-	PolicyIDs []string          `query:"policyIds,omitzero" json:"-"`
-	WorkerIDs []string          `query:"workerIds,omitzero" json:"-"`
-	paramObj
+	Limit     param.Field[string]   `query:"limit"`
+	PolicyIDs param.Field[[]string] `query:"policyIds"`
+	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
 
 // URLQuery serializes [TimeOffListAssignmentsParams]'s query parameters as
 // `url.Values`.
-func (r TimeOffListAssignmentsParams) URLQuery() (v url.Values, err error) {
+func (r TimeOffListAssignmentsParams) URLQuery() (v url.Values) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
@@ -241,22 +261,21 @@ func (r TimeOffListAssignmentsParams) URLQuery() (v url.Values, err error) {
 }
 
 type TimeOffListBalancesParams struct {
-	AfterID  param.Opt[string] `query:"afterId,omitzero" json:"-"`
-	BeforeID param.Opt[string] `query:"beforeId,omitzero" json:"-"`
+	AfterID  param.Field[string] `query:"afterId"`
+	BeforeID param.Field[string] `query:"beforeId"`
 	// a string to be decoded into a Date
-	EndDate param.Opt[string] `query:"endDate,omitzero" json:"-"`
+	EndDate param.Field[string] `query:"endDate"`
 	// a number less than or equal to 100
-	Limit param.Opt[string] `query:"limit,omitzero" json:"-"`
+	Limit     param.Field[string]   `query:"limit"`
+	PolicyIDs param.Field[[]string] `query:"policyIds"`
 	// a string to be decoded into a Date
-	StartDate param.Opt[string] `query:"startDate,omitzero" json:"-"`
-	PolicyIDs []string          `query:"policyIds,omitzero" json:"-"`
-	WorkerIDs []string          `query:"workerIds,omitzero" json:"-"`
-	paramObj
+	StartDate param.Field[string]   `query:"startDate"`
+	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
 
 // URLQuery serializes [TimeOffListBalancesParams]'s query parameters as
 // `url.Values`.
-func (r TimeOffListBalancesParams) URLQuery() (v url.Values, err error) {
+func (r TimeOffListBalancesParams) URLQuery() (v url.Values) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
@@ -264,30 +283,44 @@ func (r TimeOffListBalancesParams) URLQuery() (v url.Values, err error) {
 }
 
 type TimeOffListRequestsParams struct {
-	AfterID  param.Opt[string] `query:"afterId,omitzero" json:"-"`
-	BeforeID param.Opt[string] `query:"beforeId,omitzero" json:"-"`
+	AfterID  param.Field[string] `query:"afterId"`
+	BeforeID param.Field[string] `query:"beforeId"`
 	// a string to be decoded into a Date
-	EndsBefore param.Opt[string] `query:"endsBefore,omitzero" json:"-"`
+	EndsBefore param.Field[string] `query:"endsBefore"`
 	// a string to be decoded into a Date
-	EndsOnOrAfter param.Opt[string] `query:"endsOnOrAfter,omitzero" json:"-"`
+	EndsOnOrAfter param.Field[string] `query:"endsOnOrAfter"`
 	// a number less than or equal to 100
-	Limit param.Opt[string] `query:"limit,omitzero" json:"-"`
+	Limit     param.Field[string]   `query:"limit"`
+	PolicyIDs param.Field[[]string] `query:"policyIds"`
 	// a string to be decoded into a Date
-	StartsBefore param.Opt[string] `query:"startsBefore,omitzero" json:"-"`
+	StartsBefore param.Field[string] `query:"startsBefore"`
 	// a string to be decoded into a Date
-	StartsOnOrAfter param.Opt[string] `query:"startsOnOrAfter,omitzero" json:"-"`
-	PolicyIDs       []string          `query:"policyIds,omitzero" json:"-"`
-	// Any of "pending", "approved", "denied".
-	Statuses  []string `query:"statuses,omitzero" json:"-"`
-	WorkerIDs []string `query:"workerIds,omitzero" json:"-"`
-	paramObj
+	StartsOnOrAfter param.Field[string]                            `query:"startsOnOrAfter"`
+	Statuses        param.Field[[]TimeOffListRequestsParamsStatus] `query:"statuses"`
+	WorkerIDs       param.Field[[]string]                          `query:"workerIds"`
 }
 
 // URLQuery serializes [TimeOffListRequestsParams]'s query parameters as
 // `url.Values`.
-func (r TimeOffListRequestsParams) URLQuery() (v url.Values, err error) {
+func (r TimeOffListRequestsParams) URLQuery() (v url.Values) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
+}
+
+type TimeOffListRequestsParamsStatus string
+
+const (
+	TimeOffListRequestsParamsStatusPending  TimeOffListRequestsParamsStatus = "pending"
+	TimeOffListRequestsParamsStatusApproved TimeOffListRequestsParamsStatus = "approved"
+	TimeOffListRequestsParamsStatusDenied   TimeOffListRequestsParamsStatus = "denied"
+)
+
+func (r TimeOffListRequestsParamsStatus) IsKnown() bool {
+	switch r {
+	case TimeOffListRequestsParamsStatusPending, TimeOffListRequestsParamsStatusApproved, TimeOffListRequestsParamsStatusDenied:
+		return true
+	}
+	return false
 }

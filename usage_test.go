@@ -27,7 +27,8 @@ func TestUsage(t *testing.T) {
 	)
 	page, err := client.TimeOff.Policies.List(context.TODO(), warphr.TimeOffPolicyListParams{})
 	if err != nil {
-		t.Fatalf("err should be nil: %s", err.Error())
+		t.Error(err)
+		return
 	}
 	t.Logf("%+v\n", page)
 }
