@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-03-27)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/TeamWarp/warp-go-sdk/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** update contact email ([a0a0026](https://github.com/TeamWarp/warp-go-sdk/commit/a0a0026c2373e72554e46c6ea1b46300be005419))
+
 ## 0.1.0 (2026-03-27)
 
 Full Changelog: [v0.0.2...v0.1.0](https://github.com/TeamWarp/warp-go-sdk/compare/v0.0.2...v0.1.0)
