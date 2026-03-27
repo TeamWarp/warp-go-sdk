@@ -157,7 +157,7 @@ func TestWorkerNewEmployeeWithOptionalParams(t *testing.T) {
 		Position:     "Software Engineer",
 		StartDate:    "2000-01-01",
 		WorkLocation: warphr.WorkerNewEmployeeParamsWorkLocationUnion{
-			OfWorkerNewEmployeesWorkLocationObject: &warphr.WorkerNewEmployeeParamsWorkLocationObject{
+			OfWorkerNewEmployeesWorkLocationOfficeWorkLocation: &warphr.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
 				Type:        "office",
 				WorkplaceID: "wkp_1234",
 			},
