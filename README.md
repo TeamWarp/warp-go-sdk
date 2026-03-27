@@ -6,7 +6,7 @@
 
 <!-- x-release-please-end -->
 
-The Warp Hr Go library provides convenient access to the [Warp Hr REST API](docs.joinwarp.com)
+The Warp Hr Go library provides convenient access to the [Warp Hr REST API](https://docs.warp.co)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
