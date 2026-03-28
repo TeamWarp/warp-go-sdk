@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 (2026-03-28)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/TeamWarp/warp-go-sdk/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** fix go edition ([647951b](https://github.com/TeamWarp/warp-go-sdk/commit/647951b56460a6acb5768ee2990eb878585a5618))
+
+
+### Chores
+
+* **ci:** support opting out of skipping builds on metadata-only commits ([a9893a6](https://github.com/TeamWarp/warp-go-sdk/commit/a9893a6dbaa36cef188c5e349a8bd42ca4031802))
+
 ## 0.3.0 (2026-03-27)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/TeamWarp/warp-go-sdk/compare/v0.2.0...v0.3.0)
