@@ -27,16 +27,16 @@ func TestWorkplaceNewWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Workplaces.New(context.TODO(), warphr.WorkplaceNewParams{
-		Address: warphr.WorkplaceNewParamsAddress{
-			City:       "city",
-			Country:    "US",
-			Line1:      "x",
-			PostalCode: "postalCode",
-			State:      "AL",
-			Line2:      warphr.String("line2"),
-		},
-		Name: "name",
-		Type: warphr.WorkplaceNewParamsTypeRemote,
+		Address: warphr.F(warphr.WorkplaceNewParamsAddress{
+			City:       warphr.F("city"),
+			Country:    warphr.F(warphr.WorkplaceNewParamsAddressCountryUs),
+			Line1:      warphr.F("x"),
+			PostalCode: warphr.F("postalCode"),
+			State:      warphr.F(warphr.WorkplaceNewParamsAddressStateAl),
+			Line2:      warphr.F("line2"),
+		}),
+		Name: warphr.F("name"),
+		Type: warphr.F(warphr.WorkplaceNewParamsTypeRemote),
 	})
 	if err != nil {
 		var apierr *warphr.Error
@@ -64,7 +64,7 @@ func TestWorkplaceUpdateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"wkp_1234",
 		warphr.WorkplaceUpdateParams{
-			Name: warphr.String("name"),
+			Name: warphr.F("name"),
 		},
 	)
 	if err != nil {
@@ -90,9 +90,9 @@ func TestWorkplaceListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Workplaces.List(context.TODO(), warphr.WorkplaceListParams{
-		AfterID:  warphr.String("wkp_1234"),
-		BeforeID: warphr.String("wkp_1234"),
-		Limit:    warphr.String("limit"),
+		AfterID:  warphr.F("wkp_1234"),
+		BeforeID: warphr.F("wkp_1234"),
+		Limit:    warphr.F("limit"),
 	})
 	if err != nil {
 		var apierr *warphr.Error
