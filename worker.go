@@ -12,11 +12,10 @@ import (
 
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
 	"github.com/TeamWarp/warp-go-sdk/packages/pagination"
-	"github.com/TeamWarp/warp-go-sdk/packages/param"
-	"github.com/TeamWarp/warp-go-sdk/packages/respjson"
 )
 
 // Endpoints for worker management. "Workers" include anyone employed by your
@@ -29,26 +28,26 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewWorkerService] method instead.
 type WorkerService struct {
-	options []option.RequestOption
+	Options []option.RequestOption
 }
 
 // NewWorkerService generates a new service that applies the given options to each
 // request. These options are applied after the parent client's options (if there
 // is one), and before any request-specific options.
-func NewWorkerService(opts ...option.RequestOption) (r WorkerService) {
-	r = WorkerService{}
-	r.options = opts
+func NewWorkerService(opts ...option.RequestOption) (r *WorkerService) {
+	r = &WorkerService{}
+	r.Options = opts
 	return
 }
 
 // Get a specific worker by id.
 func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerGetResponse, err error) {
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/workers/%s", url.PathEscape(id))
+	path := fmt.Sprintf("v1/workers/%s", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
@@ -57,7 +56,7 @@ func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.Reque
 // international, full-time employees or contractors.
 func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts ...option.RequestOption) (res *pagination.CursorPage[WorkerListResponse], err error) {
 	var raw *http.Response
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/workers"
 	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
@@ -81,13 +80,13 @@ func (r *WorkerService) ListAutoPaging(ctx context.Context, query WorkerListPara
 // Delete a worker. Only workers who have not yet completed onboarding can be
 // deleted. Active workers must be properly offboarded.
 func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return err
 	}
-	path := fmt.Sprintf("v1/workers/%s", url.PathEscape(id))
+	path := fmt.Sprintf("v1/workers/%s", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return err
 }
@@ -96,7 +95,7 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 // invited separately via the invite endpoint. For business contractors, the
 // businessName field is required.
 func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContractorParams, opts ...option.RequestOption) (res *WorkerNewContractorResponse, err error) {
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	path := "v1/workers/contractor"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
@@ -106,7 +105,7 @@ func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContrac
 // invited separately via the invite endpoint. If hiring in a state without an
 // existing tax registration, you must specify the stateRegistration field.
 func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeParams, opts ...option.RequestOption) (res *WorkerNewEmployeeResponse, err error) {
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	path := "v1/workers/employee"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
@@ -116,12 +115,12 @@ func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeP
 // Warp. If the worker has already been invited, the invite will be resent with
 // extended validity.
 func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerInviteResponse, err error) {
-	opts = slices.Concat(r.options, opts)
+	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/workers/%s/invite", url.PathEscape(id))
+	path := fmt.Sprintf("v1/workers/%s/invite", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }
@@ -129,78 +128,86 @@ func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.Re
 type WorkerGetResponse struct {
 	// The id of the worker.
 	ID           string `json:"id" api:"required"`
-	BusinessName string `json:"businessName" api:"required"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required"`
+	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	EndDate       string `json:"endDate" api:"required"`
+	EndDate       string `json:"endDate" api:"required,nullable"`
 	FirstName     string `json:"firstName" api:"required"`
-	IsBusiness    bool   `json:"isBusiness" api:"required"`
+	IsBusiness    bool   `json:"isBusiness" api:"required,nullable"`
 	LastName      string `json:"lastName" api:"required"`
 	Position      string `json:"position" api:"required"`
-	PreferredName string `json:"preferredName" api:"required"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Status WorkerGetResponseStatus `json:"status" api:"required"`
+	StartDate string                  `json:"startDate" api:"required"`
+	Status    WorkerGetResponseStatus `json:"status" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required"`
-	// Any of "employee", "contractor".
-	Type WorkerGetResponseType `json:"type" api:"required"`
+	TimeZone string                `json:"timeZone" api:"required,nullable"`
+	Type     WorkerGetResponseType `json:"type" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail string `json:"workEmail" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID            respjson.Field
-		BusinessName  respjson.Field
-		Department    respjson.Field
-		DisplayName   respjson.Field
-		Email         respjson.Field
-		EndDate       respjson.Field
-		FirstName     respjson.Field
-		IsBusiness    respjson.Field
-		LastName      respjson.Field
-		Position      respjson.Field
-		PreferredName respjson.Field
-		StartDate     respjson.Field
-		Status        respjson.Field
-		TimeZone      respjson.Field
-		Type          respjson.Field
-		WorkEmail     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
+	WorkEmail string                `json:"workEmail" api:"required,nullable"`
+	JSON      workerGetResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerGetResponse) RawJSON() string { return r.JSON.raw }
-func (r *WorkerGetResponse) UnmarshalJSON(data []byte) error {
+// workerGetResponseJSON contains the JSON metadata for the struct
+// [WorkerGetResponse]
+type workerGetResponseJSON struct {
+	ID            apijson.Field
+	BusinessName  apijson.Field
+	Department    apijson.Field
+	DisplayName   apijson.Field
+	Email         apijson.Field
+	EndDate       apijson.Field
+	FirstName     apijson.Field
+	IsBusiness    apijson.Field
+	LastName      apijson.Field
+	Position      apijson.Field
+	PreferredName apijson.Field
+	StartDate     apijson.Field
+	Status        apijson.Field
+	TimeZone      apijson.Field
+	Type          apijson.Field
+	WorkEmail     apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerGetResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 // The department the worker belongs to, or null if unassigned.
 type WorkerGetResponseDepartment struct {
 	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
+	ID   string                          `json:"id" api:"required"`
+	Name string                          `json:"name" api:"required"`
+	JSON workerGetResponseDepartmentJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerGetResponseDepartment) RawJSON() string { return r.JSON.raw }
-func (r *WorkerGetResponseDepartment) UnmarshalJSON(data []byte) error {
+// workerGetResponseDepartmentJSON contains the JSON metadata for the struct
+// [WorkerGetResponseDepartment]
+type workerGetResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerGetResponseDepartment) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerGetResponseDepartmentJSON) RawJSON() string {
+	return r.raw
 }
 
 type WorkerGetResponseStatus string
@@ -214,6 +221,14 @@ const (
 	WorkerGetResponseStatusInactive    WorkerGetResponseStatus = "inactive"
 )
 
+func (r WorkerGetResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseStatusDraft, WorkerGetResponseStatusInvited, WorkerGetResponseStatusOnboarding, WorkerGetResponseStatusActive, WorkerGetResponseStatusOffboarding, WorkerGetResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
 type WorkerGetResponseType string
 
 const (
@@ -221,81 +236,97 @@ const (
 	WorkerGetResponseTypeContractor WorkerGetResponseType = "contractor"
 )
 
+func (r WorkerGetResponseType) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseTypeEmployee, WorkerGetResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
 type WorkerListResponse struct {
 	// The id of the worker.
 	ID           string `json:"id" api:"required"`
-	BusinessName string `json:"businessName" api:"required"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerListResponseDepartment `json:"department" api:"required"`
+	Department WorkerListResponseDepartment `json:"department" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	EndDate       string `json:"endDate" api:"required"`
+	EndDate       string `json:"endDate" api:"required,nullable"`
 	FirstName     string `json:"firstName" api:"required"`
-	IsBusiness    bool   `json:"isBusiness" api:"required"`
+	IsBusiness    bool   `json:"isBusiness" api:"required,nullable"`
 	LastName      string `json:"lastName" api:"required"`
 	Position      string `json:"position" api:"required"`
-	PreferredName string `json:"preferredName" api:"required"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Status WorkerListResponseStatus `json:"status" api:"required"`
+	StartDate string                   `json:"startDate" api:"required"`
+	Status    WorkerListResponseStatus `json:"status" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required"`
-	// Any of "employee", "contractor".
-	Type WorkerListResponseType `json:"type" api:"required"`
+	TimeZone string                 `json:"timeZone" api:"required,nullable"`
+	Type     WorkerListResponseType `json:"type" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail string `json:"workEmail" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID            respjson.Field
-		BusinessName  respjson.Field
-		Department    respjson.Field
-		DisplayName   respjson.Field
-		Email         respjson.Field
-		EndDate       respjson.Field
-		FirstName     respjson.Field
-		IsBusiness    respjson.Field
-		LastName      respjson.Field
-		Position      respjson.Field
-		PreferredName respjson.Field
-		StartDate     respjson.Field
-		Status        respjson.Field
-		TimeZone      respjson.Field
-		Type          respjson.Field
-		WorkEmail     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
+	WorkEmail string                 `json:"workEmail" api:"required,nullable"`
+	JSON      workerListResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerListResponse) RawJSON() string { return r.JSON.raw }
-func (r *WorkerListResponse) UnmarshalJSON(data []byte) error {
+// workerListResponseJSON contains the JSON metadata for the struct
+// [WorkerListResponse]
+type workerListResponseJSON struct {
+	ID            apijson.Field
+	BusinessName  apijson.Field
+	Department    apijson.Field
+	DisplayName   apijson.Field
+	Email         apijson.Field
+	EndDate       apijson.Field
+	FirstName     apijson.Field
+	IsBusiness    apijson.Field
+	LastName      apijson.Field
+	Position      apijson.Field
+	PreferredName apijson.Field
+	StartDate     apijson.Field
+	Status        apijson.Field
+	TimeZone      apijson.Field
+	Type          apijson.Field
+	WorkEmail     apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *WorkerListResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerListResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 // The department the worker belongs to, or null if unassigned.
 type WorkerListResponseDepartment struct {
 	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
+	ID   string                           `json:"id" api:"required"`
+	Name string                           `json:"name" api:"required"`
+	JSON workerListResponseDepartmentJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerListResponseDepartment) RawJSON() string { return r.JSON.raw }
-func (r *WorkerListResponseDepartment) UnmarshalJSON(data []byte) error {
+// workerListResponseDepartmentJSON contains the JSON metadata for the struct
+// [WorkerListResponseDepartment]
+type workerListResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerListResponseDepartment) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerListResponseDepartmentJSON) RawJSON() string {
+	return r.raw
 }
 
 type WorkerListResponseStatus string
@@ -309,6 +340,14 @@ const (
 	WorkerListResponseStatusInactive    WorkerListResponseStatus = "inactive"
 )
 
+func (r WorkerListResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerListResponseStatusDraft, WorkerListResponseStatusInvited, WorkerListResponseStatusOnboarding, WorkerListResponseStatusActive, WorkerListResponseStatusOffboarding, WorkerListResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
 type WorkerListResponseType string
 
 const (
@@ -316,81 +355,97 @@ const (
 	WorkerListResponseTypeContractor WorkerListResponseType = "contractor"
 )
 
+func (r WorkerListResponseType) IsKnown() bool {
+	switch r {
+	case WorkerListResponseTypeEmployee, WorkerListResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
 type WorkerNewContractorResponse struct {
 	// The id of the worker.
 	ID           string `json:"id" api:"required"`
-	BusinessName string `json:"businessName" api:"required"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerNewContractorResponseDepartment `json:"department" api:"required"`
+	Department WorkerNewContractorResponseDepartment `json:"department" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	EndDate       string `json:"endDate" api:"required"`
+	EndDate       string `json:"endDate" api:"required,nullable"`
 	FirstName     string `json:"firstName" api:"required"`
-	IsBusiness    bool   `json:"isBusiness" api:"required"`
+	IsBusiness    bool   `json:"isBusiness" api:"required,nullable"`
 	LastName      string `json:"lastName" api:"required"`
 	Position      string `json:"position" api:"required"`
-	PreferredName string `json:"preferredName" api:"required"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Status WorkerNewContractorResponseStatus `json:"status" api:"required"`
+	StartDate string                            `json:"startDate" api:"required"`
+	Status    WorkerNewContractorResponseStatus `json:"status" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required"`
-	// Any of "employee", "contractor".
-	Type WorkerNewContractorResponseType `json:"type" api:"required"`
+	TimeZone string                          `json:"timeZone" api:"required,nullable"`
+	Type     WorkerNewContractorResponseType `json:"type" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail string `json:"workEmail" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID            respjson.Field
-		BusinessName  respjson.Field
-		Department    respjson.Field
-		DisplayName   respjson.Field
-		Email         respjson.Field
-		EndDate       respjson.Field
-		FirstName     respjson.Field
-		IsBusiness    respjson.Field
-		LastName      respjson.Field
-		Position      respjson.Field
-		PreferredName respjson.Field
-		StartDate     respjson.Field
-		Status        respjson.Field
-		TimeZone      respjson.Field
-		Type          respjson.Field
-		WorkEmail     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
+	WorkEmail string                          `json:"workEmail" api:"required,nullable"`
+	JSON      workerNewContractorResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerNewContractorResponse) RawJSON() string { return r.JSON.raw }
-func (r *WorkerNewContractorResponse) UnmarshalJSON(data []byte) error {
+// workerNewContractorResponseJSON contains the JSON metadata for the struct
+// [WorkerNewContractorResponse]
+type workerNewContractorResponseJSON struct {
+	ID            apijson.Field
+	BusinessName  apijson.Field
+	Department    apijson.Field
+	DisplayName   apijson.Field
+	Email         apijson.Field
+	EndDate       apijson.Field
+	FirstName     apijson.Field
+	IsBusiness    apijson.Field
+	LastName      apijson.Field
+	Position      apijson.Field
+	PreferredName apijson.Field
+	StartDate     apijson.Field
+	Status        apijson.Field
+	TimeZone      apijson.Field
+	Type          apijson.Field
+	WorkEmail     apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *WorkerNewContractorResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewContractorResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 // The department the worker belongs to, or null if unassigned.
 type WorkerNewContractorResponseDepartment struct {
 	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
+	ID   string                                    `json:"id" api:"required"`
+	Name string                                    `json:"name" api:"required"`
+	JSON workerNewContractorResponseDepartmentJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerNewContractorResponseDepartment) RawJSON() string { return r.JSON.raw }
-func (r *WorkerNewContractorResponseDepartment) UnmarshalJSON(data []byte) error {
+// workerNewContractorResponseDepartmentJSON contains the JSON metadata for the
+// struct [WorkerNewContractorResponseDepartment]
+type workerNewContractorResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewContractorResponseDepartment) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewContractorResponseDepartmentJSON) RawJSON() string {
+	return r.raw
 }
 
 type WorkerNewContractorResponseStatus string
@@ -404,6 +459,14 @@ const (
 	WorkerNewContractorResponseStatusInactive    WorkerNewContractorResponseStatus = "inactive"
 )
 
+func (r WorkerNewContractorResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorResponseStatusDraft, WorkerNewContractorResponseStatusInvited, WorkerNewContractorResponseStatusOnboarding, WorkerNewContractorResponseStatusActive, WorkerNewContractorResponseStatusOffboarding, WorkerNewContractorResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
 type WorkerNewContractorResponseType string
 
 const (
@@ -411,81 +474,97 @@ const (
 	WorkerNewContractorResponseTypeContractor WorkerNewContractorResponseType = "contractor"
 )
 
+func (r WorkerNewContractorResponseType) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorResponseTypeEmployee, WorkerNewContractorResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
 type WorkerNewEmployeeResponse struct {
 	// The id of the worker.
 	ID           string `json:"id" api:"required"`
-	BusinessName string `json:"businessName" api:"required"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required"`
+	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	EndDate       string `json:"endDate" api:"required"`
+	EndDate       string `json:"endDate" api:"required,nullable"`
 	FirstName     string `json:"firstName" api:"required"`
-	IsBusiness    bool   `json:"isBusiness" api:"required"`
+	IsBusiness    bool   `json:"isBusiness" api:"required,nullable"`
 	LastName      string `json:"lastName" api:"required"`
 	Position      string `json:"position" api:"required"`
-	PreferredName string `json:"preferredName" api:"required"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Status WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
+	StartDate string                          `json:"startDate" api:"required"`
+	Status    WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required"`
-	// Any of "employee", "contractor".
-	Type WorkerNewEmployeeResponseType `json:"type" api:"required"`
+	TimeZone string                        `json:"timeZone" api:"required,nullable"`
+	Type     WorkerNewEmployeeResponseType `json:"type" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail string `json:"workEmail" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID            respjson.Field
-		BusinessName  respjson.Field
-		Department    respjson.Field
-		DisplayName   respjson.Field
-		Email         respjson.Field
-		EndDate       respjson.Field
-		FirstName     respjson.Field
-		IsBusiness    respjson.Field
-		LastName      respjson.Field
-		Position      respjson.Field
-		PreferredName respjson.Field
-		StartDate     respjson.Field
-		Status        respjson.Field
-		TimeZone      respjson.Field
-		Type          respjson.Field
-		WorkEmail     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
+	WorkEmail string                        `json:"workEmail" api:"required,nullable"`
+	JSON      workerNewEmployeeResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerNewEmployeeResponse) RawJSON() string { return r.JSON.raw }
-func (r *WorkerNewEmployeeResponse) UnmarshalJSON(data []byte) error {
+// workerNewEmployeeResponseJSON contains the JSON metadata for the struct
+// [WorkerNewEmployeeResponse]
+type workerNewEmployeeResponseJSON struct {
+	ID            apijson.Field
+	BusinessName  apijson.Field
+	Department    apijson.Field
+	DisplayName   apijson.Field
+	Email         apijson.Field
+	EndDate       apijson.Field
+	FirstName     apijson.Field
+	IsBusiness    apijson.Field
+	LastName      apijson.Field
+	Position      apijson.Field
+	PreferredName apijson.Field
+	StartDate     apijson.Field
+	Status        apijson.Field
+	TimeZone      apijson.Field
+	Type          apijson.Field
+	WorkEmail     apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *WorkerNewEmployeeResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewEmployeeResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 // The department the worker belongs to, or null if unassigned.
 type WorkerNewEmployeeResponseDepartment struct {
 	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
+	ID   string                                  `json:"id" api:"required"`
+	Name string                                  `json:"name" api:"required"`
+	JSON workerNewEmployeeResponseDepartmentJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerNewEmployeeResponseDepartment) RawJSON() string { return r.JSON.raw }
-func (r *WorkerNewEmployeeResponseDepartment) UnmarshalJSON(data []byte) error {
+// workerNewEmployeeResponseDepartmentJSON contains the JSON metadata for the
+// struct [WorkerNewEmployeeResponseDepartment]
+type workerNewEmployeeResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewEmployeeResponseDepartment) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewEmployeeResponseDepartmentJSON) RawJSON() string {
+	return r.raw
 }
 
 type WorkerNewEmployeeResponseStatus string
@@ -499,6 +578,14 @@ const (
 	WorkerNewEmployeeResponseStatusInactive    WorkerNewEmployeeResponseStatus = "inactive"
 )
 
+func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeResponseStatusDraft, WorkerNewEmployeeResponseStatusInvited, WorkerNewEmployeeResponseStatusOnboarding, WorkerNewEmployeeResponseStatusActive, WorkerNewEmployeeResponseStatusOffboarding, WorkerNewEmployeeResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
 type WorkerNewEmployeeResponseType string
 
 const (
@@ -506,81 +593,97 @@ const (
 	WorkerNewEmployeeResponseTypeContractor WorkerNewEmployeeResponseType = "contractor"
 )
 
+func (r WorkerNewEmployeeResponseType) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeResponseTypeEmployee, WorkerNewEmployeeResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteResponse struct {
 	// The id of the worker.
 	ID           string `json:"id" api:"required"`
-	BusinessName string `json:"businessName" api:"required"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerInviteResponseDepartment `json:"department" api:"required"`
+	Department WorkerInviteResponseDepartment `json:"department" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	EndDate       string `json:"endDate" api:"required"`
+	EndDate       string `json:"endDate" api:"required,nullable"`
 	FirstName     string `json:"firstName" api:"required"`
-	IsBusiness    bool   `json:"isBusiness" api:"required"`
+	IsBusiness    bool   `json:"isBusiness" api:"required,nullable"`
 	LastName      string `json:"lastName" api:"required"`
 	Position      string `json:"position" api:"required"`
-	PreferredName string `json:"preferredName" api:"required"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Status WorkerInviteResponseStatus `json:"status" api:"required"`
+	StartDate string                     `json:"startDate" api:"required"`
+	Status    WorkerInviteResponseStatus `json:"status" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required"`
-	// Any of "employee", "contractor".
-	Type WorkerInviteResponseType `json:"type" api:"required"`
+	TimeZone string                   `json:"timeZone" api:"required,nullable"`
+	Type     WorkerInviteResponseType `json:"type" api:"required"`
 	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail string `json:"workEmail" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID            respjson.Field
-		BusinessName  respjson.Field
-		Department    respjson.Field
-		DisplayName   respjson.Field
-		Email         respjson.Field
-		EndDate       respjson.Field
-		FirstName     respjson.Field
-		IsBusiness    respjson.Field
-		LastName      respjson.Field
-		Position      respjson.Field
-		PreferredName respjson.Field
-		StartDate     respjson.Field
-		Status        respjson.Field
-		TimeZone      respjson.Field
-		Type          respjson.Field
-		WorkEmail     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
+	WorkEmail string                   `json:"workEmail" api:"required,nullable"`
+	JSON      workerInviteResponseJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerInviteResponse) RawJSON() string { return r.JSON.raw }
-func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) error {
+// workerInviteResponseJSON contains the JSON metadata for the struct
+// [WorkerInviteResponse]
+type workerInviteResponseJSON struct {
+	ID            apijson.Field
+	BusinessName  apijson.Field
+	Department    apijson.Field
+	DisplayName   apijson.Field
+	Email         apijson.Field
+	EndDate       apijson.Field
+	FirstName     apijson.Field
+	IsBusiness    apijson.Field
+	LastName      apijson.Field
+	Position      apijson.Field
+	PreferredName apijson.Field
+	StartDate     apijson.Field
+	Status        apijson.Field
+	TimeZone      apijson.Field
+	Type          apijson.Field
+	WorkEmail     apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteResponseJSON) RawJSON() string {
+	return r.raw
 }
 
 // The department the worker belongs to, or null if unassigned.
 type WorkerInviteResponseDepartment struct {
 	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID          respjson.Field
-		Name        respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
+	ID   string                             `json:"id" api:"required"`
+	Name string                             `json:"name" api:"required"`
+	JSON workerInviteResponseDepartmentJSON `json:"-"`
 }
 
-// Returns the unmodified JSON received from the API
-func (r WorkerInviteResponseDepartment) RawJSON() string { return r.JSON.raw }
-func (r *WorkerInviteResponseDepartment) UnmarshalJSON(data []byte) error {
+// workerInviteResponseDepartmentJSON contains the JSON metadata for the struct
+// [WorkerInviteResponseDepartment]
+type workerInviteResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteResponseDepartment) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteResponseDepartmentJSON) RawJSON() string {
+	return r.raw
 }
 
 type WorkerInviteResponseStatus string
@@ -594,6 +697,14 @@ const (
 	WorkerInviteResponseStatusInactive    WorkerInviteResponseStatus = "inactive"
 )
 
+func (r WorkerInviteResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerInviteResponseStatusDraft, WorkerInviteResponseStatusInvited, WorkerInviteResponseStatusOnboarding, WorkerInviteResponseStatusActive, WorkerInviteResponseStatusOffboarding, WorkerInviteResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteResponseType string
 
 const (
@@ -601,93 +712,103 @@ const (
 	WorkerInviteResponseTypeContractor WorkerInviteResponseType = "contractor"
 )
 
+func (r WorkerInviteResponseType) IsKnown() bool {
+	switch r {
+	case WorkerInviteResponseTypeEmployee, WorkerInviteResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
 type WorkerListParams struct {
 	// The id of the worker.
-	AfterID param.Opt[string] `query:"afterId,omitzero" json:"-"`
+	AfterID param.Field[string] `query:"afterId"`
 	// The id of the worker.
-	BeforeID param.Opt[string] `query:"beforeId,omitzero" json:"-"`
+	BeforeID param.Field[string] `query:"beforeId"`
 	// a number less than or equal to 100
-	Limit     param.Opt[string] `query:"limit,omitzero" json:"-"`
-	WorkEmail param.Opt[string] `query:"workEmail,omitzero" json:"-"`
-	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Statuses []string `query:"statuses,omitzero" json:"-"`
-	// Any of "employee", "contractor".
-	Types []string `query:"types,omitzero" json:"-"`
-	paramObj
+	Limit     param.Field[string]                   `query:"limit"`
+	Statuses  param.Field[[]WorkerListParamsStatus] `query:"statuses"`
+	Types     param.Field[[]WorkerListParamsType]   `query:"types"`
+	WorkEmail param.Field[string]                   `query:"workEmail"`
 }
 
 // URLQuery serializes [WorkerListParams]'s query parameters as `url.Values`.
-func (r WorkerListParams) URLQuery() (v url.Values, err error) {
+func (r WorkerListParams) URLQuery() (v url.Values) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
+type WorkerListParamsStatus string
+
+const (
+	WorkerListParamsStatusDraft       WorkerListParamsStatus = "draft"
+	WorkerListParamsStatusInvited     WorkerListParamsStatus = "invited"
+	WorkerListParamsStatusOnboarding  WorkerListParamsStatus = "onboarding"
+	WorkerListParamsStatusActive      WorkerListParamsStatus = "active"
+	WorkerListParamsStatusOffboarding WorkerListParamsStatus = "offboarding"
+	WorkerListParamsStatusInactive    WorkerListParamsStatus = "inactive"
+)
+
+func (r WorkerListParamsStatus) IsKnown() bool {
+	switch r {
+	case WorkerListParamsStatusDraft, WorkerListParamsStatusInvited, WorkerListParamsStatusOnboarding, WorkerListParamsStatusActive, WorkerListParamsStatusOffboarding, WorkerListParamsStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerListParamsType string
+
+const (
+	WorkerListParamsTypeEmployee   WorkerListParamsType = "employee"
+	WorkerListParamsTypeContractor WorkerListParamsType = "contractor"
+)
+
+func (r WorkerListParamsType) IsKnown() bool {
+	switch r {
+	case WorkerListParamsTypeEmployee, WorkerListParamsTypeContractor:
+		return true
+	}
+	return false
+}
+
 type WorkerNewContractorParams struct {
 	// The department to assign this contractor to.
-	DepartmentID string `json:"departmentId" api:"required"`
+	DepartmentID param.Field[string] `json:"departmentId" api:"required"`
 	// Personal email address. The invite will be sent here.
-	Email string `json:"email" api:"required"`
+	Email param.Field[string] `json:"email" api:"required"`
 	// Whether the contractor is an individual person or a business entity.
-	//
-	// Any of "individual", "business".
-	EntityType WorkerNewContractorParamsEntityType `json:"entityType,omitzero" api:"required"`
+	EntityType param.Field[WorkerNewContractorParamsEntityType] `json:"entityType" api:"required"`
 	// a non empty string
-	FirstName string `json:"firstName" api:"required"`
+	FirstName param.Field[string] `json:"firstName" api:"required"`
 	// a non empty string
-	LastName string `json:"lastName" api:"required"`
+	LastName param.Field[string] `json:"lastName" api:"required"`
 	// The worker id of this contractor's direct manager.
-	ManagerID string `json:"managerId" api:"required"`
+	ManagerID param.Field[string] `json:"managerId" api:"required"`
 	// The contractor's role or job title.
-	Position string `json:"position" api:"required"`
+	Position param.Field[string] `json:"position" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	// Any of "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT",
-	// "AU", "AW", "AX", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ",
-	// "BL", "BM", "BN", "BO", "BQ", "BR", "BS", "BT", "BV", "BW", "BY", "BZ", "CA",
-	// "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU",
-	// "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE",
-	// "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB",
-	// "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS",
-	// "GT", "GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID", "IE", "IL",
-	// "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG",
-	// "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC", "LI",
-	// "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG",
-	// "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV",
-	// "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP",
-	// "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN",
-	// "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB",
-	// "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR",
-	// "SS", "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK",
-	// "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US",
-	// "UY", "UZ", "VA", "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "XK", "YE",
-	// "YT", "ZA", "ZM", "ZW".
-	WorkCountry WorkerNewContractorParamsWorkCountry `json:"workCountry,omitzero" api:"required"`
-	// A description of the work the contractor will perform.
-	ScopeOfWork param.Opt[string] `json:"scopeOfWork,omitzero"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail param.Opt[string] `json:"workEmail,omitzero"`
+	StartDate   param.Field[string]                               `json:"startDate" api:"required"`
+	WorkCountry param.Field[WorkerNewContractorParamsWorkCountry] `json:"workCountry" api:"required"`
 	// Required when entityType is "business". The legal name of the contractor's
 	// business.
-	BusinessName param.Opt[string] `json:"businessName,omitzero"`
+	BusinessName param.Field[string] `json:"businessName"`
 	// The pay rate for the contractor. Leave this blank if you'd like to pay this
 	// contractor on-demand or via invoicing.
-	Compensation WorkerNewContractorParamsCompensation `json:"compensation,omitzero"`
+	Compensation param.Field[WorkerNewContractorParamsCompensation] `json:"compensation"`
 	// The contractor's pay schedule. Must be a pay schedule that the company has
 	// configured.
-	//
-	// Any of "weekly", "biweekly", "monthly", "semimonthly", "quarterly", "annually".
-	PaySchedule WorkerNewContractorParamsPaySchedule `json:"paySchedule,omitzero"`
-	paramObj
+	PaySchedule param.Field[WorkerNewContractorParamsPaySchedule] `json:"paySchedule"`
+	// A description of the work the contractor will perform.
+	ScopeOfWork param.Field[string] `json:"scopeOfWork"`
+	// An email with a reasonably valid regex (shamelessly taken from zod)
+	WorkEmail param.Field[string] `json:"workEmail"`
 }
 
 func (r WorkerNewContractorParams) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewContractorParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *WorkerNewContractorParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return apijson.MarshalRoot(r)
 }
 
 // Whether the contractor is an individual person or a business entity.
@@ -697,6 +818,14 @@ const (
 	WorkerNewContractorParamsEntityTypeIndividual WorkerNewContractorParamsEntityType = "individual"
 	WorkerNewContractorParamsEntityTypeBusiness   WorkerNewContractorParamsEntityType = "business"
 )
+
+func (r WorkerNewContractorParamsEntityType) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorParamsEntityTypeIndividual, WorkerNewContractorParamsEntityTypeBusiness:
+		return true
+	}
+	return false
+}
 
 type WorkerNewContractorParamsWorkCountry string
 
@@ -953,42 +1082,118 @@ const (
 	WorkerNewContractorParamsWorkCountryZw WorkerNewContractorParamsWorkCountry = "ZW"
 )
 
+func (r WorkerNewContractorParamsWorkCountry) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorParamsWorkCountryAd, WorkerNewContractorParamsWorkCountryAe, WorkerNewContractorParamsWorkCountryAf, WorkerNewContractorParamsWorkCountryAg, WorkerNewContractorParamsWorkCountryAI, WorkerNewContractorParamsWorkCountryAl, WorkerNewContractorParamsWorkCountryAm, WorkerNewContractorParamsWorkCountryAo, WorkerNewContractorParamsWorkCountryAq, WorkerNewContractorParamsWorkCountryAr, WorkerNewContractorParamsWorkCountryAs, WorkerNewContractorParamsWorkCountryAt, WorkerNewContractorParamsWorkCountryAu, WorkerNewContractorParamsWorkCountryAw, WorkerNewContractorParamsWorkCountryAx, WorkerNewContractorParamsWorkCountryAz, WorkerNewContractorParamsWorkCountryBa, WorkerNewContractorParamsWorkCountryBb, WorkerNewContractorParamsWorkCountryBd, WorkerNewContractorParamsWorkCountryBe, WorkerNewContractorParamsWorkCountryBf, WorkerNewContractorParamsWorkCountryBg, WorkerNewContractorParamsWorkCountryBh, WorkerNewContractorParamsWorkCountryBi, WorkerNewContractorParamsWorkCountryBj, WorkerNewContractorParamsWorkCountryBl, WorkerNewContractorParamsWorkCountryBm, WorkerNewContractorParamsWorkCountryBn, WorkerNewContractorParamsWorkCountryBo, WorkerNewContractorParamsWorkCountryBq, WorkerNewContractorParamsWorkCountryBr, WorkerNewContractorParamsWorkCountryBs, WorkerNewContractorParamsWorkCountryBt, WorkerNewContractorParamsWorkCountryBv, WorkerNewContractorParamsWorkCountryBw, WorkerNewContractorParamsWorkCountryBy, WorkerNewContractorParamsWorkCountryBz, WorkerNewContractorParamsWorkCountryCa, WorkerNewContractorParamsWorkCountryCc, WorkerNewContractorParamsWorkCountryCd, WorkerNewContractorParamsWorkCountryCf, WorkerNewContractorParamsWorkCountryCg, WorkerNewContractorParamsWorkCountryCh, WorkerNewContractorParamsWorkCountryCi, WorkerNewContractorParamsWorkCountryCk, WorkerNewContractorParamsWorkCountryCl, WorkerNewContractorParamsWorkCountryCm, WorkerNewContractorParamsWorkCountryCn, WorkerNewContractorParamsWorkCountryCo, WorkerNewContractorParamsWorkCountryCr, WorkerNewContractorParamsWorkCountryCu, WorkerNewContractorParamsWorkCountryCv, WorkerNewContractorParamsWorkCountryCw, WorkerNewContractorParamsWorkCountryCx, WorkerNewContractorParamsWorkCountryCy, WorkerNewContractorParamsWorkCountryCz, WorkerNewContractorParamsWorkCountryDe, WorkerNewContractorParamsWorkCountryDj, WorkerNewContractorParamsWorkCountryDk, WorkerNewContractorParamsWorkCountryDm, WorkerNewContractorParamsWorkCountryDo, WorkerNewContractorParamsWorkCountryDz, WorkerNewContractorParamsWorkCountryEc, WorkerNewContractorParamsWorkCountryEe, WorkerNewContractorParamsWorkCountryEg, WorkerNewContractorParamsWorkCountryEh, WorkerNewContractorParamsWorkCountryEr, WorkerNewContractorParamsWorkCountryEs, WorkerNewContractorParamsWorkCountryEt, WorkerNewContractorParamsWorkCountryFi, WorkerNewContractorParamsWorkCountryFj, WorkerNewContractorParamsWorkCountryFk, WorkerNewContractorParamsWorkCountryFm, WorkerNewContractorParamsWorkCountryFo, WorkerNewContractorParamsWorkCountryFr, WorkerNewContractorParamsWorkCountryGa, WorkerNewContractorParamsWorkCountryGB, WorkerNewContractorParamsWorkCountryGd, WorkerNewContractorParamsWorkCountryGe, WorkerNewContractorParamsWorkCountryGf, WorkerNewContractorParamsWorkCountryGg, WorkerNewContractorParamsWorkCountryGh, WorkerNewContractorParamsWorkCountryGi, WorkerNewContractorParamsWorkCountryGl, WorkerNewContractorParamsWorkCountryGm, WorkerNewContractorParamsWorkCountryGn, WorkerNewContractorParamsWorkCountryGp, WorkerNewContractorParamsWorkCountryGq, WorkerNewContractorParamsWorkCountryGr, WorkerNewContractorParamsWorkCountryGs, WorkerNewContractorParamsWorkCountryGt, WorkerNewContractorParamsWorkCountryGu, WorkerNewContractorParamsWorkCountryGw, WorkerNewContractorParamsWorkCountryGy, WorkerNewContractorParamsWorkCountryHk, WorkerNewContractorParamsWorkCountryHm, WorkerNewContractorParamsWorkCountryHn, WorkerNewContractorParamsWorkCountryHr, WorkerNewContractorParamsWorkCountryHt, WorkerNewContractorParamsWorkCountryHu, WorkerNewContractorParamsWorkCountryID, WorkerNewContractorParamsWorkCountryIe, WorkerNewContractorParamsWorkCountryIl, WorkerNewContractorParamsWorkCountryIm, WorkerNewContractorParamsWorkCountryIn, WorkerNewContractorParamsWorkCountryIo, WorkerNewContractorParamsWorkCountryIq, WorkerNewContractorParamsWorkCountryIr, WorkerNewContractorParamsWorkCountryIs, WorkerNewContractorParamsWorkCountryIt, WorkerNewContractorParamsWorkCountryJe, WorkerNewContractorParamsWorkCountryJm, WorkerNewContractorParamsWorkCountryJo, WorkerNewContractorParamsWorkCountryJp, WorkerNewContractorParamsWorkCountryKe, WorkerNewContractorParamsWorkCountryKg, WorkerNewContractorParamsWorkCountryKh, WorkerNewContractorParamsWorkCountryKi, WorkerNewContractorParamsWorkCountryKm, WorkerNewContractorParamsWorkCountryKn, WorkerNewContractorParamsWorkCountryKp, WorkerNewContractorParamsWorkCountryKr, WorkerNewContractorParamsWorkCountryKw, WorkerNewContractorParamsWorkCountryKy, WorkerNewContractorParamsWorkCountryKz, WorkerNewContractorParamsWorkCountryLa, WorkerNewContractorParamsWorkCountryLb, WorkerNewContractorParamsWorkCountryLc, WorkerNewContractorParamsWorkCountryLi, WorkerNewContractorParamsWorkCountryLk, WorkerNewContractorParamsWorkCountryLr, WorkerNewContractorParamsWorkCountryLs, WorkerNewContractorParamsWorkCountryLt, WorkerNewContractorParamsWorkCountryLu, WorkerNewContractorParamsWorkCountryLv, WorkerNewContractorParamsWorkCountryLy, WorkerNewContractorParamsWorkCountryMa, WorkerNewContractorParamsWorkCountryMc, WorkerNewContractorParamsWorkCountryMd, WorkerNewContractorParamsWorkCountryMe, WorkerNewContractorParamsWorkCountryMf, WorkerNewContractorParamsWorkCountryMg, WorkerNewContractorParamsWorkCountryMh, WorkerNewContractorParamsWorkCountryMk, WorkerNewContractorParamsWorkCountryMl, WorkerNewContractorParamsWorkCountryMm, WorkerNewContractorParamsWorkCountryMn, WorkerNewContractorParamsWorkCountryMo, WorkerNewContractorParamsWorkCountryMp, WorkerNewContractorParamsWorkCountryMq, WorkerNewContractorParamsWorkCountryMr, WorkerNewContractorParamsWorkCountryMs, WorkerNewContractorParamsWorkCountryMt, WorkerNewContractorParamsWorkCountryMu, WorkerNewContractorParamsWorkCountryMv, WorkerNewContractorParamsWorkCountryMw, WorkerNewContractorParamsWorkCountryMx, WorkerNewContractorParamsWorkCountryMy, WorkerNewContractorParamsWorkCountryMz, WorkerNewContractorParamsWorkCountryNa, WorkerNewContractorParamsWorkCountryNc, WorkerNewContractorParamsWorkCountryNe, WorkerNewContractorParamsWorkCountryNf, WorkerNewContractorParamsWorkCountryNg, WorkerNewContractorParamsWorkCountryNi, WorkerNewContractorParamsWorkCountryNl, WorkerNewContractorParamsWorkCountryNo, WorkerNewContractorParamsWorkCountryNp, WorkerNewContractorParamsWorkCountryNr, WorkerNewContractorParamsWorkCountryNu, WorkerNewContractorParamsWorkCountryNz, WorkerNewContractorParamsWorkCountryOm, WorkerNewContractorParamsWorkCountryPa, WorkerNewContractorParamsWorkCountryPe, WorkerNewContractorParamsWorkCountryPf, WorkerNewContractorParamsWorkCountryPg, WorkerNewContractorParamsWorkCountryPh, WorkerNewContractorParamsWorkCountryPk, WorkerNewContractorParamsWorkCountryPl, WorkerNewContractorParamsWorkCountryPm, WorkerNewContractorParamsWorkCountryPn, WorkerNewContractorParamsWorkCountryPr, WorkerNewContractorParamsWorkCountryPs, WorkerNewContractorParamsWorkCountryPt, WorkerNewContractorParamsWorkCountryPw, WorkerNewContractorParamsWorkCountryPy, WorkerNewContractorParamsWorkCountryQa, WorkerNewContractorParamsWorkCountryRe, WorkerNewContractorParamsWorkCountryRo, WorkerNewContractorParamsWorkCountryRs, WorkerNewContractorParamsWorkCountryRu, WorkerNewContractorParamsWorkCountryRw, WorkerNewContractorParamsWorkCountrySa, WorkerNewContractorParamsWorkCountrySb, WorkerNewContractorParamsWorkCountrySc, WorkerNewContractorParamsWorkCountrySd, WorkerNewContractorParamsWorkCountrySe, WorkerNewContractorParamsWorkCountrySg, WorkerNewContractorParamsWorkCountrySh, WorkerNewContractorParamsWorkCountrySi, WorkerNewContractorParamsWorkCountrySj, WorkerNewContractorParamsWorkCountrySk, WorkerNewContractorParamsWorkCountrySl, WorkerNewContractorParamsWorkCountrySm, WorkerNewContractorParamsWorkCountrySn, WorkerNewContractorParamsWorkCountrySo, WorkerNewContractorParamsWorkCountrySr, WorkerNewContractorParamsWorkCountrySS, WorkerNewContractorParamsWorkCountrySt, WorkerNewContractorParamsWorkCountrySv, WorkerNewContractorParamsWorkCountrySx, WorkerNewContractorParamsWorkCountrySy, WorkerNewContractorParamsWorkCountrySz, WorkerNewContractorParamsWorkCountryTc, WorkerNewContractorParamsWorkCountryTd, WorkerNewContractorParamsWorkCountryTf, WorkerNewContractorParamsWorkCountryTg, WorkerNewContractorParamsWorkCountryTh, WorkerNewContractorParamsWorkCountryTj, WorkerNewContractorParamsWorkCountryTk, WorkerNewContractorParamsWorkCountryTl, WorkerNewContractorParamsWorkCountryTm, WorkerNewContractorParamsWorkCountryTn, WorkerNewContractorParamsWorkCountryTo, WorkerNewContractorParamsWorkCountryTr, WorkerNewContractorParamsWorkCountryTt, WorkerNewContractorParamsWorkCountryTv, WorkerNewContractorParamsWorkCountryTw, WorkerNewContractorParamsWorkCountryTz, WorkerNewContractorParamsWorkCountryUa, WorkerNewContractorParamsWorkCountryUg, WorkerNewContractorParamsWorkCountryUm, WorkerNewContractorParamsWorkCountryUs, WorkerNewContractorParamsWorkCountryUy, WorkerNewContractorParamsWorkCountryUz, WorkerNewContractorParamsWorkCountryVa, WorkerNewContractorParamsWorkCountryVc, WorkerNewContractorParamsWorkCountryVe, WorkerNewContractorParamsWorkCountryVg, WorkerNewContractorParamsWorkCountryVi, WorkerNewContractorParamsWorkCountryVn, WorkerNewContractorParamsWorkCountryVu, WorkerNewContractorParamsWorkCountryWf, WorkerNewContractorParamsWorkCountryWs, WorkerNewContractorParamsWorkCountryXk, WorkerNewContractorParamsWorkCountryYe, WorkerNewContractorParamsWorkCountryYt, WorkerNewContractorParamsWorkCountryZa, WorkerNewContractorParamsWorkCountryZm, WorkerNewContractorParamsWorkCountryZw:
+		return true
+	}
+	return false
+}
+
 // The pay rate for the contractor. Leave this blank if you'd like to pay this
 // contractor on-demand or via invoicing.
-//
-// The properties Amount, Currency, Per are required.
 type WorkerNewContractorParamsCompensation struct {
 	// a positive number
-	Amount float64 `json:"amount" api:"required"`
-	// Any of "USD", "AUD", "BGN", "BRL", "CAD", "CHF", "CZK", "DKK", "EUR", "GBP",
-	// "HKD", "HUF", "IDR", "INR", "JPY", "MYR", "NOK", "NZD", "CNY", "PLN", "RON",
-	// "TRY", "SEK", "SGD", "AED", "ARS", "BDT", "BWP", "CLP", "COP", "CRC", "EGP",
-	// "FJD", "GEL", "GHS", "ILS", "KES", "KRW", "LKR", "MAD", "MXN", "NPR", "PHP",
-	// "PKR", "THB", "UAH", "UGX", "UYU", "VND", "ZAR", "ZMW", "TND", "NGN", "RSD",
-	// "TWD", "GTQ", "HNL", "DOP", "SAR", "XAF", "PEN".
-	Currency string `json:"currency,omitzero" api:"required"`
+	Amount   param.Field[float64]                                       `json:"amount" api:"required"`
+	Currency param.Field[WorkerNewContractorParamsCompensationCurrency] `json:"currency" api:"required"`
 	// The pay period for the compensation amount.
-	//
-	// Any of "hour", "year", "month", "week".
-	Per string `json:"per,omitzero" api:"required"`
-	paramObj
+	Per param.Field[WorkerNewContractorParamsCompensationPer] `json:"per" api:"required"`
 }
 
 func (r WorkerNewContractorParamsCompensation) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewContractorParamsCompensation
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *WorkerNewContractorParamsCompensation) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return apijson.MarshalRoot(r)
 }
 
-func init() {
-	apijson.RegisterFieldValidator[WorkerNewContractorParamsCompensation](
-		"currency", "USD", "AUD", "BGN", "BRL", "CAD", "CHF", "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "INR", "JPY", "MYR", "NOK", "NZD", "CNY", "PLN", "RON", "TRY", "SEK", "SGD", "AED", "ARS", "BDT", "BWP", "CLP", "COP", "CRC", "EGP", "FJD", "GEL", "GHS", "ILS", "KES", "KRW", "LKR", "MAD", "MXN", "NPR", "PHP", "PKR", "THB", "UAH", "UGX", "UYU", "VND", "ZAR", "ZMW", "TND", "NGN", "RSD", "TWD", "GTQ", "HNL", "DOP", "SAR", "XAF", "PEN",
-	)
-	apijson.RegisterFieldValidator[WorkerNewContractorParamsCompensation](
-		"per", "hour", "year", "month", "week",
-	)
+type WorkerNewContractorParamsCompensationCurrency string
+
+const (
+	WorkerNewContractorParamsCompensationCurrencyUsd WorkerNewContractorParamsCompensationCurrency = "USD"
+	WorkerNewContractorParamsCompensationCurrencyAud WorkerNewContractorParamsCompensationCurrency = "AUD"
+	WorkerNewContractorParamsCompensationCurrencyBgn WorkerNewContractorParamsCompensationCurrency = "BGN"
+	WorkerNewContractorParamsCompensationCurrencyBrl WorkerNewContractorParamsCompensationCurrency = "BRL"
+	WorkerNewContractorParamsCompensationCurrencyCad WorkerNewContractorParamsCompensationCurrency = "CAD"
+	WorkerNewContractorParamsCompensationCurrencyChf WorkerNewContractorParamsCompensationCurrency = "CHF"
+	WorkerNewContractorParamsCompensationCurrencyCzk WorkerNewContractorParamsCompensationCurrency = "CZK"
+	WorkerNewContractorParamsCompensationCurrencyDkk WorkerNewContractorParamsCompensationCurrency = "DKK"
+	WorkerNewContractorParamsCompensationCurrencyEur WorkerNewContractorParamsCompensationCurrency = "EUR"
+	WorkerNewContractorParamsCompensationCurrencyGbp WorkerNewContractorParamsCompensationCurrency = "GBP"
+	WorkerNewContractorParamsCompensationCurrencyHkd WorkerNewContractorParamsCompensationCurrency = "HKD"
+	WorkerNewContractorParamsCompensationCurrencyHuf WorkerNewContractorParamsCompensationCurrency = "HUF"
+	WorkerNewContractorParamsCompensationCurrencyIdr WorkerNewContractorParamsCompensationCurrency = "IDR"
+	WorkerNewContractorParamsCompensationCurrencyInr WorkerNewContractorParamsCompensationCurrency = "INR"
+	WorkerNewContractorParamsCompensationCurrencyJpy WorkerNewContractorParamsCompensationCurrency = "JPY"
+	WorkerNewContractorParamsCompensationCurrencyMyr WorkerNewContractorParamsCompensationCurrency = "MYR"
+	WorkerNewContractorParamsCompensationCurrencyNok WorkerNewContractorParamsCompensationCurrency = "NOK"
+	WorkerNewContractorParamsCompensationCurrencyNzd WorkerNewContractorParamsCompensationCurrency = "NZD"
+	WorkerNewContractorParamsCompensationCurrencyCny WorkerNewContractorParamsCompensationCurrency = "CNY"
+	WorkerNewContractorParamsCompensationCurrencyPln WorkerNewContractorParamsCompensationCurrency = "PLN"
+	WorkerNewContractorParamsCompensationCurrencyRon WorkerNewContractorParamsCompensationCurrency = "RON"
+	WorkerNewContractorParamsCompensationCurrencyTry WorkerNewContractorParamsCompensationCurrency = "TRY"
+	WorkerNewContractorParamsCompensationCurrencySek WorkerNewContractorParamsCompensationCurrency = "SEK"
+	WorkerNewContractorParamsCompensationCurrencySgd WorkerNewContractorParamsCompensationCurrency = "SGD"
+	WorkerNewContractorParamsCompensationCurrencyAed WorkerNewContractorParamsCompensationCurrency = "AED"
+	WorkerNewContractorParamsCompensationCurrencyArs WorkerNewContractorParamsCompensationCurrency = "ARS"
+	WorkerNewContractorParamsCompensationCurrencyBdt WorkerNewContractorParamsCompensationCurrency = "BDT"
+	WorkerNewContractorParamsCompensationCurrencyBwp WorkerNewContractorParamsCompensationCurrency = "BWP"
+	WorkerNewContractorParamsCompensationCurrencyClp WorkerNewContractorParamsCompensationCurrency = "CLP"
+	WorkerNewContractorParamsCompensationCurrencyCop WorkerNewContractorParamsCompensationCurrency = "COP"
+	WorkerNewContractorParamsCompensationCurrencyCrc WorkerNewContractorParamsCompensationCurrency = "CRC"
+	WorkerNewContractorParamsCompensationCurrencyEgp WorkerNewContractorParamsCompensationCurrency = "EGP"
+	WorkerNewContractorParamsCompensationCurrencyFjd WorkerNewContractorParamsCompensationCurrency = "FJD"
+	WorkerNewContractorParamsCompensationCurrencyGel WorkerNewContractorParamsCompensationCurrency = "GEL"
+	WorkerNewContractorParamsCompensationCurrencyGhs WorkerNewContractorParamsCompensationCurrency = "GHS"
+	WorkerNewContractorParamsCompensationCurrencyIls WorkerNewContractorParamsCompensationCurrency = "ILS"
+	WorkerNewContractorParamsCompensationCurrencyKes WorkerNewContractorParamsCompensationCurrency = "KES"
+	WorkerNewContractorParamsCompensationCurrencyKrw WorkerNewContractorParamsCompensationCurrency = "KRW"
+	WorkerNewContractorParamsCompensationCurrencyLkr WorkerNewContractorParamsCompensationCurrency = "LKR"
+	WorkerNewContractorParamsCompensationCurrencyMad WorkerNewContractorParamsCompensationCurrency = "MAD"
+	WorkerNewContractorParamsCompensationCurrencyMxn WorkerNewContractorParamsCompensationCurrency = "MXN"
+	WorkerNewContractorParamsCompensationCurrencyNpr WorkerNewContractorParamsCompensationCurrency = "NPR"
+	WorkerNewContractorParamsCompensationCurrencyPhp WorkerNewContractorParamsCompensationCurrency = "PHP"
+	WorkerNewContractorParamsCompensationCurrencyPkr WorkerNewContractorParamsCompensationCurrency = "PKR"
+	WorkerNewContractorParamsCompensationCurrencyThb WorkerNewContractorParamsCompensationCurrency = "THB"
+	WorkerNewContractorParamsCompensationCurrencyUah WorkerNewContractorParamsCompensationCurrency = "UAH"
+	WorkerNewContractorParamsCompensationCurrencyUgx WorkerNewContractorParamsCompensationCurrency = "UGX"
+	WorkerNewContractorParamsCompensationCurrencyUyu WorkerNewContractorParamsCompensationCurrency = "UYU"
+	WorkerNewContractorParamsCompensationCurrencyVnd WorkerNewContractorParamsCompensationCurrency = "VND"
+	WorkerNewContractorParamsCompensationCurrencyZar WorkerNewContractorParamsCompensationCurrency = "ZAR"
+	WorkerNewContractorParamsCompensationCurrencyZmw WorkerNewContractorParamsCompensationCurrency = "ZMW"
+	WorkerNewContractorParamsCompensationCurrencyTnd WorkerNewContractorParamsCompensationCurrency = "TND"
+	WorkerNewContractorParamsCompensationCurrencyNgn WorkerNewContractorParamsCompensationCurrency = "NGN"
+	WorkerNewContractorParamsCompensationCurrencyRsd WorkerNewContractorParamsCompensationCurrency = "RSD"
+	WorkerNewContractorParamsCompensationCurrencyTwd WorkerNewContractorParamsCompensationCurrency = "TWD"
+	WorkerNewContractorParamsCompensationCurrencyGtq WorkerNewContractorParamsCompensationCurrency = "GTQ"
+	WorkerNewContractorParamsCompensationCurrencyHnl WorkerNewContractorParamsCompensationCurrency = "HNL"
+	WorkerNewContractorParamsCompensationCurrencyDop WorkerNewContractorParamsCompensationCurrency = "DOP"
+	WorkerNewContractorParamsCompensationCurrencySar WorkerNewContractorParamsCompensationCurrency = "SAR"
+	WorkerNewContractorParamsCompensationCurrencyXaf WorkerNewContractorParamsCompensationCurrency = "XAF"
+	WorkerNewContractorParamsCompensationCurrencyPen WorkerNewContractorParamsCompensationCurrency = "PEN"
+)
+
+func (r WorkerNewContractorParamsCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorParamsCompensationCurrencyUsd, WorkerNewContractorParamsCompensationCurrencyAud, WorkerNewContractorParamsCompensationCurrencyBgn, WorkerNewContractorParamsCompensationCurrencyBrl, WorkerNewContractorParamsCompensationCurrencyCad, WorkerNewContractorParamsCompensationCurrencyChf, WorkerNewContractorParamsCompensationCurrencyCzk, WorkerNewContractorParamsCompensationCurrencyDkk, WorkerNewContractorParamsCompensationCurrencyEur, WorkerNewContractorParamsCompensationCurrencyGbp, WorkerNewContractorParamsCompensationCurrencyHkd, WorkerNewContractorParamsCompensationCurrencyHuf, WorkerNewContractorParamsCompensationCurrencyIdr, WorkerNewContractorParamsCompensationCurrencyInr, WorkerNewContractorParamsCompensationCurrencyJpy, WorkerNewContractorParamsCompensationCurrencyMyr, WorkerNewContractorParamsCompensationCurrencyNok, WorkerNewContractorParamsCompensationCurrencyNzd, WorkerNewContractorParamsCompensationCurrencyCny, WorkerNewContractorParamsCompensationCurrencyPln, WorkerNewContractorParamsCompensationCurrencyRon, WorkerNewContractorParamsCompensationCurrencyTry, WorkerNewContractorParamsCompensationCurrencySek, WorkerNewContractorParamsCompensationCurrencySgd, WorkerNewContractorParamsCompensationCurrencyAed, WorkerNewContractorParamsCompensationCurrencyArs, WorkerNewContractorParamsCompensationCurrencyBdt, WorkerNewContractorParamsCompensationCurrencyBwp, WorkerNewContractorParamsCompensationCurrencyClp, WorkerNewContractorParamsCompensationCurrencyCop, WorkerNewContractorParamsCompensationCurrencyCrc, WorkerNewContractorParamsCompensationCurrencyEgp, WorkerNewContractorParamsCompensationCurrencyFjd, WorkerNewContractorParamsCompensationCurrencyGel, WorkerNewContractorParamsCompensationCurrencyGhs, WorkerNewContractorParamsCompensationCurrencyIls, WorkerNewContractorParamsCompensationCurrencyKes, WorkerNewContractorParamsCompensationCurrencyKrw, WorkerNewContractorParamsCompensationCurrencyLkr, WorkerNewContractorParamsCompensationCurrencyMad, WorkerNewContractorParamsCompensationCurrencyMxn, WorkerNewContractorParamsCompensationCurrencyNpr, WorkerNewContractorParamsCompensationCurrencyPhp, WorkerNewContractorParamsCompensationCurrencyPkr, WorkerNewContractorParamsCompensationCurrencyThb, WorkerNewContractorParamsCompensationCurrencyUah, WorkerNewContractorParamsCompensationCurrencyUgx, WorkerNewContractorParamsCompensationCurrencyUyu, WorkerNewContractorParamsCompensationCurrencyVnd, WorkerNewContractorParamsCompensationCurrencyZar, WorkerNewContractorParamsCompensationCurrencyZmw, WorkerNewContractorParamsCompensationCurrencyTnd, WorkerNewContractorParamsCompensationCurrencyNgn, WorkerNewContractorParamsCompensationCurrencyRsd, WorkerNewContractorParamsCompensationCurrencyTwd, WorkerNewContractorParamsCompensationCurrencyGtq, WorkerNewContractorParamsCompensationCurrencyHnl, WorkerNewContractorParamsCompensationCurrencyDop, WorkerNewContractorParamsCompensationCurrencySar, WorkerNewContractorParamsCompensationCurrencyXaf, WorkerNewContractorParamsCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
+// The pay period for the compensation amount.
+type WorkerNewContractorParamsCompensationPer string
+
+const (
+	WorkerNewContractorParamsCompensationPerHour  WorkerNewContractorParamsCompensationPer = "hour"
+	WorkerNewContractorParamsCompensationPerYear  WorkerNewContractorParamsCompensationPer = "year"
+	WorkerNewContractorParamsCompensationPerMonth WorkerNewContractorParamsCompensationPer = "month"
+	WorkerNewContractorParamsCompensationPerWeek  WorkerNewContractorParamsCompensationPer = "week"
+)
+
+func (r WorkerNewContractorParamsCompensationPer) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorParamsCompensationPerHour, WorkerNewContractorParamsCompensationPerYear, WorkerNewContractorParamsCompensationPerMonth, WorkerNewContractorParamsCompensationPerWeek:
+		return true
+	}
+	return false
 }
 
 // The contractor's pay schedule. Must be a pay schedule that the company has
@@ -1004,155 +1209,308 @@ const (
 	WorkerNewContractorParamsPayScheduleAnnually    WorkerNewContractorParamsPaySchedule = "annually"
 )
 
+func (r WorkerNewContractorParamsPaySchedule) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorParamsPayScheduleWeekly, WorkerNewContractorParamsPayScheduleBiweekly, WorkerNewContractorParamsPayScheduleMonthly, WorkerNewContractorParamsPayScheduleSemimonthly, WorkerNewContractorParamsPayScheduleQuarterly, WorkerNewContractorParamsPayScheduleAnnually:
+		return true
+	}
+	return false
+}
+
 type WorkerNewEmployeeParams struct {
 	// The employee's base compensation.
-	Compensation WorkerNewEmployeeParamsCompensation `json:"compensation,omitzero" api:"required"`
+	Compensation param.Field[WorkerNewEmployeeParamsCompensation] `json:"compensation" api:"required"`
 	// The department to assign this employee to.
-	DepartmentID string `json:"departmentId" api:"required"`
+	DepartmentID param.Field[string] `json:"departmentId" api:"required"`
 	// Personal email address. The invite will be sent here.
-	Email string `json:"email" api:"required"`
+	Email param.Field[string] `json:"email" api:"required"`
 	// a non empty string
-	FirstName string `json:"firstName" api:"required"`
+	FirstName param.Field[string] `json:"firstName" api:"required"`
 	// a non empty string
-	LastName string `json:"lastName" api:"required"`
+	LastName param.Field[string] `json:"lastName" api:"required"`
 	// The worker id of this employee's direct manager.
-	ManagerID string `json:"managerId" api:"required"`
+	ManagerID param.Field[string] `json:"managerId" api:"required"`
 	// The employee's job title.
-	Position string `json:"position" api:"required"`
+	Position param.Field[string] `json:"position" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
+	StartDate param.Field[string] `json:"startDate" api:"required"`
 	// Where the employee will work. Either an existing company workplace or a remote
 	// US state.
-	WorkLocation WorkerNewEmployeeParamsWorkLocationUnion `json:"workLocation,omitzero" api:"required"`
-	// a non-negative number
-	StockOptions param.Opt[float64] `json:"stockOptions,omitzero"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
-	WorkEmail param.Opt[string] `json:"workEmail,omitzero"`
-	// Whether the employee is required to complete I-9 work authorization. Set to
-	// false if the employee has already been verified off-platform. Defaults to true.
-	RequireI9 param.Opt[bool] `json:"requireI9,omitzero"`
+	WorkLocation param.Field[WorkerNewEmployeeParamsWorkLocationUnion] `json:"workLocation" api:"required"`
 	// The employee's pay schedule. Must be a pay schedule that the company has
 	// configured.
-	//
-	// Any of "weekly", "biweekly", "monthly", "semimonthly", "quarterly", "annually".
-	PaySchedule WorkerNewEmployeeParamsPaySchedule `json:"paySchedule,omitzero"`
+	PaySchedule param.Field[WorkerNewEmployeeParamsPaySchedule] `json:"paySchedule"`
+	// Whether the employee is required to complete I-9 work authorization. Set to
+	// false if the employee has already been verified off-platform. Defaults to true.
+	RequireI9 param.Field[bool] `json:"requireI9"`
 	// How state tax registration is handled for this employee's work state. Required
 	// when hiring in a state where your company doesn't have an existing registration.
 	// Use 'self_managed' if you've already registered in this state, or 'warp_managed'
 	// for Warp to handle registration on your behalf.
-	//
-	// Any of "self_managed", "warp_managed".
-	StateRegistration WorkerNewEmployeeParamsStateRegistration `json:"stateRegistration,omitzero"`
-	paramObj
+	StateRegistration param.Field[WorkerNewEmployeeParamsStateRegistration] `json:"stateRegistration"`
+	// a non-negative number
+	StockOptions param.Field[float64] `json:"stockOptions"`
+	// An email with a reasonably valid regex (shamelessly taken from zod)
+	WorkEmail param.Field[string] `json:"workEmail"`
 }
 
 func (r WorkerNewEmployeeParams) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewEmployeeParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *WorkerNewEmployeeParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return apijson.MarshalRoot(r)
 }
 
 // The employee's base compensation.
-//
-// The properties Amount, Per are required.
 type WorkerNewEmployeeParamsCompensation struct {
 	// a positive number
-	Amount float64 `json:"amount" api:"required"`
+	Amount param.Field[float64] `json:"amount" api:"required"`
 	// Whether the amount is per hour or per year.
-	//
-	// Any of "hour", "year".
-	Per string `json:"per,omitzero" api:"required"`
-	paramObj
+	Per param.Field[WorkerNewEmployeeParamsCompensationPer] `json:"per" api:"required"`
 }
 
 func (r WorkerNewEmployeeParamsCompensation) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewEmployeeParamsCompensation
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *WorkerNewEmployeeParamsCompensation) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return apijson.MarshalRoot(r)
 }
 
-func init() {
-	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsCompensation](
-		"per", "hour", "year",
-	)
+// Whether the amount is per hour or per year.
+type WorkerNewEmployeeParamsCompensationPer string
+
+const (
+	WorkerNewEmployeeParamsCompensationPerHour WorkerNewEmployeeParamsCompensationPer = "hour"
+	WorkerNewEmployeeParamsCompensationPerYear WorkerNewEmployeeParamsCompensationPer = "year"
+)
+
+func (r WorkerNewEmployeeParamsCompensationPer) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsCompensationPerHour, WorkerNewEmployeeParamsCompensationPerYear:
+		return true
+	}
+	return false
 }
 
-// Only one field can be non-zero.
+// Where the employee will work. Either an existing company workplace or a remote
+// US state.
+type WorkerNewEmployeeParamsWorkLocation struct {
+	Type param.Field[WorkerNewEmployeeParamsWorkLocationType] `json:"type" api:"required"`
+	// The US state where the remote employee works. Required for tax purposes.
+	State param.Field[WorkerNewEmployeeParamsWorkLocationState] `json:"state"`
+	// Public workplace identifier
+	WorkplaceID param.Field[string] `json:"workplaceId"`
+}
+
+func (r WorkerNewEmployeeParamsWorkLocation) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+func (r WorkerNewEmployeeParamsWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {}
+
+// Where the employee will work. Either an existing company workplace or a remote
+// US state.
 //
-// Use [param.IsOmitted] to confirm if a field is set.
-type WorkerNewEmployeeParamsWorkLocationUnion struct {
-	OfWorkerNewEmployeesWorkLocationOfficeWorkLocation *WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation `json:",omitzero,inline"`
-	OfWorkerNewEmployeesWorkLocationRemoteWorkLocation *WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u WorkerNewEmployeeParamsWorkLocationUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfWorkerNewEmployeesWorkLocationOfficeWorkLocation, u.OfWorkerNewEmployeesWorkLocationRemoteWorkLocation)
-}
-func (u *WorkerNewEmployeeParamsWorkLocationUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
+// Satisfied by [WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation],
+// [WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation],
+// [WorkerNewEmployeeParamsWorkLocation].
+type WorkerNewEmployeeParamsWorkLocationUnion interface {
+	implementsWorkerNewEmployeeParamsWorkLocationUnion()
 }
 
 // Employee works from a company workplace.
-//
-// The properties Type, WorkplaceID are required.
 type WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation struct {
-	// Any of "office".
-	Type string `json:"type,omitzero" api:"required"`
+	Type param.Field[WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType] `json:"type" api:"required"`
 	// Public workplace identifier
-	WorkplaceID string `json:"workplaceId" api:"required"`
-	paramObj
+	WorkplaceID param.Field[string] `json:"workplaceId" api:"required"`
 }
 
 func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return apijson.MarshalRoot(r)
 }
 
-func init() {
-	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation](
-		"type", "office",
-	)
+func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {
+}
+
+type WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType string
+
+const (
+	WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationTypeOffice WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType = "office"
+)
+
+func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationTypeOffice:
+		return true
+	}
+	return false
 }
 
 // Employee works remotely from a US state.
-//
-// The properties State, Type are required.
 type WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation struct {
 	// The US state where the remote employee works. Required for tax purposes.
-	//
-	// Any of "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
-	// "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
-	// "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR",
-	// "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY".
-	State string `json:"state,omitzero" api:"required"`
-	// Any of "remote".
-	Type string `json:"type,omitzero" api:"required"`
-	paramObj
+	State param.Field[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState] `json:"state" api:"required"`
+	Type  param.Field[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationType]  `json:"type" api:"required"`
 }
 
 func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) MarshalJSON() (data []byte, err error) {
-	type shadow WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
+	return apijson.MarshalRoot(r)
 }
 
-func init() {
-	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation](
-		"state", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
-	)
-	apijson.RegisterFieldValidator[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation](
-		"type", "remote",
-	)
+func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {
+}
+
+// The US state where the remote employee works. Required for tax purposes.
+type WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState string
+
+const (
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAl WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "AL"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAk WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "AK"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAz WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "AZ"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAr WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "AR"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateCa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "CA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateCo WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "CO"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateCt WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "CT"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateDc WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "DC"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateDe WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "DE"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateFl WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "FL"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateGa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "GA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateHi WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "HI"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateID WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "ID"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateIl WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "IL"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateIn WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "IN"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateIa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "IA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateKs WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "KS"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateKy WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "KY"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateLa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "LA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMe WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "ME"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMd WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MD"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMi WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MI"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMn WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MN"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMs WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MS"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMo WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MO"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMt WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "MT"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNe WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NE"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNv WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NV"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNh WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NH"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNj WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NJ"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNm WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NM"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNy WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NY"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNc WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "NC"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNd WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "ND"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateOh WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "OH"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateOk WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "OK"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateOr WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "OR"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStatePa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "PA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateRi WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "RI"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateSc WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "SC"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateSd WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "SD"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateTn WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "TN"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateTx WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "TX"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateUt WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "UT"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateVt WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "VT"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateVa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "VA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWa WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "WA"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWv WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "WV"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWi WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "WI"
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWy WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState = "WY"
+)
+
+func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAl, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAk, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAz, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateAr, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateCa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateCo, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateCt, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateDc, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateDe, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateFl, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateGa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateHi, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateID, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateIl, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateIn, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateIa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateKs, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateKy, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateLa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMe, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMd, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMi, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMn, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMs, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMo, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateMt, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNe, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNv, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNh, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNj, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNm, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNy, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNc, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateNd, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateOh, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateOk, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateOr, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStatePa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateRi, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateSc, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateSd, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateTn, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateTx, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateUt, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateVt, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateVa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWa, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWv, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWi, WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationType string
+
+const (
+	WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationTypeRemote WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationType = "remote"
+)
+
+func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationType) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationTypeRemote:
+		return true
+	}
+	return false
+}
+
+type WorkerNewEmployeeParamsWorkLocationType string
+
+const (
+	WorkerNewEmployeeParamsWorkLocationTypeOffice WorkerNewEmployeeParamsWorkLocationType = "office"
+	WorkerNewEmployeeParamsWorkLocationTypeRemote WorkerNewEmployeeParamsWorkLocationType = "remote"
+)
+
+func (r WorkerNewEmployeeParamsWorkLocationType) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsWorkLocationTypeOffice, WorkerNewEmployeeParamsWorkLocationTypeRemote:
+		return true
+	}
+	return false
+}
+
+// The US state where the remote employee works. Required for tax purposes.
+type WorkerNewEmployeeParamsWorkLocationState string
+
+const (
+	WorkerNewEmployeeParamsWorkLocationStateAl WorkerNewEmployeeParamsWorkLocationState = "AL"
+	WorkerNewEmployeeParamsWorkLocationStateAk WorkerNewEmployeeParamsWorkLocationState = "AK"
+	WorkerNewEmployeeParamsWorkLocationStateAz WorkerNewEmployeeParamsWorkLocationState = "AZ"
+	WorkerNewEmployeeParamsWorkLocationStateAr WorkerNewEmployeeParamsWorkLocationState = "AR"
+	WorkerNewEmployeeParamsWorkLocationStateCa WorkerNewEmployeeParamsWorkLocationState = "CA"
+	WorkerNewEmployeeParamsWorkLocationStateCo WorkerNewEmployeeParamsWorkLocationState = "CO"
+	WorkerNewEmployeeParamsWorkLocationStateCt WorkerNewEmployeeParamsWorkLocationState = "CT"
+	WorkerNewEmployeeParamsWorkLocationStateDc WorkerNewEmployeeParamsWorkLocationState = "DC"
+	WorkerNewEmployeeParamsWorkLocationStateDe WorkerNewEmployeeParamsWorkLocationState = "DE"
+	WorkerNewEmployeeParamsWorkLocationStateFl WorkerNewEmployeeParamsWorkLocationState = "FL"
+	WorkerNewEmployeeParamsWorkLocationStateGa WorkerNewEmployeeParamsWorkLocationState = "GA"
+	WorkerNewEmployeeParamsWorkLocationStateHi WorkerNewEmployeeParamsWorkLocationState = "HI"
+	WorkerNewEmployeeParamsWorkLocationStateID WorkerNewEmployeeParamsWorkLocationState = "ID"
+	WorkerNewEmployeeParamsWorkLocationStateIl WorkerNewEmployeeParamsWorkLocationState = "IL"
+	WorkerNewEmployeeParamsWorkLocationStateIn WorkerNewEmployeeParamsWorkLocationState = "IN"
+	WorkerNewEmployeeParamsWorkLocationStateIa WorkerNewEmployeeParamsWorkLocationState = "IA"
+	WorkerNewEmployeeParamsWorkLocationStateKs WorkerNewEmployeeParamsWorkLocationState = "KS"
+	WorkerNewEmployeeParamsWorkLocationStateKy WorkerNewEmployeeParamsWorkLocationState = "KY"
+	WorkerNewEmployeeParamsWorkLocationStateLa WorkerNewEmployeeParamsWorkLocationState = "LA"
+	WorkerNewEmployeeParamsWorkLocationStateMe WorkerNewEmployeeParamsWorkLocationState = "ME"
+	WorkerNewEmployeeParamsWorkLocationStateMd WorkerNewEmployeeParamsWorkLocationState = "MD"
+	WorkerNewEmployeeParamsWorkLocationStateMa WorkerNewEmployeeParamsWorkLocationState = "MA"
+	WorkerNewEmployeeParamsWorkLocationStateMi WorkerNewEmployeeParamsWorkLocationState = "MI"
+	WorkerNewEmployeeParamsWorkLocationStateMn WorkerNewEmployeeParamsWorkLocationState = "MN"
+	WorkerNewEmployeeParamsWorkLocationStateMs WorkerNewEmployeeParamsWorkLocationState = "MS"
+	WorkerNewEmployeeParamsWorkLocationStateMo WorkerNewEmployeeParamsWorkLocationState = "MO"
+	WorkerNewEmployeeParamsWorkLocationStateMt WorkerNewEmployeeParamsWorkLocationState = "MT"
+	WorkerNewEmployeeParamsWorkLocationStateNe WorkerNewEmployeeParamsWorkLocationState = "NE"
+	WorkerNewEmployeeParamsWorkLocationStateNv WorkerNewEmployeeParamsWorkLocationState = "NV"
+	WorkerNewEmployeeParamsWorkLocationStateNh WorkerNewEmployeeParamsWorkLocationState = "NH"
+	WorkerNewEmployeeParamsWorkLocationStateNj WorkerNewEmployeeParamsWorkLocationState = "NJ"
+	WorkerNewEmployeeParamsWorkLocationStateNm WorkerNewEmployeeParamsWorkLocationState = "NM"
+	WorkerNewEmployeeParamsWorkLocationStateNy WorkerNewEmployeeParamsWorkLocationState = "NY"
+	WorkerNewEmployeeParamsWorkLocationStateNc WorkerNewEmployeeParamsWorkLocationState = "NC"
+	WorkerNewEmployeeParamsWorkLocationStateNd WorkerNewEmployeeParamsWorkLocationState = "ND"
+	WorkerNewEmployeeParamsWorkLocationStateOh WorkerNewEmployeeParamsWorkLocationState = "OH"
+	WorkerNewEmployeeParamsWorkLocationStateOk WorkerNewEmployeeParamsWorkLocationState = "OK"
+	WorkerNewEmployeeParamsWorkLocationStateOr WorkerNewEmployeeParamsWorkLocationState = "OR"
+	WorkerNewEmployeeParamsWorkLocationStatePa WorkerNewEmployeeParamsWorkLocationState = "PA"
+	WorkerNewEmployeeParamsWorkLocationStateRi WorkerNewEmployeeParamsWorkLocationState = "RI"
+	WorkerNewEmployeeParamsWorkLocationStateSc WorkerNewEmployeeParamsWorkLocationState = "SC"
+	WorkerNewEmployeeParamsWorkLocationStateSd WorkerNewEmployeeParamsWorkLocationState = "SD"
+	WorkerNewEmployeeParamsWorkLocationStateTn WorkerNewEmployeeParamsWorkLocationState = "TN"
+	WorkerNewEmployeeParamsWorkLocationStateTx WorkerNewEmployeeParamsWorkLocationState = "TX"
+	WorkerNewEmployeeParamsWorkLocationStateUt WorkerNewEmployeeParamsWorkLocationState = "UT"
+	WorkerNewEmployeeParamsWorkLocationStateVt WorkerNewEmployeeParamsWorkLocationState = "VT"
+	WorkerNewEmployeeParamsWorkLocationStateVa WorkerNewEmployeeParamsWorkLocationState = "VA"
+	WorkerNewEmployeeParamsWorkLocationStateWa WorkerNewEmployeeParamsWorkLocationState = "WA"
+	WorkerNewEmployeeParamsWorkLocationStateWv WorkerNewEmployeeParamsWorkLocationState = "WV"
+	WorkerNewEmployeeParamsWorkLocationStateWi WorkerNewEmployeeParamsWorkLocationState = "WI"
+	WorkerNewEmployeeParamsWorkLocationStateWy WorkerNewEmployeeParamsWorkLocationState = "WY"
+)
+
+func (r WorkerNewEmployeeParamsWorkLocationState) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsWorkLocationStateAl, WorkerNewEmployeeParamsWorkLocationStateAk, WorkerNewEmployeeParamsWorkLocationStateAz, WorkerNewEmployeeParamsWorkLocationStateAr, WorkerNewEmployeeParamsWorkLocationStateCa, WorkerNewEmployeeParamsWorkLocationStateCo, WorkerNewEmployeeParamsWorkLocationStateCt, WorkerNewEmployeeParamsWorkLocationStateDc, WorkerNewEmployeeParamsWorkLocationStateDe, WorkerNewEmployeeParamsWorkLocationStateFl, WorkerNewEmployeeParamsWorkLocationStateGa, WorkerNewEmployeeParamsWorkLocationStateHi, WorkerNewEmployeeParamsWorkLocationStateID, WorkerNewEmployeeParamsWorkLocationStateIl, WorkerNewEmployeeParamsWorkLocationStateIn, WorkerNewEmployeeParamsWorkLocationStateIa, WorkerNewEmployeeParamsWorkLocationStateKs, WorkerNewEmployeeParamsWorkLocationStateKy, WorkerNewEmployeeParamsWorkLocationStateLa, WorkerNewEmployeeParamsWorkLocationStateMe, WorkerNewEmployeeParamsWorkLocationStateMd, WorkerNewEmployeeParamsWorkLocationStateMa, WorkerNewEmployeeParamsWorkLocationStateMi, WorkerNewEmployeeParamsWorkLocationStateMn, WorkerNewEmployeeParamsWorkLocationStateMs, WorkerNewEmployeeParamsWorkLocationStateMo, WorkerNewEmployeeParamsWorkLocationStateMt, WorkerNewEmployeeParamsWorkLocationStateNe, WorkerNewEmployeeParamsWorkLocationStateNv, WorkerNewEmployeeParamsWorkLocationStateNh, WorkerNewEmployeeParamsWorkLocationStateNj, WorkerNewEmployeeParamsWorkLocationStateNm, WorkerNewEmployeeParamsWorkLocationStateNy, WorkerNewEmployeeParamsWorkLocationStateNc, WorkerNewEmployeeParamsWorkLocationStateNd, WorkerNewEmployeeParamsWorkLocationStateOh, WorkerNewEmployeeParamsWorkLocationStateOk, WorkerNewEmployeeParamsWorkLocationStateOr, WorkerNewEmployeeParamsWorkLocationStatePa, WorkerNewEmployeeParamsWorkLocationStateRi, WorkerNewEmployeeParamsWorkLocationStateSc, WorkerNewEmployeeParamsWorkLocationStateSd, WorkerNewEmployeeParamsWorkLocationStateTn, WorkerNewEmployeeParamsWorkLocationStateTx, WorkerNewEmployeeParamsWorkLocationStateUt, WorkerNewEmployeeParamsWorkLocationStateVt, WorkerNewEmployeeParamsWorkLocationStateVa, WorkerNewEmployeeParamsWorkLocationStateWa, WorkerNewEmployeeParamsWorkLocationStateWv, WorkerNewEmployeeParamsWorkLocationStateWi, WorkerNewEmployeeParamsWorkLocationStateWy:
+		return true
+	}
+	return false
 }
 
 // The employee's pay schedule. Must be a pay schedule that the company has
@@ -1168,6 +1526,14 @@ const (
 	WorkerNewEmployeeParamsPayScheduleAnnually    WorkerNewEmployeeParamsPaySchedule = "annually"
 )
 
+func (r WorkerNewEmployeeParamsPaySchedule) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsPayScheduleWeekly, WorkerNewEmployeeParamsPayScheduleBiweekly, WorkerNewEmployeeParamsPayScheduleMonthly, WorkerNewEmployeeParamsPayScheduleSemimonthly, WorkerNewEmployeeParamsPayScheduleQuarterly, WorkerNewEmployeeParamsPayScheduleAnnually:
+		return true
+	}
+	return false
+}
+
 // How state tax registration is handled for this employee's work state. Required
 // when hiring in a state where your company doesn't have an existing registration.
 // Use 'self_managed' if you've already registered in this state, or 'warp_managed'
@@ -1178,3 +1544,11 @@ const (
 	WorkerNewEmployeeParamsStateRegistrationSelfManaged WorkerNewEmployeeParamsStateRegistration = "self_managed"
 	WorkerNewEmployeeParamsStateRegistrationWarpManaged WorkerNewEmployeeParamsStateRegistration = "warp_managed"
 )
+
+func (r WorkerNewEmployeeParamsStateRegistration) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeParamsStateRegistrationSelfManaged, WorkerNewEmployeeParamsStateRegistrationWarpManaged:
+		return true
+	}
+	return false
+}

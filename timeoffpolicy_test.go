@@ -50,9 +50,9 @@ func TestTimeOffPolicyListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.TimeOff.Policies.List(context.TODO(), warphr.TimeOffPolicyListParams{
-		AfterID:  warphr.String("top_1234"),
-		BeforeID: warphr.String("top_1234"),
-		Limit:    warphr.String("limit"),
+		AfterID:  warphr.F("top_1234"),
+		BeforeID: warphr.F("top_1234"),
+		Limit:    warphr.F("limit"),
 	})
 	if err != nil {
 		var apierr *warphr.Error

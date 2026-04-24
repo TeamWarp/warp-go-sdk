@@ -16,19 +16,19 @@ import (
 // interacting with the warp API. You should not instantiate this client directly,
 // and instead use the [NewClient] method instead.
 type Client struct {
-	options []option.RequestOption
+	Options []option.RequestOption
 	// Endpoints for worker time off management. See time off requests, which workers
 	// are assigned to which policies, or worker remaining balances.
-	TimeOff TimeOffService
+	TimeOff *TimeOffService
 	// Endpoints for worker management. "Workers" include anyone employed by your
 	// company, whether US or international, full-time employees or contractors.
-	Workers WorkerService
+	Workers *WorkerService
 	// Endpoints for department management. Create, list, and update departments within
 	// your company.
-	Departments DepartmentService
+	Departments *DepartmentService
 	// Endpoints for workplace management. Create, list, and update workplaces within
 	// your company.
-	Workplaces WorkplaceService
+	Workplaces *WorkplaceService
 }
 
 // DefaultClientOptions read from the environment (WARP_API_KEY, WARP_BASE_URL).
@@ -48,10 +48,10 @@ func DefaultClientOptions() []option.RequestOption {
 // environment (WARP_API_KEY, WARP_BASE_URL). The option passed in as arguments are
 // applied after these default arguments, and all option will be passed down to the
 // services and requests that this client makes.
-func NewClient(opts ...option.RequestOption) (r Client) {
+func NewClient(opts ...option.RequestOption) (r *Client) {
 	opts = append(DefaultClientOptions(), opts...)
 
-	r = Client{options: opts}
+	r = &Client{Options: opts}
 
 	r.TimeOff = NewTimeOffService(opts...)
 	r.Workers = NewWorkerService(opts...)
@@ -92,40 +92,40 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 //
 // For even greater flexibility, see [option.WithResponseInto] and
 // [option.WithResponseBodyInto].
-func (r *Client) Execute(ctx context.Context, method string, path string, params any, res any, opts ...option.RequestOption) error {
-	opts = slices.Concat(r.options, opts)
+func (r *Client) Execute(ctx context.Context, method string, path string, params interface{}, res interface{}, opts ...option.RequestOption) error {
+	opts = slices.Concat(r.Options, opts)
 	return requestconfig.ExecuteNewRequest(ctx, method, path, params, res, opts...)
 }
 
 // Get makes a GET request with the given URL, params, and optionally deserializes
 // to a response. See [Execute] documentation on the params and response.
-func (r *Client) Get(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
+func (r *Client) Get(ctx context.Context, path string, params interface{}, res interface{}, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodGet, path, params, res, opts...)
 }
 
 // Post makes a POST request with the given URL, params, and optionally
 // deserializes to a response. See [Execute] documentation on the params and
 // response.
-func (r *Client) Post(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
+func (r *Client) Post(ctx context.Context, path string, params interface{}, res interface{}, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodPost, path, params, res, opts...)
 }
 
 // Put makes a PUT request with the given URL, params, and optionally deserializes
 // to a response. See [Execute] documentation on the params and response.
-func (r *Client) Put(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
+func (r *Client) Put(ctx context.Context, path string, params interface{}, res interface{}, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodPut, path, params, res, opts...)
 }
 
 // Patch makes a PATCH request with the given URL, params, and optionally
 // deserializes to a response. See [Execute] documentation on the params and
 // response.
-func (r *Client) Patch(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
+func (r *Client) Patch(ctx context.Context, path string, params interface{}, res interface{}, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodPatch, path, params, res, opts...)
 }
 
 // Delete makes a DELETE request with the given URL, params, and optionally
 // deserializes to a response. See [Execute] documentation on the params and
 // response.
-func (r *Client) Delete(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
+func (r *Client) Delete(ctx context.Context, path string, params interface{}, res interface{}, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodDelete, path, params, res, opts...)
 }

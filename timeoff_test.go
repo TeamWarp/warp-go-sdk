@@ -27,11 +27,11 @@ func TestTimeOffListAssignmentsWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.TimeOff.ListAssignments(context.TODO(), warphr.TimeOffListAssignmentsParams{
-		AfterID:   warphr.String("afterId"),
-		BeforeID:  warphr.String("beforeId"),
-		Limit:     warphr.String("limit"),
-		PolicyIDs: []string{"top_1234"},
-		WorkerIDs: []string{"wrk_1234"},
+		AfterID:   warphr.F("afterId"),
+		BeforeID:  warphr.F("beforeId"),
+		Limit:     warphr.F("limit"),
+		PolicyIDs: warphr.F([]string{"top_1234"}),
+		WorkerIDs: warphr.F([]string{"wrk_1234"}),
 	})
 	if err != nil {
 		var apierr *warphr.Error
@@ -56,13 +56,13 @@ func TestTimeOffListBalancesWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.TimeOff.ListBalances(context.TODO(), warphr.TimeOffListBalancesParams{
-		AfterID:   warphr.String("afterId"),
-		BeforeID:  warphr.String("beforeId"),
-		EndDate:   warphr.String("endDate"),
-		Limit:     warphr.String("limit"),
-		PolicyIDs: []string{"top_1234"},
-		StartDate: warphr.String("startDate"),
-		WorkerIDs: []string{"wrk_1234"},
+		AfterID:   warphr.F("afterId"),
+		BeforeID:  warphr.F("beforeId"),
+		EndDate:   warphr.F("endDate"),
+		Limit:     warphr.F("limit"),
+		PolicyIDs: warphr.F([]string{"top_1234"}),
+		StartDate: warphr.F("startDate"),
+		WorkerIDs: warphr.F([]string{"wrk_1234"}),
 	})
 	if err != nil {
 		var apierr *warphr.Error
@@ -87,16 +87,16 @@ func TestTimeOffListRequestsWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.TimeOff.ListRequests(context.TODO(), warphr.TimeOffListRequestsParams{
-		AfterID:         warphr.String("afterId"),
-		BeforeID:        warphr.String("beforeId"),
-		EndsBefore:      warphr.String("endsBefore"),
-		EndsOnOrAfter:   warphr.String("endsOnOrAfter"),
-		Limit:           warphr.String("limit"),
-		PolicyIDs:       []string{"top_1234"},
-		StartsBefore:    warphr.String("startsBefore"),
-		StartsOnOrAfter: warphr.String("startsOnOrAfter"),
-		Statuses:        []string{"pending"},
-		WorkerIDs:       []string{"wrk_1234"},
+		AfterID:         warphr.F("afterId"),
+		BeforeID:        warphr.F("beforeId"),
+		EndsBefore:      warphr.F("endsBefore"),
+		EndsOnOrAfter:   warphr.F("endsOnOrAfter"),
+		Limit:           warphr.F("limit"),
+		PolicyIDs:       warphr.F([]string{"top_1234"}),
+		StartsBefore:    warphr.F("startsBefore"),
+		StartsOnOrAfter: warphr.F("startsOnOrAfter"),
+		Statuses:        warphr.F([]warphr.TimeOffListRequestsParamsStatus{warphr.TimeOffListRequestsParamsStatusPending}),
+		WorkerIDs:       warphr.F([]string{"wrk_1234"}),
 	})
 	if err != nil {
 		var apierr *warphr.Error
