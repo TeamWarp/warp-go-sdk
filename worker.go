@@ -134,7 +134,7 @@ type WorkerGetResponse struct {
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
 	EndDate       string `json:"endDate" api:"required,nullable"`
@@ -149,7 +149,7 @@ type WorkerGetResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string                `json:"timeZone" api:"required,nullable"`
 	Type     WorkerGetResponseType `json:"type" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail string                `json:"workEmail" api:"required,nullable"`
 	JSON      workerGetResponseJSON `json:"-"`
 }
@@ -253,7 +253,7 @@ type WorkerListResponse struct {
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
 	EndDate       string `json:"endDate" api:"required,nullable"`
@@ -268,7 +268,7 @@ type WorkerListResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string                 `json:"timeZone" api:"required,nullable"`
 	Type     WorkerListResponseType `json:"type" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail string                 `json:"workEmail" api:"required,nullable"`
 	JSON      workerListResponseJSON `json:"-"`
 }
@@ -372,7 +372,7 @@ type WorkerNewContractorResponse struct {
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
 	EndDate       string `json:"endDate" api:"required,nullable"`
@@ -387,7 +387,7 @@ type WorkerNewContractorResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string                          `json:"timeZone" api:"required,nullable"`
 	Type     WorkerNewContractorResponseType `json:"type" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail string                          `json:"workEmail" api:"required,nullable"`
 	JSON      workerNewContractorResponseJSON `json:"-"`
 }
@@ -491,7 +491,7 @@ type WorkerNewEmployeeResponse struct {
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
 	EndDate       string `json:"endDate" api:"required,nullable"`
@@ -506,7 +506,7 @@ type WorkerNewEmployeeResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string                        `json:"timeZone" api:"required,nullable"`
 	Type     WorkerNewEmployeeResponseType `json:"type" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail string                        `json:"workEmail" api:"required,nullable"`
 	JSON      workerNewEmployeeResponseJSON `json:"-"`
 }
@@ -610,7 +610,7 @@ type WorkerInviteResponse struct {
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email string `json:"email" api:"required"`
 	// A date string in the form YYYY-MM-DD
 	EndDate       string `json:"endDate" api:"required,nullable"`
@@ -625,7 +625,7 @@ type WorkerInviteResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string                   `json:"timeZone" api:"required,nullable"`
 	Type     WorkerInviteResponseType `json:"type" api:"required"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail string                   `json:"workEmail" api:"required,nullable"`
 	JSON      workerInviteResponseJSON `json:"-"`
 }
@@ -803,7 +803,7 @@ type WorkerNewContractorParams struct {
 	PaySchedule param.Field[WorkerNewContractorParamsPaySchedule] `json:"paySchedule"`
 	// A description of the work the contractor will perform.
 	ScopeOfWork param.Field[string] `json:"scopeOfWork"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail param.Field[string] `json:"workEmail"`
 }
 
@@ -1250,7 +1250,7 @@ type WorkerNewEmployeeParams struct {
 	StateRegistration param.Field[WorkerNewEmployeeParamsStateRegistration] `json:"stateRegistration"`
 	// a non-negative number
 	StockOptions param.Field[float64] `json:"stockOptions"`
-	// An email with a reasonably valid regex (shamelessly taken from zod)
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	WorkEmail param.Field[string] `json:"workEmail"`
 }
 
