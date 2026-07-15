@@ -1,4 +1,4 @@
-// File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+// File generated from our OpenAPI spec by Scalar. See README.md for details.
 
 package requestconfig
 
@@ -18,10 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TeamWarp/warp-go-sdk/internal"
-	"github.com/TeamWarp/warp-go-sdk/internal/apierror"
-	"github.com/TeamWarp/warp-go-sdk/internal/apiform"
-	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/marclave/warp-go-sdk/internal"
+	"github.com/marclave/warp-go-sdk/internal/apierror"
+	"github.com/marclave/warp-go-sdk/internal/apiform"
+	"github.com/marclave/warp-go-sdk/internal/apiquery"
+	"github.com/marclave/warp-go-sdk/internal/param"
 )
 
 func getDefaultHeaders() map[string]string {
@@ -68,12 +69,12 @@ func getNormalizedArchitecture() string {
 
 func getPlatformProperties() map[string]string {
 	return map[string]string{
-		"X-Stainless-Lang":            "go",
-		"X-Stainless-Package-Version": internal.PackageVersion,
-		"X-Stainless-OS":              getNormalizedOS(),
-		"X-Stainless-Arch":            getNormalizedArchitecture(),
-		"X-Stainless-Runtime":         "go",
-		"X-Stainless-Runtime-Version": runtime.Version(),
+		"X-Scalar-Lang":            "go",
+		"X-Scalar-Package-Version": internal.PackageVersion,
+		"X-Scalar-OS":              getNormalizedOS(),
+		"X-Scalar-Arch":            getNormalizedArchitecture(),
+		"X-Scalar-Runtime":         "go",
+		"X-Scalar-Runtime-Version": runtime.Version(),
 	}
 }
 
@@ -87,7 +88,7 @@ type PreRequestOptionFunc func(*RequestConfig) error
 func (s RequestOptionFunc) Apply(r *RequestConfig) error    { return s(r) }
 func (s PreRequestOptionFunc) Apply(r *RequestConfig) error { return s(r) }
 
-func NewRequestConfig(ctx context.Context, method string, u string, body any, dst any, opts ...RequestOption) (*RequestConfig, error) {
+func NewRequestConfig(ctx context.Context, method string, u string, body interface{}, dst interface{}, opts ...RequestOption) (*RequestConfig, error) {
 	var reader io.Reader
 
 	contentType := "application/json"
@@ -115,11 +116,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 	}
 	if body, ok := body.(apiquery.Queryer); ok {
 		hasSerializationFunc = true
-		q, err := body.URLQuery()
-		if err != nil {
-			return nil, err
-		}
-		params := q.Encode()
+		params := body.URLQuery().Encode()
 		if params != "" {
 			parsed, _ := url.Parse(u)
 			if parsed.RawQuery != "" {
@@ -160,8 +157,8 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 	}
 
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("X-Stainless-Retry-Count", "0")
-	req.Header.Set("X-Stainless-Timeout", "0")
+	req.Header.Set("X-Scalar-Retry-Count", "0")
+	req.Header.Set("X-Scalar-Timeout", "0")
 	for k, v := range getDefaultHeaders() {
 		req.Header.Add(k, v)
 	}
@@ -169,6 +166,7 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 	for k, v := range getPlatformProperties() {
 		req.Header.Add(k, v)
 	}
+
 	cfg := RequestConfig{
 		MaxRetries: 2,
 		Context:    ctx,
@@ -185,15 +183,22 @@ func NewRequestConfig(ctx context.Context, method string, u string, body any, ds
 	// This must run after `cfg.Apply(...)` above in case the request timeout gets modified. We also only
 	// apply our own logic for it if it's still "0" from above. If it's not, then it was deleted or modified
 	// by the user and we should respect that.
-	if req.Header.Get("X-Stainless-Timeout") == "0" {
+	if req.Header.Get("X-Scalar-Timeout") == "0" {
 		if cfg.RequestTimeout == time.Duration(0) {
-			req.Header.Del("X-Stainless-Timeout")
+			req.Header.Del("X-Scalar-Timeout")
 		} else {
-			req.Header.Set("X-Stainless-Timeout", strconv.Itoa(int(cfg.RequestTimeout.Seconds())))
+			req.Header.Set("X-Scalar-Timeout", strconv.Itoa(int(cfg.RequestTimeout.Seconds())))
 		}
 	}
 
 	return &cfg, nil
+}
+
+func UseDefaultParam[T any](dst *param.Field[T], src *T) {
+	if !dst.Present && src != nil {
+		dst.Value = *src
+		dst.Present = true
+	}
 }
 
 // This interface is primarily used to describe an [*http.Client], but also
@@ -222,7 +227,7 @@ type RequestConfig struct {
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
-	ResponseBodyInto any
+	ResponseBodyInto interface{}
 	// ResponseInto copies the \*http.Response of the corresponding request into the
 	// given address
 	ResponseInto **http.Response
@@ -423,7 +428,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 	}
 
 	// Don't send the current retry count in the headers if the caller modified the header defaults.
-	shouldSendRetryCount := cfg.Request.Header.Get("X-Stainless-Retry-Count") == "0"
+	shouldSendRetryCount := cfg.Request.Header.Get("X-Scalar-Retry-Count") == "0"
 
 	var res *http.Response
 	var cancel context.CancelFunc
@@ -441,7 +446,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 
 		req := cfg.Request.Clone(ctx)
 		if shouldSendRetryCount {
-			req.Header.Set("X-Stainless-Retry-Count", strconv.Itoa(retryCount))
+			req.Header.Set("X-Scalar-Retry-Count", strconv.Itoa(retryCount))
 		}
 
 		res, err = handler(req)
@@ -530,6 +535,9 @@ func (cfg *RequestConfig) Execute() (err error) {
 	if err != nil {
 		return fmt.Errorf("error reading response body: %w", err)
 	}
+	if len(contents) == 0 {
+		return nil
+	}
 
 	// If we are not json, return plaintext
 	contentType := res.Header.Get("content-type")
@@ -544,6 +552,9 @@ func (cfg *RequestConfig) Execute() (err error) {
 			*dst = &tmp
 		case *[]byte:
 			*dst = contents
+		case **[]byte:
+			tmp := contents
+			*dst = &tmp
 		default:
 			return fmt.Errorf("expected destination type of 'string' or '[]byte' for responses with content-type '%s' that is not 'application/json'", contentType)
 		}
@@ -554,6 +565,9 @@ func (cfg *RequestConfig) Execute() (err error) {
 	// If the response happens to be a byte array, deserialize the body as-is.
 	case *[]byte:
 		*dst = contents
+	case **[]byte:
+		tmp := contents
+		*dst = &tmp
 	default:
 		err = json.NewDecoder(bytes.NewReader(contents)).Decode(cfg.ResponseBodyInto)
 		if err != nil {
@@ -564,7 +578,7 @@ func (cfg *RequestConfig) Execute() (err error) {
 	return nil
 }
 
-func ExecuteNewRequest(ctx context.Context, method string, u string, body any, dst any, opts ...RequestOption) error {
+func ExecuteNewRequest(ctx context.Context, method string, u string, body interface{}, dst interface{}, opts ...RequestOption) error {
 	cfg, err := NewRequestConfig(ctx, method, u, body, dst, opts...)
 	if err != nil {
 		return err
