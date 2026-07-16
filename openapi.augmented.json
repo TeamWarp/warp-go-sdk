@@ -10022,8 +10022,8 @@
             "source": "warp workers create-employee --api-key \"$WARP_API_KEY\" --first-name 'firstName' --last-name 'lastName' --position 'position' --start-date '2000-01-01' --email 'john@joinwarp.com' --department-id 'dpt_1234' --manager-id 'wrk_1234' --work-location '{\"type\":\"office\",\"workplaceId\":\"wkp_1234\"}' --compensation '{\"amount\":0,\"per\":\"hour\"}'"
           },
           {
-            "lang": "Go",
             "label": "Go",
+            "lang": "Go",
             "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-go-sdk\"\n\t\"warp-go-sdk/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{\n\t\tCompensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{\n\t\t\tAmount: sdk.F[float64](0),\n\t\t}),\n\t\tDepartmentID: sdk.F[string](\"dpt_1234\"),\n\t\tEmail: sdk.F[string](\"john@joinwarp.com\"),\n\t\tFirstName: sdk.F[string](\"\"),\n\t\tLastName: sdk.F[string](\"\"),\n\t\tManagerID: sdk.F[string](\"wrk_1234\"),\n\t\tPosition: sdk.F[string](\"\"),\n\t\tStartDate: sdk.F[string](\"2000-01-01\"),\n\t\tWorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{\n\t\t\tWorkplaceID: sdk.F[string](\"wkp_1234\"),\n\t\t}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(worker)\n}"
           }
         ]

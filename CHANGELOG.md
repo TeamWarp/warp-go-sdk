@@ -2,35 +2,21 @@
 
 ## v0.1.4 (2026-07-16)
 
-Looking at this diff, I can identify the following user-facing changes:
+- **Breaking change**: The package name has changed from `warphr` to `warpgosdk`. Update all imports from `"github.com/TeamWarp/warp-go-sdk"` to use `warpgosdk` instead of `warphr`.
 
-## Breaking changes
+- **Breaking change**: `NewClient()` now returns `*Client` instead of `Client`. Update any code that doesn't already dereference the return value.
 
-- **Package name changed**: `warphr` → `warpgosdk`. Update your imports from `"github.com/TeamWarp/warp-go-sdk"` (which still resolves to package `warphr`) to use package `warpgosdk` instead.
+- **Breaking change**: Service fields on `Client` are now pointers (e.g., `client.TimeOff` is `*TimeOffService`). This shouldn't affect normal usage but may impact code that directly accesses these fields.
 
-- **Client initialization now returns a pointer**: `NewClient()` now returns `*Client` instead of `Client`. You don't need to change call sites (Go handles this automatically), but be aware if you were taking the address of the result.
+- **Breaking change**: The parameter builder functions have changed. Replace `String(value)`, `Int(value)`, `Bool(value)`, `Float(value)` calls with `F[T](value)` where `T` is the type. For example: `String("name")` becomes `F[string]("name")`.
 
-- **Service types now use pointers**: All service types (`TimeOffService`, `WorkerService`, `DepartmentService`, `WorkplaceService`) are now returned as pointers from their constructors. This is internal refactoring that shouldn't affect normal usage via the client.
+- **Breaking change**: Response pagination has changed. `DepartmentService.List()` and similar methods now return `*DepartmentListResponse` directly instead of `*pagination.CursorPage[DepartmentListResponse]`. The `ListAutoPaging()` methods have been removed.
 
-- **Parameter field API changed**: The SDK now uses `param.Field[T]` instead of `param.Opt[T]`. Use the new `F[T]()` helper function to wrap optional parameters:
-  - Old: `DepartmentNewParams{Name: "foo"}` 
-  - New: `DepartmentNewParams{Name: sdk.F[string]("foo")}`
+- **Breaking change**: `DepartmentService.List()` has moved to be called before `New()` and `Update()` in the service.
 
-- **Removed pagination wrapper**: `List()` methods now return the response type directly (e.g., `*DepartmentListResponse`) instead of `*pagination.CursorPage[T]`. The `ListAutoPaging()` methods have been removed.
+- **Changed**: Parameter structs no longer embed `paramObj`. Use `param.Field[T]` directly with the `F[]` helper for optional fields.
 
-- **Removed `respjson` metadata**: Response types no longer include the `.JSON` field with `respjson.Field` metadata. Access raw JSON via `RawJSON()` method if needed.
-
-## Changed
-
-- Department methods reordered: `List()` is now the first method (was last), followed by `New()` and `Update()`.
-- URL path encoding simplified: `url.PathEscape()` calls removed (paths are now escaped automatically).
-
-## Added
-
-- New `default_http_client.go` provides automatic response header timeout configuration for better handling of stuck connections.
-- New `VERSIONING.md` documents the SDK's manual versioning policy.
-
-Minor internal updates.
+- **Changed**: Error handling and JSON unmarshaling have been refactored internally. The API surface remains the same, but error types and response JSON field handling are slightly different.
 
 ## 0.3.0 (2026-03-27)
 
