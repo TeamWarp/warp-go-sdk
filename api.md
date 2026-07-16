@@ -34,7 +34,7 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/marclave/warp-go-sdk"
+	sdk "github.com/TeamWarp/warp-go-sdk"
 )
 
 client := sdk.NewClient()
@@ -195,7 +195,9 @@ worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmp
 	ManagerID: sdk.F[string]("wrk_1234"),
 	Position: sdk.F[string](""),
 	StartDate: sdk.F[string]("2000-01-01"),
-	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationUnion{}),
+	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
+		WorkplaceID: sdk.F[string]("wkp_1234"),
+	}),
 })
 if err != nil {
 	panic(err)

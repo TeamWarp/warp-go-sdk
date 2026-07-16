@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/marclave/warp-go-sdk/internal/apijson"
-	"github.com/marclave/warp-go-sdk/internal/apiquery"
-	"github.com/marclave/warp-go-sdk/internal/param"
-	"github.com/marclave/warp-go-sdk/internal/requestconfig"
-	"github.com/marclave/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // WorkplaceService contains methods and other services that help with interacting
@@ -117,160 +117,6 @@ func (r *WorkplaceService) Update(ctx context.Context, id string, body Workplace
 	return res, err
 }
 
-type AddressInvalid struct {
-	SuggestedAlternative AddressInvalidSuggestedAlternative `json:"suggestedAlternative" api:"required,nullable"`
-	Message string `json:"message" api:"required"`
-	// Any of "AddressInvalid".
-	Tag AddressInvalidTag `json:"_tag" api:"required"`
-	JSON addressInvalidJSON `json:"-"`
-}
-
-// addressInvalidJSON contains the JSON metadata for the struct [AddressInvalid]
-type addressInvalidJSON struct {
-	SuggestedAlternative apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *AddressInvalid) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r addressInvalidJSON) RawJSON() string {
-	return r.raw
-}
-
-type AddressInvalidTag string
-
-const (
-	AddressInvalidTagAddressInvalid AddressInvalidTag = "AddressInvalid"
-)
-
-func (r AddressInvalidTag) IsKnown() bool {
-	switch r {
-	case AddressInvalidTagAddressInvalid:
-		return true
-	}
-	return false
-}
-
-type WorkplaceListResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkplaceListResponseTag `json:"_tag" api:"required"`
-	JSON workplaceListResponseJSON `json:"-"`
-}
-
-// workplaceListResponseJSON contains the JSON metadata for the struct [WorkplaceListResponse]
-type workplaceListResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkplaceListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workplaceListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkplaceListResponseTag string
-
-const (
-	WorkplaceListResponseTagHTTPAPIDecodeError WorkplaceListResponseTag = "HttpApiDecodeError"
-)
-
-func (r WorkplaceListResponseTag) IsKnown() bool {
-	switch r {
-	case WorkplaceListResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type WorkplaceNewResponse struct {
-	Message string `json:"message" api:"required"`
-	// Any of "ApiKeyUnauthorized".
-	Tag WorkplaceNewResponseTag `json:"_tag" api:"required"`
-	JSON workplaceNewResponseJSON `json:"-"`
-}
-
-// workplaceNewResponseJSON contains the JSON metadata for the struct [WorkplaceNewResponse]
-type workplaceNewResponseJSON struct {
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkplaceNewResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workplaceNewResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkplaceNewResponseTag string
-
-const (
-	WorkplaceNewResponseTagAPIKeyUnauthorized WorkplaceNewResponseTag = "ApiKeyUnauthorized"
-)
-
-func (r WorkplaceNewResponseTag) IsKnown() bool {
-	switch r {
-	case WorkplaceNewResponseTagAPIKeyUnauthorized:
-		return true
-	}
-	return false
-}
-
-type WorkplaceUpdateResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkplaceUpdateResponseTag `json:"_tag" api:"required"`
-	JSON workplaceUpdateResponseJSON `json:"-"`
-}
-
-// workplaceUpdateResponseJSON contains the JSON metadata for the struct [WorkplaceUpdateResponse]
-type workplaceUpdateResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkplaceUpdateResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workplaceUpdateResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkplaceUpdateResponseTag string
-
-const (
-	WorkplaceUpdateResponseTagHTTPAPIDecodeError WorkplaceUpdateResponseTag = "HttpApiDecodeError"
-)
-
-func (r WorkplaceUpdateResponseTag) IsKnown() bool {
-	switch r {
-	case WorkplaceUpdateResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
 type WorkplaceListParams struct {
 	// Public workplace identifier
 	AfterID param.Field[string] `query:"afterId"`
@@ -343,315 +189,563 @@ func (r WorkplaceUpdateParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type AddressInvalidSuggestedAlternative struct {
+type WorkplaceListResponse struct {
+	HasMore bool `json:"hasMore" api:"required"`
+	// an integer
+	Count int64 `json:"count" api:"required"`
+	Data []WorkplaceListResponseData `json:"data" api:"required"`
+	JSON workplaceListResponseJSON `json:"-"`
+}
+
+// workplaceListResponseJSON contains the JSON metadata for the struct [WorkplaceListResponse]
+type workplaceListResponseJSON struct {
+	HasMore apijson.Field
+	Count apijson.Field
+	Data apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceListResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceListResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceNewResponse struct {
+	// Public workplace identifier
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// Any of "remote", "office".
+	Type WorkplaceNewResponseType `json:"type" api:"required"`
+	// Any of "active", "archived".
+	Status WorkplaceNewResponseStatus `json:"status" api:"required"`
+	// A valid US address
+	Address WorkplaceNewResponseAddress `json:"address" api:"required"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	JSON workplaceNewResponseJSON `json:"-"`
+}
+
+// workplaceNewResponseJSON contains the JSON metadata for the struct [WorkplaceNewResponse]
+type workplaceNewResponseJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	Address apijson.Field
+	CreatedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceNewResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceNewResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceUpdateResponse struct {
+	// Public workplace identifier
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// Any of "remote", "office".
+	Type WorkplaceUpdateResponseType `json:"type" api:"required"`
+	// Any of "active", "archived".
+	Status WorkplaceUpdateResponseStatus `json:"status" api:"required"`
+	// A valid US address
+	Address WorkplaceUpdateResponseAddress `json:"address" api:"required"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	JSON workplaceUpdateResponseJSON `json:"-"`
+}
+
+// workplaceUpdateResponseJSON contains the JSON metadata for the struct [WorkplaceUpdateResponse]
+type workplaceUpdateResponseJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	Address apijson.Field
+	CreatedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceUpdateResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceUpdateResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceListResponseData struct {
+	// Public workplace identifier
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// Any of "remote", "office".
+	Type WorkplaceListResponseDataType `json:"type" api:"required"`
+	// Any of "active", "archived".
+	Status WorkplaceListResponseDataStatus `json:"status" api:"required"`
+	// A valid US address
+	Address WorkplaceListResponseDataAddress `json:"address" api:"required"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	JSON workplaceListResponseDataJSON `json:"-"`
+}
+
+// workplaceListResponseDataJSON contains the JSON metadata for the struct [WorkplaceListResponseData]
+type workplaceListResponseDataJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	Address apijson.Field
+	CreatedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceListResponseData) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceListResponseDataJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceNewResponseType string
+
+const (
+	WorkplaceNewResponseTypeRemote WorkplaceNewResponseType = "remote"
+	WorkplaceNewResponseTypeOffice WorkplaceNewResponseType = "office"
+)
+
+func (r WorkplaceNewResponseType) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseTypeRemote, WorkplaceNewResponseTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewResponseStatus string
+
+const (
+	WorkplaceNewResponseStatusActive WorkplaceNewResponseStatus = "active"
+	WorkplaceNewResponseStatusArchived WorkplaceNewResponseStatus = "archived"
+)
+
+func (r WorkplaceNewResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseStatusActive, WorkplaceNewResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewResponseAddress struct {
 	// a non empty string
 	Line1 string `json:"line1" api:"required"`
 	City string `json:"city" api:"required"`
-	State string `json:"state" api:"required"`
 	PostalCode string `json:"postalCode" api:"required"`
-	// Any of "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT",
-	// "AU", "AW", "AX", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ",
-	// "BL", "BM", "BN", "BO", "BQ", "BR", "BS", "BT", "BV", "BW", "BY", "BZ", "CA",
-	// "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU",
-	// "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE",
-	// "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB",
-	// "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS",
-	// "GT", "GU", "GW", "GY", "HK", "HM", "HN", "HR", "HT", "HU", "ID", "IE", "IL",
-	// "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM", "JO", "JP", "KE", "KG",
-	// "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC", "LI",
-	// "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG",
-	// "MH", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV",
-	// "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP",
-	// "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN",
-	// "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB",
-	// "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR",
-	// "SS", "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK",
-	// "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US",
-	// "UY", "UZ", "VA", "VC", "VE", "VG", "VI", "VN", "VU", "WF", "WS", "XK", "YE",
-	// "YT", "ZA", "ZM", "ZW".
-	Country AddressInvalidSuggestedAlternativeCountry `json:"country" api:"required"`
+	// Any of "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
+	// "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+	// "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR",
+	// "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY".
+	State WorkplaceNewResponseAddressState `json:"state" api:"required"`
+	// Any of "US".
+	Country WorkplaceNewResponseAddressCountry `json:"country" api:"required"`
 	Line2 string `json:"line2" api:"nullable"`
-	JSON addressInvalidSuggestedAlternativeJSON `json:"-"`
+	JSON workplaceNewResponseAddressJSON `json:"-"`
 }
 
-// addressInvalidSuggestedAlternativeJSON contains the JSON metadata for the struct [AddressInvalidSuggestedAlternative]
-type addressInvalidSuggestedAlternativeJSON struct {
+// workplaceNewResponseAddressJSON contains the JSON metadata for the struct [WorkplaceNewResponseAddress]
+type workplaceNewResponseAddressJSON struct {
 	Line1 apijson.Field
 	City apijson.Field
-	State apijson.Field
 	PostalCode apijson.Field
+	State apijson.Field
 	Country apijson.Field
 	Line2 apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *AddressInvalidSuggestedAlternative) UnmarshalJSON(data []byte) (err error) {
+func (r *WorkplaceNewResponseAddress) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r addressInvalidSuggestedAlternativeJSON) RawJSON() string {
+func (r workplaceNewResponseAddressJSON) RawJSON() string {
 	return r.raw
 }
 
-type AddressInvalidSuggestedAlternativeCountry string
+type WorkplaceUpdateResponseType string
 
 const (
-	AddressInvalidSuggestedAlternativeCountryAd AddressInvalidSuggestedAlternativeCountry = "AD"
-	AddressInvalidSuggestedAlternativeCountryAe AddressInvalidSuggestedAlternativeCountry = "AE"
-	AddressInvalidSuggestedAlternativeCountryAf AddressInvalidSuggestedAlternativeCountry = "AF"
-	AddressInvalidSuggestedAlternativeCountryAg AddressInvalidSuggestedAlternativeCountry = "AG"
-	AddressInvalidSuggestedAlternativeCountryAI AddressInvalidSuggestedAlternativeCountry = "AI"
-	AddressInvalidSuggestedAlternativeCountryAl AddressInvalidSuggestedAlternativeCountry = "AL"
-	AddressInvalidSuggestedAlternativeCountryAm AddressInvalidSuggestedAlternativeCountry = "AM"
-	AddressInvalidSuggestedAlternativeCountryAo AddressInvalidSuggestedAlternativeCountry = "AO"
-	AddressInvalidSuggestedAlternativeCountryAq AddressInvalidSuggestedAlternativeCountry = "AQ"
-	AddressInvalidSuggestedAlternativeCountryAr AddressInvalidSuggestedAlternativeCountry = "AR"
-	AddressInvalidSuggestedAlternativeCountryAs AddressInvalidSuggestedAlternativeCountry = "AS"
-	AddressInvalidSuggestedAlternativeCountryAt AddressInvalidSuggestedAlternativeCountry = "AT"
-	AddressInvalidSuggestedAlternativeCountryAu AddressInvalidSuggestedAlternativeCountry = "AU"
-	AddressInvalidSuggestedAlternativeCountryAw AddressInvalidSuggestedAlternativeCountry = "AW"
-	AddressInvalidSuggestedAlternativeCountryAx AddressInvalidSuggestedAlternativeCountry = "AX"
-	AddressInvalidSuggestedAlternativeCountryAz AddressInvalidSuggestedAlternativeCountry = "AZ"
-	AddressInvalidSuggestedAlternativeCountryBa AddressInvalidSuggestedAlternativeCountry = "BA"
-	AddressInvalidSuggestedAlternativeCountryBb AddressInvalidSuggestedAlternativeCountry = "BB"
-	AddressInvalidSuggestedAlternativeCountryBd AddressInvalidSuggestedAlternativeCountry = "BD"
-	AddressInvalidSuggestedAlternativeCountryBe AddressInvalidSuggestedAlternativeCountry = "BE"
-	AddressInvalidSuggestedAlternativeCountryBf AddressInvalidSuggestedAlternativeCountry = "BF"
-	AddressInvalidSuggestedAlternativeCountryBg AddressInvalidSuggestedAlternativeCountry = "BG"
-	AddressInvalidSuggestedAlternativeCountryBh AddressInvalidSuggestedAlternativeCountry = "BH"
-	AddressInvalidSuggestedAlternativeCountryBi AddressInvalidSuggestedAlternativeCountry = "BI"
-	AddressInvalidSuggestedAlternativeCountryBj AddressInvalidSuggestedAlternativeCountry = "BJ"
-	AddressInvalidSuggestedAlternativeCountryBl AddressInvalidSuggestedAlternativeCountry = "BL"
-	AddressInvalidSuggestedAlternativeCountryBm AddressInvalidSuggestedAlternativeCountry = "BM"
-	AddressInvalidSuggestedAlternativeCountryBn AddressInvalidSuggestedAlternativeCountry = "BN"
-	AddressInvalidSuggestedAlternativeCountryBo AddressInvalidSuggestedAlternativeCountry = "BO"
-	AddressInvalidSuggestedAlternativeCountryBq AddressInvalidSuggestedAlternativeCountry = "BQ"
-	AddressInvalidSuggestedAlternativeCountryBr AddressInvalidSuggestedAlternativeCountry = "BR"
-	AddressInvalidSuggestedAlternativeCountryBs AddressInvalidSuggestedAlternativeCountry = "BS"
-	AddressInvalidSuggestedAlternativeCountryBt AddressInvalidSuggestedAlternativeCountry = "BT"
-	AddressInvalidSuggestedAlternativeCountryBv AddressInvalidSuggestedAlternativeCountry = "BV"
-	AddressInvalidSuggestedAlternativeCountryBw AddressInvalidSuggestedAlternativeCountry = "BW"
-	AddressInvalidSuggestedAlternativeCountryBy AddressInvalidSuggestedAlternativeCountry = "BY"
-	AddressInvalidSuggestedAlternativeCountryBz AddressInvalidSuggestedAlternativeCountry = "BZ"
-	AddressInvalidSuggestedAlternativeCountryCa AddressInvalidSuggestedAlternativeCountry = "CA"
-	AddressInvalidSuggestedAlternativeCountryCc AddressInvalidSuggestedAlternativeCountry = "CC"
-	AddressInvalidSuggestedAlternativeCountryCd AddressInvalidSuggestedAlternativeCountry = "CD"
-	AddressInvalidSuggestedAlternativeCountryCf AddressInvalidSuggestedAlternativeCountry = "CF"
-	AddressInvalidSuggestedAlternativeCountryCg AddressInvalidSuggestedAlternativeCountry = "CG"
-	AddressInvalidSuggestedAlternativeCountryCh AddressInvalidSuggestedAlternativeCountry = "CH"
-	AddressInvalidSuggestedAlternativeCountryCi AddressInvalidSuggestedAlternativeCountry = "CI"
-	AddressInvalidSuggestedAlternativeCountryCk AddressInvalidSuggestedAlternativeCountry = "CK"
-	AddressInvalidSuggestedAlternativeCountryCl AddressInvalidSuggestedAlternativeCountry = "CL"
-	AddressInvalidSuggestedAlternativeCountryCm AddressInvalidSuggestedAlternativeCountry = "CM"
-	AddressInvalidSuggestedAlternativeCountryCn AddressInvalidSuggestedAlternativeCountry = "CN"
-	AddressInvalidSuggestedAlternativeCountryCo AddressInvalidSuggestedAlternativeCountry = "CO"
-	AddressInvalidSuggestedAlternativeCountryCr AddressInvalidSuggestedAlternativeCountry = "CR"
-	AddressInvalidSuggestedAlternativeCountryCu AddressInvalidSuggestedAlternativeCountry = "CU"
-	AddressInvalidSuggestedAlternativeCountryCv AddressInvalidSuggestedAlternativeCountry = "CV"
-	AddressInvalidSuggestedAlternativeCountryCw AddressInvalidSuggestedAlternativeCountry = "CW"
-	AddressInvalidSuggestedAlternativeCountryCx AddressInvalidSuggestedAlternativeCountry = "CX"
-	AddressInvalidSuggestedAlternativeCountryCy AddressInvalidSuggestedAlternativeCountry = "CY"
-	AddressInvalidSuggestedAlternativeCountryCz AddressInvalidSuggestedAlternativeCountry = "CZ"
-	AddressInvalidSuggestedAlternativeCountryDe AddressInvalidSuggestedAlternativeCountry = "DE"
-	AddressInvalidSuggestedAlternativeCountryDj AddressInvalidSuggestedAlternativeCountry = "DJ"
-	AddressInvalidSuggestedAlternativeCountryDk AddressInvalidSuggestedAlternativeCountry = "DK"
-	AddressInvalidSuggestedAlternativeCountryDm AddressInvalidSuggestedAlternativeCountry = "DM"
-	AddressInvalidSuggestedAlternativeCountryDo AddressInvalidSuggestedAlternativeCountry = "DO"
-	AddressInvalidSuggestedAlternativeCountryDz AddressInvalidSuggestedAlternativeCountry = "DZ"
-	AddressInvalidSuggestedAlternativeCountryEc AddressInvalidSuggestedAlternativeCountry = "EC"
-	AddressInvalidSuggestedAlternativeCountryEe AddressInvalidSuggestedAlternativeCountry = "EE"
-	AddressInvalidSuggestedAlternativeCountryEg AddressInvalidSuggestedAlternativeCountry = "EG"
-	AddressInvalidSuggestedAlternativeCountryEh AddressInvalidSuggestedAlternativeCountry = "EH"
-	AddressInvalidSuggestedAlternativeCountryEr AddressInvalidSuggestedAlternativeCountry = "ER"
-	AddressInvalidSuggestedAlternativeCountryEs AddressInvalidSuggestedAlternativeCountry = "ES"
-	AddressInvalidSuggestedAlternativeCountryEt AddressInvalidSuggestedAlternativeCountry = "ET"
-	AddressInvalidSuggestedAlternativeCountryFi AddressInvalidSuggestedAlternativeCountry = "FI"
-	AddressInvalidSuggestedAlternativeCountryFj AddressInvalidSuggestedAlternativeCountry = "FJ"
-	AddressInvalidSuggestedAlternativeCountryFk AddressInvalidSuggestedAlternativeCountry = "FK"
-	AddressInvalidSuggestedAlternativeCountryFm AddressInvalidSuggestedAlternativeCountry = "FM"
-	AddressInvalidSuggestedAlternativeCountryFo AddressInvalidSuggestedAlternativeCountry = "FO"
-	AddressInvalidSuggestedAlternativeCountryFr AddressInvalidSuggestedAlternativeCountry = "FR"
-	AddressInvalidSuggestedAlternativeCountryGa AddressInvalidSuggestedAlternativeCountry = "GA"
-	AddressInvalidSuggestedAlternativeCountryGB AddressInvalidSuggestedAlternativeCountry = "GB"
-	AddressInvalidSuggestedAlternativeCountryGd AddressInvalidSuggestedAlternativeCountry = "GD"
-	AddressInvalidSuggestedAlternativeCountryGe AddressInvalidSuggestedAlternativeCountry = "GE"
-	AddressInvalidSuggestedAlternativeCountryGf AddressInvalidSuggestedAlternativeCountry = "GF"
-	AddressInvalidSuggestedAlternativeCountryGg AddressInvalidSuggestedAlternativeCountry = "GG"
-	AddressInvalidSuggestedAlternativeCountryGh AddressInvalidSuggestedAlternativeCountry = "GH"
-	AddressInvalidSuggestedAlternativeCountryGi AddressInvalidSuggestedAlternativeCountry = "GI"
-	AddressInvalidSuggestedAlternativeCountryGl AddressInvalidSuggestedAlternativeCountry = "GL"
-	AddressInvalidSuggestedAlternativeCountryGm AddressInvalidSuggestedAlternativeCountry = "GM"
-	AddressInvalidSuggestedAlternativeCountryGn AddressInvalidSuggestedAlternativeCountry = "GN"
-	AddressInvalidSuggestedAlternativeCountryGp AddressInvalidSuggestedAlternativeCountry = "GP"
-	AddressInvalidSuggestedAlternativeCountryGq AddressInvalidSuggestedAlternativeCountry = "GQ"
-	AddressInvalidSuggestedAlternativeCountryGr AddressInvalidSuggestedAlternativeCountry = "GR"
-	AddressInvalidSuggestedAlternativeCountryGs AddressInvalidSuggestedAlternativeCountry = "GS"
-	AddressInvalidSuggestedAlternativeCountryGt AddressInvalidSuggestedAlternativeCountry = "GT"
-	AddressInvalidSuggestedAlternativeCountryGu AddressInvalidSuggestedAlternativeCountry = "GU"
-	AddressInvalidSuggestedAlternativeCountryGw AddressInvalidSuggestedAlternativeCountry = "GW"
-	AddressInvalidSuggestedAlternativeCountryGy AddressInvalidSuggestedAlternativeCountry = "GY"
-	AddressInvalidSuggestedAlternativeCountryHk AddressInvalidSuggestedAlternativeCountry = "HK"
-	AddressInvalidSuggestedAlternativeCountryHm AddressInvalidSuggestedAlternativeCountry = "HM"
-	AddressInvalidSuggestedAlternativeCountryHn AddressInvalidSuggestedAlternativeCountry = "HN"
-	AddressInvalidSuggestedAlternativeCountryHr AddressInvalidSuggestedAlternativeCountry = "HR"
-	AddressInvalidSuggestedAlternativeCountryHt AddressInvalidSuggestedAlternativeCountry = "HT"
-	AddressInvalidSuggestedAlternativeCountryHu AddressInvalidSuggestedAlternativeCountry = "HU"
-	AddressInvalidSuggestedAlternativeCountryID AddressInvalidSuggestedAlternativeCountry = "ID"
-	AddressInvalidSuggestedAlternativeCountryIe AddressInvalidSuggestedAlternativeCountry = "IE"
-	AddressInvalidSuggestedAlternativeCountryIl AddressInvalidSuggestedAlternativeCountry = "IL"
-	AddressInvalidSuggestedAlternativeCountryIm AddressInvalidSuggestedAlternativeCountry = "IM"
-	AddressInvalidSuggestedAlternativeCountryIn AddressInvalidSuggestedAlternativeCountry = "IN"
-	AddressInvalidSuggestedAlternativeCountryIo AddressInvalidSuggestedAlternativeCountry = "IO"
-	AddressInvalidSuggestedAlternativeCountryIq AddressInvalidSuggestedAlternativeCountry = "IQ"
-	AddressInvalidSuggestedAlternativeCountryIr AddressInvalidSuggestedAlternativeCountry = "IR"
-	AddressInvalidSuggestedAlternativeCountryIs AddressInvalidSuggestedAlternativeCountry = "IS"
-	AddressInvalidSuggestedAlternativeCountryIt AddressInvalidSuggestedAlternativeCountry = "IT"
-	AddressInvalidSuggestedAlternativeCountryJe AddressInvalidSuggestedAlternativeCountry = "JE"
-	AddressInvalidSuggestedAlternativeCountryJm AddressInvalidSuggestedAlternativeCountry = "JM"
-	AddressInvalidSuggestedAlternativeCountryJo AddressInvalidSuggestedAlternativeCountry = "JO"
-	AddressInvalidSuggestedAlternativeCountryJp AddressInvalidSuggestedAlternativeCountry = "JP"
-	AddressInvalidSuggestedAlternativeCountryKe AddressInvalidSuggestedAlternativeCountry = "KE"
-	AddressInvalidSuggestedAlternativeCountryKg AddressInvalidSuggestedAlternativeCountry = "KG"
-	AddressInvalidSuggestedAlternativeCountryKh AddressInvalidSuggestedAlternativeCountry = "KH"
-	AddressInvalidSuggestedAlternativeCountryKi AddressInvalidSuggestedAlternativeCountry = "KI"
-	AddressInvalidSuggestedAlternativeCountryKm AddressInvalidSuggestedAlternativeCountry = "KM"
-	AddressInvalidSuggestedAlternativeCountryKn AddressInvalidSuggestedAlternativeCountry = "KN"
-	AddressInvalidSuggestedAlternativeCountryKp AddressInvalidSuggestedAlternativeCountry = "KP"
-	AddressInvalidSuggestedAlternativeCountryKr AddressInvalidSuggestedAlternativeCountry = "KR"
-	AddressInvalidSuggestedAlternativeCountryKw AddressInvalidSuggestedAlternativeCountry = "KW"
-	AddressInvalidSuggestedAlternativeCountryKy AddressInvalidSuggestedAlternativeCountry = "KY"
-	AddressInvalidSuggestedAlternativeCountryKz AddressInvalidSuggestedAlternativeCountry = "KZ"
-	AddressInvalidSuggestedAlternativeCountryLa AddressInvalidSuggestedAlternativeCountry = "LA"
-	AddressInvalidSuggestedAlternativeCountryLb AddressInvalidSuggestedAlternativeCountry = "LB"
-	AddressInvalidSuggestedAlternativeCountryLc AddressInvalidSuggestedAlternativeCountry = "LC"
-	AddressInvalidSuggestedAlternativeCountryLi AddressInvalidSuggestedAlternativeCountry = "LI"
-	AddressInvalidSuggestedAlternativeCountryLk AddressInvalidSuggestedAlternativeCountry = "LK"
-	AddressInvalidSuggestedAlternativeCountryLr AddressInvalidSuggestedAlternativeCountry = "LR"
-	AddressInvalidSuggestedAlternativeCountryLs AddressInvalidSuggestedAlternativeCountry = "LS"
-	AddressInvalidSuggestedAlternativeCountryLt AddressInvalidSuggestedAlternativeCountry = "LT"
-	AddressInvalidSuggestedAlternativeCountryLu AddressInvalidSuggestedAlternativeCountry = "LU"
-	AddressInvalidSuggestedAlternativeCountryLv AddressInvalidSuggestedAlternativeCountry = "LV"
-	AddressInvalidSuggestedAlternativeCountryLy AddressInvalidSuggestedAlternativeCountry = "LY"
-	AddressInvalidSuggestedAlternativeCountryMa AddressInvalidSuggestedAlternativeCountry = "MA"
-	AddressInvalidSuggestedAlternativeCountryMc AddressInvalidSuggestedAlternativeCountry = "MC"
-	AddressInvalidSuggestedAlternativeCountryMd AddressInvalidSuggestedAlternativeCountry = "MD"
-	AddressInvalidSuggestedAlternativeCountryMe AddressInvalidSuggestedAlternativeCountry = "ME"
-	AddressInvalidSuggestedAlternativeCountryMf AddressInvalidSuggestedAlternativeCountry = "MF"
-	AddressInvalidSuggestedAlternativeCountryMg AddressInvalidSuggestedAlternativeCountry = "MG"
-	AddressInvalidSuggestedAlternativeCountryMh AddressInvalidSuggestedAlternativeCountry = "MH"
-	AddressInvalidSuggestedAlternativeCountryMk AddressInvalidSuggestedAlternativeCountry = "MK"
-	AddressInvalidSuggestedAlternativeCountryMl AddressInvalidSuggestedAlternativeCountry = "ML"
-	AddressInvalidSuggestedAlternativeCountryMm AddressInvalidSuggestedAlternativeCountry = "MM"
-	AddressInvalidSuggestedAlternativeCountryMn AddressInvalidSuggestedAlternativeCountry = "MN"
-	AddressInvalidSuggestedAlternativeCountryMo AddressInvalidSuggestedAlternativeCountry = "MO"
-	AddressInvalidSuggestedAlternativeCountryMp AddressInvalidSuggestedAlternativeCountry = "MP"
-	AddressInvalidSuggestedAlternativeCountryMq AddressInvalidSuggestedAlternativeCountry = "MQ"
-	AddressInvalidSuggestedAlternativeCountryMr AddressInvalidSuggestedAlternativeCountry = "MR"
-	AddressInvalidSuggestedAlternativeCountryMs AddressInvalidSuggestedAlternativeCountry = "MS"
-	AddressInvalidSuggestedAlternativeCountryMt AddressInvalidSuggestedAlternativeCountry = "MT"
-	AddressInvalidSuggestedAlternativeCountryMu AddressInvalidSuggestedAlternativeCountry = "MU"
-	AddressInvalidSuggestedAlternativeCountryMv AddressInvalidSuggestedAlternativeCountry = "MV"
-	AddressInvalidSuggestedAlternativeCountryMw AddressInvalidSuggestedAlternativeCountry = "MW"
-	AddressInvalidSuggestedAlternativeCountryMx AddressInvalidSuggestedAlternativeCountry = "MX"
-	AddressInvalidSuggestedAlternativeCountryMy AddressInvalidSuggestedAlternativeCountry = "MY"
-	AddressInvalidSuggestedAlternativeCountryMz AddressInvalidSuggestedAlternativeCountry = "MZ"
-	AddressInvalidSuggestedAlternativeCountryNa AddressInvalidSuggestedAlternativeCountry = "NA"
-	AddressInvalidSuggestedAlternativeCountryNc AddressInvalidSuggestedAlternativeCountry = "NC"
-	AddressInvalidSuggestedAlternativeCountryNe AddressInvalidSuggestedAlternativeCountry = "NE"
-	AddressInvalidSuggestedAlternativeCountryNf AddressInvalidSuggestedAlternativeCountry = "NF"
-	AddressInvalidSuggestedAlternativeCountryNg AddressInvalidSuggestedAlternativeCountry = "NG"
-	AddressInvalidSuggestedAlternativeCountryNi AddressInvalidSuggestedAlternativeCountry = "NI"
-	AddressInvalidSuggestedAlternativeCountryNl AddressInvalidSuggestedAlternativeCountry = "NL"
-	AddressInvalidSuggestedAlternativeCountryNo AddressInvalidSuggestedAlternativeCountry = "NO"
-	AddressInvalidSuggestedAlternativeCountryNp AddressInvalidSuggestedAlternativeCountry = "NP"
-	AddressInvalidSuggestedAlternativeCountryNr AddressInvalidSuggestedAlternativeCountry = "NR"
-	AddressInvalidSuggestedAlternativeCountryNu AddressInvalidSuggestedAlternativeCountry = "NU"
-	AddressInvalidSuggestedAlternativeCountryNz AddressInvalidSuggestedAlternativeCountry = "NZ"
-	AddressInvalidSuggestedAlternativeCountryOm AddressInvalidSuggestedAlternativeCountry = "OM"
-	AddressInvalidSuggestedAlternativeCountryPa AddressInvalidSuggestedAlternativeCountry = "PA"
-	AddressInvalidSuggestedAlternativeCountryPe AddressInvalidSuggestedAlternativeCountry = "PE"
-	AddressInvalidSuggestedAlternativeCountryPf AddressInvalidSuggestedAlternativeCountry = "PF"
-	AddressInvalidSuggestedAlternativeCountryPg AddressInvalidSuggestedAlternativeCountry = "PG"
-	AddressInvalidSuggestedAlternativeCountryPh AddressInvalidSuggestedAlternativeCountry = "PH"
-	AddressInvalidSuggestedAlternativeCountryPk AddressInvalidSuggestedAlternativeCountry = "PK"
-	AddressInvalidSuggestedAlternativeCountryPl AddressInvalidSuggestedAlternativeCountry = "PL"
-	AddressInvalidSuggestedAlternativeCountryPm AddressInvalidSuggestedAlternativeCountry = "PM"
-	AddressInvalidSuggestedAlternativeCountryPn AddressInvalidSuggestedAlternativeCountry = "PN"
-	AddressInvalidSuggestedAlternativeCountryPr AddressInvalidSuggestedAlternativeCountry = "PR"
-	AddressInvalidSuggestedAlternativeCountryPs AddressInvalidSuggestedAlternativeCountry = "PS"
-	AddressInvalidSuggestedAlternativeCountryPt AddressInvalidSuggestedAlternativeCountry = "PT"
-	AddressInvalidSuggestedAlternativeCountryPw AddressInvalidSuggestedAlternativeCountry = "PW"
-	AddressInvalidSuggestedAlternativeCountryPy AddressInvalidSuggestedAlternativeCountry = "PY"
-	AddressInvalidSuggestedAlternativeCountryQa AddressInvalidSuggestedAlternativeCountry = "QA"
-	AddressInvalidSuggestedAlternativeCountryRe AddressInvalidSuggestedAlternativeCountry = "RE"
-	AddressInvalidSuggestedAlternativeCountryRo AddressInvalidSuggestedAlternativeCountry = "RO"
-	AddressInvalidSuggestedAlternativeCountryRs AddressInvalidSuggestedAlternativeCountry = "RS"
-	AddressInvalidSuggestedAlternativeCountryRu AddressInvalidSuggestedAlternativeCountry = "RU"
-	AddressInvalidSuggestedAlternativeCountryRw AddressInvalidSuggestedAlternativeCountry = "RW"
-	AddressInvalidSuggestedAlternativeCountrySa AddressInvalidSuggestedAlternativeCountry = "SA"
-	AddressInvalidSuggestedAlternativeCountrySb AddressInvalidSuggestedAlternativeCountry = "SB"
-	AddressInvalidSuggestedAlternativeCountrySc AddressInvalidSuggestedAlternativeCountry = "SC"
-	AddressInvalidSuggestedAlternativeCountrySd AddressInvalidSuggestedAlternativeCountry = "SD"
-	AddressInvalidSuggestedAlternativeCountrySe AddressInvalidSuggestedAlternativeCountry = "SE"
-	AddressInvalidSuggestedAlternativeCountrySg AddressInvalidSuggestedAlternativeCountry = "SG"
-	AddressInvalidSuggestedAlternativeCountrySh AddressInvalidSuggestedAlternativeCountry = "SH"
-	AddressInvalidSuggestedAlternativeCountrySi AddressInvalidSuggestedAlternativeCountry = "SI"
-	AddressInvalidSuggestedAlternativeCountrySj AddressInvalidSuggestedAlternativeCountry = "SJ"
-	AddressInvalidSuggestedAlternativeCountrySk AddressInvalidSuggestedAlternativeCountry = "SK"
-	AddressInvalidSuggestedAlternativeCountrySl AddressInvalidSuggestedAlternativeCountry = "SL"
-	AddressInvalidSuggestedAlternativeCountrySm AddressInvalidSuggestedAlternativeCountry = "SM"
-	AddressInvalidSuggestedAlternativeCountrySn AddressInvalidSuggestedAlternativeCountry = "SN"
-	AddressInvalidSuggestedAlternativeCountrySo AddressInvalidSuggestedAlternativeCountry = "SO"
-	AddressInvalidSuggestedAlternativeCountrySr AddressInvalidSuggestedAlternativeCountry = "SR"
-	AddressInvalidSuggestedAlternativeCountrySS AddressInvalidSuggestedAlternativeCountry = "SS"
-	AddressInvalidSuggestedAlternativeCountrySt AddressInvalidSuggestedAlternativeCountry = "ST"
-	AddressInvalidSuggestedAlternativeCountrySv AddressInvalidSuggestedAlternativeCountry = "SV"
-	AddressInvalidSuggestedAlternativeCountrySx AddressInvalidSuggestedAlternativeCountry = "SX"
-	AddressInvalidSuggestedAlternativeCountrySy AddressInvalidSuggestedAlternativeCountry = "SY"
-	AddressInvalidSuggestedAlternativeCountrySz AddressInvalidSuggestedAlternativeCountry = "SZ"
-	AddressInvalidSuggestedAlternativeCountryTc AddressInvalidSuggestedAlternativeCountry = "TC"
-	AddressInvalidSuggestedAlternativeCountryTd AddressInvalidSuggestedAlternativeCountry = "TD"
-	AddressInvalidSuggestedAlternativeCountryTf AddressInvalidSuggestedAlternativeCountry = "TF"
-	AddressInvalidSuggestedAlternativeCountryTg AddressInvalidSuggestedAlternativeCountry = "TG"
-	AddressInvalidSuggestedAlternativeCountryTh AddressInvalidSuggestedAlternativeCountry = "TH"
-	AddressInvalidSuggestedAlternativeCountryTj AddressInvalidSuggestedAlternativeCountry = "TJ"
-	AddressInvalidSuggestedAlternativeCountryTk AddressInvalidSuggestedAlternativeCountry = "TK"
-	AddressInvalidSuggestedAlternativeCountryTl AddressInvalidSuggestedAlternativeCountry = "TL"
-	AddressInvalidSuggestedAlternativeCountryTm AddressInvalidSuggestedAlternativeCountry = "TM"
-	AddressInvalidSuggestedAlternativeCountryTn AddressInvalidSuggestedAlternativeCountry = "TN"
-	AddressInvalidSuggestedAlternativeCountryTo AddressInvalidSuggestedAlternativeCountry = "TO"
-	AddressInvalidSuggestedAlternativeCountryTr AddressInvalidSuggestedAlternativeCountry = "TR"
-	AddressInvalidSuggestedAlternativeCountryTt AddressInvalidSuggestedAlternativeCountry = "TT"
-	AddressInvalidSuggestedAlternativeCountryTv AddressInvalidSuggestedAlternativeCountry = "TV"
-	AddressInvalidSuggestedAlternativeCountryTw AddressInvalidSuggestedAlternativeCountry = "TW"
-	AddressInvalidSuggestedAlternativeCountryTz AddressInvalidSuggestedAlternativeCountry = "TZ"
-	AddressInvalidSuggestedAlternativeCountryUa AddressInvalidSuggestedAlternativeCountry = "UA"
-	AddressInvalidSuggestedAlternativeCountryUg AddressInvalidSuggestedAlternativeCountry = "UG"
-	AddressInvalidSuggestedAlternativeCountryUm AddressInvalidSuggestedAlternativeCountry = "UM"
-	AddressInvalidSuggestedAlternativeCountryUs AddressInvalidSuggestedAlternativeCountry = "US"
-	AddressInvalidSuggestedAlternativeCountryUy AddressInvalidSuggestedAlternativeCountry = "UY"
-	AddressInvalidSuggestedAlternativeCountryUz AddressInvalidSuggestedAlternativeCountry = "UZ"
-	AddressInvalidSuggestedAlternativeCountryVa AddressInvalidSuggestedAlternativeCountry = "VA"
-	AddressInvalidSuggestedAlternativeCountryVc AddressInvalidSuggestedAlternativeCountry = "VC"
-	AddressInvalidSuggestedAlternativeCountryVe AddressInvalidSuggestedAlternativeCountry = "VE"
-	AddressInvalidSuggestedAlternativeCountryVg AddressInvalidSuggestedAlternativeCountry = "VG"
-	AddressInvalidSuggestedAlternativeCountryVi AddressInvalidSuggestedAlternativeCountry = "VI"
-	AddressInvalidSuggestedAlternativeCountryVn AddressInvalidSuggestedAlternativeCountry = "VN"
-	AddressInvalidSuggestedAlternativeCountryVu AddressInvalidSuggestedAlternativeCountry = "VU"
-	AddressInvalidSuggestedAlternativeCountryWf AddressInvalidSuggestedAlternativeCountry = "WF"
-	AddressInvalidSuggestedAlternativeCountryWs AddressInvalidSuggestedAlternativeCountry = "WS"
-	AddressInvalidSuggestedAlternativeCountryXk AddressInvalidSuggestedAlternativeCountry = "XK"
-	AddressInvalidSuggestedAlternativeCountryYe AddressInvalidSuggestedAlternativeCountry = "YE"
-	AddressInvalidSuggestedAlternativeCountryYt AddressInvalidSuggestedAlternativeCountry = "YT"
-	AddressInvalidSuggestedAlternativeCountryZa AddressInvalidSuggestedAlternativeCountry = "ZA"
-	AddressInvalidSuggestedAlternativeCountryZm AddressInvalidSuggestedAlternativeCountry = "ZM"
-	AddressInvalidSuggestedAlternativeCountryZw AddressInvalidSuggestedAlternativeCountry = "ZW"
+	WorkplaceUpdateResponseTypeRemote WorkplaceUpdateResponseType = "remote"
+	WorkplaceUpdateResponseTypeOffice WorkplaceUpdateResponseType = "office"
 )
 
-func (r AddressInvalidSuggestedAlternativeCountry) IsKnown() bool {
+func (r WorkplaceUpdateResponseType) IsKnown() bool {
 	switch r {
-	case AddressInvalidSuggestedAlternativeCountryAd, AddressInvalidSuggestedAlternativeCountryAe, AddressInvalidSuggestedAlternativeCountryAf, AddressInvalidSuggestedAlternativeCountryAg, AddressInvalidSuggestedAlternativeCountryAI, AddressInvalidSuggestedAlternativeCountryAl, AddressInvalidSuggestedAlternativeCountryAm, AddressInvalidSuggestedAlternativeCountryAo, AddressInvalidSuggestedAlternativeCountryAq, AddressInvalidSuggestedAlternativeCountryAr, AddressInvalidSuggestedAlternativeCountryAs, AddressInvalidSuggestedAlternativeCountryAt, AddressInvalidSuggestedAlternativeCountryAu, AddressInvalidSuggestedAlternativeCountryAw, AddressInvalidSuggestedAlternativeCountryAx, AddressInvalidSuggestedAlternativeCountryAz, AddressInvalidSuggestedAlternativeCountryBa, AddressInvalidSuggestedAlternativeCountryBb, AddressInvalidSuggestedAlternativeCountryBd, AddressInvalidSuggestedAlternativeCountryBe, AddressInvalidSuggestedAlternativeCountryBf, AddressInvalidSuggestedAlternativeCountryBg, AddressInvalidSuggestedAlternativeCountryBh, AddressInvalidSuggestedAlternativeCountryBi, AddressInvalidSuggestedAlternativeCountryBj, AddressInvalidSuggestedAlternativeCountryBl, AddressInvalidSuggestedAlternativeCountryBm, AddressInvalidSuggestedAlternativeCountryBn, AddressInvalidSuggestedAlternativeCountryBo, AddressInvalidSuggestedAlternativeCountryBq, AddressInvalidSuggestedAlternativeCountryBr, AddressInvalidSuggestedAlternativeCountryBs, AddressInvalidSuggestedAlternativeCountryBt, AddressInvalidSuggestedAlternativeCountryBv, AddressInvalidSuggestedAlternativeCountryBw, AddressInvalidSuggestedAlternativeCountryBy, AddressInvalidSuggestedAlternativeCountryBz, AddressInvalidSuggestedAlternativeCountryCa, AddressInvalidSuggestedAlternativeCountryCc, AddressInvalidSuggestedAlternativeCountryCd, AddressInvalidSuggestedAlternativeCountryCf, AddressInvalidSuggestedAlternativeCountryCg, AddressInvalidSuggestedAlternativeCountryCh, AddressInvalidSuggestedAlternativeCountryCi, AddressInvalidSuggestedAlternativeCountryCk, AddressInvalidSuggestedAlternativeCountryCl, AddressInvalidSuggestedAlternativeCountryCm, AddressInvalidSuggestedAlternativeCountryCn, AddressInvalidSuggestedAlternativeCountryCo, AddressInvalidSuggestedAlternativeCountryCr, AddressInvalidSuggestedAlternativeCountryCu, AddressInvalidSuggestedAlternativeCountryCv, AddressInvalidSuggestedAlternativeCountryCw, AddressInvalidSuggestedAlternativeCountryCx, AddressInvalidSuggestedAlternativeCountryCy, AddressInvalidSuggestedAlternativeCountryCz, AddressInvalidSuggestedAlternativeCountryDe, AddressInvalidSuggestedAlternativeCountryDj, AddressInvalidSuggestedAlternativeCountryDk, AddressInvalidSuggestedAlternativeCountryDm, AddressInvalidSuggestedAlternativeCountryDo, AddressInvalidSuggestedAlternativeCountryDz, AddressInvalidSuggestedAlternativeCountryEc, AddressInvalidSuggestedAlternativeCountryEe, AddressInvalidSuggestedAlternativeCountryEg, AddressInvalidSuggestedAlternativeCountryEh, AddressInvalidSuggestedAlternativeCountryEr, AddressInvalidSuggestedAlternativeCountryEs, AddressInvalidSuggestedAlternativeCountryEt, AddressInvalidSuggestedAlternativeCountryFi, AddressInvalidSuggestedAlternativeCountryFj, AddressInvalidSuggestedAlternativeCountryFk, AddressInvalidSuggestedAlternativeCountryFm, AddressInvalidSuggestedAlternativeCountryFo, AddressInvalidSuggestedAlternativeCountryFr, AddressInvalidSuggestedAlternativeCountryGa, AddressInvalidSuggestedAlternativeCountryGB, AddressInvalidSuggestedAlternativeCountryGd, AddressInvalidSuggestedAlternativeCountryGe, AddressInvalidSuggestedAlternativeCountryGf, AddressInvalidSuggestedAlternativeCountryGg, AddressInvalidSuggestedAlternativeCountryGh, AddressInvalidSuggestedAlternativeCountryGi, AddressInvalidSuggestedAlternativeCountryGl, AddressInvalidSuggestedAlternativeCountryGm, AddressInvalidSuggestedAlternativeCountryGn, AddressInvalidSuggestedAlternativeCountryGp, AddressInvalidSuggestedAlternativeCountryGq, AddressInvalidSuggestedAlternativeCountryGr, AddressInvalidSuggestedAlternativeCountryGs, AddressInvalidSuggestedAlternativeCountryGt, AddressInvalidSuggestedAlternativeCountryGu, AddressInvalidSuggestedAlternativeCountryGw, AddressInvalidSuggestedAlternativeCountryGy, AddressInvalidSuggestedAlternativeCountryHk, AddressInvalidSuggestedAlternativeCountryHm, AddressInvalidSuggestedAlternativeCountryHn, AddressInvalidSuggestedAlternativeCountryHr, AddressInvalidSuggestedAlternativeCountryHt, AddressInvalidSuggestedAlternativeCountryHu, AddressInvalidSuggestedAlternativeCountryID, AddressInvalidSuggestedAlternativeCountryIe, AddressInvalidSuggestedAlternativeCountryIl, AddressInvalidSuggestedAlternativeCountryIm, AddressInvalidSuggestedAlternativeCountryIn, AddressInvalidSuggestedAlternativeCountryIo, AddressInvalidSuggestedAlternativeCountryIq, AddressInvalidSuggestedAlternativeCountryIr, AddressInvalidSuggestedAlternativeCountryIs, AddressInvalidSuggestedAlternativeCountryIt, AddressInvalidSuggestedAlternativeCountryJe, AddressInvalidSuggestedAlternativeCountryJm, AddressInvalidSuggestedAlternativeCountryJo, AddressInvalidSuggestedAlternativeCountryJp, AddressInvalidSuggestedAlternativeCountryKe, AddressInvalidSuggestedAlternativeCountryKg, AddressInvalidSuggestedAlternativeCountryKh, AddressInvalidSuggestedAlternativeCountryKi, AddressInvalidSuggestedAlternativeCountryKm, AddressInvalidSuggestedAlternativeCountryKn, AddressInvalidSuggestedAlternativeCountryKp, AddressInvalidSuggestedAlternativeCountryKr, AddressInvalidSuggestedAlternativeCountryKw, AddressInvalidSuggestedAlternativeCountryKy, AddressInvalidSuggestedAlternativeCountryKz, AddressInvalidSuggestedAlternativeCountryLa, AddressInvalidSuggestedAlternativeCountryLb, AddressInvalidSuggestedAlternativeCountryLc, AddressInvalidSuggestedAlternativeCountryLi, AddressInvalidSuggestedAlternativeCountryLk, AddressInvalidSuggestedAlternativeCountryLr, AddressInvalidSuggestedAlternativeCountryLs, AddressInvalidSuggestedAlternativeCountryLt, AddressInvalidSuggestedAlternativeCountryLu, AddressInvalidSuggestedAlternativeCountryLv, AddressInvalidSuggestedAlternativeCountryLy, AddressInvalidSuggestedAlternativeCountryMa, AddressInvalidSuggestedAlternativeCountryMc, AddressInvalidSuggestedAlternativeCountryMd, AddressInvalidSuggestedAlternativeCountryMe, AddressInvalidSuggestedAlternativeCountryMf, AddressInvalidSuggestedAlternativeCountryMg, AddressInvalidSuggestedAlternativeCountryMh, AddressInvalidSuggestedAlternativeCountryMk, AddressInvalidSuggestedAlternativeCountryMl, AddressInvalidSuggestedAlternativeCountryMm, AddressInvalidSuggestedAlternativeCountryMn, AddressInvalidSuggestedAlternativeCountryMo, AddressInvalidSuggestedAlternativeCountryMp, AddressInvalidSuggestedAlternativeCountryMq, AddressInvalidSuggestedAlternativeCountryMr, AddressInvalidSuggestedAlternativeCountryMs, AddressInvalidSuggestedAlternativeCountryMt, AddressInvalidSuggestedAlternativeCountryMu, AddressInvalidSuggestedAlternativeCountryMv, AddressInvalidSuggestedAlternativeCountryMw, AddressInvalidSuggestedAlternativeCountryMx, AddressInvalidSuggestedAlternativeCountryMy, AddressInvalidSuggestedAlternativeCountryMz, AddressInvalidSuggestedAlternativeCountryNa, AddressInvalidSuggestedAlternativeCountryNc, AddressInvalidSuggestedAlternativeCountryNe, AddressInvalidSuggestedAlternativeCountryNf, AddressInvalidSuggestedAlternativeCountryNg, AddressInvalidSuggestedAlternativeCountryNi, AddressInvalidSuggestedAlternativeCountryNl, AddressInvalidSuggestedAlternativeCountryNo, AddressInvalidSuggestedAlternativeCountryNp, AddressInvalidSuggestedAlternativeCountryNr, AddressInvalidSuggestedAlternativeCountryNu, AddressInvalidSuggestedAlternativeCountryNz, AddressInvalidSuggestedAlternativeCountryOm, AddressInvalidSuggestedAlternativeCountryPa, AddressInvalidSuggestedAlternativeCountryPe, AddressInvalidSuggestedAlternativeCountryPf, AddressInvalidSuggestedAlternativeCountryPg, AddressInvalidSuggestedAlternativeCountryPh, AddressInvalidSuggestedAlternativeCountryPk, AddressInvalidSuggestedAlternativeCountryPl, AddressInvalidSuggestedAlternativeCountryPm, AddressInvalidSuggestedAlternativeCountryPn, AddressInvalidSuggestedAlternativeCountryPr, AddressInvalidSuggestedAlternativeCountryPs, AddressInvalidSuggestedAlternativeCountryPt, AddressInvalidSuggestedAlternativeCountryPw, AddressInvalidSuggestedAlternativeCountryPy, AddressInvalidSuggestedAlternativeCountryQa, AddressInvalidSuggestedAlternativeCountryRe, AddressInvalidSuggestedAlternativeCountryRo, AddressInvalidSuggestedAlternativeCountryRs, AddressInvalidSuggestedAlternativeCountryRu, AddressInvalidSuggestedAlternativeCountryRw, AddressInvalidSuggestedAlternativeCountrySa, AddressInvalidSuggestedAlternativeCountrySb, AddressInvalidSuggestedAlternativeCountrySc, AddressInvalidSuggestedAlternativeCountrySd, AddressInvalidSuggestedAlternativeCountrySe, AddressInvalidSuggestedAlternativeCountrySg, AddressInvalidSuggestedAlternativeCountrySh, AddressInvalidSuggestedAlternativeCountrySi, AddressInvalidSuggestedAlternativeCountrySj, AddressInvalidSuggestedAlternativeCountrySk, AddressInvalidSuggestedAlternativeCountrySl, AddressInvalidSuggestedAlternativeCountrySm, AddressInvalidSuggestedAlternativeCountrySn, AddressInvalidSuggestedAlternativeCountrySo, AddressInvalidSuggestedAlternativeCountrySr, AddressInvalidSuggestedAlternativeCountrySS, AddressInvalidSuggestedAlternativeCountrySt, AddressInvalidSuggestedAlternativeCountrySv, AddressInvalidSuggestedAlternativeCountrySx, AddressInvalidSuggestedAlternativeCountrySy, AddressInvalidSuggestedAlternativeCountrySz, AddressInvalidSuggestedAlternativeCountryTc, AddressInvalidSuggestedAlternativeCountryTd, AddressInvalidSuggestedAlternativeCountryTf, AddressInvalidSuggestedAlternativeCountryTg, AddressInvalidSuggestedAlternativeCountryTh, AddressInvalidSuggestedAlternativeCountryTj, AddressInvalidSuggestedAlternativeCountryTk, AddressInvalidSuggestedAlternativeCountryTl, AddressInvalidSuggestedAlternativeCountryTm, AddressInvalidSuggestedAlternativeCountryTn, AddressInvalidSuggestedAlternativeCountryTo, AddressInvalidSuggestedAlternativeCountryTr, AddressInvalidSuggestedAlternativeCountryTt, AddressInvalidSuggestedAlternativeCountryTv, AddressInvalidSuggestedAlternativeCountryTw, AddressInvalidSuggestedAlternativeCountryTz, AddressInvalidSuggestedAlternativeCountryUa, AddressInvalidSuggestedAlternativeCountryUg, AddressInvalidSuggestedAlternativeCountryUm, AddressInvalidSuggestedAlternativeCountryUs, AddressInvalidSuggestedAlternativeCountryUy, AddressInvalidSuggestedAlternativeCountryUz, AddressInvalidSuggestedAlternativeCountryVa, AddressInvalidSuggestedAlternativeCountryVc, AddressInvalidSuggestedAlternativeCountryVe, AddressInvalidSuggestedAlternativeCountryVg, AddressInvalidSuggestedAlternativeCountryVi, AddressInvalidSuggestedAlternativeCountryVn, AddressInvalidSuggestedAlternativeCountryVu, AddressInvalidSuggestedAlternativeCountryWf, AddressInvalidSuggestedAlternativeCountryWs, AddressInvalidSuggestedAlternativeCountryXk, AddressInvalidSuggestedAlternativeCountryYe, AddressInvalidSuggestedAlternativeCountryYt, AddressInvalidSuggestedAlternativeCountryZa, AddressInvalidSuggestedAlternativeCountryZm, AddressInvalidSuggestedAlternativeCountryZw:
+	case WorkplaceUpdateResponseTypeRemote, WorkplaceUpdateResponseTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseStatus string
+
+const (
+	WorkplaceUpdateResponseStatusActive WorkplaceUpdateResponseStatus = "active"
+	WorkplaceUpdateResponseStatusArchived WorkplaceUpdateResponseStatus = "archived"
+)
+
+func (r WorkplaceUpdateResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseStatusActive, WorkplaceUpdateResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddress struct {
+	// a non empty string
+	Line1 string `json:"line1" api:"required"`
+	City string `json:"city" api:"required"`
+	PostalCode string `json:"postalCode" api:"required"`
+	// Any of "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
+	// "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+	// "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR",
+	// "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY".
+	State WorkplaceUpdateResponseAddressState `json:"state" api:"required"`
+	// Any of "US".
+	Country WorkplaceUpdateResponseAddressCountry `json:"country" api:"required"`
+	Line2 string `json:"line2" api:"nullable"`
+	JSON workplaceUpdateResponseAddressJSON `json:"-"`
+}
+
+// workplaceUpdateResponseAddressJSON contains the JSON metadata for the struct [WorkplaceUpdateResponseAddress]
+type workplaceUpdateResponseAddressJSON struct {
+	Line1 apijson.Field
+	City apijson.Field
+	PostalCode apijson.Field
+	State apijson.Field
+	Country apijson.Field
+	Line2 apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceUpdateResponseAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceUpdateResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceListResponseDataType string
+
+const (
+	WorkplaceListResponseDataTypeRemote WorkplaceListResponseDataType = "remote"
+	WorkplaceListResponseDataTypeOffice WorkplaceListResponseDataType = "office"
+)
+
+func (r WorkplaceListResponseDataType) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataTypeRemote, WorkplaceListResponseDataTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataStatus string
+
+const (
+	WorkplaceListResponseDataStatusActive WorkplaceListResponseDataStatus = "active"
+	WorkplaceListResponseDataStatusArchived WorkplaceListResponseDataStatus = "archived"
+)
+
+func (r WorkplaceListResponseDataStatus) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataStatusActive, WorkplaceListResponseDataStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddress struct {
+	// a non empty string
+	Line1 string `json:"line1" api:"required"`
+	City string `json:"city" api:"required"`
+	PostalCode string `json:"postalCode" api:"required"`
+	// Any of "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
+	// "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+	// "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR",
+	// "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY".
+	State WorkplaceListResponseDataAddressState `json:"state" api:"required"`
+	// Any of "US".
+	Country WorkplaceListResponseDataAddressCountry `json:"country" api:"required"`
+	Line2 string `json:"line2" api:"nullable"`
+	JSON workplaceListResponseDataAddressJSON `json:"-"`
+}
+
+// workplaceListResponseDataAddressJSON contains the JSON metadata for the struct [WorkplaceListResponseDataAddress]
+type workplaceListResponseDataAddressJSON struct {
+	Line1 apijson.Field
+	City apijson.Field
+	PostalCode apijson.Field
+	State apijson.Field
+	Country apijson.Field
+	Line2 apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceListResponseDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceListResponseDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceNewResponseAddressState string
+
+const (
+	WorkplaceNewResponseAddressStateAl WorkplaceNewResponseAddressState = "AL"
+	WorkplaceNewResponseAddressStateAk WorkplaceNewResponseAddressState = "AK"
+	WorkplaceNewResponseAddressStateAz WorkplaceNewResponseAddressState = "AZ"
+	WorkplaceNewResponseAddressStateAr WorkplaceNewResponseAddressState = "AR"
+	WorkplaceNewResponseAddressStateCa WorkplaceNewResponseAddressState = "CA"
+	WorkplaceNewResponseAddressStateCo WorkplaceNewResponseAddressState = "CO"
+	WorkplaceNewResponseAddressStateCt WorkplaceNewResponseAddressState = "CT"
+	WorkplaceNewResponseAddressStateDc WorkplaceNewResponseAddressState = "DC"
+	WorkplaceNewResponseAddressStateDe WorkplaceNewResponseAddressState = "DE"
+	WorkplaceNewResponseAddressStateFl WorkplaceNewResponseAddressState = "FL"
+	WorkplaceNewResponseAddressStateGa WorkplaceNewResponseAddressState = "GA"
+	WorkplaceNewResponseAddressStateHi WorkplaceNewResponseAddressState = "HI"
+	WorkplaceNewResponseAddressStateID WorkplaceNewResponseAddressState = "ID"
+	WorkplaceNewResponseAddressStateIl WorkplaceNewResponseAddressState = "IL"
+	WorkplaceNewResponseAddressStateIn WorkplaceNewResponseAddressState = "IN"
+	WorkplaceNewResponseAddressStateIa WorkplaceNewResponseAddressState = "IA"
+	WorkplaceNewResponseAddressStateKs WorkplaceNewResponseAddressState = "KS"
+	WorkplaceNewResponseAddressStateKy WorkplaceNewResponseAddressState = "KY"
+	WorkplaceNewResponseAddressStateLa WorkplaceNewResponseAddressState = "LA"
+	WorkplaceNewResponseAddressStateMe WorkplaceNewResponseAddressState = "ME"
+	WorkplaceNewResponseAddressStateMd WorkplaceNewResponseAddressState = "MD"
+	WorkplaceNewResponseAddressStateMa WorkplaceNewResponseAddressState = "MA"
+	WorkplaceNewResponseAddressStateMi WorkplaceNewResponseAddressState = "MI"
+	WorkplaceNewResponseAddressStateMn WorkplaceNewResponseAddressState = "MN"
+	WorkplaceNewResponseAddressStateMs WorkplaceNewResponseAddressState = "MS"
+	WorkplaceNewResponseAddressStateMo WorkplaceNewResponseAddressState = "MO"
+	WorkplaceNewResponseAddressStateMt WorkplaceNewResponseAddressState = "MT"
+	WorkplaceNewResponseAddressStateNe WorkplaceNewResponseAddressState = "NE"
+	WorkplaceNewResponseAddressStateNv WorkplaceNewResponseAddressState = "NV"
+	WorkplaceNewResponseAddressStateNh WorkplaceNewResponseAddressState = "NH"
+	WorkplaceNewResponseAddressStateNj WorkplaceNewResponseAddressState = "NJ"
+	WorkplaceNewResponseAddressStateNm WorkplaceNewResponseAddressState = "NM"
+	WorkplaceNewResponseAddressStateNy WorkplaceNewResponseAddressState = "NY"
+	WorkplaceNewResponseAddressStateNc WorkplaceNewResponseAddressState = "NC"
+	WorkplaceNewResponseAddressStateNd WorkplaceNewResponseAddressState = "ND"
+	WorkplaceNewResponseAddressStateOh WorkplaceNewResponseAddressState = "OH"
+	WorkplaceNewResponseAddressStateOk WorkplaceNewResponseAddressState = "OK"
+	WorkplaceNewResponseAddressStateOr WorkplaceNewResponseAddressState = "OR"
+	WorkplaceNewResponseAddressStatePa WorkplaceNewResponseAddressState = "PA"
+	WorkplaceNewResponseAddressStateRi WorkplaceNewResponseAddressState = "RI"
+	WorkplaceNewResponseAddressStateSc WorkplaceNewResponseAddressState = "SC"
+	WorkplaceNewResponseAddressStateSd WorkplaceNewResponseAddressState = "SD"
+	WorkplaceNewResponseAddressStateTn WorkplaceNewResponseAddressState = "TN"
+	WorkplaceNewResponseAddressStateTx WorkplaceNewResponseAddressState = "TX"
+	WorkplaceNewResponseAddressStateUt WorkplaceNewResponseAddressState = "UT"
+	WorkplaceNewResponseAddressStateVt WorkplaceNewResponseAddressState = "VT"
+	WorkplaceNewResponseAddressStateVa WorkplaceNewResponseAddressState = "VA"
+	WorkplaceNewResponseAddressStateWa WorkplaceNewResponseAddressState = "WA"
+	WorkplaceNewResponseAddressStateWv WorkplaceNewResponseAddressState = "WV"
+	WorkplaceNewResponseAddressStateWi WorkplaceNewResponseAddressState = "WI"
+	WorkplaceNewResponseAddressStateWy WorkplaceNewResponseAddressState = "WY"
+)
+
+func (r WorkplaceNewResponseAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseAddressStateAl, WorkplaceNewResponseAddressStateAk, WorkplaceNewResponseAddressStateAz, WorkplaceNewResponseAddressStateAr, WorkplaceNewResponseAddressStateCa, WorkplaceNewResponseAddressStateCo, WorkplaceNewResponseAddressStateCt, WorkplaceNewResponseAddressStateDc, WorkplaceNewResponseAddressStateDe, WorkplaceNewResponseAddressStateFl, WorkplaceNewResponseAddressStateGa, WorkplaceNewResponseAddressStateHi, WorkplaceNewResponseAddressStateID, WorkplaceNewResponseAddressStateIl, WorkplaceNewResponseAddressStateIn, WorkplaceNewResponseAddressStateIa, WorkplaceNewResponseAddressStateKs, WorkplaceNewResponseAddressStateKy, WorkplaceNewResponseAddressStateLa, WorkplaceNewResponseAddressStateMe, WorkplaceNewResponseAddressStateMd, WorkplaceNewResponseAddressStateMa, WorkplaceNewResponseAddressStateMi, WorkplaceNewResponseAddressStateMn, WorkplaceNewResponseAddressStateMs, WorkplaceNewResponseAddressStateMo, WorkplaceNewResponseAddressStateMt, WorkplaceNewResponseAddressStateNe, WorkplaceNewResponseAddressStateNv, WorkplaceNewResponseAddressStateNh, WorkplaceNewResponseAddressStateNj, WorkplaceNewResponseAddressStateNm, WorkplaceNewResponseAddressStateNy, WorkplaceNewResponseAddressStateNc, WorkplaceNewResponseAddressStateNd, WorkplaceNewResponseAddressStateOh, WorkplaceNewResponseAddressStateOk, WorkplaceNewResponseAddressStateOr, WorkplaceNewResponseAddressStatePa, WorkplaceNewResponseAddressStateRi, WorkplaceNewResponseAddressStateSc, WorkplaceNewResponseAddressStateSd, WorkplaceNewResponseAddressStateTn, WorkplaceNewResponseAddressStateTx, WorkplaceNewResponseAddressStateUt, WorkplaceNewResponseAddressStateVt, WorkplaceNewResponseAddressStateVa, WorkplaceNewResponseAddressStateWa, WorkplaceNewResponseAddressStateWv, WorkplaceNewResponseAddressStateWi, WorkplaceNewResponseAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewResponseAddressCountry string
+
+const (
+	WorkplaceNewResponseAddressCountryUs WorkplaceNewResponseAddressCountry = "US"
+)
+
+func (r WorkplaceNewResponseAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddressState string
+
+const (
+	WorkplaceUpdateResponseAddressStateAl WorkplaceUpdateResponseAddressState = "AL"
+	WorkplaceUpdateResponseAddressStateAk WorkplaceUpdateResponseAddressState = "AK"
+	WorkplaceUpdateResponseAddressStateAz WorkplaceUpdateResponseAddressState = "AZ"
+	WorkplaceUpdateResponseAddressStateAr WorkplaceUpdateResponseAddressState = "AR"
+	WorkplaceUpdateResponseAddressStateCa WorkplaceUpdateResponseAddressState = "CA"
+	WorkplaceUpdateResponseAddressStateCo WorkplaceUpdateResponseAddressState = "CO"
+	WorkplaceUpdateResponseAddressStateCt WorkplaceUpdateResponseAddressState = "CT"
+	WorkplaceUpdateResponseAddressStateDc WorkplaceUpdateResponseAddressState = "DC"
+	WorkplaceUpdateResponseAddressStateDe WorkplaceUpdateResponseAddressState = "DE"
+	WorkplaceUpdateResponseAddressStateFl WorkplaceUpdateResponseAddressState = "FL"
+	WorkplaceUpdateResponseAddressStateGa WorkplaceUpdateResponseAddressState = "GA"
+	WorkplaceUpdateResponseAddressStateHi WorkplaceUpdateResponseAddressState = "HI"
+	WorkplaceUpdateResponseAddressStateID WorkplaceUpdateResponseAddressState = "ID"
+	WorkplaceUpdateResponseAddressStateIl WorkplaceUpdateResponseAddressState = "IL"
+	WorkplaceUpdateResponseAddressStateIn WorkplaceUpdateResponseAddressState = "IN"
+	WorkplaceUpdateResponseAddressStateIa WorkplaceUpdateResponseAddressState = "IA"
+	WorkplaceUpdateResponseAddressStateKs WorkplaceUpdateResponseAddressState = "KS"
+	WorkplaceUpdateResponseAddressStateKy WorkplaceUpdateResponseAddressState = "KY"
+	WorkplaceUpdateResponseAddressStateLa WorkplaceUpdateResponseAddressState = "LA"
+	WorkplaceUpdateResponseAddressStateMe WorkplaceUpdateResponseAddressState = "ME"
+	WorkplaceUpdateResponseAddressStateMd WorkplaceUpdateResponseAddressState = "MD"
+	WorkplaceUpdateResponseAddressStateMa WorkplaceUpdateResponseAddressState = "MA"
+	WorkplaceUpdateResponseAddressStateMi WorkplaceUpdateResponseAddressState = "MI"
+	WorkplaceUpdateResponseAddressStateMn WorkplaceUpdateResponseAddressState = "MN"
+	WorkplaceUpdateResponseAddressStateMs WorkplaceUpdateResponseAddressState = "MS"
+	WorkplaceUpdateResponseAddressStateMo WorkplaceUpdateResponseAddressState = "MO"
+	WorkplaceUpdateResponseAddressStateMt WorkplaceUpdateResponseAddressState = "MT"
+	WorkplaceUpdateResponseAddressStateNe WorkplaceUpdateResponseAddressState = "NE"
+	WorkplaceUpdateResponseAddressStateNv WorkplaceUpdateResponseAddressState = "NV"
+	WorkplaceUpdateResponseAddressStateNh WorkplaceUpdateResponseAddressState = "NH"
+	WorkplaceUpdateResponseAddressStateNj WorkplaceUpdateResponseAddressState = "NJ"
+	WorkplaceUpdateResponseAddressStateNm WorkplaceUpdateResponseAddressState = "NM"
+	WorkplaceUpdateResponseAddressStateNy WorkplaceUpdateResponseAddressState = "NY"
+	WorkplaceUpdateResponseAddressStateNc WorkplaceUpdateResponseAddressState = "NC"
+	WorkplaceUpdateResponseAddressStateNd WorkplaceUpdateResponseAddressState = "ND"
+	WorkplaceUpdateResponseAddressStateOh WorkplaceUpdateResponseAddressState = "OH"
+	WorkplaceUpdateResponseAddressStateOk WorkplaceUpdateResponseAddressState = "OK"
+	WorkplaceUpdateResponseAddressStateOr WorkplaceUpdateResponseAddressState = "OR"
+	WorkplaceUpdateResponseAddressStatePa WorkplaceUpdateResponseAddressState = "PA"
+	WorkplaceUpdateResponseAddressStateRi WorkplaceUpdateResponseAddressState = "RI"
+	WorkplaceUpdateResponseAddressStateSc WorkplaceUpdateResponseAddressState = "SC"
+	WorkplaceUpdateResponseAddressStateSd WorkplaceUpdateResponseAddressState = "SD"
+	WorkplaceUpdateResponseAddressStateTn WorkplaceUpdateResponseAddressState = "TN"
+	WorkplaceUpdateResponseAddressStateTx WorkplaceUpdateResponseAddressState = "TX"
+	WorkplaceUpdateResponseAddressStateUt WorkplaceUpdateResponseAddressState = "UT"
+	WorkplaceUpdateResponseAddressStateVt WorkplaceUpdateResponseAddressState = "VT"
+	WorkplaceUpdateResponseAddressStateVa WorkplaceUpdateResponseAddressState = "VA"
+	WorkplaceUpdateResponseAddressStateWa WorkplaceUpdateResponseAddressState = "WA"
+	WorkplaceUpdateResponseAddressStateWv WorkplaceUpdateResponseAddressState = "WV"
+	WorkplaceUpdateResponseAddressStateWi WorkplaceUpdateResponseAddressState = "WI"
+	WorkplaceUpdateResponseAddressStateWy WorkplaceUpdateResponseAddressState = "WY"
+)
+
+func (r WorkplaceUpdateResponseAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseAddressStateAl, WorkplaceUpdateResponseAddressStateAk, WorkplaceUpdateResponseAddressStateAz, WorkplaceUpdateResponseAddressStateAr, WorkplaceUpdateResponseAddressStateCa, WorkplaceUpdateResponseAddressStateCo, WorkplaceUpdateResponseAddressStateCt, WorkplaceUpdateResponseAddressStateDc, WorkplaceUpdateResponseAddressStateDe, WorkplaceUpdateResponseAddressStateFl, WorkplaceUpdateResponseAddressStateGa, WorkplaceUpdateResponseAddressStateHi, WorkplaceUpdateResponseAddressStateID, WorkplaceUpdateResponseAddressStateIl, WorkplaceUpdateResponseAddressStateIn, WorkplaceUpdateResponseAddressStateIa, WorkplaceUpdateResponseAddressStateKs, WorkplaceUpdateResponseAddressStateKy, WorkplaceUpdateResponseAddressStateLa, WorkplaceUpdateResponseAddressStateMe, WorkplaceUpdateResponseAddressStateMd, WorkplaceUpdateResponseAddressStateMa, WorkplaceUpdateResponseAddressStateMi, WorkplaceUpdateResponseAddressStateMn, WorkplaceUpdateResponseAddressStateMs, WorkplaceUpdateResponseAddressStateMo, WorkplaceUpdateResponseAddressStateMt, WorkplaceUpdateResponseAddressStateNe, WorkplaceUpdateResponseAddressStateNv, WorkplaceUpdateResponseAddressStateNh, WorkplaceUpdateResponseAddressStateNj, WorkplaceUpdateResponseAddressStateNm, WorkplaceUpdateResponseAddressStateNy, WorkplaceUpdateResponseAddressStateNc, WorkplaceUpdateResponseAddressStateNd, WorkplaceUpdateResponseAddressStateOh, WorkplaceUpdateResponseAddressStateOk, WorkplaceUpdateResponseAddressStateOr, WorkplaceUpdateResponseAddressStatePa, WorkplaceUpdateResponseAddressStateRi, WorkplaceUpdateResponseAddressStateSc, WorkplaceUpdateResponseAddressStateSd, WorkplaceUpdateResponseAddressStateTn, WorkplaceUpdateResponseAddressStateTx, WorkplaceUpdateResponseAddressStateUt, WorkplaceUpdateResponseAddressStateVt, WorkplaceUpdateResponseAddressStateVa, WorkplaceUpdateResponseAddressStateWa, WorkplaceUpdateResponseAddressStateWv, WorkplaceUpdateResponseAddressStateWi, WorkplaceUpdateResponseAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddressCountry string
+
+const (
+	WorkplaceUpdateResponseAddressCountryUs WorkplaceUpdateResponseAddressCountry = "US"
+)
+
+func (r WorkplaceUpdateResponseAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddressState string
+
+const (
+	WorkplaceListResponseDataAddressStateAl WorkplaceListResponseDataAddressState = "AL"
+	WorkplaceListResponseDataAddressStateAk WorkplaceListResponseDataAddressState = "AK"
+	WorkplaceListResponseDataAddressStateAz WorkplaceListResponseDataAddressState = "AZ"
+	WorkplaceListResponseDataAddressStateAr WorkplaceListResponseDataAddressState = "AR"
+	WorkplaceListResponseDataAddressStateCa WorkplaceListResponseDataAddressState = "CA"
+	WorkplaceListResponseDataAddressStateCo WorkplaceListResponseDataAddressState = "CO"
+	WorkplaceListResponseDataAddressStateCt WorkplaceListResponseDataAddressState = "CT"
+	WorkplaceListResponseDataAddressStateDc WorkplaceListResponseDataAddressState = "DC"
+	WorkplaceListResponseDataAddressStateDe WorkplaceListResponseDataAddressState = "DE"
+	WorkplaceListResponseDataAddressStateFl WorkplaceListResponseDataAddressState = "FL"
+	WorkplaceListResponseDataAddressStateGa WorkplaceListResponseDataAddressState = "GA"
+	WorkplaceListResponseDataAddressStateHi WorkplaceListResponseDataAddressState = "HI"
+	WorkplaceListResponseDataAddressStateID WorkplaceListResponseDataAddressState = "ID"
+	WorkplaceListResponseDataAddressStateIl WorkplaceListResponseDataAddressState = "IL"
+	WorkplaceListResponseDataAddressStateIn WorkplaceListResponseDataAddressState = "IN"
+	WorkplaceListResponseDataAddressStateIa WorkplaceListResponseDataAddressState = "IA"
+	WorkplaceListResponseDataAddressStateKs WorkplaceListResponseDataAddressState = "KS"
+	WorkplaceListResponseDataAddressStateKy WorkplaceListResponseDataAddressState = "KY"
+	WorkplaceListResponseDataAddressStateLa WorkplaceListResponseDataAddressState = "LA"
+	WorkplaceListResponseDataAddressStateMe WorkplaceListResponseDataAddressState = "ME"
+	WorkplaceListResponseDataAddressStateMd WorkplaceListResponseDataAddressState = "MD"
+	WorkplaceListResponseDataAddressStateMa WorkplaceListResponseDataAddressState = "MA"
+	WorkplaceListResponseDataAddressStateMi WorkplaceListResponseDataAddressState = "MI"
+	WorkplaceListResponseDataAddressStateMn WorkplaceListResponseDataAddressState = "MN"
+	WorkplaceListResponseDataAddressStateMs WorkplaceListResponseDataAddressState = "MS"
+	WorkplaceListResponseDataAddressStateMo WorkplaceListResponseDataAddressState = "MO"
+	WorkplaceListResponseDataAddressStateMt WorkplaceListResponseDataAddressState = "MT"
+	WorkplaceListResponseDataAddressStateNe WorkplaceListResponseDataAddressState = "NE"
+	WorkplaceListResponseDataAddressStateNv WorkplaceListResponseDataAddressState = "NV"
+	WorkplaceListResponseDataAddressStateNh WorkplaceListResponseDataAddressState = "NH"
+	WorkplaceListResponseDataAddressStateNj WorkplaceListResponseDataAddressState = "NJ"
+	WorkplaceListResponseDataAddressStateNm WorkplaceListResponseDataAddressState = "NM"
+	WorkplaceListResponseDataAddressStateNy WorkplaceListResponseDataAddressState = "NY"
+	WorkplaceListResponseDataAddressStateNc WorkplaceListResponseDataAddressState = "NC"
+	WorkplaceListResponseDataAddressStateNd WorkplaceListResponseDataAddressState = "ND"
+	WorkplaceListResponseDataAddressStateOh WorkplaceListResponseDataAddressState = "OH"
+	WorkplaceListResponseDataAddressStateOk WorkplaceListResponseDataAddressState = "OK"
+	WorkplaceListResponseDataAddressStateOr WorkplaceListResponseDataAddressState = "OR"
+	WorkplaceListResponseDataAddressStatePa WorkplaceListResponseDataAddressState = "PA"
+	WorkplaceListResponseDataAddressStateRi WorkplaceListResponseDataAddressState = "RI"
+	WorkplaceListResponseDataAddressStateSc WorkplaceListResponseDataAddressState = "SC"
+	WorkplaceListResponseDataAddressStateSd WorkplaceListResponseDataAddressState = "SD"
+	WorkplaceListResponseDataAddressStateTn WorkplaceListResponseDataAddressState = "TN"
+	WorkplaceListResponseDataAddressStateTx WorkplaceListResponseDataAddressState = "TX"
+	WorkplaceListResponseDataAddressStateUt WorkplaceListResponseDataAddressState = "UT"
+	WorkplaceListResponseDataAddressStateVt WorkplaceListResponseDataAddressState = "VT"
+	WorkplaceListResponseDataAddressStateVa WorkplaceListResponseDataAddressState = "VA"
+	WorkplaceListResponseDataAddressStateWa WorkplaceListResponseDataAddressState = "WA"
+	WorkplaceListResponseDataAddressStateWv WorkplaceListResponseDataAddressState = "WV"
+	WorkplaceListResponseDataAddressStateWi WorkplaceListResponseDataAddressState = "WI"
+	WorkplaceListResponseDataAddressStateWy WorkplaceListResponseDataAddressState = "WY"
+)
+
+func (r WorkplaceListResponseDataAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataAddressStateAl, WorkplaceListResponseDataAddressStateAk, WorkplaceListResponseDataAddressStateAz, WorkplaceListResponseDataAddressStateAr, WorkplaceListResponseDataAddressStateCa, WorkplaceListResponseDataAddressStateCo, WorkplaceListResponseDataAddressStateCt, WorkplaceListResponseDataAddressStateDc, WorkplaceListResponseDataAddressStateDe, WorkplaceListResponseDataAddressStateFl, WorkplaceListResponseDataAddressStateGa, WorkplaceListResponseDataAddressStateHi, WorkplaceListResponseDataAddressStateID, WorkplaceListResponseDataAddressStateIl, WorkplaceListResponseDataAddressStateIn, WorkplaceListResponseDataAddressStateIa, WorkplaceListResponseDataAddressStateKs, WorkplaceListResponseDataAddressStateKy, WorkplaceListResponseDataAddressStateLa, WorkplaceListResponseDataAddressStateMe, WorkplaceListResponseDataAddressStateMd, WorkplaceListResponseDataAddressStateMa, WorkplaceListResponseDataAddressStateMi, WorkplaceListResponseDataAddressStateMn, WorkplaceListResponseDataAddressStateMs, WorkplaceListResponseDataAddressStateMo, WorkplaceListResponseDataAddressStateMt, WorkplaceListResponseDataAddressStateNe, WorkplaceListResponseDataAddressStateNv, WorkplaceListResponseDataAddressStateNh, WorkplaceListResponseDataAddressStateNj, WorkplaceListResponseDataAddressStateNm, WorkplaceListResponseDataAddressStateNy, WorkplaceListResponseDataAddressStateNc, WorkplaceListResponseDataAddressStateNd, WorkplaceListResponseDataAddressStateOh, WorkplaceListResponseDataAddressStateOk, WorkplaceListResponseDataAddressStateOr, WorkplaceListResponseDataAddressStatePa, WorkplaceListResponseDataAddressStateRi, WorkplaceListResponseDataAddressStateSc, WorkplaceListResponseDataAddressStateSd, WorkplaceListResponseDataAddressStateTn, WorkplaceListResponseDataAddressStateTx, WorkplaceListResponseDataAddressStateUt, WorkplaceListResponseDataAddressStateVt, WorkplaceListResponseDataAddressStateVa, WorkplaceListResponseDataAddressStateWa, WorkplaceListResponseDataAddressStateWv, WorkplaceListResponseDataAddressStateWi, WorkplaceListResponseDataAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddressCountry string
+
+const (
+	WorkplaceListResponseDataAddressCountryUs WorkplaceListResponseDataAddressCountry = "US"
+)
+
+func (r WorkplaceListResponseDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataAddressCountryUs:
 		return true
 	}
 	return false

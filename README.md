@@ -23,7 +23,7 @@ Generated Go SDK for Warp API.
 ## Installation
 
 ```sh
-go get github.com/marclave/warp-go-sdk
+go get github.com/TeamWarp/warp-go-sdk
 ```
 
 <br />
@@ -38,8 +38,8 @@ import (
 	"fmt"
 	"os"
 
-	sdk "github.com/marclave/warp-go-sdk"
-	"github.com/marclave/warp-go-sdk/option"
+	sdk "github.com/TeamWarp/warp-go-sdk"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 func main() {
@@ -89,7 +89,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "github.com/marclave/warp-go-sdk", "errors", "fmt"
+// imports: sdk "github.com/TeamWarp/warp-go-sdk", "errors", "fmt"
 ```
 
 Documented error statuses: `400`, `401`, `403`, `404`, `409`, `429`, `500`.
@@ -107,7 +107,7 @@ client := sdk.NewClient(
 	option.WithRequestTimeout(60*time.Second),
 )
 
-// imports: sdk "github.com/marclave/warp-go-sdk", "github.com/marclave/warp-go-sdk/option", "time"
+// imports: sdk "github.com/TeamWarp/warp-go-sdk", "github.com/TeamWarp/warp-go-sdk/option", "time"
 ```
 
 | Option | Type | Default | Description |

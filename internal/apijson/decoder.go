@@ -12,7 +12,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/marclave/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 )
 
 // decoders is a synchronized map with roughly the following type:

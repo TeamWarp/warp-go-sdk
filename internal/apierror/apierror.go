@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 
-	"github.com/marclave/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 )
 
 // Error represents an error that originates from the API, i.e. when a request is

@@ -1,7 +1,7 @@
 package warpgosdk
 
 import (
-	"github.com/marclave/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"io"
 )
 

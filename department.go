@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/marclave/warp-go-sdk/internal/apijson"
-	"github.com/marclave/warp-go-sdk/internal/apiquery"
-	"github.com/marclave/warp-go-sdk/internal/param"
-	"github.com/marclave/warp-go-sdk/internal/requestconfig"
-	"github.com/marclave/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // DepartmentService contains methods and other services that help with interacting
@@ -112,123 +112,6 @@ func (r *DepartmentService) Update(ctx context.Context, id string, body Departme
 	return res, err
 }
 
-type DepartmentListResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag DepartmentListResponseTag `json:"_tag" api:"required"`
-	JSON departmentListResponseJSON `json:"-"`
-}
-
-// departmentListResponseJSON contains the JSON metadata for the struct [DepartmentListResponse]
-type departmentListResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DepartmentListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r departmentListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type DepartmentListResponseTag string
-
-const (
-	DepartmentListResponseTagHTTPAPIDecodeError DepartmentListResponseTag = "HttpApiDecodeError"
-)
-
-func (r DepartmentListResponseTag) IsKnown() bool {
-	switch r {
-	case DepartmentListResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type DepartmentNewResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag DepartmentNewResponseTag `json:"_tag" api:"required"`
-	JSON departmentNewResponseJSON `json:"-"`
-}
-
-// departmentNewResponseJSON contains the JSON metadata for the struct [DepartmentNewResponse]
-type departmentNewResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DepartmentNewResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r departmentNewResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type DepartmentNewResponseTag string
-
-const (
-	DepartmentNewResponseTagHTTPAPIDecodeError DepartmentNewResponseTag = "HttpApiDecodeError"
-)
-
-func (r DepartmentNewResponseTag) IsKnown() bool {
-	switch r {
-	case DepartmentNewResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type DepartmentUpdateResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag DepartmentUpdateResponseTag `json:"_tag" api:"required"`
-	JSON departmentUpdateResponseJSON `json:"-"`
-}
-
-// departmentUpdateResponseJSON contains the JSON metadata for the struct [DepartmentUpdateResponse]
-type departmentUpdateResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DepartmentUpdateResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r departmentUpdateResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type DepartmentUpdateResponseTag string
-
-const (
-	DepartmentUpdateResponseTagHTTPAPIDecodeError DepartmentUpdateResponseTag = "HttpApiDecodeError"
-)
-
-func (r DepartmentUpdateResponseTag) IsKnown() bool {
-	switch r {
-	case DepartmentUpdateResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
 type DepartmentListParams struct {
 	// The unique public id of the department
 	AfterID param.Field[string] `query:"afterId"`
@@ -261,4 +144,107 @@ type DepartmentUpdateParams struct {
 
 func (r DepartmentUpdateParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
+}
+
+type DepartmentListResponse struct {
+	HasMore bool `json:"hasMore" api:"required"`
+	// an integer
+	Count int64 `json:"count" api:"required"`
+	Data []DepartmentListResponseData `json:"data" api:"required"`
+	JSON departmentListResponseJSON `json:"-"`
+}
+
+// departmentListResponseJSON contains the JSON metadata for the struct [DepartmentListResponse]
+type departmentListResponseJSON struct {
+	HasMore apijson.Field
+	Count apijson.Field
+	Data apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DepartmentListResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r departmentListResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type DepartmentNewResponse struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	JSON departmentNewResponseJSON `json:"-"`
+}
+
+// departmentNewResponseJSON contains the JSON metadata for the struct [DepartmentNewResponse]
+type departmentNewResponseJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	CreatedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DepartmentNewResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r departmentNewResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type DepartmentUpdateResponse struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	JSON departmentUpdateResponseJSON `json:"-"`
+}
+
+// departmentUpdateResponseJSON contains the JSON metadata for the struct [DepartmentUpdateResponse]
+type departmentUpdateResponseJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	CreatedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DepartmentUpdateResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r departmentUpdateResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type DepartmentListResponseData struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	JSON departmentListResponseDataJSON `json:"-"`
+}
+
+// departmentListResponseDataJSON contains the JSON metadata for the struct [DepartmentListResponseData]
+type departmentListResponseDataJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	CreatedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DepartmentListResponseData) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r departmentListResponseDataJSON) RawJSON() string {
+	return r.raw
 }

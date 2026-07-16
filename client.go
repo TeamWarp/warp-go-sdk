@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/marclave/warp-go-sdk/internal/requestconfig"
-	"github.com/marclave/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // Client creates a struct with services and top level methods that help with

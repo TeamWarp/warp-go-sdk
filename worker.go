@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/marclave/warp-go-sdk/internal/apijson"
-	"github.com/marclave/warp-go-sdk/internal/apiquery"
-	"github.com/marclave/warp-go-sdk/internal/param"
-	"github.com/marclave/warp-go-sdk/internal/requestconfig"
-	"github.com/marclave/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // WorkerService contains methods and other services that help with interacting
@@ -136,7 +136,9 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 //     	ManagerID: sdk.F[string]("wrk_1234"),
 //     	Position: sdk.F[string](""),
 //     	StartDate: sdk.F[string]("2000-01-01"),
-//     	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationUnion{}),
+//     	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
+//     		WorkplaceID: sdk.F[string]("wkp_1234"),
+//     	}),
 //     })
 //     if err != nil {
 //     	panic(err)
@@ -209,671 +211,120 @@ func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.Re
 	return res, err
 }
 
-type HTTPAPIDecodeError struct {
-	Issues []HTTPAPIDecodeErrorIssue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag HTTPAPIDecodeErrorTag `json:"_tag" api:"required"`
-	JSON httpapiDecodeErrorJSON `json:"-"`
-}
-
-// httpapiDecodeErrorJSON contains the JSON metadata for the struct [HTTPAPIDecodeError]
-type httpapiDecodeErrorJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *HTTPAPIDecodeError) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r httpapiDecodeErrorJSON) RawJSON() string {
-	return r.raw
-}
-
-type HTTPAPIDecodeErrorTag string
-
-const (
-	HTTPAPIDecodeErrorTagHTTPAPIDecodeError HTTPAPIDecodeErrorTag = "HttpApiDecodeError"
-)
-
-func (r HTTPAPIDecodeErrorTag) IsKnown() bool {
-	switch r {
-	case HTTPAPIDecodeErrorTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type StateRegistrationRequired struct {
-	State string `json:"state" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "StateRegistrationRequired".
-	Tag StateRegistrationRequiredTag `json:"_tag" api:"required"`
-	JSON stateRegistrationRequiredJSON `json:"-"`
-}
-
-// stateRegistrationRequiredJSON contains the JSON metadata for the struct [StateRegistrationRequired]
-type stateRegistrationRequiredJSON struct {
-	State apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *StateRegistrationRequired) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r stateRegistrationRequiredJSON) RawJSON() string {
-	return r.raw
-}
-
-type StateRegistrationRequiredTag string
-
-const (
-	StateRegistrationRequiredTagStateRegistrationRequired StateRegistrationRequiredTag = "StateRegistrationRequired"
-)
-
-func (r StateRegistrationRequiredTag) IsKnown() bool {
-	switch r {
-	case StateRegistrationRequiredTagStateRegistrationRequired:
-		return true
-	}
-	return false
-}
-
-type DepartmentNotFound struct {
-	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "DepartmentNotFound".
-	Tag DepartmentNotFoundTag `json:"_tag" api:"required"`
-	JSON departmentNotFoundJSON `json:"-"`
-}
-
-// departmentNotFoundJSON contains the JSON metadata for the struct [DepartmentNotFound]
-type departmentNotFoundJSON struct {
-	ID apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *DepartmentNotFound) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r departmentNotFoundJSON) RawJSON() string {
-	return r.raw
-}
-
-type DepartmentNotFoundTag string
-
-const (
-	DepartmentNotFoundTagDepartmentNotFound DepartmentNotFoundTag = "DepartmentNotFound"
-)
-
-func (r DepartmentNotFoundTag) IsKnown() bool {
-	switch r {
-	case DepartmentNotFoundTagDepartmentNotFound:
-		return true
-	}
-	return false
-}
-
-type WorkplaceNotFound struct {
+type OfficeWorkLocationParam struct {
+	// Any of "office".
+	Type param.Field[OfficeWorkLocationType] `json:"type" api:"required"`
 	// Public workplace identifier
-	ID string `json:"id" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "WorkplaceNotFound".
-	Tag WorkplaceNotFoundTag `json:"_tag" api:"required"`
-	JSON workplaceNotFoundJSON `json:"-"`
+	WorkplaceID param.Field[string] `json:"workplaceId" api:"required"`
 }
 
-// workplaceNotFoundJSON contains the JSON metadata for the struct [WorkplaceNotFound]
-type workplaceNotFoundJSON struct {
-	ID apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkplaceNotFound) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workplaceNotFoundJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkplaceNotFoundTag string
-
-const (
-	WorkplaceNotFoundTagWorkplaceNotFound WorkplaceNotFoundTag = "WorkplaceNotFound"
-)
-
-func (r WorkplaceNotFoundTag) IsKnown() bool {
-	switch r {
-	case WorkplaceNotFoundTagWorkplaceNotFound:
-		return true
-	}
-	return false
-}
-
-type ManagerNotFoundError struct {
-	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "ManagerNotFoundError".
-	Tag ManagerNotFoundErrorTag `json:"_tag" api:"required"`
-	JSON managerNotFoundErrorJSON `json:"-"`
-}
-
-// managerNotFoundErrorJSON contains the JSON metadata for the struct [ManagerNotFoundError]
-type managerNotFoundErrorJSON struct {
-	ID apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *ManagerNotFoundError) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r managerNotFoundErrorJSON) RawJSON() string {
-	return r.raw
-}
-
-type ManagerNotFoundErrorTag string
-
-const (
-	ManagerNotFoundErrorTagManagerNotFoundError ManagerNotFoundErrorTag = "ManagerNotFoundError"
-)
-
-func (r ManagerNotFoundErrorTag) IsKnown() bool {
-	switch r {
-	case ManagerNotFoundErrorTagManagerNotFoundError:
-		return true
-	}
-	return false
-}
-
-type PayScheduleNotConfigured struct {
-	// Any of "weekly", "biweekly", "monthly", "semimonthly", "quarterly", "annually".
-	PaySchedule PayScheduleNotConfiguredPaySchedule `json:"paySchedule" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "PayScheduleNotConfigured".
-	Tag PayScheduleNotConfiguredTag `json:"_tag" api:"required"`
-	JSON payScheduleNotConfiguredJSON `json:"-"`
-}
-
-// payScheduleNotConfiguredJSON contains the JSON metadata for the struct [PayScheduleNotConfigured]
-type payScheduleNotConfiguredJSON struct {
-	PaySchedule apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PayScheduleNotConfigured) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r payScheduleNotConfiguredJSON) RawJSON() string {
-	return r.raw
-}
-
-type PayScheduleNotConfiguredPaySchedule string
-
-const (
-	PayScheduleNotConfiguredPayScheduleWeekly PayScheduleNotConfiguredPaySchedule = "weekly"
-	PayScheduleNotConfiguredPayScheduleBiweekly PayScheduleNotConfiguredPaySchedule = "biweekly"
-	PayScheduleNotConfiguredPayScheduleMonthly PayScheduleNotConfiguredPaySchedule = "monthly"
-	PayScheduleNotConfiguredPayScheduleSemimonthly PayScheduleNotConfiguredPaySchedule = "semimonthly"
-	PayScheduleNotConfiguredPayScheduleQuarterly PayScheduleNotConfiguredPaySchedule = "quarterly"
-	PayScheduleNotConfiguredPayScheduleAnnually PayScheduleNotConfiguredPaySchedule = "annually"
-)
-
-func (r PayScheduleNotConfiguredPaySchedule) IsKnown() bool {
-	switch r {
-	case PayScheduleNotConfiguredPayScheduleWeekly, PayScheduleNotConfiguredPayScheduleBiweekly, PayScheduleNotConfiguredPayScheduleMonthly, PayScheduleNotConfiguredPayScheduleSemimonthly, PayScheduleNotConfiguredPayScheduleQuarterly, PayScheduleNotConfiguredPayScheduleAnnually:
-		return true
-	}
-	return false
-}
-
-type PayScheduleNotConfiguredTag string
-
-const (
-	PayScheduleNotConfiguredTagPayScheduleNotConfigured PayScheduleNotConfiguredTag = "PayScheduleNotConfigured"
-)
-
-func (r PayScheduleNotConfiguredTag) IsKnown() bool {
-	switch r {
-	case PayScheduleNotConfiguredTagPayScheduleNotConfigured:
-		return true
-	}
-	return false
-}
-
-type SubscriptionLimitError struct {
-	Message string `json:"message" api:"required"`
-	// Any of "SubscriptionLimitError".
-	Tag SubscriptionLimitErrorTag `json:"_tag" api:"required"`
-	JSON subscriptionLimitErrorJSON `json:"-"`
-}
-
-// subscriptionLimitErrorJSON contains the JSON metadata for the struct [SubscriptionLimitError]
-type subscriptionLimitErrorJSON struct {
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *SubscriptionLimitError) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r subscriptionLimitErrorJSON) RawJSON() string {
-	return r.raw
-}
-
-type SubscriptionLimitErrorTag string
-
-const (
-	SubscriptionLimitErrorTagSubscriptionLimitError SubscriptionLimitErrorTag = "SubscriptionLimitError"
-)
-
-func (r SubscriptionLimitErrorTag) IsKnown() bool {
-	switch r {
-	case SubscriptionLimitErrorTagSubscriptionLimitError:
-		return true
-	}
-	return false
-}
-
-type InvalidWorkerStatusError struct {
-	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "InvalidWorkerStatusError".
-	Tag InvalidWorkerStatusErrorTag `json:"_tag" api:"required"`
-	JSON invalidWorkerStatusErrorJSON `json:"-"`
-}
-
-// invalidWorkerStatusErrorJSON contains the JSON metadata for the struct [InvalidWorkerStatusError]
-type invalidWorkerStatusErrorJSON struct {
-	ID apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *InvalidWorkerStatusError) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r invalidWorkerStatusErrorJSON) RawJSON() string {
-	return r.raw
-}
-
-type InvalidWorkerStatusErrorTag string
-
-const (
-	InvalidWorkerStatusErrorTagInvalidWorkerStatusError InvalidWorkerStatusErrorTag = "InvalidWorkerStatusError"
-)
-
-func (r InvalidWorkerStatusErrorTag) IsKnown() bool {
-	switch r {
-	case InvalidWorkerStatusErrorTagInvalidWorkerStatusError:
-		return true
-	}
-	return false
-}
-
-type WorkerAlreadyExistsError struct {
-	Message string `json:"message" api:"required"`
-	// Any of "WorkerAlreadyExistsError".
-	Tag WorkerAlreadyExistsErrorTag `json:"_tag" api:"required"`
-	JSON workerAlreadyExistsErrorJSON `json:"-"`
-}
-
-// workerAlreadyExistsErrorJSON contains the JSON metadata for the struct [WorkerAlreadyExistsError]
-type workerAlreadyExistsErrorJSON struct {
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerAlreadyExistsError) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerAlreadyExistsErrorJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerAlreadyExistsErrorTag string
-
-const (
-	WorkerAlreadyExistsErrorTagWorkerAlreadyExistsError WorkerAlreadyExistsErrorTag = "WorkerAlreadyExistsError"
-)
-
-func (r WorkerAlreadyExistsErrorTag) IsKnown() bool {
-	switch r {
-	case WorkerAlreadyExistsErrorTagWorkerAlreadyExistsError:
-		return true
-	}
-	return false
-}
-
-type HTTPAPIDecodeErrorIssue struct {
-	// The tag identifying the type of parse issue
-	//
-	// Any of "Pointer", "Unexpected", "Missing", "Composite", "Refinement",
-	// "Transformation", "Type", "Forbidden".
-	Tag HTTPAPIDecodeErrorIssueTag `json:"_tag" api:"required"`
-	// The path to the property where the issue occurred
-	Path []any `json:"path" api:"required"`
-	// A descriptive message explaining the issue
-	Message string `json:"message" api:"required"`
-	JSON httpapiDecodeErrorIssueJSON `json:"-"`
-}
-
-// httpapiDecodeErrorIssueJSON contains the JSON metadata for the struct [HTTPAPIDecodeErrorIssue]
-type httpapiDecodeErrorIssueJSON struct {
-	Tag apijson.Field
-	Path apijson.Field
-	Message apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *HTTPAPIDecodeErrorIssue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r httpapiDecodeErrorIssueJSON) RawJSON() string {
-	return r.raw
-}
-
-type HTTPAPIDecodeErrorIssueTag string
-
-const (
-	HTTPAPIDecodeErrorIssueTagPointer HTTPAPIDecodeErrorIssueTag = "Pointer"
-	HTTPAPIDecodeErrorIssueTagUnexpected HTTPAPIDecodeErrorIssueTag = "Unexpected"
-	HTTPAPIDecodeErrorIssueTagMissing HTTPAPIDecodeErrorIssueTag = "Missing"
-	HTTPAPIDecodeErrorIssueTagComposite HTTPAPIDecodeErrorIssueTag = "Composite"
-	HTTPAPIDecodeErrorIssueTagRefinement HTTPAPIDecodeErrorIssueTag = "Refinement"
-	HTTPAPIDecodeErrorIssueTagTransformation HTTPAPIDecodeErrorIssueTag = "Transformation"
-	HTTPAPIDecodeErrorIssueTagType HTTPAPIDecodeErrorIssueTag = "Type"
-	HTTPAPIDecodeErrorIssueTagForbidden HTTPAPIDecodeErrorIssueTag = "Forbidden"
-)
-
-func (r HTTPAPIDecodeErrorIssueTag) IsKnown() bool {
-	switch r {
-	case HTTPAPIDecodeErrorIssueTagPointer, HTTPAPIDecodeErrorIssueTagUnexpected, HTTPAPIDecodeErrorIssueTagMissing, HTTPAPIDecodeErrorIssueTagComposite, HTTPAPIDecodeErrorIssueTagRefinement, HTTPAPIDecodeErrorIssueTagTransformation, HTTPAPIDecodeErrorIssueTagType, HTTPAPIDecodeErrorIssueTagForbidden:
-		return true
-	}
-	return false
-}
-
-type HTTPAPIDecodeErrorIssueParam struct {
-	// A descriptive message explaining the issue
-	Message param.Field[string] `json:"message" api:"required"`
-	// The path to the property where the issue occurred
-	Path param.Field[[]any] `json:"path" api:"required"`
-	// The tag identifying the type of parse issue
-	//
-	// Any of "Pointer", "Unexpected", "Missing", "Composite", "Refinement",
-	// "Transformation", "Type", "Forbidden".
-	Tag param.Field[HTTPAPIDecodeErrorIssueTag] `json:"_tag" api:"required"`
-}
-
-func (r HTTPAPIDecodeErrorIssueParam) MarshalJSON() (data []byte, err error) {
+func (r OfficeWorkLocationParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
 
-type WorkerListResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkerListResponseTag `json:"_tag" api:"required"`
-	JSON workerListResponseJSON `json:"-"`
-}
-
-// workerListResponseJSON contains the JSON metadata for the struct [WorkerListResponse]
-type workerListResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerListResponseTag string
+type OfficeWorkLocationType string
 
 const (
-	WorkerListResponseTagHTTPAPIDecodeError WorkerListResponseTag = "HttpApiDecodeError"
+	OfficeWorkLocationTypeOffice OfficeWorkLocationType = "office"
 )
 
-func (r WorkerListResponseTag) IsKnown() bool {
+func (r OfficeWorkLocationType) IsKnown() bool {
 	switch r {
-	case WorkerListResponseTagHTTPAPIDecodeError:
+	case OfficeWorkLocationTypeOffice:
 		return true
 	}
 	return false
 }
 
-type WorkerGetResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkerGetResponseTag `json:"_tag" api:"required"`
-	JSON workerGetResponseJSON `json:"-"`
+type RemoteWorkLocationParam struct {
+	// The US state where the remote employee works. Required for tax purposes.
+	//
+	// Any of "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI",
+	// "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+	// "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR",
+	// "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY".
+	State param.Field[RemoteWorkLocationState] `json:"state" api:"required"`
+	// Any of "remote".
+	Type param.Field[RemoteWorkLocationType] `json:"type" api:"required"`
 }
 
-// workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
-type workerGetResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+func (r RemoteWorkLocationParam) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
 }
 
-func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseTag string
+type RemoteWorkLocationType string
 
 const (
-	WorkerGetResponseTagHTTPAPIDecodeError WorkerGetResponseTag = "HttpApiDecodeError"
+	RemoteWorkLocationTypeRemote RemoteWorkLocationType = "remote"
 )
 
-func (r WorkerGetResponseTag) IsKnown() bool {
+func (r RemoteWorkLocationType) IsKnown() bool {
 	switch r {
-	case WorkerGetResponseTagHTTPAPIDecodeError:
+	case RemoteWorkLocationTypeRemote:
 		return true
 	}
 	return false
 }
 
-type WorkerDeleteResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkerDeleteResponseTag `json:"_tag" api:"required"`
-	JSON workerDeleteResponseJSON `json:"-"`
-}
-
-// workerDeleteResponseJSON contains the JSON metadata for the struct [WorkerDeleteResponse]
-type workerDeleteResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerDeleteResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerDeleteResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerDeleteResponseTag string
+type RemoteWorkLocationState string
 
 const (
-	WorkerDeleteResponseTagHTTPAPIDecodeError WorkerDeleteResponseTag = "HttpApiDecodeError"
+	RemoteWorkLocationStateAl RemoteWorkLocationState = "AL"
+	RemoteWorkLocationStateAk RemoteWorkLocationState = "AK"
+	RemoteWorkLocationStateAz RemoteWorkLocationState = "AZ"
+	RemoteWorkLocationStateAr RemoteWorkLocationState = "AR"
+	RemoteWorkLocationStateCa RemoteWorkLocationState = "CA"
+	RemoteWorkLocationStateCo RemoteWorkLocationState = "CO"
+	RemoteWorkLocationStateCt RemoteWorkLocationState = "CT"
+	RemoteWorkLocationStateDc RemoteWorkLocationState = "DC"
+	RemoteWorkLocationStateDe RemoteWorkLocationState = "DE"
+	RemoteWorkLocationStateFl RemoteWorkLocationState = "FL"
+	RemoteWorkLocationStateGa RemoteWorkLocationState = "GA"
+	RemoteWorkLocationStateHi RemoteWorkLocationState = "HI"
+	RemoteWorkLocationStateID RemoteWorkLocationState = "ID"
+	RemoteWorkLocationStateIl RemoteWorkLocationState = "IL"
+	RemoteWorkLocationStateIn RemoteWorkLocationState = "IN"
+	RemoteWorkLocationStateIa RemoteWorkLocationState = "IA"
+	RemoteWorkLocationStateKs RemoteWorkLocationState = "KS"
+	RemoteWorkLocationStateKy RemoteWorkLocationState = "KY"
+	RemoteWorkLocationStateLa RemoteWorkLocationState = "LA"
+	RemoteWorkLocationStateMe RemoteWorkLocationState = "ME"
+	RemoteWorkLocationStateMd RemoteWorkLocationState = "MD"
+	RemoteWorkLocationStateMa RemoteWorkLocationState = "MA"
+	RemoteWorkLocationStateMi RemoteWorkLocationState = "MI"
+	RemoteWorkLocationStateMn RemoteWorkLocationState = "MN"
+	RemoteWorkLocationStateMs RemoteWorkLocationState = "MS"
+	RemoteWorkLocationStateMo RemoteWorkLocationState = "MO"
+	RemoteWorkLocationStateMt RemoteWorkLocationState = "MT"
+	RemoteWorkLocationStateNe RemoteWorkLocationState = "NE"
+	RemoteWorkLocationStateNv RemoteWorkLocationState = "NV"
+	RemoteWorkLocationStateNh RemoteWorkLocationState = "NH"
+	RemoteWorkLocationStateNj RemoteWorkLocationState = "NJ"
+	RemoteWorkLocationStateNm RemoteWorkLocationState = "NM"
+	RemoteWorkLocationStateNy RemoteWorkLocationState = "NY"
+	RemoteWorkLocationStateNc RemoteWorkLocationState = "NC"
+	RemoteWorkLocationStateNd RemoteWorkLocationState = "ND"
+	RemoteWorkLocationStateOh RemoteWorkLocationState = "OH"
+	RemoteWorkLocationStateOk RemoteWorkLocationState = "OK"
+	RemoteWorkLocationStateOr RemoteWorkLocationState = "OR"
+	RemoteWorkLocationStatePa RemoteWorkLocationState = "PA"
+	RemoteWorkLocationStateRi RemoteWorkLocationState = "RI"
+	RemoteWorkLocationStateSc RemoteWorkLocationState = "SC"
+	RemoteWorkLocationStateSd RemoteWorkLocationState = "SD"
+	RemoteWorkLocationStateTn RemoteWorkLocationState = "TN"
+	RemoteWorkLocationStateTx RemoteWorkLocationState = "TX"
+	RemoteWorkLocationStateUt RemoteWorkLocationState = "UT"
+	RemoteWorkLocationStateVt RemoteWorkLocationState = "VT"
+	RemoteWorkLocationStateVa RemoteWorkLocationState = "VA"
+	RemoteWorkLocationStateWa RemoteWorkLocationState = "WA"
+	RemoteWorkLocationStateWv RemoteWorkLocationState = "WV"
+	RemoteWorkLocationStateWi RemoteWorkLocationState = "WI"
+	RemoteWorkLocationStateWy RemoteWorkLocationState = "WY"
 )
 
-func (r WorkerDeleteResponseTag) IsKnown() bool {
+func (r RemoteWorkLocationState) IsKnown() bool {
 	switch r {
-	case WorkerDeleteResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponse struct {
-	Message string `json:"message" api:"required"`
-	// Any of "ApiKeyUnauthorized".
-	Tag WorkerNewEmployeeResponseTag `json:"_tag" api:"required"`
-	JSON workerNewEmployeeResponseJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponse]
-type workerNewEmployeeResponseJSON struct {
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewEmployeeResponseTag string
-
-const (
-	WorkerNewEmployeeResponseTagAPIKeyUnauthorized WorkerNewEmployeeResponseTag = "ApiKeyUnauthorized"
-)
-
-func (r WorkerNewEmployeeResponseTag) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseTagAPIKeyUnauthorized:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkerNewContractorResponseTag `json:"_tag" api:"required"`
-	JSON workerNewContractorResponseJSON `json:"-"`
-}
-
-// workerNewContractorResponseJSON contains the JSON metadata for the struct [WorkerNewContractorResponse]
-type workerNewContractorResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewContractorResponseTag string
-
-const (
-	WorkerNewContractorResponseTagHTTPAPIDecodeError WorkerNewContractorResponseTag = "HttpApiDecodeError"
-)
-
-func (r WorkerNewContractorResponseTag) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag WorkerInviteResponseTag `json:"_tag" api:"required"`
-	JSON workerInviteResponseJSON `json:"-"`
-}
-
-// workerInviteResponseJSON contains the JSON metadata for the struct [WorkerInviteResponse]
-type workerInviteResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerInviteResponseTag string
-
-const (
-	WorkerInviteResponseTagHTTPAPIDecodeError WorkerInviteResponseTag = "HttpApiDecodeError"
-)
-
-func (r WorkerInviteResponseTag) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseTagHTTPAPIDecodeError:
+	case RemoteWorkLocationStateAl, RemoteWorkLocationStateAk, RemoteWorkLocationStateAz, RemoteWorkLocationStateAr, RemoteWorkLocationStateCa, RemoteWorkLocationStateCo, RemoteWorkLocationStateCt, RemoteWorkLocationStateDc, RemoteWorkLocationStateDe, RemoteWorkLocationStateFl, RemoteWorkLocationStateGa, RemoteWorkLocationStateHi, RemoteWorkLocationStateID, RemoteWorkLocationStateIl, RemoteWorkLocationStateIn, RemoteWorkLocationStateIa, RemoteWorkLocationStateKs, RemoteWorkLocationStateKy, RemoteWorkLocationStateLa, RemoteWorkLocationStateMe, RemoteWorkLocationStateMd, RemoteWorkLocationStateMa, RemoteWorkLocationStateMi, RemoteWorkLocationStateMn, RemoteWorkLocationStateMs, RemoteWorkLocationStateMo, RemoteWorkLocationStateMt, RemoteWorkLocationStateNe, RemoteWorkLocationStateNv, RemoteWorkLocationStateNh, RemoteWorkLocationStateNj, RemoteWorkLocationStateNm, RemoteWorkLocationStateNy, RemoteWorkLocationStateNc, RemoteWorkLocationStateNd, RemoteWorkLocationStateOh, RemoteWorkLocationStateOk, RemoteWorkLocationStateOr, RemoteWorkLocationStatePa, RemoteWorkLocationStateRi, RemoteWorkLocationStateSc, RemoteWorkLocationStateSd, RemoteWorkLocationStateTn, RemoteWorkLocationStateTx, RemoteWorkLocationStateUt, RemoteWorkLocationStateVt, RemoteWorkLocationStateVa, RemoteWorkLocationStateWa, RemoteWorkLocationStateWv, RemoteWorkLocationStateWi, RemoteWorkLocationStateWy:
 		return true
 	}
 	return false
@@ -887,9 +338,9 @@ type WorkerListParams struct {
 	// a number less than or equal to 100
 	Limit param.Field[string] `query:"limit"`
 	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
-	Statuses param.Field[[]string] `query:"statuses"`
+	Statuses param.Field[[]WorkerListParamsStatus] `query:"statuses"`
 	// Any of "employee", "contractor".
-	Types param.Field[[]string] `query:"types"`
+	Types param.Field[[]WorkerListParamsType] `query:"types"`
 	WorkEmail param.Field[string] `query:"workEmail"`
 }
 
@@ -899,6 +350,40 @@ func (r WorkerListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
+}
+
+type WorkerListParamsStatus string
+
+const (
+	WorkerListParamsStatusDraft WorkerListParamsStatus = "draft"
+	WorkerListParamsStatusInvited WorkerListParamsStatus = "invited"
+	WorkerListParamsStatusOnboarding WorkerListParamsStatus = "onboarding"
+	WorkerListParamsStatusActive WorkerListParamsStatus = "active"
+	WorkerListParamsStatusOffboarding WorkerListParamsStatus = "offboarding"
+	WorkerListParamsStatusInactive WorkerListParamsStatus = "inactive"
+)
+
+func (r WorkerListParamsStatus) IsKnown() bool {
+	switch r {
+	case WorkerListParamsStatusDraft, WorkerListParamsStatusInvited, WorkerListParamsStatusOnboarding, WorkerListParamsStatusActive, WorkerListParamsStatusOffboarding, WorkerListParamsStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerListParamsType string
+
+const (
+	WorkerListParamsTypeEmployee WorkerListParamsType = "employee"
+	WorkerListParamsTypeContractor WorkerListParamsType = "contractor"
+)
+
+func (r WorkerListParamsType) IsKnown() bool {
+	switch r {
+	case WorkerListParamsTypeEmployee, WorkerListParamsTypeContractor:
+		return true
+	}
+	return false
 }
 
 type WorkerNewEmployeeParams struct {
@@ -961,18 +446,14 @@ func (r WorkerNewEmployeeParamsStateRegistration) IsKnown() bool {
 	return false
 }
 
-type WorkerNewEmployeeParamsWorkLocationUnion struct {
-	OfWorkerNewEmployeeParamsWorkLocationOfficeWorkLocation *WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation `json:",omitzero,inline"`
-	OfWorkerNewEmployeeParamsWorkLocationRemoteWorkLocation *WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation `json:",omitzero,inline"`
-	paramUnion
+// Satisfied by [WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation], [WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation].
+type WorkerNewEmployeeParamsWorkLocationUnion interface {
+	implementsWorkerNewEmployeeParamsWorkLocationUnion()
 }
 
-func (u WorkerNewEmployeeParamsWorkLocationUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfWorkerNewEmployeeParamsWorkLocationOfficeWorkLocation, u.OfWorkerNewEmployeeParamsWorkLocationRemoteWorkLocation)
-}
-func (u *WorkerNewEmployeeParamsWorkLocationUnion) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
+func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {}
+
+func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {}
 
 type WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation struct {
 	// Any of "office".
@@ -1500,4 +981,609 @@ func (r WorkerNewContractorParamsPaySchedule) IsKnown() bool {
 		return true
 	}
 	return false
+}
+
+type WorkerListResponse struct {
+	HasMore bool `json:"hasMore" api:"required"`
+	// an integer
+	Count int64 `json:"count" api:"required"`
+	Data []WorkerListResponseData `json:"data" api:"required"`
+	JSON workerListResponseJSON `json:"-"`
+}
+
+// workerListResponseJSON contains the JSON metadata for the struct [WorkerListResponse]
+type workerListResponseJSON struct {
+	HasMore apijson.Field
+	Count apijson.Field
+	Data apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerListResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerListResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerGetResponse struct {
+	// The id of the worker.
+	ID string `json:"id" api:"required"`
+	Position string `json:"position" api:"required"`
+	// Any of "employee", "contractor".
+	Type WorkerGetResponseType `json:"type" api:"required"`
+	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
+	Status WorkerGetResponseStatus `json:"status" api:"required"`
+	// A date string in the form YYYY-MM-DD
+	StartDate string `json:"startDate" api:"required"`
+	EndDate string `json:"endDate" api:"required,nullable"`
+	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email string `json:"email" api:"required"`
+	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	JSON workerGetResponseJSON `json:"-"`
+}
+
+// workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
+type workerGetResponseJSON struct {
+	ID apijson.Field
+	Position apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	StartDate apijson.Field
+	EndDate apijson.Field
+	IsBusiness apijson.Field
+	BusinessName apijson.Field
+	FirstName apijson.Field
+	LastName apijson.Field
+	Email apijson.Field
+	WorkEmail apijson.Field
+	PreferredName apijson.Field
+	DisplayName apijson.Field
+	TimeZone apijson.Field
+	Department apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerGetResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerNewEmployeeResponse struct {
+	// The id of the worker.
+	ID string `json:"id" api:"required"`
+	Position string `json:"position" api:"required"`
+	// Any of "employee", "contractor".
+	Type WorkerNewEmployeeResponseType `json:"type" api:"required"`
+	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
+	Status WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
+	// A date string in the form YYYY-MM-DD
+	StartDate string `json:"startDate" api:"required"`
+	EndDate string `json:"endDate" api:"required,nullable"`
+	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email string `json:"email" api:"required"`
+	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
+	JSON workerNewEmployeeResponseJSON `json:"-"`
+}
+
+// workerNewEmployeeResponseJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponse]
+type workerNewEmployeeResponseJSON struct {
+	ID apijson.Field
+	Position apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	StartDate apijson.Field
+	EndDate apijson.Field
+	IsBusiness apijson.Field
+	BusinessName apijson.Field
+	FirstName apijson.Field
+	LastName apijson.Field
+	Email apijson.Field
+	WorkEmail apijson.Field
+	PreferredName apijson.Field
+	DisplayName apijson.Field
+	TimeZone apijson.Field
+	Department apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewEmployeeResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewEmployeeResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerNewContractorResponse struct {
+	// The id of the worker.
+	ID string `json:"id" api:"required"`
+	Position string `json:"position" api:"required"`
+	// Any of "employee", "contractor".
+	Type WorkerNewContractorResponseType `json:"type" api:"required"`
+	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
+	Status WorkerNewContractorResponseStatus `json:"status" api:"required"`
+	// A date string in the form YYYY-MM-DD
+	StartDate string `json:"startDate" api:"required"`
+	EndDate string `json:"endDate" api:"required,nullable"`
+	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email string `json:"email" api:"required"`
+	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerNewContractorResponseDepartment `json:"department" api:"required,nullable"`
+	JSON workerNewContractorResponseJSON `json:"-"`
+}
+
+// workerNewContractorResponseJSON contains the JSON metadata for the struct [WorkerNewContractorResponse]
+type workerNewContractorResponseJSON struct {
+	ID apijson.Field
+	Position apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	StartDate apijson.Field
+	EndDate apijson.Field
+	IsBusiness apijson.Field
+	BusinessName apijson.Field
+	FirstName apijson.Field
+	LastName apijson.Field
+	Email apijson.Field
+	WorkEmail apijson.Field
+	PreferredName apijson.Field
+	DisplayName apijson.Field
+	TimeZone apijson.Field
+	Department apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewContractorResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewContractorResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteResponse struct {
+	// The id of the worker.
+	ID string `json:"id" api:"required"`
+	Position string `json:"position" api:"required"`
+	// Any of "employee", "contractor".
+	Type WorkerInviteResponseType `json:"type" api:"required"`
+	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
+	Status WorkerInviteResponseStatus `json:"status" api:"required"`
+	// A date string in the form YYYY-MM-DD
+	StartDate string `json:"startDate" api:"required"`
+	EndDate string `json:"endDate" api:"required,nullable"`
+	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email string `json:"email" api:"required"`
+	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerInviteResponseDepartment `json:"department" api:"required,nullable"`
+	JSON workerInviteResponseJSON `json:"-"`
+}
+
+// workerInviteResponseJSON contains the JSON metadata for the struct [WorkerInviteResponse]
+type workerInviteResponseJSON struct {
+	ID apijson.Field
+	Position apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	StartDate apijson.Field
+	EndDate apijson.Field
+	IsBusiness apijson.Field
+	BusinessName apijson.Field
+	FirstName apijson.Field
+	LastName apijson.Field
+	Email apijson.Field
+	WorkEmail apijson.Field
+	PreferredName apijson.Field
+	DisplayName apijson.Field
+	TimeZone apijson.Field
+	Department apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerListResponseData struct {
+	// The id of the worker.
+	ID string `json:"id" api:"required"`
+	Position string `json:"position" api:"required"`
+	// Any of "employee", "contractor".
+	Type WorkerListResponseDataType `json:"type" api:"required"`
+	// Any of "draft", "invited", "onboarding", "active", "offboarding", "inactive".
+	Status WorkerListResponseDataStatus `json:"status" api:"required"`
+	// A date string in the form YYYY-MM-DD
+	StartDate string `json:"startDate" api:"required"`
+	EndDate string `json:"endDate" api:"required,nullable"`
+	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	BusinessName string `json:"businessName" api:"required,nullable"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email string `json:"email" api:"required"`
+	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerListResponseDataDepartment `json:"department" api:"required,nullable"`
+	JSON workerListResponseDataJSON `json:"-"`
+}
+
+// workerListResponseDataJSON contains the JSON metadata for the struct [WorkerListResponseData]
+type workerListResponseDataJSON struct {
+	ID apijson.Field
+	Position apijson.Field
+	Type apijson.Field
+	Status apijson.Field
+	StartDate apijson.Field
+	EndDate apijson.Field
+	IsBusiness apijson.Field
+	BusinessName apijson.Field
+	FirstName apijson.Field
+	LastName apijson.Field
+	Email apijson.Field
+	WorkEmail apijson.Field
+	PreferredName apijson.Field
+	DisplayName apijson.Field
+	TimeZone apijson.Field
+	Department apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerListResponseData) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerListResponseDataJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerGetResponseType string
+
+const (
+	WorkerGetResponseTypeEmployee WorkerGetResponseType = "employee"
+	WorkerGetResponseTypeContractor WorkerGetResponseType = "contractor"
+)
+
+func (r WorkerGetResponseType) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseTypeEmployee, WorkerGetResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
+type WorkerGetResponseStatus string
+
+const (
+	WorkerGetResponseStatusDraft WorkerGetResponseStatus = "draft"
+	WorkerGetResponseStatusInvited WorkerGetResponseStatus = "invited"
+	WorkerGetResponseStatusOnboarding WorkerGetResponseStatus = "onboarding"
+	WorkerGetResponseStatusActive WorkerGetResponseStatus = "active"
+	WorkerGetResponseStatusOffboarding WorkerGetResponseStatus = "offboarding"
+	WorkerGetResponseStatusInactive WorkerGetResponseStatus = "inactive"
+)
+
+func (r WorkerGetResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseStatusDraft, WorkerGetResponseStatusInvited, WorkerGetResponseStatusOnboarding, WorkerGetResponseStatusActive, WorkerGetResponseStatusOffboarding, WorkerGetResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerGetResponseDepartment struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	JSON workerGetResponseDepartmentJSON `json:"-"`
+}
+
+// workerGetResponseDepartmentJSON contains the JSON metadata for the struct [WorkerGetResponseDepartment]
+type workerGetResponseDepartmentJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerGetResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerGetResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerNewEmployeeResponseType string
+
+const (
+	WorkerNewEmployeeResponseTypeEmployee WorkerNewEmployeeResponseType = "employee"
+	WorkerNewEmployeeResponseTypeContractor WorkerNewEmployeeResponseType = "contractor"
+)
+
+func (r WorkerNewEmployeeResponseType) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeResponseTypeEmployee, WorkerNewEmployeeResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
+type WorkerNewEmployeeResponseStatus string
+
+const (
+	WorkerNewEmployeeResponseStatusDraft WorkerNewEmployeeResponseStatus = "draft"
+	WorkerNewEmployeeResponseStatusInvited WorkerNewEmployeeResponseStatus = "invited"
+	WorkerNewEmployeeResponseStatusOnboarding WorkerNewEmployeeResponseStatus = "onboarding"
+	WorkerNewEmployeeResponseStatusActive WorkerNewEmployeeResponseStatus = "active"
+	WorkerNewEmployeeResponseStatusOffboarding WorkerNewEmployeeResponseStatus = "offboarding"
+	WorkerNewEmployeeResponseStatusInactive WorkerNewEmployeeResponseStatus = "inactive"
+)
+
+func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeResponseStatusDraft, WorkerNewEmployeeResponseStatusInvited, WorkerNewEmployeeResponseStatusOnboarding, WorkerNewEmployeeResponseStatusActive, WorkerNewEmployeeResponseStatusOffboarding, WorkerNewEmployeeResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerNewEmployeeResponseDepartment struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	JSON workerNewEmployeeResponseDepartmentJSON `json:"-"`
+}
+
+// workerNewEmployeeResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseDepartment]
+type workerNewEmployeeResponseDepartmentJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewEmployeeResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewEmployeeResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerNewContractorResponseType string
+
+const (
+	WorkerNewContractorResponseTypeEmployee WorkerNewContractorResponseType = "employee"
+	WorkerNewContractorResponseTypeContractor WorkerNewContractorResponseType = "contractor"
+)
+
+func (r WorkerNewContractorResponseType) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorResponseTypeEmployee, WorkerNewContractorResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
+type WorkerNewContractorResponseStatus string
+
+const (
+	WorkerNewContractorResponseStatusDraft WorkerNewContractorResponseStatus = "draft"
+	WorkerNewContractorResponseStatusInvited WorkerNewContractorResponseStatus = "invited"
+	WorkerNewContractorResponseStatusOnboarding WorkerNewContractorResponseStatus = "onboarding"
+	WorkerNewContractorResponseStatusActive WorkerNewContractorResponseStatus = "active"
+	WorkerNewContractorResponseStatusOffboarding WorkerNewContractorResponseStatus = "offboarding"
+	WorkerNewContractorResponseStatusInactive WorkerNewContractorResponseStatus = "inactive"
+)
+
+func (r WorkerNewContractorResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorResponseStatusDraft, WorkerNewContractorResponseStatusInvited, WorkerNewContractorResponseStatusOnboarding, WorkerNewContractorResponseStatusActive, WorkerNewContractorResponseStatusOffboarding, WorkerNewContractorResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerNewContractorResponseDepartment struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	JSON workerNewContractorResponseDepartmentJSON `json:"-"`
+}
+
+// workerNewContractorResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewContractorResponseDepartment]
+type workerNewContractorResponseDepartmentJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewContractorResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewContractorResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteResponseType string
+
+const (
+	WorkerInviteResponseTypeEmployee WorkerInviteResponseType = "employee"
+	WorkerInviteResponseTypeContractor WorkerInviteResponseType = "contractor"
+)
+
+func (r WorkerInviteResponseType) IsKnown() bool {
+	switch r {
+	case WorkerInviteResponseTypeEmployee, WorkerInviteResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteResponseStatus string
+
+const (
+	WorkerInviteResponseStatusDraft WorkerInviteResponseStatus = "draft"
+	WorkerInviteResponseStatusInvited WorkerInviteResponseStatus = "invited"
+	WorkerInviteResponseStatusOnboarding WorkerInviteResponseStatus = "onboarding"
+	WorkerInviteResponseStatusActive WorkerInviteResponseStatus = "active"
+	WorkerInviteResponseStatusOffboarding WorkerInviteResponseStatus = "offboarding"
+	WorkerInviteResponseStatusInactive WorkerInviteResponseStatus = "inactive"
+)
+
+func (r WorkerInviteResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerInviteResponseStatusDraft, WorkerInviteResponseStatusInvited, WorkerInviteResponseStatusOnboarding, WorkerInviteResponseStatusActive, WorkerInviteResponseStatusOffboarding, WorkerInviteResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteResponseDepartment struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	JSON workerInviteResponseDepartmentJSON `json:"-"`
+}
+
+// workerInviteResponseDepartmentJSON contains the JSON metadata for the struct [WorkerInviteResponseDepartment]
+type workerInviteResponseDepartmentJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerListResponseDataType string
+
+const (
+	WorkerListResponseDataTypeEmployee WorkerListResponseDataType = "employee"
+	WorkerListResponseDataTypeContractor WorkerListResponseDataType = "contractor"
+)
+
+func (r WorkerListResponseDataType) IsKnown() bool {
+	switch r {
+	case WorkerListResponseDataTypeEmployee, WorkerListResponseDataTypeContractor:
+		return true
+	}
+	return false
+}
+
+type WorkerListResponseDataStatus string
+
+const (
+	WorkerListResponseDataStatusDraft WorkerListResponseDataStatus = "draft"
+	WorkerListResponseDataStatusInvited WorkerListResponseDataStatus = "invited"
+	WorkerListResponseDataStatusOnboarding WorkerListResponseDataStatus = "onboarding"
+	WorkerListResponseDataStatusActive WorkerListResponseDataStatus = "active"
+	WorkerListResponseDataStatusOffboarding WorkerListResponseDataStatus = "offboarding"
+	WorkerListResponseDataStatusInactive WorkerListResponseDataStatus = "inactive"
+)
+
+func (r WorkerListResponseDataStatus) IsKnown() bool {
+	switch r {
+	case WorkerListResponseDataStatusDraft, WorkerListResponseDataStatusInvited, WorkerListResponseDataStatusOnboarding, WorkerListResponseDataStatusActive, WorkerListResponseDataStatusOffboarding, WorkerListResponseDataStatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerListResponseDataDepartment struct {
+	// The unique public id of the department
+	ID string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	JSON workerListResponseDataDepartmentJSON `json:"-"`
+}
+
+// workerListResponseDataDepartmentJSON contains the JSON metadata for the struct [WorkerListResponseDataDepartment]
+type workerListResponseDataDepartmentJSON struct {
+	ID apijson.Field
+	Name apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerListResponseDataDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerListResponseDataDepartmentJSON) RawJSON() string {
+	return r.raw
 }

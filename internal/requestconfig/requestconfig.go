@@ -18,11 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/marclave/warp-go-sdk/internal"
-	"github.com/marclave/warp-go-sdk/internal/apierror"
-	"github.com/marclave/warp-go-sdk/internal/apiform"
-	"github.com/marclave/warp-go-sdk/internal/apiquery"
-	"github.com/marclave/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal"
+	"github.com/TeamWarp/warp-go-sdk/internal/apierror"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiform"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 )
 
 func getDefaultHeaders() map[string]string {

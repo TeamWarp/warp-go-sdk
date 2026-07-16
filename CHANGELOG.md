@@ -1,31 +1,36 @@
 # Changelog
 
-## v0.1.4 (2026-07-15)
+## v0.1.4 (2026-07-16)
 
-# Breaking changes
+Looking at this diff, I can identify the following user-facing changes:
 
-- **Package import path changed**: Update imports from `github.com/TeamWarp/warp-go-sdk` to `github.com/marclave/warp-go-sdk`, and the package name from `warphr` to `warpgosdk`.
-- **NewClient now returns a pointer**: `NewClient()` returns `*Client` instead of `Client`. This is a breaking change if you were storing the result as a value type.
-- **Service field access changed**: Service fields on the client (e.g., `client.TimeOff`) are now pointers (`*TimeOffService`), and service `Options` field is now public (`Options` instead of `options`).
-- **DepartmentService.List signature changed**: Now returns `*DepartmentListResponse` instead of a paginated cursor page. Update code that was iterating through paginated results.
-- **Response types restructured**: Department, Worker, and Workplace response types have changed structure—they now include `Issues`, `Message`, and `Tag` fields. Check your code if you were accessing specific fields from these responses.
-- **Method signatures simplified**: All Execute/Get/Post/Patch/Delete methods now use `interface{}` instead of `any` for params and response types (functionally equivalent but note if you have type constraints).
+## Breaking changes
 
-# Changed
+- **Package name changed**: `warphr` → `warpgosdk`. Update your imports from `"github.com/TeamWarp/warp-go-sdk"` (which still resolves to package `warphr`) to use package `warpgosdk` instead.
 
-- Helper function `Opt[T]()` is now `F[T]()` for creating field values.
-- Helper functions like `StringPtr()`, `IntPtr()`, etc. have been removed; use `F()` or `Null()` directly.
-- `File()` helper is now `FileParam()`.
-- Query parameter types changed from `param.Opt[T]` to `param.Field[T]`.
-- Request body parameter types changed from `param.Opt[T]` to `param.Field[T]`.
-- `URLQuery()` method on params no longer returns an error; signature is now `URLQuery() url.Values`.
-- Path escaping removed in some methods (e.g., `url.PathEscape()` calls removed).
+- **Client initialization now returns a pointer**: `NewClient()` now returns `*Client` instead of `Client`. You don't need to change call sites (Go handles this automatically), but be aware if you were taking the address of the result.
 
-# Added
+- **Service types now use pointers**: All service types (`TimeOffService`, `WorkerService`, `DepartmentService`, `WorkplaceService`) are now returned as pointers from their constructors. This is internal refactoring that shouldn't affect normal usage via the client.
 
-- New `VERSIONING.md` documenting the manual versioning policy.
-- New `defaultHTTPClient()` function for better HTTP connection handling.
-- Extended environment variable support: `WARP_CUSTOM_HEADERS` can now be set to define custom headers via newline-separated `key: value` pairs.
+- **Parameter field API changed**: The SDK now uses `param.Field[T]` instead of `param.Opt[T]`. Use the new `F[T]()` helper function to wrap optional parameters:
+  - Old: `DepartmentNewParams{Name: "foo"}` 
+  - New: `DepartmentNewParams{Name: sdk.F[string]("foo")}`
+
+- **Removed pagination wrapper**: `List()` methods now return the response type directly (e.g., `*DepartmentListResponse`) instead of `*pagination.CursorPage[T]`. The `ListAutoPaging()` methods have been removed.
+
+- **Removed `respjson` metadata**: Response types no longer include the `.JSON` field with `respjson.Field` metadata. Access raw JSON via `RawJSON()` method if needed.
+
+## Changed
+
+- Department methods reordered: `List()` is now the first method (was last), followed by `New()` and `Update()`.
+- URL path encoding simplified: `url.PathEscape()` calls removed (paths are now escaped automatically).
+
+## Added
+
+- New `default_http_client.go` provides automatic response header timeout configuration for better handling of stuck connections.
+- New `VERSIONING.md` documents the SDK's manual versioning policy.
+
+Minor internal updates.
 
 ## 0.3.0 (2026-03-27)
 

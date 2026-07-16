@@ -3,7 +3,7 @@
 package warpgosdk
 
 import (
-	"github.com/marclave/warp-go-sdk/internal/apierror"
+	"github.com/TeamWarp/warp-go-sdk/internal/apierror"
 )
 
 type Error = apierror.Error

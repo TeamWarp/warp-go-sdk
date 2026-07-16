@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/marclave/warp-go-sdk/internal/apijson"
-	"github.com/marclave/warp-go-sdk/internal/apiquery"
-	"github.com/marclave/warp-go-sdk/internal/param"
-	"github.com/marclave/warp-go-sdk/internal/requestconfig"
-	"github.com/marclave/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // TimeOffService contains methods and other services that help with interacting
@@ -105,250 +105,6 @@ func (r *TimeOffService) ListRequests(ctx context.Context, query TimeOffListRequ
 	return res, err
 }
 
-type Issue struct {
-	// The tag identifying the type of parse issue
-	//
-	// Any of "Pointer", "Unexpected", "Missing", "Composite", "Refinement",
-	// "Transformation", "Type", "Forbidden".
-	Tag IssueTag `json:"_tag" api:"required"`
-	// The path to the property where the issue occurred
-	Path []any `json:"path" api:"required"`
-	// A descriptive message explaining the issue
-	Message string `json:"message" api:"required"`
-	JSON issueJSON `json:"-"`
-}
-
-// issueJSON contains the JSON metadata for the struct [Issue]
-type issueJSON struct {
-	Tag apijson.Field
-	Path apijson.Field
-	Message apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Issue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r issueJSON) RawJSON() string {
-	return r.raw
-}
-
-type IssueTag string
-
-const (
-	IssueTagPointer IssueTag = "Pointer"
-	IssueTagUnexpected IssueTag = "Unexpected"
-	IssueTagMissing IssueTag = "Missing"
-	IssueTagComposite IssueTag = "Composite"
-	IssueTagRefinement IssueTag = "Refinement"
-	IssueTagTransformation IssueTag = "Transformation"
-	IssueTagType IssueTag = "Type"
-	IssueTagForbidden IssueTag = "Forbidden"
-)
-
-func (r IssueTag) IsKnown() bool {
-	switch r {
-	case IssueTagPointer, IssueTagUnexpected, IssueTagMissing, IssueTagComposite, IssueTagRefinement, IssueTagTransformation, IssueTagType, IssueTagForbidden:
-		return true
-	}
-	return false
-}
-
-type MissingRequiredCompanyPermissions struct {
-	RequiredPermissions []MissingRequiredCompanyPermissionsRequiredPermission `json:"requiredPermissions" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "MissingRequiredCompanyPermissions".
-	Tag MissingRequiredCompanyPermissionsTag `json:"_tag" api:"required"`
-	JSON missingRequiredCompanyPermissionsJSON `json:"-"`
-}
-
-// missingRequiredCompanyPermissionsJSON contains the JSON metadata for the struct [MissingRequiredCompanyPermissions]
-type missingRequiredCompanyPermissionsJSON struct {
-	RequiredPermissions apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *MissingRequiredCompanyPermissions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r missingRequiredCompanyPermissionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type MissingRequiredCompanyPermissionsTag string
-
-const (
-	MissingRequiredCompanyPermissionsTagMissingRequiredCompanyPermissions MissingRequiredCompanyPermissionsTag = "MissingRequiredCompanyPermissions"
-)
-
-func (r MissingRequiredCompanyPermissionsTag) IsKnown() bool {
-	switch r {
-	case MissingRequiredCompanyPermissionsTagMissingRequiredCompanyPermissions:
-		return true
-	}
-	return false
-}
-
-type APINotEnabled struct {
-	Message string `json:"message" api:"required"`
-	// Any of "ApiNotEnabled".
-	Tag APINotEnabledTag `json:"_tag" api:"required"`
-	JSON apiNotEnabledJSON `json:"-"`
-}
-
-// apiNotEnabledJSON contains the JSON metadata for the struct [APINotEnabled]
-type apiNotEnabledJSON struct {
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *APINotEnabled) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r apiNotEnabledJSON) RawJSON() string {
-	return r.raw
-}
-
-type APINotEnabledTag string
-
-const (
-	APINotEnabledTagAPINotEnabled APINotEnabledTag = "ApiNotEnabled"
-)
-
-func (r APINotEnabledTag) IsKnown() bool {
-	switch r {
-	case APINotEnabledTagAPINotEnabled:
-		return true
-	}
-	return false
-}
-
-type TimeOffListAssignmentsResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag TimeOffListAssignmentsResponseTag `json:"_tag" api:"required"`
-	JSON timeOffListAssignmentsResponseJSON `json:"-"`
-}
-
-// timeOffListAssignmentsResponseJSON contains the JSON metadata for the struct [TimeOffListAssignmentsResponse]
-type timeOffListAssignmentsResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TimeOffListAssignmentsResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r timeOffListAssignmentsResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type TimeOffListAssignmentsResponseTag string
-
-const (
-	TimeOffListAssignmentsResponseTagHTTPAPIDecodeError TimeOffListAssignmentsResponseTag = "HttpApiDecodeError"
-)
-
-func (r TimeOffListAssignmentsResponseTag) IsKnown() bool {
-	switch r {
-	case TimeOffListAssignmentsResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type TimeOffListBalancesResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag TimeOffListBalancesResponseTag `json:"_tag" api:"required"`
-	JSON timeOffListBalancesResponseJSON `json:"-"`
-}
-
-// timeOffListBalancesResponseJSON contains the JSON metadata for the struct [TimeOffListBalancesResponse]
-type timeOffListBalancesResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TimeOffListBalancesResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r timeOffListBalancesResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type TimeOffListBalancesResponseTag string
-
-const (
-	TimeOffListBalancesResponseTagHTTPAPIDecodeError TimeOffListBalancesResponseTag = "HttpApiDecodeError"
-)
-
-func (r TimeOffListBalancesResponseTag) IsKnown() bool {
-	switch r {
-	case TimeOffListBalancesResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
-type TimeOffListRequestsResponse struct {
-	Issues []Issue `json:"issues" api:"required"`
-	Message string `json:"message" api:"required"`
-	// Any of "HttpApiDecodeError".
-	Tag TimeOffListRequestsResponseTag `json:"_tag" api:"required"`
-	JSON timeOffListRequestsResponseJSON `json:"-"`
-}
-
-// timeOffListRequestsResponseJSON contains the JSON metadata for the struct [TimeOffListRequestsResponse]
-type timeOffListRequestsResponseJSON struct {
-	Issues apijson.Field
-	Message apijson.Field
-	Tag apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TimeOffListRequestsResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r timeOffListRequestsResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type TimeOffListRequestsResponseTag string
-
-const (
-	TimeOffListRequestsResponseTagHTTPAPIDecodeError TimeOffListRequestsResponseTag = "HttpApiDecodeError"
-)
-
-func (r TimeOffListRequestsResponseTag) IsKnown() bool {
-	switch r {
-	case TimeOffListRequestsResponseTagHTTPAPIDecodeError:
-		return true
-	}
-	return false
-}
-
 type TimeOffListAssignmentsParams struct {
 	AfterID param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
@@ -402,7 +158,7 @@ type TimeOffListRequestsParams struct {
 	// a string to be decoded into a Date
 	StartsOnOrAfter param.Field[string] `query:"startsOnOrAfter"`
 	// Any of "pending", "approved", "denied".
-	Statuses param.Field[[]string] `query:"statuses"`
+	Statuses param.Field[[]TimeOffListRequestsParamsStatus] `query:"statuses"`
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
 
@@ -414,88 +170,217 @@ func (r TimeOffListRequestsParams) URLQuery() (v url.Values) {
 	})
 }
 
-type MissingRequiredCompanyPermissionsRequiredPermission struct {
-	// Any of "workers:profile", "workers:global:compensation",
-	// "workers:us:compensation", "workers:compliance", "workers:pii",
-	// "workers:banking", "workers:access", "workers:dependents",
-	// "workers:dependents:pii", "payrolls:global", "payrolls:us", "pay_schedules",
-	// "offers", "departments", "workplaces", "time_off", "time_tracking", "expenses",
-	// "general_ledger", "benefits", "tax_compliance", "kyb", "mdm", "lms",
-	// "authorized_users", "billing", "settings", "developer".
-	Scope MissingRequiredCompanyPermissionsRequiredPermissionScope `json:"scope" api:"required"`
-	// Any of "read", "write", "manage".
-	Level MissingRequiredCompanyPermissionsRequiredPermissionLevel `json:"level" api:"required"`
-	JSON missingRequiredCompanyPermissionsRequiredPermissionJSON `json:"-"`
-}
-
-// missingRequiredCompanyPermissionsRequiredPermissionJSON contains the JSON metadata for the struct [MissingRequiredCompanyPermissionsRequiredPermission]
-type missingRequiredCompanyPermissionsRequiredPermissionJSON struct {
-	Scope apijson.Field
-	Level apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *MissingRequiredCompanyPermissionsRequiredPermission) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r missingRequiredCompanyPermissionsRequiredPermissionJSON) RawJSON() string {
-	return r.raw
-}
-
-type MissingRequiredCompanyPermissionsRequiredPermissionScope string
+type TimeOffListRequestsParamsStatus string
 
 const (
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersProfile MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:profile"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersGlobalCompensation MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:global:compensation"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersUsCompensation MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:us:compensation"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersCompliance MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:compliance"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersPii MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:pii"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersBanking MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:banking"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersAccess MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:access"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersDependents MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:dependents"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersDependentsPii MissingRequiredCompanyPermissionsRequiredPermissionScope = "workers:dependents:pii"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopePayrollsGlobal MissingRequiredCompanyPermissionsRequiredPermissionScope = "payrolls:global"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopePayrollsUs MissingRequiredCompanyPermissionsRequiredPermissionScope = "payrolls:us"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopePaySchedules MissingRequiredCompanyPermissionsRequiredPermissionScope = "pay_schedules"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeOffers MissingRequiredCompanyPermissionsRequiredPermissionScope = "offers"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeDepartments MissingRequiredCompanyPermissionsRequiredPermissionScope = "departments"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkplaces MissingRequiredCompanyPermissionsRequiredPermissionScope = "workplaces"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeTimeOff MissingRequiredCompanyPermissionsRequiredPermissionScope = "time_off"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeTimeTracking MissingRequiredCompanyPermissionsRequiredPermissionScope = "time_tracking"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeExpenses MissingRequiredCompanyPermissionsRequiredPermissionScope = "expenses"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeGeneralLedger MissingRequiredCompanyPermissionsRequiredPermissionScope = "general_ledger"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeBenefits MissingRequiredCompanyPermissionsRequiredPermissionScope = "benefits"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeTaxCompliance MissingRequiredCompanyPermissionsRequiredPermissionScope = "tax_compliance"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeKYB MissingRequiredCompanyPermissionsRequiredPermissionScope = "kyb"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeMdm MissingRequiredCompanyPermissionsRequiredPermissionScope = "mdm"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeLms MissingRequiredCompanyPermissionsRequiredPermissionScope = "lms"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeAuthorizedUsers MissingRequiredCompanyPermissionsRequiredPermissionScope = "authorized_users"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeBilling MissingRequiredCompanyPermissionsRequiredPermissionScope = "billing"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeSettings MissingRequiredCompanyPermissionsRequiredPermissionScope = "settings"
-	MissingRequiredCompanyPermissionsRequiredPermissionScopeDeveloper MissingRequiredCompanyPermissionsRequiredPermissionScope = "developer"
+	TimeOffListRequestsParamsStatusPending TimeOffListRequestsParamsStatus = "pending"
+	TimeOffListRequestsParamsStatusApproved TimeOffListRequestsParamsStatus = "approved"
+	TimeOffListRequestsParamsStatusDenied TimeOffListRequestsParamsStatus = "denied"
 )
 
-func (r MissingRequiredCompanyPermissionsRequiredPermissionScope) IsKnown() bool {
+func (r TimeOffListRequestsParamsStatus) IsKnown() bool {
 	switch r {
-	case MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersProfile, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersGlobalCompensation, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersUsCompensation, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersCompliance, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersPii, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersBanking, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersAccess, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersDependents, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkersDependentsPii, MissingRequiredCompanyPermissionsRequiredPermissionScopePayrollsGlobal, MissingRequiredCompanyPermissionsRequiredPermissionScopePayrollsUs, MissingRequiredCompanyPermissionsRequiredPermissionScopePaySchedules, MissingRequiredCompanyPermissionsRequiredPermissionScopeOffers, MissingRequiredCompanyPermissionsRequiredPermissionScopeDepartments, MissingRequiredCompanyPermissionsRequiredPermissionScopeWorkplaces, MissingRequiredCompanyPermissionsRequiredPermissionScopeTimeOff, MissingRequiredCompanyPermissionsRequiredPermissionScopeTimeTracking, MissingRequiredCompanyPermissionsRequiredPermissionScopeExpenses, MissingRequiredCompanyPermissionsRequiredPermissionScopeGeneralLedger, MissingRequiredCompanyPermissionsRequiredPermissionScopeBenefits, MissingRequiredCompanyPermissionsRequiredPermissionScopeTaxCompliance, MissingRequiredCompanyPermissionsRequiredPermissionScopeKYB, MissingRequiredCompanyPermissionsRequiredPermissionScopeMdm, MissingRequiredCompanyPermissionsRequiredPermissionScopeLms, MissingRequiredCompanyPermissionsRequiredPermissionScopeAuthorizedUsers, MissingRequiredCompanyPermissionsRequiredPermissionScopeBilling, MissingRequiredCompanyPermissionsRequiredPermissionScopeSettings, MissingRequiredCompanyPermissionsRequiredPermissionScopeDeveloper:
+	case TimeOffListRequestsParamsStatusPending, TimeOffListRequestsParamsStatusApproved, TimeOffListRequestsParamsStatusDenied:
 		return true
 	}
 	return false
 }
 
-type MissingRequiredCompanyPermissionsRequiredPermissionLevel string
+type TimeOffListAssignmentsResponse struct {
+	HasMore bool `json:"hasMore" api:"required"`
+	// an integer
+	Count int64 `json:"count" api:"required"`
+	Data []TimeOffListAssignmentsResponseData `json:"data" api:"required"`
+	JSON timeOffListAssignmentsResponseJSON `json:"-"`
+}
+
+// timeOffListAssignmentsResponseJSON contains the JSON metadata for the struct [TimeOffListAssignmentsResponse]
+type timeOffListAssignmentsResponseJSON struct {
+	HasMore apijson.Field
+	Count apijson.Field
+	Data apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListAssignmentsResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListAssignmentsResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type TimeOffListBalancesResponse struct {
+	HasMore bool `json:"hasMore" api:"required"`
+	// an integer
+	Count int64 `json:"count" api:"required"`
+	Data []TimeOffListBalancesResponseData `json:"data" api:"required"`
+	JSON timeOffListBalancesResponseJSON `json:"-"`
+}
+
+// timeOffListBalancesResponseJSON contains the JSON metadata for the struct [TimeOffListBalancesResponse]
+type timeOffListBalancesResponseJSON struct {
+	HasMore apijson.Field
+	Count apijson.Field
+	Data apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListBalancesResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListBalancesResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type TimeOffListRequestsResponse struct {
+	HasMore bool `json:"hasMore" api:"required"`
+	// an integer
+	Count int64 `json:"count" api:"required"`
+	Data []TimeOffListRequestsResponseData `json:"data" api:"required"`
+	JSON timeOffListRequestsResponseJSON `json:"-"`
+}
+
+// timeOffListRequestsResponseJSON contains the JSON metadata for the struct [TimeOffListRequestsResponse]
+type timeOffListRequestsResponseJSON struct {
+	HasMore apijson.Field
+	Count apijson.Field
+	Data apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListRequestsResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListRequestsResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type TimeOffListAssignmentsResponseData struct {
+	ID string `json:"id" api:"required"`
+	// a string starting with "top_"
+	PolicyID string `json:"policyId" api:"required"`
+	// The id of the worker.
+	WorkerID string `json:"workerId" api:"required"`
+	// a string to be decoded into a Date
+	AssignedAt string `json:"assignedAt" api:"required"`
+	JSON timeOffListAssignmentsResponseDataJSON `json:"-"`
+}
+
+// timeOffListAssignmentsResponseDataJSON contains the JSON metadata for the struct [TimeOffListAssignmentsResponseData]
+type timeOffListAssignmentsResponseDataJSON struct {
+	ID apijson.Field
+	PolicyID apijson.Field
+	WorkerID apijson.Field
+	AssignedAt apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListAssignmentsResponseData) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListAssignmentsResponseDataJSON) RawJSON() string {
+	return r.raw
+}
+
+type TimeOffListBalancesResponseData struct {
+	ID string `json:"id" api:"required"`
+	// a string starting with "top_"
+	PolicyID string `json:"policyId" api:"required"`
+	LegacyWorkerID string `json:"legacyWorkerId" api:"required"`
+	AccruedUnlocked float64 `json:"accruedUnlocked" api:"required"`
+	AccruedLocked float64 `json:"accruedLocked" api:"required"`
+	Used float64 `json:"used" api:"required"`
+	Holds float64 `json:"holds" api:"required"`
+	Available float64 `json:"available" api:"required"`
+	JSON timeOffListBalancesResponseDataJSON `json:"-"`
+}
+
+// timeOffListBalancesResponseDataJSON contains the JSON metadata for the struct [TimeOffListBalancesResponseData]
+type timeOffListBalancesResponseDataJSON struct {
+	ID apijson.Field
+	PolicyID apijson.Field
+	LegacyWorkerID apijson.Field
+	AccruedUnlocked apijson.Field
+	AccruedLocked apijson.Field
+	Used apijson.Field
+	Holds apijson.Field
+	Available apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListBalancesResponseData) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListBalancesResponseDataJSON) RawJSON() string {
+	return r.raw
+}
+
+type TimeOffListRequestsResponseData struct {
+	ID string `json:"id" api:"required"`
+	// a string starting with "top_"
+	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
+	// The id of the worker.
+	WorkerID string `json:"workerId" api:"required"`
+	// Any of "pending", "approved", "denied".
+	Status TimeOffListRequestsResponseDataStatus `json:"status" api:"required"`
+	// a string to be decoded into a Date
+	StartAt string `json:"startAt" api:"required"`
+	// a string to be decoded into a Date
+	EndAt string `json:"endAt" api:"required"`
+	Reason string `json:"reason" api:"required,nullable"`
+	// a string to be decoded into a Date
+	CreatedAt string `json:"createdAt" api:"required"`
+	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
+	// The time zone that the worker is requesting time off in.
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	JSON timeOffListRequestsResponseDataJSON `json:"-"`
+}
+
+// timeOffListRequestsResponseDataJSON contains the JSON metadata for the struct [TimeOffListRequestsResponseData]
+type timeOffListRequestsResponseDataJSON struct {
+	ID apijson.Field
+	TimeOffPolicyID apijson.Field
+	WorkerID apijson.Field
+	Status apijson.Field
+	StartAt apijson.Field
+	EndAt apijson.Field
+	Reason apijson.Field
+	CreatedAt apijson.Field
+	RequestedMinutes apijson.Field
+	TimeZone apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TimeOffListRequestsResponseData) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r timeOffListRequestsResponseDataJSON) RawJSON() string {
+	return r.raw
+}
+
+type TimeOffListRequestsResponseDataStatus string
 
 const (
-	MissingRequiredCompanyPermissionsRequiredPermissionLevelRead MissingRequiredCompanyPermissionsRequiredPermissionLevel = "read"
-	MissingRequiredCompanyPermissionsRequiredPermissionLevelWrite MissingRequiredCompanyPermissionsRequiredPermissionLevel = "write"
-	MissingRequiredCompanyPermissionsRequiredPermissionLevelManage MissingRequiredCompanyPermissionsRequiredPermissionLevel = "manage"
+	TimeOffListRequestsResponseDataStatusPending TimeOffListRequestsResponseDataStatus = "pending"
+	TimeOffListRequestsResponseDataStatusApproved TimeOffListRequestsResponseDataStatus = "approved"
+	TimeOffListRequestsResponseDataStatusDenied TimeOffListRequestsResponseDataStatus = "denied"
 )
 
-func (r MissingRequiredCompanyPermissionsRequiredPermissionLevel) IsKnown() bool {
+func (r TimeOffListRequestsResponseDataStatus) IsKnown() bool {
 	switch r {
-	case MissingRequiredCompanyPermissionsRequiredPermissionLevelRead, MissingRequiredCompanyPermissionsRequiredPermissionLevelWrite, MissingRequiredCompanyPermissionsRequiredPermissionLevelManage:
+	case TimeOffListRequestsResponseDataStatusPending, TimeOffListRequestsResponseDataStatusApproved, TimeOffListRequestsResponseDataStatusDenied:
 		return true
 	}
 	return false
