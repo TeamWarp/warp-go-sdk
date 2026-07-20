@@ -333,8 +333,10 @@ type TimeOffListRequestsResponseData struct {
 	Status TimeOffListRequestsResponseDataStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
 	StartAt string `json:"startAt" api:"required"`
+	StartRangeType TimeOffListRequestsResponseDataStartRangeType `json:"startRangeType" api:"required"`
 	// a string to be decoded into a Date
 	EndAt string `json:"endAt" api:"required"`
+	EndRangeType TimeOffListRequestsResponseDataEndRangeType `json:"endRangeType" api:"required"`
 	Reason string `json:"reason" api:"required,nullable"`
 	// a string to be decoded into a Date
 	CreatedAt string `json:"createdAt" api:"required"`
@@ -351,7 +353,9 @@ type timeOffListRequestsResponseDataJSON struct {
 	WorkerID apijson.Field
 	Status apijson.Field
 	StartAt apijson.Field
+	StartRangeType apijson.Field
 	EndAt apijson.Field
+	EndRangeType apijson.Field
 	Reason apijson.Field
 	CreatedAt apijson.Field
 	RequestedMinutes apijson.Field
@@ -379,6 +383,36 @@ const (
 func (r TimeOffListRequestsResponseDataStatus) IsKnown() bool {
 	switch r {
 	case TimeOffListRequestsResponseDataStatusPending, TimeOffListRequestsResponseDataStatusApproved, TimeOffListRequestsResponseDataStatusDenied:
+		return true
+	}
+	return false
+}
+
+type TimeOffListRequestsResponseDataStartRangeType string
+
+const (
+	TimeOffListRequestsResponseDataStartRangeTypeDate TimeOffListRequestsResponseDataStartRangeType = "date"
+	TimeOffListRequestsResponseDataStartRangeTypeDatetime TimeOffListRequestsResponseDataStartRangeType = "datetime"
+)
+
+func (r TimeOffListRequestsResponseDataStartRangeType) IsKnown() bool {
+	switch r {
+	case TimeOffListRequestsResponseDataStartRangeTypeDate, TimeOffListRequestsResponseDataStartRangeTypeDatetime:
+		return true
+	}
+	return false
+}
+
+type TimeOffListRequestsResponseDataEndRangeType string
+
+const (
+	TimeOffListRequestsResponseDataEndRangeTypeDate TimeOffListRequestsResponseDataEndRangeType = "date"
+	TimeOffListRequestsResponseDataEndRangeTypeDatetime TimeOffListRequestsResponseDataEndRangeType = "datetime"
+)
+
+func (r TimeOffListRequestsResponseDataEndRangeType) IsKnown() bool {
+	switch r {
+	case TimeOffListRequestsResponseDataEndRangeTypeDate, TimeOffListRequestsResponseDataEndRangeTypeDatetime:
 		return true
 	}
 	return false
