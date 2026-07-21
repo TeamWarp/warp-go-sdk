@@ -1,6 +1,8 @@
 # Warp
 
-Generated Go SDK for Warp API.
+This library provides convenient access to the Warp REST API from Go.
+
+The full API of this library can be found in [api.md](./api.md).
 
 <br />
 
