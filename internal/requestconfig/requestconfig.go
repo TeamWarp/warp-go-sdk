@@ -18,16 +18,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TeamWarp/warp-go-sdk/internal"
-	"github.com/TeamWarp/warp-go-sdk/internal/apierror"
-	"github.com/TeamWarp/warp-go-sdk/internal/apiform"
-	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
-	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"warp-hr/internal"
+	"warp-hr/internal/apierror"
+	"warp-hr/internal/apiform"
+	"warp-hr/internal/apiquery"
+	"warp-hr/internal/param"
 )
 
 func getDefaultHeaders() map[string]string {
 	return map[string]string{
-		"User-Agent": fmt.Sprintf("Warp/Go %s", internal.PackageVersion),
+		"User-Agent": fmt.Sprintf("WarpApi/Go %s", internal.PackageVersion),
 	}
 }
 

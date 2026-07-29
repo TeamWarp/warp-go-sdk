@@ -1,4 +1,4 @@
-module github.com/TeamWarp/warp-go-sdk
+module warp-hr
 
 go 1.22
 
