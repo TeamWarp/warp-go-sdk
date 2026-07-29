@@ -1,28 +1,28 @@
 package warphr
 
 import (
-	"github.com/TeamWarp/warp-go-sdk/packages/param"
+	"github.com/TeamWarp/warp-sdk-go/internal/param"
 	"io"
-	"time"
 )
 
-func String(s string) param.Opt[string]     { return param.NewOpt(s) }
-func Int(i int64) param.Opt[int64]          { return param.NewOpt(i) }
-func Bool(b bool) param.Opt[bool]           { return param.NewOpt(b) }
-func Float(f float64) param.Opt[float64]    { return param.NewOpt(f) }
-func Time(t time.Time) param.Opt[time.Time] { return param.NewOpt(t) }
+func F[T any](value T) param.Field[T] { return param.Field[T]{Value: value, Present: true} }
 
-func Opt[T comparable](v T) param.Opt[T] { return param.NewOpt(v) }
-func Ptr[T any](v T) *T                  { return &v }
+func Null[T any]() param.Field[T] { return param.Field[T]{Null: true, Present: true} }
 
-func IntPtr(v int64) *int64          { return &v }
-func BoolPtr(v bool) *bool           { return &v }
-func FloatPtr(v float64) *float64    { return &v }
-func StringPtr(v string) *string     { return &v }
-func TimePtr(v time.Time) *time.Time { return &v }
+func Raw[T any](value any) param.Field[T] { return param.Field[T]{Raw: value, Present: true} }
 
-func File(rdr io.Reader, filename string, contentType string) file {
-	return file{rdr, filename, contentType}
+func Int(value int64) param.Field[int64] { return F(value) }
+
+func String(value string) param.Field[string] { return F(value) }
+
+func Float(value float64) param.Field[float64] { return F(value) }
+
+func Bool(value bool) param.Field[bool] { return F(value) }
+
+type paramUnion = param.APIUnion
+
+func FileParam(reader io.Reader, filename string, contentType string) param.Field[io.Reader] {
+	return F[io.Reader](&file{reader, filename, contentType})
 }
 
 type file struct {
@@ -31,15 +31,5 @@ type file struct {
 	contentType string
 }
 
-func (f file) Filename() string {
-	if f.name != "" {
-		return f.name
-	} else if named, ok := f.Reader.(interface{ Name() string }); ok {
-		return named.Name()
-	}
-	return ""
-}
-
-func (f file) ContentType() string {
-	return f.contentType
-}
+func (f *file) ContentType() string { return f.contentType }
+func (f *file) Filename() string    { return f.name }
