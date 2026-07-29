@@ -3,7 +3,7 @@
 package warphr
 
 import (
-	"warp-hr/internal/apierror"
+	"github.com/TeamWarp/warp-sdk-go/internal/apierror"
 )
 
 type Error = apierror.Error

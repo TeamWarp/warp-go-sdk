@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"warp-hr/internal/param"
+	"github.com/TeamWarp/warp-sdk-go/internal/param"
 )
 
 var encoders sync.Map // map[encoderEntry]encoderFunc

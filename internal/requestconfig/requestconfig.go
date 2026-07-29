@@ -18,11 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"warp-hr/internal"
-	"warp-hr/internal/apierror"
-	"warp-hr/internal/apiform"
-	"warp-hr/internal/apiquery"
-	"warp-hr/internal/param"
+	"github.com/TeamWarp/warp-sdk-go/internal"
+	"github.com/TeamWarp/warp-sdk-go/internal/apierror"
+	"github.com/TeamWarp/warp-sdk-go/internal/apiform"
+	"github.com/TeamWarp/warp-sdk-go/internal/apiquery"
+	"github.com/TeamWarp/warp-sdk-go/internal/param"
 )
 
 func getDefaultHeaders() map[string]string {
