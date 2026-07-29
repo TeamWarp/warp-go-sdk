@@ -1,16 +1,16 @@
 ---
 name: warp-api-go-sdk
-description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the warp-hr package: installing it, constructing and authenticating the client, and calling API operations."
+description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the github.com/TeamWarp/warp-sdk-go package: installing it, constructing and authenticating the client, and calling API operations."
 ---
 
 # Warp API Go SDK
 
-Generated Go client for Warp API, published as `warp-hr`. Use the generated client instead of hand-writing HTTP requests.
+Generated Go client for Warp API, published as `github.com/TeamWarp/warp-sdk-go`. Use the generated client instead of hand-writing HTTP requests.
 
 ## Install
 
 ```sh
-go get warp-hr
+go get github.com/TeamWarp/warp-sdk-go
 ```
 
 ## Client setup and authentication
@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	sdk "warp-hr"
+	sdk "github.com/TeamWarp/warp-sdk-go"
 )
 
 client := sdk.NewClient()
@@ -40,8 +40,8 @@ import (
 	"fmt"
 	"os"
 
-	sdk "warp-hr"
-	"warp-hr/option"
+	sdk "github.com/TeamWarp/warp-sdk-go"
+	"github.com/TeamWarp/warp-sdk-go/option"
 )
 
 func main() {
@@ -73,7 +73,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "warp-hr", "errors", "fmt"
+// imports: sdk "github.com/TeamWarp/warp-sdk-go", "errors", "fmt"
 ```
 
 ## Requirements

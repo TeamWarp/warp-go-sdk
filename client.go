@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strings"
 
-	"warp-hr/internal/requestconfig"
-	"warp-hr/option"
+	"github.com/TeamWarp/warp-sdk-go/internal/requestconfig"
+	"github.com/TeamWarp/warp-sdk-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

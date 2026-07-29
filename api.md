@@ -53,7 +53,7 @@ import (
 	"context"
 	"fmt"
 
-	sdk "warp-hr"
+	sdk "github.com/TeamWarp/warp-sdk-go"
 )
 
 client := sdk.NewClient()

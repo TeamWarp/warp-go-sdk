@@ -25,7 +25,7 @@ The full API of this library can be found in [api.md](./api.md).
 ## Installation
 
 ```sh
-go get warp-hr
+go get github.com/TeamWarp/warp-sdk-go
 ```
 
 <br />
@@ -40,8 +40,8 @@ import (
 	"fmt"
 	"os"
 
-	sdk "warp-hr"
-	"warp-hr/option"
+	sdk "github.com/TeamWarp/warp-sdk-go"
+	"github.com/TeamWarp/warp-sdk-go/option"
 )
 
 func main() {
@@ -91,7 +91,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "warp-hr", "errors", "fmt"
+// imports: sdk "github.com/TeamWarp/warp-sdk-go", "errors", "fmt"
 ```
 
 Documented error statuses: `400`, `401`, `403`, `404`, `409`, `422`, `429`, `500`.
@@ -109,7 +109,7 @@ client := sdk.NewClient(
 	option.WithRequestTimeout(60*time.Second),
 )
 
-// imports: sdk "warp-hr", "warp-hr/option", "time"
+// imports: sdk "github.com/TeamWarp/warp-sdk-go", "github.com/TeamWarp/warp-sdk-go/option", "time"
 ```
 
 | Option | Type | Default | Description |

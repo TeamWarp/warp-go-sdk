@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"slices"
 
-	"warp-hr/internal/apijson"
-	"warp-hr/internal/apiquery"
-	"warp-hr/internal/param"
-	"warp-hr/internal/requestconfig"
-	"warp-hr/option"
+	"github.com/TeamWarp/warp-sdk-go/internal/apijson"
+	"github.com/TeamWarp/warp-sdk-go/internal/apiquery"
+	"github.com/TeamWarp/warp-sdk-go/internal/param"
+	"github.com/TeamWarp/warp-sdk-go/internal/requestconfig"
+	"github.com/TeamWarp/warp-sdk-go/option"
 )
 
 // TimeOffService contains methods and other services that help with interacting

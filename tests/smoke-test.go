@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	sdk "warp-hr"
-	"warp-hr/option"
+	sdk "github.com/TeamWarp/warp-sdk-go"
+	"github.com/TeamWarp/warp-sdk-go/option"
 )
 
 // Smoke test: calls every generated operation once to confirm the SDK can reach each endpoint.
