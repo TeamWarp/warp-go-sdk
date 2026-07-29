@@ -1,7 +1,7 @@
-package warpgosdk
+package warphr
 
 import (
-	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"warp-hr/internal/param"
 	"io"
 )
 
@@ -18,6 +18,8 @@ func String(value string) param.Field[string] { return F(value) }
 func Float(value float64) param.Field[float64] { return F(value) }
 
 func Bool(value bool) param.Field[bool] { return F(value) }
+
+type paramUnion = param.APIUnion
 
 func FileParam(reader io.Reader, filename string, contentType string) param.Field[io.Reader] {
 	return F[io.Reader](&file{reader, filename, contentType})

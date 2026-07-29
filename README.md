@@ -1,6 +1,6 @@
-# Warp
+# Warp API
 
-This library provides convenient access to the Warp REST API from Go.
+This library provides convenient access to the Warp API from Go.
 
 The full API of this library can be found in [api.md](./api.md).
 
@@ -25,7 +25,7 @@ The full API of this library can be found in [api.md](./api.md).
 ## Installation
 
 ```sh
-go get github.com/TeamWarp/warp-go-sdk
+go get warp-hr
 ```
 
 <br />
@@ -40,20 +40,20 @@ import (
 	"fmt"
 	"os"
 
-	sdk "github.com/TeamWarp/warp-go-sdk"
-	"github.com/TeamWarp/warp-go-sdk/option"
+	sdk "warp-hr"
+	"warp-hr/option"
 )
 
 func main() {
 	client := sdk.NewClient(
-		option.WithAPIKey(os.Getenv("WARP_API_KEY")),
+		option.WithAPIKey(os.Getenv("API_KEY")),
 	)
 
-	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+	customWorkerField, err := client.CustomWorkerFields.List(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(timeOff)
+	fmt.Println(customWorkerField)
 }
 ```
 
@@ -69,7 +69,7 @@ Pass credentials to the generated client constructor. Environment variables are 
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `option.WithAPIKey` | `string \| provider` | - | Warp API key. Defaults to the WARP_API_KEY environment variable. Defaults to WARP_API_KEY. |
+| `option.WithAPIKey` | `string \| provider` | - | The API key for header authorization. Defaults to API_KEY. |
 
 Declared schemes:
 
@@ -82,7 +82,7 @@ Declared schemes:
 Non-success responses return generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```go
-timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+customWorkerField, err := client.CustomWorkerFields.List(context.Background())
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
@@ -91,10 +91,10 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "github.com/TeamWarp/warp-go-sdk", "errors", "fmt"
+// imports: sdk "warp-hr", "errors", "fmt"
 ```
 
-Documented error statuses: `400`, `401`, `403`, `404`, `409`, `429`, `500`.
+Documented error statuses: `400`, `401`, `403`, `404`, `409`, `422`, `429`, `500`.
 
 <br />
 
@@ -109,12 +109,12 @@ client := sdk.NewClient(
 	option.WithRequestTimeout(60*time.Second),
 )
 
-// imports: sdk "github.com/TeamWarp/warp-go-sdk", "github.com/TeamWarp/warp-go-sdk/option", "time"
+// imports: sdk "warp-hr", "warp-hr/option", "time"
 ```
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `option.WithAPIKey` | `func(string) option.RequestOption` | `os.Getenv("WARP_API_KEY")` | Warp API key. Defaults to the WARP_API_KEY environment variable. |
+| `option.WithAPIKey` | `func(string) option.RequestOption` | `os.Getenv("API_KEY")` | The API key for header authorization. |
 | `option.WithEnvironmentProduction` | `func() option.RequestOption` | - | Select the production API environment. |
 | `option.WithBaseURL` | `func(string) option.RequestOption` | `os.Getenv("WARP_BASE_URL")` | Override the default API base URL. |
 | `option.WithRequestTimeout` | `func(time.Duration) option.RequestOption` | - | Maximum time to wait for each request attempt. |

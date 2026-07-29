@@ -4,6 +4,29 @@ Complete reference of every operation, grouped by resource. See [the README](./R
 
 ## Contents
 
+- [`CustomWorkerFields`](#customworkerfields)
+  - [List custom worker fields](#list-custom-worker-fields)
+  - [Create custom worker field](#create-custom-worker-field)
+  - [Get custom worker field](#get-custom-worker-field)
+  - [Update custom worker field](#update-custom-worker-field)
+  - [Archive custom worker field](#archive-custom-worker-field)
+  - [Create field option](#create-field-option)
+  - [Update field option](#update-field-option)
+  - [Delete unused field option](#delete-unused-field-option)
+  - [Archive field option](#archive-field-option)
+  - [List worker custom field values](#list-worker-custom-field-values)
+  - [Set worker custom field value](#set-worker-custom-field-value)
+  - [Clear worker custom field value](#clear-worker-custom-field-value)
+- [`Departments`](#departments)
+  - [List departments](#list-departments)
+  - [Create department](#create-department)
+  - [Update department](#update-department)
+- [`Offers`](#offers)
+  - [List offers](#list-offers)
+  - [Create offer](#create-offer)
+  - [Void offer](#void-offer)
+  - [Extend offer deadline](#extend-offer-deadline)
+  - [Resend offer](#resend-offer)
 - [`TimeOff`](#timeoff)
   - [List time off assignments](#list-time-off-assignments)
   - [List time off balances](#list-time-off-balances)
@@ -18,10 +41,6 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [Create employee](#create-employee)
   - [Create contractor](#create-contractor)
   - [Invite worker](#invite-worker)
-- [`Departments`](#departments)
-  - [List departments](#list-departments)
-  - [Create department](#create-department)
-  - [Update department](#update-department)
 - [`Workplaces`](#workplaces)
   - [List workplaces](#list-workplaces)
   - [Create workplace](#create-workplace)
@@ -34,10 +53,371 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/TeamWarp/warp-go-sdk"
+	sdk "warp-hr"
 )
 
 client := sdk.NewClient()
+```
+
+## `CustomWorkerFields`
+
+### List custom worker fields
+
+List the custom worker field definitions your API key can read. Each field belongs to a worker-data category; fields whose category your key cannot read are omitted unless the key holds workers:custom_fields.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`[]CustomWorkerFieldListResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.List(context.Background())
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Create custom worker field
+
+Create a custom worker field definition. The field type is immutable after creation. Select and multi_select fields can include their initial options. Access to values derives from the field category; requires the workers:custom_fields permission.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldNewParams`](./customworkerfield.go) |
+| Response | [`CustomWorkerFieldNewResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.New(context.Background(), sdk.CustomWorkerFieldNewParams{
+	Name: sdk.F[string](""),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Get custom worker field
+
+Get a custom worker field definition, including its select options. Archived options may appear on existing worker values but cannot be newly selected.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`CustomWorkerFieldGetResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.Get(context.Background(), "cf_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Update custom worker field
+
+Update a custom worker field definition. The field type cannot be changed; create a new field instead. Requires the workers:custom_fields permission; changing the category, access level, or input source requires the manage level.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldUpdateParams`](./customworkerfield.go) |
+| Response | [`CustomWorkerFieldUpdateResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.Update(context.Background(), "cf_1234", sdk.CustomWorkerFieldUpdateParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Archive custom worker field
+
+Archive a custom worker field. Archived fields keep their existing worker values but cannot receive new ones. Requires the workers:custom_fields permission at the manage level.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`CustomWorkerFieldArchiveResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.Archive(context.Background(), "cf_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Create field option
+
+Add an option to a select or multi_select custom worker field. The option value should be treated as stable; the label can change. Requires the workers:custom_fields permission.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldNewOptionParams`](./customworkerfield.go) |
+| Response | [`CustomWorkerFieldNewOptionResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.NewOption(context.Background(), "cf_1234", sdk.CustomWorkerFieldNewOptionParams{
+	Label: sdk.F[string]("x"),
+	Value: sdk.F[string]("x"),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Update field option
+
+Update the label or sort order of a custom worker field option. Options of archived fields cannot be edited. Requires the workers:custom_fields permission.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldUpdateOptionParams`](./customworkerfield.go) |
+| Response | [`CustomWorkerFieldUpdateOptionResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomWorkerFieldUpdateOptionParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Delete unused field option
+
+Delete a custom worker field option that is not applied to any worker. Options in use must be archived instead. Requires the workers:custom_fields permission at the manage level.
+
+```go
+err := client.CustomWorkerFields.DeleteOption(context.Background(), "cfo_1234")
+if err != nil {
+	panic(err)
+}
+```
+
+### Archive field option
+
+Archive a custom worker field option. Archived options remain on existing worker values but cannot be newly selected. Requires the workers:custom_fields permission at the manage level.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`CustomWorkerFieldArchiveOptionResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.ArchiveOption(context.Background(), "cfo_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### List worker custom field values
+
+List custom field values for workers, optionally filtered by worker or field. Values are returned only for fields whose category your API key can read.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldListValuesParams`](./customworkerfield.go) |
+| Response | [`[]CustomWorkerFieldListValuesResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.ListValues(context.Background(), sdk.CustomWorkerFieldListValuesParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Set worker custom field value
+
+Create or replace a worker's value for a custom field. The value shape must match the field type, and your API key must hold write on the field's category.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldUpsertValueParams`](./customworkerfield.go) |
+| Response | [`CustomWorkerFieldUpsertValueResponse`](./customworkerfield.go) |
+
+```go
+customWorkerField, err := client.CustomWorkerFields.UpsertValue(context.Background(), sdk.CustomWorkerFieldUpsertValueParams{
+	FieldID: sdk.F[string]("cf_1234"),
+	Value: sdk.F[sdk.CustomWorkerFieldUpsertValueParamsValueUnion](sdk.CustomWorkerFieldUpsertValueParamsValueUnion{}),
+	WorkerID: sdk.F[string]("wrk_1234"),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customWorkerField)
+```
+
+### Clear worker custom field value
+
+Remove a worker's value for a custom field. Your API key must hold write on the field's category.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomWorkerFieldClearValueParams`](./customworkerfield.go) |
+
+```go
+err := client.CustomWorkerFields.ClearValue(context.Background(), sdk.CustomWorkerFieldClearValueParams{
+	FieldID: sdk.F[string]("cf_1234"),
+	WorkerID: sdk.F[string]("wrk_1234"),
+})
+if err != nil {
+	panic(err)
+}
+```
+
+## `Departments`
+
+### List departments
+
+List all departments for your company.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`DepartmentListParams`](./department.go) |
+| Response | [`DepartmentListResponse`](./department.go) |
+
+```go
+department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(department)
+```
+
+### Create department
+
+Create a new department.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`DepartmentNewParams`](./department.go) |
+| Response | [`DepartmentNewResponse`](./department.go) |
+
+```go
+department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
+	Name: sdk.F[string](""),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(department)
+```
+
+### Update department
+
+Update an existing department.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`DepartmentUpdateParams`](./department.go) |
+| Response | [`DepartmentUpdateResponse`](./department.go) |
+
+```go
+department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(department)
+```
+
+## `Offers`
+
+### List offers
+
+List the candidate offers for your company.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`OfferListParams`](./offer.go) |
+| Response | [`OfferListResponse`](./offer.go) |
+
+```go
+offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(offer)
+```
+
+### Create offer
+
+Create and send a candidate offer. The candidate receives an email with a link to the offer portal.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`OfferNewParams`](./offer.go) |
+| Response | [`OfferNewResponse`](./offer.go) |
+
+```go
+offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
+	Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
+		FirstName: sdk.F[string]("x"),
+		LastName: sdk.F[string]("x"),
+		Email: sdk.F[string]("john@joinwarp.com"),
+	}),
+	Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
+		PayRate: sdk.F[float64](0),
+	}),
+	Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
+		Title: sdk.F[string]("x"),
+		StartDate: sdk.F[string]("2000-01-01"),
+	}),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(offer)
+```
+
+### Void offer
+
+Void a previously sent offer. Only sent offers can be voided.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`OfferVoidResponse`](./offer.go) |
+
+```go
+offer, err := client.Offers.Void(context.Background(), "offr_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(offer)
+```
+
+### Extend offer deadline
+
+Extend the expiration deadline of a sent offer.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`OfferExtendDeadlineParams`](./offer.go) |
+| Response | [`OfferExtendDeadlineResponse`](./offer.go) |
+
+```go
+offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
+	ExpirationTime: sdk.F[string](""),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(offer)
+```
+
+### Resend offer
+
+Resend the offer email to the candidate for a sent offer.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`OfferResendResponse`](./offer.go) |
+
+```go
+offer, err := client.Offers.Resend(context.Background(), "offr_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(offer)
 ```
 
 ## `TimeOff`
@@ -101,11 +481,11 @@ Get the time off policies for your company
 
 | Direction | Type |
 | --- | --- |
-| Request | [`TimeOffPolicyListParams`](./timeoffpolicy.go) |
-| Response | [`TimeOffPolicyListResponse`](./timeoffpolicy.go) |
+| Request | [`TimeOffPolicyTimeOffGetParams`](./timeoffpolicy.go) |
+| Response | [`TimeOffPolicyTimeOffGetResponse`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{})
+policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
 if err != nil {
 	panic(err)
 }
@@ -118,10 +498,10 @@ Get a specific time off policy by id
 
 | Direction | Type |
 | --- | --- |
-| Response | [`TimeOffPolicyGetResponse`](./timeoffpolicy.go) |
+| Response | [`TimeOffPolicyTimeOffGet2Response`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.Get(context.Background(), "top_1234")
+policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
 if err != nil {
 	panic(err)
 }
@@ -244,61 +624,6 @@ if err != nil {
 	panic(err)
 }
 fmt.Println(worker)
-```
-
-## `Departments`
-
-### List departments
-
-List all departments for your company.
-
-| Direction | Type |
-| --- | --- |
-| Request | [`DepartmentListParams`](./department.go) |
-| Response | [`DepartmentListResponse`](./department.go) |
-
-```go
-department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
-if err != nil {
-	panic(err)
-}
-fmt.Println(department)
-```
-
-### Create department
-
-Create a new department.
-
-| Direction | Type |
-| --- | --- |
-| Request | [`DepartmentNewParams`](./department.go) |
-| Response | [`DepartmentNewResponse`](./department.go) |
-
-```go
-department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-	Name: sdk.F[string](""),
-})
-if err != nil {
-	panic(err)
-}
-fmt.Println(department)
-```
-
-### Update department
-
-Update an existing department.
-
-| Direction | Type |
-| --- | --- |
-| Request | [`DepartmentUpdateParams`](./department.go) |
-| Response | [`DepartmentUpdateResponse`](./department.go) |
-
-```go
-department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
-if err != nil {
-	panic(err)
-}
-fmt.Println(department)
 ```
 
 ## `Workplaces`

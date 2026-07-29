@@ -1,16 +1,16 @@
 ---
-name: warp-go-sdk
-description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the github.com/TeamWarp/warp-go-sdk package: installing it, constructing and authenticating the client, and calling API operations."
+name: warp-api-go-sdk
+description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the warp-hr package: installing it, constructing and authenticating the client, and calling API operations."
 ---
 
-# Warp Go SDK
+# Warp API Go SDK
 
-Generated Go client for Warp API, published as `github.com/TeamWarp/warp-go-sdk`. Use the generated client instead of hand-writing HTTP requests.
+Generated Go client for Warp API, published as `warp-hr`. Use the generated client instead of hand-writing HTTP requests.
 
 ## Install
 
 ```sh
-go get github.com/TeamWarp/warp-go-sdk
+go get warp-hr
 ```
 
 ## Client setup and authentication
@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/TeamWarp/warp-go-sdk"
+	sdk "warp-hr"
 )
 
 client := sdk.NewClient()
@@ -28,7 +28,7 @@ client := sdk.NewClient()
 
 Provide credentials using the options below. Environment variables are read automatically when the target runtime supports them:
 
-- `option.WithAPIKey` (env: `WARP_API_KEY`) — Warp API key. Defaults to the WARP_API_KEY environment variable.
+- `option.WithAPIKey` (env: `API_KEY`) — The API key for header authorization.
 
 ## Calling operations
 
@@ -40,20 +40,20 @@ import (
 	"fmt"
 	"os"
 
-	sdk "github.com/TeamWarp/warp-go-sdk"
-	"github.com/TeamWarp/warp-go-sdk/option"
+	sdk "warp-hr"
+	"warp-hr/option"
 )
 
 func main() {
 	client := sdk.NewClient(
-		option.WithAPIKey(os.Getenv("WARP_API_KEY")),
+		option.WithAPIKey(os.Getenv("API_KEY")),
 	)
 
-	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+	customWorkerField, err := client.CustomWorkerFields.List(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(timeOff)
+	fmt.Println(customWorkerField)
 }
 ```
 
@@ -64,7 +64,7 @@ Method names, parameter shapes, and response types are generated from the API de
 Non-success responses return generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```go
-timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+customWorkerField, err := client.CustomWorkerFields.List(context.Background())
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
@@ -73,7 +73,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "github.com/TeamWarp/warp-go-sdk", "errors", "fmt"
+// imports: sdk "warp-hr", "errors", "fmt"
 ```
 
 ## Requirements

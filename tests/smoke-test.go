@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	sdk "github.com/TeamWarp/warp-go-sdk"
-	"github.com/TeamWarp/warp-go-sdk/option"
+	sdk "warp-hr"
+	"warp-hr/option"
 )
 
 // Smoke test: calls every generated operation once to confirm the SDK can reach each endpoint.
@@ -37,6 +37,193 @@ type smokeCase struct {
 }
 
 func _smokeCase0() {
+	customWorkerField, err := client.CustomWorkerFields.List(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase1() {
+	customWorkerField, err := client.CustomWorkerFields.New(context.Background(), sdk.CustomWorkerFieldNewParams{
+		Name: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase2() {
+	customWorkerField, err := client.CustomWorkerFields.Get(context.Background(), "cf_1234")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase3() {
+	customWorkerField, err := client.CustomWorkerFields.Update(context.Background(), "cf_1234", sdk.CustomWorkerFieldUpdateParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase4() {
+	customWorkerField, err := client.CustomWorkerFields.Archive(context.Background(), "cf_1234")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase5() {
+	customWorkerField, err := client.CustomWorkerFields.NewOption(context.Background(), "cf_1234", sdk.CustomWorkerFieldNewOptionParams{
+		Label: sdk.F[string]("x"),
+		Value: sdk.F[string]("x"),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase6() {
+	customWorkerField, err := client.CustomWorkerFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomWorkerFieldUpdateOptionParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase7() {
+	err := client.CustomWorkerFields.DeleteOption(context.Background(), "cfo_1234")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func _smokeCase8() {
+	customWorkerField, err := client.CustomWorkerFields.ArchiveOption(context.Background(), "cfo_1234")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase9() {
+	customWorkerField, err := client.CustomWorkerFields.ListValues(context.Background(), sdk.CustomWorkerFieldListValuesParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase10() {
+	customWorkerField, err := client.CustomWorkerFields.UpsertValue(context.Background(), sdk.CustomWorkerFieldUpsertValueParams{
+		FieldID: sdk.F[string]("cf_1234"),
+		Value: sdk.F[sdk.CustomWorkerFieldUpsertValueParamsValueUnion](sdk.CustomWorkerFieldUpsertValueParamsValueUnion{}),
+		WorkerID: sdk.F[string]("wrk_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(customWorkerField)
+}
+
+func _smokeCase11() {
+	err := client.CustomWorkerFields.ClearValue(context.Background(), sdk.CustomWorkerFieldClearValueParams{
+		FieldID: sdk.F[string]("cf_1234"),
+		WorkerID: sdk.F[string]("wrk_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+}
+
+func _smokeCase12() {
+	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(department)
+}
+
+func _smokeCase13() {
+	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
+		Name: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(department)
+}
+
+func _smokeCase14() {
+	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(department)
+}
+
+func _smokeCase15() {
+	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(offer)
+}
+
+func _smokeCase16() {
+	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
+		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
+			FirstName: sdk.F[string]("x"),
+			LastName: sdk.F[string]("x"),
+			Email: sdk.F[string]("john@joinwarp.com"),
+		}),
+		Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
+			PayRate: sdk.F[float64](0),
+		}),
+		Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
+			Title: sdk.F[string]("x"),
+			StartDate: sdk.F[string]("2000-01-01"),
+		}),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(offer)
+}
+
+func _smokeCase17() {
+	offer, err := client.Offers.Void(context.Background(), "offr_1234")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(offer)
+}
+
+func _smokeCase18() {
+	offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
+		ExpirationTime: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(offer)
+}
+
+func _smokeCase19() {
+	offer, err := client.Offers.Resend(context.Background(), "offr_1234")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(offer)
+}
+
+func _smokeCase20() {
 	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
 	if err != nil {
 		panic(err)
@@ -44,7 +231,7 @@ func _smokeCase0() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase1() {
+func _smokeCase21() {
 	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
 	if err != nil {
 		panic(err)
@@ -52,7 +239,7 @@ func _smokeCase1() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase2() {
+func _smokeCase22() {
 	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
 	if err != nil {
 		panic(err)
@@ -60,23 +247,23 @@ func _smokeCase2() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase3() {
-	policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{})
+func _smokeCase23() {
+	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(policy)
 }
 
-func _smokeCase4() {
-	policy, err := client.TimeOff.Policies.Get(context.Background(), "top_1234")
+func _smokeCase24() {
+	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(policy)
 }
 
-func _smokeCase5() {
+func _smokeCase25() {
 	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
 	if err != nil {
 		panic(err)
@@ -84,7 +271,7 @@ func _smokeCase5() {
 	fmt.Println(worker)
 }
 
-func _smokeCase6() {
+func _smokeCase26() {
 	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
@@ -92,14 +279,14 @@ func _smokeCase6() {
 	fmt.Println(worker)
 }
 
-func _smokeCase7() {
+func _smokeCase27() {
 	err := client.Workers.Delete(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func _smokeCase8() {
+func _smokeCase28() {
 	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
 			Amount: sdk.F[float64](0),
@@ -121,7 +308,7 @@ func _smokeCase8() {
 	fmt.Println(worker)
 }
 
-func _smokeCase9() {
+func _smokeCase29() {
 	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
 		DepartmentID: sdk.F[string]("dpt_1234"),
 		Email: sdk.F[string]("john@joinwarp.com"),
@@ -137,7 +324,7 @@ func _smokeCase9() {
 	fmt.Println(worker)
 }
 
-func _smokeCase10() {
+func _smokeCase30() {
 	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
@@ -145,33 +332,7 @@ func _smokeCase10() {
 	fmt.Println(worker)
 }
 
-func _smokeCase11() {
-	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(department)
-}
-
-func _smokeCase12() {
-	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-		Name: sdk.F[string](""),
-	})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(department)
-}
-
-func _smokeCase13() {
-	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(department)
-}
-
-func _smokeCase14() {
+func _smokeCase31() {
 	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
 	if err != nil {
 		panic(err)
@@ -179,7 +340,7 @@ func _smokeCase14() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase15() {
+func _smokeCase32() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 			Line1: sdk.F[string]("x"),
@@ -194,7 +355,7 @@ func _smokeCase15() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase16() {
+func _smokeCase33() {
 	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
 	if err != nil {
 		panic(err)
@@ -205,122 +366,241 @@ func _smokeCase16() {
 
 var cases = []smokeCase{
 	{
-		Operation: "listAssignments",
+		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/time_off/assignments",
+		Path:      "/v1/custom-worker-fields",
 		Run:       _smokeCase0,
 	},
 
 	{
-		Operation: "listBalances",
-		Method:    "GET",
-		Path:      "/v1/time_off/balances",
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/custom-worker-fields",
 		Run:       _smokeCase1,
 	},
 
 	{
-		Operation: "listRequests",
+		Operation: "retrieve",
 		Method:    "GET",
-		Path:      "/v1/time_off/requests",
+		Path:      "/v1/custom-worker-fields/{id}",
 		Run:       _smokeCase2,
 	},
 
 	{
-		Operation: "list",
-		Method:    "GET",
-		Path:      "/v1/time_off/policies",
+		Operation: "update",
+		Method:    "PATCH",
+		Path:      "/v1/custom-worker-fields/{id}",
 		Run:       _smokeCase3,
 	},
 
 	{
-		Operation: "retrieve",
-		Method:    "GET",
-		Path:      "/v1/time_off/policies/{id}",
+		Operation: "archive",
+		Method:    "POST",
+		Path:      "/v1/custom-worker-fields/{id}/archive",
 		Run:       _smokeCase4,
 	},
 
 	{
-		Operation: "list",
-		Method:    "GET",
-		Path:      "/v1/workers",
+		Operation: "createOption",
+		Method:    "POST",
+		Path:      "/v1/custom-worker-fields/{id}/options",
 		Run:       _smokeCase5,
 	},
 
 	{
-		Operation: "retrieve",
-		Method:    "GET",
-		Path:      "/v1/workers/{id}",
+		Operation: "updateOption",
+		Method:    "PATCH",
+		Path:      "/v1/custom-worker-field-options/{id}",
 		Run:       _smokeCase6,
 	},
 
 	{
-		Operation: "delete",
+		Operation: "deleteOption",
 		Method:    "DELETE",
-		Path:      "/v1/workers/{id}",
+		Path:      "/v1/custom-worker-field-options/{id}",
 		Run:       _smokeCase7,
 	},
 
 	{
-		Operation: "createEmployee",
+		Operation: "archiveOption",
 		Method:    "POST",
-		Path:      "/v1/workers/employee",
+		Path:      "/v1/custom-worker-field-options/{id}/archive",
 		Run:       _smokeCase8,
 	},
 
 	{
-		Operation: "createContractor",
-		Method:    "POST",
-		Path:      "/v1/workers/contractor",
+		Operation: "listValues",
+		Method:    "GET",
+		Path:      "/v1/worker-custom-field-values",
 		Run:       _smokeCase9,
 	},
 
 	{
-		Operation: "invite",
-		Method:    "POST",
-		Path:      "/v1/workers/{id}/invite",
+		Operation: "upsertValue",
+		Method:    "PUT",
+		Path:      "/v1/worker-custom-field-values",
 		Run:       _smokeCase10,
+	},
+
+	{
+		Operation: "clearValue",
+		Method:    "DELETE",
+		Path:      "/v1/worker-custom-field-values",
+		Run:       _smokeCase11,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/departments",
-		Run:       _smokeCase11,
+		Run:       _smokeCase12,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/departments",
-		Run:       _smokeCase12,
+		Run:       _smokeCase13,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/departments/{id}",
-		Run:       _smokeCase13,
+		Run:       _smokeCase14,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/offers",
+		Run:       _smokeCase15,
+	},
+
+	{
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/offers",
+		Run:       _smokeCase16,
+	},
+
+	{
+		Operation: "void",
+		Method:    "POST",
+		Path:      "/v1/offers/{id}/void",
+		Run:       _smokeCase17,
+	},
+
+	{
+		Operation: "extendDeadline",
+		Method:    "POST",
+		Path:      "/v1/offers/{id}/extend-deadline",
+		Run:       _smokeCase18,
+	},
+
+	{
+		Operation: "resend",
+		Method:    "POST",
+		Path:      "/v1/offers/{id}/resend",
+		Run:       _smokeCase19,
+	},
+
+	{
+		Operation: "listAssignments",
+		Method:    "GET",
+		Path:      "/v1/time_off/assignments",
+		Run:       _smokeCase20,
+	},
+
+	{
+		Operation: "listBalances",
+		Method:    "GET",
+		Path:      "/v1/time_off/balances",
+		Run:       _smokeCase21,
+	},
+
+	{
+		Operation: "listRequests",
+		Method:    "GET",
+		Path:      "/v1/time_off/requests",
+		Run:       _smokeCase22,
+	},
+
+	{
+		Operation: "timeOffGet",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies",
+		Run:       _smokeCase23,
+	},
+
+	{
+		Operation: "timeOffGet2",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies/{id}",
+		Run:       _smokeCase24,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/workers",
+		Run:       _smokeCase25,
+	},
+
+	{
+		Operation: "retrieve",
+		Method:    "GET",
+		Path:      "/v1/workers/{id}",
+		Run:       _smokeCase26,
+	},
+
+	{
+		Operation: "delete",
+		Method:    "DELETE",
+		Path:      "/v1/workers/{id}",
+		Run:       _smokeCase27,
+	},
+
+	{
+		Operation: "createEmployee",
+		Method:    "POST",
+		Path:      "/v1/workers/employee",
+		Run:       _smokeCase28,
+	},
+
+	{
+		Operation: "createContractor",
+		Method:    "POST",
+		Path:      "/v1/workers/contractor",
+		Run:       _smokeCase29,
+	},
+
+	{
+		Operation: "invite",
+		Method:    "POST",
+		Path:      "/v1/workers/{id}/invite",
+		Run:       _smokeCase30,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/workplaces",
-		Run:       _smokeCase14,
+		Run:       _smokeCase31,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/workplaces",
-		Run:       _smokeCase15,
+		Run:       _smokeCase32,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/workplaces/{id}",
-		Run:       _smokeCase16,
+		Run:       _smokeCase33,
 	},
 
 }

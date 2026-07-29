@@ -11,11 +11,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"warp-hr/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 
-// RequestOption is an option for the requests made by the Warp API Client
+// RequestOption is an option for the requests made by the Warp API API Client
 // which can be supplied to clients, services, and methods.
 type RequestOption = requestconfig.RequestOption
 
@@ -259,11 +259,10 @@ func WithEnvironmentProduction() RequestOption {
 	return requestconfig.WithDefaultBaseURL("https://api.joinwarp.com/")
 }
 
-// WithAPIKey returns a RequestOption that sets the client setting "api_key".
+// WithAPIKey returns a RequestOption that sets the client setting "apiKey".
 func WithAPIKey(value string) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
-		r.APIKey = value
-		return r.Apply(WithHeader("x-api-key", r.APIKey))
-
+		r.Request.Header.Set("x-api-key", value)
+		return nil
 	})
 }
