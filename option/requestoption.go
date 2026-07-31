@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TeamWarp/warp-sdk-go/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 

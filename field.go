@@ -1,7 +1,7 @@
 package warphr
 
 import (
-	"github.com/TeamWarp/warp-sdk-go/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"io"
 )
 
