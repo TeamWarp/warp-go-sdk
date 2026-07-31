@@ -49,11 +49,11 @@ func main() {
 		option.WithAPIKey(os.Getenv("WARP_API_KEY")),
 	)
 
-	customWorkerField, err := client.CustomWorkerFields.List(context.Background())
+	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(department)
 }
 ```
 
@@ -82,7 +82,7 @@ Declared schemes:
 Non-success responses return generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```go
-customWorkerField, err := client.CustomWorkerFields.List(context.Background())
+department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
