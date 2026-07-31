@@ -224,6 +224,7 @@ type RequestConfig struct {
 	HTTPClient     *http.Client
 	Middlewares    []middleware
 	APIKey         string
+	WebhookSecret  string
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
@@ -607,6 +608,7 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		HTTPClient:     cfg.HTTPClient,
 		Middlewares:    cfg.Middlewares,
 		APIKey:         cfg.APIKey,
+		WebhookSecret:  cfg.WebhookSecret,
 	}
 
 	return new

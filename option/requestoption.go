@@ -254,6 +254,15 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 	})
 }
 
+// WithWebhookSecret returns a RequestOption that sets the secret used to verify
+// inbound webhook signatures. It is never sent on outbound requests.
+func WithWebhookSecret(value string) RequestOption {
+	return requestconfig.PreRequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.WebhookSecret = value
+		return nil
+	})
+}
+
 // WithEnvironmentProduction sets the default base URL to the "production" environment.
 func WithEnvironmentProduction() RequestOption {
 	return requestconfig.WithDefaultBaseURL("https://api.joinwarp.com/")

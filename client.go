@@ -18,12 +18,13 @@ import (
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
 	Options []option.RequestOption
-	CustomWorkerFields *CustomWorkerFieldService
+	CustomFields *CustomFieldService
 	Departments *DepartmentService
 	Offers *OfferService
 	TimeOff *TimeOffService
 	Workers *WorkerService
 	Workplaces *WorkplaceService
+	Webhooks *WebhookService
 }
 
 // DefaultClientOptions read from the environment. This should be used to initialize
@@ -35,6 +36,9 @@ func DefaultClientOptions() []option.RequestOption {
 	}
 	if o, ok := os.LookupEnv("WARP_API_KEY"); ok {
 		defaults = append(defaults, option.WithAPIKey(o))
+	}
+	if o, ok := os.LookupEnv("WARP_WEBHOOK_SECRET"); ok && o != "" {
+		defaults = append(defaults, option.WithWebhookSecret(o))
 	}
 	if o, ok := os.LookupEnv("WARP_CUSTOM_HEADERS"); ok {
 		for _, line := range strings.Split(o, "\n") {
@@ -56,12 +60,13 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 
 	r = &Client{Options: opts}
 
-	r.CustomWorkerFields = NewCustomWorkerFieldService(opts...)
+	r.CustomFields = NewCustomFieldService(opts...)
 	r.Departments = NewDepartmentService(opts...)
 	r.Offers = NewOfferService(opts...)
 	r.TimeOff = NewTimeOffService(opts...)
 	r.Workers = NewWorkerService(opts...)
 	r.Workplaces = NewWorkplaceService(opts...)
+	r.Webhooks = NewWebhookService(opts...)
 
 	return
 }

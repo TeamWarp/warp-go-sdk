@@ -214,7 +214,24 @@
           }
         },
         "description": "List the custom worker field definitions your API key can read. Each field belongs to a worker-data category; fields whose category your key cannot read are omitted unless the key holds workers:custom_fields.",
-        "summary": "List Fields"
+        "summary": "List Fields",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.customFields.list();\nconsole.log(list);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.list()\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.List(context.Background())\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -535,7 +552,24 @@
             }
           },
           "required": true
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst create = await client.customFields.create({\n  name: \"\",\n  type: \"text\",\n  category: \"info\",\n});\nconsole.log(create);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.create(\n    name=\"\",\n    type=\"text\",\n    category=\"info\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{\n\t\tName: sdk.F[string](\"\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       }
     },
     "/v1/custom_fields/{id}": {
@@ -801,7 +835,24 @@
           }
         },
         "description": "Get a custom worker field definition, including its select options. Archived options may appear on existing worker values but cannot be newly selected.",
-        "summary": "Get Field"
+        "summary": "Get Field",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst retrieve = await client.customFields.retrieve(\"cf_1234\");\nconsole.log(retrieve);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.retrieve(\n    id=\"cf_1234\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.Get(context.Background(), \"cf_1234\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -1101,7 +1152,24 @@
             }
           },
           "required": true
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst update = await client.customFields.update(\"cf_1234\", {});\nconsole.log(update);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.update(\n    id=\"cf_1234\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.Update(context.Background(), \"cf_1234\", sdk.CustomFieldUpdateParams{})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       }
     },
     "/v1/custom_fields/{id}/archive": {
@@ -1321,7 +1389,24 @@
           }
         },
         "description": "Archive a custom worker field. Archived fields keep their existing worker values but cannot receive new ones. Requires the workers:custom_fields permission at the manage level.",
-        "summary": "Archive Field"
+        "summary": "Archive Field",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst archive = await client.customFields.archive(\"cf_1234\");\nconsole.log(archive);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.archive(\n    id=\"cf_1234\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.Archive(context.Background(), \"cf_1234\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       }
     },
     "/v1/custom_fields/{id}/options": {
@@ -1521,7 +1606,24 @@
             }
           },
           "required": true
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst createOption = await client.customFields.createOption(\"cf_1234\", {\n  label: \"x\",\n  value: \"x\",\n});\nconsole.log(createOption);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.create_option(\n    id=\"cf_1234\",\n    label=\"x\",\n    value=\"x\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"cf_1234\", sdk.CustomFieldNewOptionParams{\n\t\tLabel: sdk.F[string](\"x\"),\n\t\tValue: sdk.F[string](\"x\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       }
     },
     "/v1/custom_field_options/{id}": {
@@ -1715,7 +1817,24 @@
             }
           },
           "required": true
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst updateOption = await client.customFields.updateOption(\"cfo_1234\", {});\nconsole.log(updateOption);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.update_option(\n    id=\"cfo_1234\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.UpdateOption(context.Background(), \"cfo_1234\", sdk.CustomFieldUpdateOptionParams{})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1834,7 +1953,24 @@
           }
         },
         "description": "Delete a custom worker field option that is not applied to any worker. Options in use must be archived instead. Requires the workers:custom_fields permission at the manage level.",
-        "summary": "Delete Unused Field Option"
+        "summary": "Delete Unused Field Option",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nawait client.customFields.deleteOption(\"cfo_1234\");"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\nclient.custom_fields.delete_option(\n    id=\"cfo_1234\",\n)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\terr := client.CustomFields.DeleteOption(context.Background(), \"cfo_1234\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n}"
+          }
+        ]
       }
     },
     "/v1/custom_field_options/{id}/archive": {
@@ -1991,7 +2127,24 @@
           }
         },
         "description": "Archive a custom worker field option. Archived options remain on existing worker values but cannot be newly selected. Requires the workers:custom_fields permission at the manage level.",
-        "summary": "Archive Field Option"
+        "summary": "Archive Field Option",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst archiveOption = await client.customFields.archiveOption(\"cfo_1234\");\nconsole.log(archiveOption);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.archive_option(\n    id=\"cfo_1234\",\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.ArchiveOption(context.Background(), \"cfo_1234\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       }
     },
     "/v1/custom_field_values": {
@@ -2472,7 +2625,24 @@
           }
         },
         "description": "List custom field values for workers, optionally filtered by worker or field. Values are returned only for fields whose category your API key can read.",
-        "summary": "List Field Values"
+        "summary": "List Field Values",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst listValues = await client.customFields.listValues();\nconsole.log(listValues);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.list_values()\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -3221,7 +3391,24 @@
             }
           },
           "required": true
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nconst upsertValue = await client.customFields.upsertValue({\n  workerId: \"wrk_1234\",\n  fieldId: \"cf_1234\",\n  value: {\n    type: \"text\",\n    value: \"\",\n  },\n});\nconsole.log(upsertValue);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.upsert_value(\n    worker_id=\"wrk_1234\",\n    field_id=\"cf_1234\",\n    value={\"type\": \"text\", \"value\": \"\"},\n)\nprint(custom_field)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{\n\t\tFieldID: sdk.F[string](\"cf_1234\"),\n\t\tValue: sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),\n\t\tWorkerID: sdk.F[string](\"wrk_1234\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tfmt.Println(customField)\n}"
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -3352,7 +3539,24 @@
           }
         },
         "description": "Remove a worker's value for a custom field. Your API key must hold write on the field's category.",
-        "summary": "Clear Field Value"
+        "summary": "Clear Field Value",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import WarpAPI from \"warp-hr\";\n\nconst client = new WarpAPI({\n  apiKey: process.env[\"WARP_API_KEY\"], // defaults to the WARP_API_KEY env var\n});\n\nawait client.customFields.clearValue({\n  workerId: \"wrk_1234\",\n  fieldId: \"cf_1234\",\n});"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\nclient.custom_fields.clear_value(\n    worker_id=\"wrk_1234\",\n    field_id=\"cf_1234\",\n)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\terr := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{\n\t\tFieldID: sdk.F[string](\"cf_1234\"),\n\t\tWorkerID: sdk.F[string](\"wrk_1234\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n}"
+          }
+        ]
       }
     },
     "/v1/departments": {
