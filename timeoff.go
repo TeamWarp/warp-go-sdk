@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/TeamWarp/warp-sdk-go/internal/apijson"
-	"github.com/TeamWarp/warp-sdk-go/internal/apiquery"
-	"github.com/TeamWarp/warp-sdk-go/internal/param"
-	"github.com/TeamWarp/warp-sdk-go/internal/requestconfig"
-	"github.com/TeamWarp/warp-sdk-go/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // TimeOffService contains methods and other services that help with interacting
