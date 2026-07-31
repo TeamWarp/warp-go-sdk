@@ -4,6 +4,19 @@ Complete reference of every operation, grouped by resource. See [the README](./R
 
 ## Contents
 
+- [`CustomFields`](#customfields)
+  - [List Fields](#list-fields)
+  - [Create Field](#create-field)
+  - [Get Field](#get-field)
+  - [Update Field](#update-field)
+  - [Archive Field](#archive-field)
+  - [Create Field Option](#create-field-option)
+  - [Update Field Option](#update-field-option)
+  - [Delete Unused Field Option](#delete-unused-field-option)
+  - [Archive Field Option](#archive-field-option)
+  - [List Field Values](#list-field-values)
+  - [Set Field Value](#set-field-value)
+  - [Clear Field Value](#clear-field-value)
 - [`Departments`](#departments)
   - [List Departments](#list-departments)
   - [Create Department](#create-department)
@@ -44,6 +57,212 @@ import (
 )
 
 client := sdk.NewClient()
+```
+
+## `CustomFields`
+
+### List Fields
+
+List the custom worker field definitions your API key can read. Each field belongs to a worker-data category; fields whose category your key cannot read are omitted unless the key holds workers:custom_fields.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`[]CustomFieldListResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.List(context.Background())
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Create Field
+
+Create a custom worker field definition. The field type is immutable after creation. Select and multi_select fields can include their initial options. Access to values derives from the field category; requires the workers:custom_fields permission.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldNewParams`](./customfield.go) |
+| Response | [`CustomFieldNewResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
+	Name: sdk.F[string](""),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Get Field
+
+Get a custom worker field definition, including its select options. Archived options may appear on existing worker values but cannot be newly selected.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`CustomFieldGetResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Update Field
+
+Update a custom worker field definition. The field type cannot be changed; create a new field instead. Requires the workers:custom_fields permission; changing the category, access level, or input source requires the manage level.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldUpdateParams`](./customfield.go) |
+| Response | [`CustomFieldUpdateResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Archive Field
+
+Archive a custom worker field. Archived fields keep their existing worker values but cannot receive new ones. Requires the workers:custom_fields permission at the manage level.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`CustomFieldArchiveResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Create Field Option
+
+Add an option to a select or multi_select custom worker field. The option value should be treated as stable; the label can change. Requires the workers:custom_fields permission.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldNewOptionParams`](./customfield.go) |
+| Response | [`CustomFieldNewOptionResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
+	Label: sdk.F[string]("x"),
+	Value: sdk.F[string]("x"),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Update Field Option
+
+Update the label or sort order of a custom worker field option. Options of archived fields cannot be edited. Requires the workers:custom_fields permission.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldUpdateOptionParams`](./customfield.go) |
+| Response | [`CustomFieldUpdateOptionResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Delete Unused Field Option
+
+Delete a custom worker field option that is not applied to any worker. Options in use must be archived instead. Requires the workers:custom_fields permission at the manage level.
+
+```go
+err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
+if err != nil {
+	panic(err)
+}
+```
+
+### Archive Field Option
+
+Archive a custom worker field option. Archived options remain on existing worker values but cannot be newly selected. Requires the workers:custom_fields permission at the manage level.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`CustomFieldArchiveOptionResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### List Field Values
+
+List custom field values for workers, optionally filtered by worker or field. Values are returned only for fields whose category your API key can read.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldListValuesParams`](./customfield.go) |
+| Response | [`[]CustomFieldListValuesResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Set Field Value
+
+Create or replace a worker's value for a custom field. The value shape must match the field type, and your API key must hold write on the field's category.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldUpsertValueParams`](./customfield.go) |
+| Response | [`CustomFieldUpsertValueResponse`](./customfield.go) |
+
+```go
+customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
+	FieldID: sdk.F[string]("cf_1234"),
+	Value: sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
+	WorkerID: sdk.F[string]("wrk_1234"),
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(customField)
+```
+
+### Clear Field Value
+
+Remove a worker's value for a custom field. Your API key must hold write on the field's category.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`CustomFieldClearValueParams`](./customfield.go) |
+
+```go
+err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
+	FieldID: sdk.F[string]("cf_1234"),
+	WorkerID: sdk.F[string]("wrk_1234"),
+})
+if err != nil {
+	panic(err)
+}
 ```
 
 ## `Departments`
