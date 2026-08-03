@@ -1,7 +1,7 @@
 {
   "name": "WarpApi",
   "slug": "warpApi",
-  "generatorVersion": "0.20.1",
+  "generatorVersion": "0.21.1",
   "servers": [
     "https://api.joinwarp.com"
   ],
@@ -580,8 +580,8 @@
       }
     },
     {
-      "name": "invalid_custom_worker_field_operation",
-      "source": "invalid_custom_worker_field_operation",
+      "name": "invalid_custom_field_operation_error",
+      "source": "invalid_custom_field_operation_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -605,10 +605,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "InvalidCustomWorkerFieldOperation"
+                "InvalidCustomFieldOperationError"
               ],
               "names": [
-                "InvalidCustomWorkerFieldOperation"
+                "InvalidCustomFieldOperationError"
               ],
               "deprecations": [
                 false
@@ -620,8 +620,8 @@
       }
     },
     {
-      "name": "custom_worker_field_already_exists",
-      "source": "custom_worker_field_already_exists",
+      "name": "custom_field_already_exists_error",
+      "source": "custom_field_already_exists_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -655,10 +655,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "CustomWorkerFieldAlreadyExists"
+                "CustomFieldAlreadyExistsError"
               ],
               "names": [
-                "CustomWorkerFieldAlreadyExists"
+                "CustomFieldAlreadyExistsError"
               ],
               "deprecations": [
                 false
@@ -670,8 +670,8 @@
       }
     },
     {
-      "name": "custom_worker_field_option_already_exists",
-      "source": "custom_worker_field_option_already_exists",
+      "name": "custom_field_option_already_exists_error",
+      "source": "custom_field_option_already_exists_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -705,10 +705,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "CustomWorkerFieldOptionAlreadyExists"
+                "CustomFieldOptionAlreadyExistsError"
               ],
               "names": [
-                "CustomWorkerFieldOptionAlreadyExists"
+                "CustomFieldOptionAlreadyExistsError"
               ],
               "deprecations": [
                 false
@@ -720,8 +720,8 @@
       }
     },
     {
-      "name": "custom_worker_field_not_found",
-      "source": "custom_worker_field_not_found",
+      "name": "custom_field_not_found_error",
+      "source": "custom_field_not_found_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -764,10 +764,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "CustomWorkerFieldNotFound"
+                "CustomFieldNotFoundError"
               ],
               "names": [
-                "CustomWorkerFieldNotFound"
+                "CustomFieldNotFoundError"
               ],
               "deprecations": [
                 false
@@ -779,8 +779,8 @@
       }
     },
     {
-      "name": "custom_worker_field_option_not_found",
-      "source": "custom_worker_field_option_not_found",
+      "name": "custom_field_option_not_found_error",
+      "source": "custom_field_option_not_found_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -823,10 +823,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "CustomWorkerFieldOptionNotFound"
+                "CustomFieldOptionNotFoundError"
               ],
               "names": [
-                "CustomWorkerFieldOptionNotFound"
+                "CustomFieldOptionNotFoundError"
               ],
               "deprecations": [
                 false
@@ -838,8 +838,8 @@
       }
     },
     {
-      "name": "custom_worker_field_option_in_use",
-      "source": "custom_worker_field_option_in_use",
+      "name": "custom_field_option_in_use_error",
+      "source": "custom_field_option_in_use_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -882,10 +882,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "CustomWorkerFieldOptionInUse"
+                "CustomFieldOptionInUseError"
               ],
               "names": [
-                "CustomWorkerFieldOptionInUse"
+                "CustomFieldOptionInUseError"
               ],
               "deprecations": [
                 false
@@ -897,8 +897,8 @@
       }
     },
     {
-      "name": "invalid_custom_worker_field_value",
-      "source": "invalid_custom_worker_field_value",
+      "name": "invalid_custom_field_value_error",
+      "source": "invalid_custom_field_value_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -922,10 +922,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "InvalidCustomWorkerFieldValue"
+                "InvalidCustomFieldValueError"
               ],
               "names": [
-                "InvalidCustomWorkerFieldValue"
+                "InvalidCustomFieldValueError"
               ],
               "deprecations": [
                 false
@@ -937,8 +937,8 @@
       }
     },
     {
-      "name": "custom_worker_field_worker_not_found",
-      "source": "custom_worker_field_worker_not_found",
+      "name": "custom_field_worker_not_found_error",
+      "source": "custom_field_worker_not_found_error",
       "publicAliases": [],
       "deprecated": false,
       "type": {
@@ -981,10 +981,10 @@
             "type": {
               "kind": "enum",
               "values": [
-                "CustomWorkerFieldWorkerNotFound"
+                "CustomFieldWorkerNotFoundError"
               ],
               "names": [
-                "CustomWorkerFieldWorkerNotFound"
+                "CustomFieldWorkerNotFoundError"
               ],
               "deprecations": [
                 false
@@ -3139,7 +3139,7 @@
     }
   ],
   "resources": [
-    "customWorkerFields",
+    "customFields",
     "departments",
     "offers",
     "timeOff",
@@ -3148,7 +3148,7 @@
     "workplaces"
   ],
   "publicResources": [
-    "customWorkerFields",
+    "customFields",
     "departments",
     "offers",
     "timeOff",
@@ -3158,13 +3158,13 @@
   ],
   "operations": [
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "list",
       "publicOperation": "list",
       "deprecated": false,
       "method": "GET",
-      "path": "/v1/custom-worker-fields",
+      "path": "/v1/custom_fields",
       "pathParams": [],
       "publicPathParams": [],
       "queryParams": [],
@@ -3274,13 +3274,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "create",
       "publicOperation": "create",
       "deprecated": false,
       "method": "POST",
-      "path": "/v1/custom-worker-fields",
+      "path": "/v1/custom_fields",
       "pathParams": [],
       "publicPathParams": [],
       "queryParams": [],
@@ -3354,7 +3354,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldCreateParams"
+        "publicName": "CustomFieldCreateParams"
       },
       "requestBody": {
         "contentType": "application/json",
@@ -3471,13 +3471,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "retrieve",
       "publicOperation": "retrieve",
       "deprecated": false,
       "method": "GET",
-      "path": "/v1/custom-worker-fields/{id}",
+      "path": "/v1/custom_fields/{id}",
       "pathParams": [
         "id"
       ],
@@ -3505,7 +3505,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldRetrieveParams"
+        "publicName": "CustomFieldRetrieveParams"
       },
       "response": {
         "status": "200",
@@ -3582,7 +3582,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_not_found",
+            "name": "custom_field_not_found_error",
             "publicAliases": []
           }
         },
@@ -3617,13 +3617,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "update",
       "publicOperation": "update",
       "deprecated": false,
       "method": "PATCH",
-      "path": "/v1/custom-worker-fields/{id}",
+      "path": "/v1/custom_fields/{id}",
       "pathParams": [
         "id"
       ],
@@ -3696,7 +3696,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldUpdateParams"
+        "publicName": "CustomFieldUpdateParams"
       },
       "requestBody": {
         "contentType": "application/json",
@@ -3783,7 +3783,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_not_found",
+            "name": "custom_field_not_found_error",
             "publicAliases": []
           }
         },
@@ -3798,7 +3798,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_already_exists",
+            "name": "custom_field_already_exists_error",
             "publicAliases": []
           }
         },
@@ -3833,13 +3833,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "archive",
       "publicOperation": "archive",
       "deprecated": false,
       "method": "POST",
-      "path": "/v1/custom-worker-fields/{id}/archive",
+      "path": "/v1/custom_fields/{id}/archive",
       "pathParams": [
         "id"
       ],
@@ -3867,7 +3867,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldArchiveParams"
+        "publicName": "CustomFieldArchiveParams"
       },
       "response": {
         "status": "200",
@@ -3944,7 +3944,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_not_found",
+            "name": "custom_field_not_found_error",
             "publicAliases": []
           }
         },
@@ -3979,13 +3979,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "createOption",
       "publicOperation": "createOption",
       "deprecated": false,
       "method": "POST",
-      "path": "/v1/custom-worker-fields/{id}/options",
+      "path": "/v1/custom_fields/{id}/options",
       "pathParams": [
         "id"
       ],
@@ -4034,7 +4034,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldCreateOptionParams"
+        "publicName": "CustomFieldCreateOptionParams"
       },
       "requestBody": {
         "contentType": "application/json",
@@ -4121,7 +4121,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_not_found",
+            "name": "custom_field_not_found_error",
             "publicAliases": []
           }
         },
@@ -4136,7 +4136,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_option_already_exists",
+            "name": "custom_field_option_already_exists_error",
             "publicAliases": []
           }
         },
@@ -4171,13 +4171,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "updateOption",
       "publicOperation": "updateOption",
       "deprecated": false,
       "method": "PATCH",
-      "path": "/v1/custom-worker-field-options/{id}",
+      "path": "/v1/custom_field_options/{id}",
       "pathParams": [
         "id"
       ],
@@ -4220,7 +4220,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldUpdateOptionParams"
+        "publicName": "CustomFieldUpdateOptionParams"
       },
       "requestBody": {
         "contentType": "application/json",
@@ -4307,7 +4307,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_option_not_found",
+            "name": "custom_field_option_not_found_error",
             "publicAliases": []
           }
         },
@@ -4322,7 +4322,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_option_already_exists",
+            "name": "custom_field_option_already_exists_error",
             "publicAliases": []
           }
         },
@@ -4357,13 +4357,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "deleteOption",
       "publicOperation": "deleteOption",
       "deprecated": false,
       "method": "DELETE",
-      "path": "/v1/custom-worker-field-options/{id}",
+      "path": "/v1/custom_field_options/{id}",
       "pathParams": [
         "id"
       ],
@@ -4391,7 +4391,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldDeleteOptionParams"
+        "publicName": "CustomFieldDeleteOptionParams"
       },
       "result": {
         "successStatus": "204",
@@ -4458,7 +4458,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_option_not_found",
+            "name": "custom_field_option_not_found_error",
             "publicAliases": []
           }
         },
@@ -4473,7 +4473,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_option_in_use",
+            "name": "custom_field_option_in_use_error",
             "publicAliases": []
           }
         },
@@ -4508,13 +4508,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "archiveOption",
       "publicOperation": "archiveOption",
       "deprecated": false,
       "method": "POST",
-      "path": "/v1/custom-worker-field-options/{id}/archive",
+      "path": "/v1/custom_field_options/{id}/archive",
       "pathParams": [
         "id"
       ],
@@ -4542,7 +4542,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldArchiveOptionParams"
+        "publicName": "CustomFieldArchiveOptionParams"
       },
       "response": {
         "status": "200",
@@ -4619,7 +4619,7 @@
             }
           ],
           "model": {
-            "name": "custom_worker_field_option_not_found",
+            "name": "custom_field_option_not_found_error",
             "publicAliases": []
           }
         },
@@ -4654,13 +4654,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "listValues",
       "publicOperation": "listValues",
       "deprecated": false,
       "method": "GET",
-      "path": "/v1/worker-custom-field-values",
+      "path": "/v1/custom_field_values",
       "pathParams": [],
       "publicPathParams": [],
       "queryParams": [
@@ -4696,7 +4696,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldListValuesParams"
+        "publicName": "CustomFieldListValuesParams"
       },
       "response": {
         "status": "200",
@@ -4792,13 +4792,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "upsertValue",
       "publicOperation": "upsertValue",
       "deprecated": false,
       "method": "PUT",
-      "path": "/v1/worker-custom-field-values",
+      "path": "/v1/custom_field_values",
       "pathParams": [],
       "publicPathParams": [],
       "queryParams": [],
@@ -4836,7 +4836,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldUpsertValueParams"
+        "publicName": "CustomFieldUpsertValueParams"
       },
       "requestBody": {
         "contentType": "application/json",
@@ -4953,13 +4953,13 @@
       "transport": "http"
     },
     {
-      "resource": "customWorkerFields",
-      "publicResource": "customWorkerFields",
+      "resource": "customFields",
+      "publicResource": "customFields",
       "operation": "clearValue",
       "publicOperation": "clearValue",
       "deprecated": false,
       "method": "DELETE",
-      "path": "/v1/worker-custom-field-values",
+      "path": "/v1/custom_field_values",
       "pathParams": [],
       "publicPathParams": [],
       "queryParams": [
@@ -4995,7 +4995,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "CustomWorkerFieldClearValueParams"
+        "publicName": "CustomFieldClearValueParams"
       },
       "result": {
         "successStatus": "204",
@@ -8938,5 +8938,132 @@
       "transport": "http"
     }
   ],
-  "webhooks": []
+  "webhooks": [
+    {
+      "event": "time_off:request:created",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "time_off:request:created"
+    },
+    {
+      "event": "time_off:request:reviewed",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "time_off:request:reviewed"
+    },
+    {
+      "event": "time_off:request:deleted",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "time_off:request:deleted"
+    },
+    {
+      "event": "time_off:balance:adjusted",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "time_off:balance:adjusted"
+    },
+    {
+      "event": "worker:created",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:created"
+    },
+    {
+      "event": "worker:updated",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:updated"
+    },
+    {
+      "event": "worker:deleted",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:deleted"
+    },
+    {
+      "event": "worker:invite_sent",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:invite_sent"
+    },
+    {
+      "event": "worker:invite_accepted",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:invite_accepted"
+    },
+    {
+      "event": "worker:onboarding_completed",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:onboarding_completed"
+    },
+    {
+      "event": "worker:offboarding_started",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:offboarding_started"
+    },
+    {
+      "event": "worker:offboarded",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:offboarded"
+    },
+    {
+      "event": "worker:reactivated",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "worker:reactivated"
+    },
+    {
+      "event": "offer:created",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "offer:created"
+    },
+    {
+      "event": "offer:sent",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "offer:sent"
+    },
+    {
+      "event": "offer:viewed",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "offer:viewed"
+    },
+    {
+      "event": "offer:accepted",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "offer:accepted"
+    },
+    {
+      "event": "offer:voided",
+      "name": "Unwrap",
+      "source": "webhook",
+      "method": "POST",
+      "path": "offer:voided"
+    }
+  ]
 }

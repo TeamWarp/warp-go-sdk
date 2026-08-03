@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TeamWarp/warp-sdk-go/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 
@@ -250,6 +250,15 @@ func WithRequestBody(contentType string, body any) RequestOption {
 func WithRequestTimeout(dur time.Duration) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
 		r.RequestTimeout = dur
+		return nil
+	})
+}
+
+// WithWebhookSecret returns a RequestOption that sets the secret used to verify
+// inbound webhook signatures. It is never sent on outbound requests.
+func WithWebhookSecret(value string) RequestOption {
+	return requestconfig.PreRequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.WebhookSecret = value
 		return nil
 	})
 }

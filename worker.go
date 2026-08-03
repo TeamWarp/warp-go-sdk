@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/TeamWarp/warp-sdk-go/internal/apijson"
-	"github.com/TeamWarp/warp-sdk-go/internal/apiquery"
-	"github.com/TeamWarp/warp-sdk-go/internal/param"
-	"github.com/TeamWarp/warp-sdk-go/internal/requestconfig"
-	"github.com/TeamWarp/warp-sdk-go/option"
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // WorkerService contains methods and other services that help with interacting
@@ -211,29 +211,6 @@ func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.Re
 	return res, err
 }
 
-type OfficeWorkLocation struct {
-	Type OfficeWorkLocationType `json:"type" api:"required"`
-	// Public workplace identifier
-	WorkplaceID string `json:"workplaceId" api:"required"`
-	JSON officeWorkLocationJSON `json:"-"`
-}
-
-// officeWorkLocationJSON contains the JSON metadata for the struct [OfficeWorkLocation]
-type officeWorkLocationJSON struct {
-	Type apijson.Field
-	WorkplaceID apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfficeWorkLocation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r officeWorkLocationJSON) RawJSON() string {
-	return r.raw
-}
-
 type OfficeWorkLocationParam struct {
 	Type param.Field[OfficeWorkLocationType] `json:"type" api:"required"`
 	// Public workplace identifier
@@ -256,29 +233,6 @@ func (r OfficeWorkLocationType) IsKnown() bool {
 		return true
 	}
 	return false
-}
-
-type RemoteWorkLocation struct {
-	Type RemoteWorkLocationType `json:"type" api:"required"`
-	// The US state where the remote employee works. Required for tax purposes.
-	State RemoteWorkLocationState `json:"state" api:"required"`
-	JSON remoteWorkLocationJSON `json:"-"`
-}
-
-// remoteWorkLocationJSON contains the JSON metadata for the struct [RemoteWorkLocation]
-type remoteWorkLocationJSON struct {
-	Type apijson.Field
-	State apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *RemoteWorkLocation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r remoteWorkLocationJSON) RawJSON() string {
-	return r.raw
 }
 
 type RemoteWorkLocationParam struct {

@@ -18,11 +18,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TeamWarp/warp-sdk-go/internal"
-	"github.com/TeamWarp/warp-sdk-go/internal/apierror"
-	"github.com/TeamWarp/warp-sdk-go/internal/apiform"
-	"github.com/TeamWarp/warp-sdk-go/internal/apiquery"
-	"github.com/TeamWarp/warp-sdk-go/internal/param"
+	"github.com/TeamWarp/warp-go-sdk/internal"
+	"github.com/TeamWarp/warp-go-sdk/internal/apierror"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiform"
+	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
+	"github.com/TeamWarp/warp-go-sdk/internal/param"
 )
 
 func getDefaultHeaders() map[string]string {
@@ -224,6 +224,7 @@ type RequestConfig struct {
 	HTTPClient     *http.Client
 	Middlewares    []middleware
 	APIKey         string
+	WebhookSecret  string
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
@@ -607,6 +608,7 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		HTTPClient:     cfg.HTTPClient,
 		Middlewares:    cfg.Middlewares,
 		APIKey:         cfg.APIKey,
+		WebhookSecret:  cfg.WebhookSecret,
 	}
 
 	return new

@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	sdk "github.com/TeamWarp/warp-sdk-go"
-	"github.com/TeamWarp/warp-sdk-go/option"
+	sdk "github.com/TeamWarp/warp-go-sdk"
+	"github.com/TeamWarp/warp-go-sdk/option"
 )
 
 // Smoke test: calls every generated operation once to confirm the SDK can reach each endpoint.
@@ -37,103 +37,103 @@ type smokeCase struct {
 }
 
 func _smokeCase0() {
-	customWorkerField, err := client.CustomWorkerFields.List(context.Background())
+	customField, err := client.CustomFields.List(context.Background())
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase1() {
-	customWorkerField, err := client.CustomWorkerFields.New(context.Background(), sdk.CustomWorkerFieldNewParams{
+	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
 		Name: sdk.F[string](""),
 	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase2() {
-	customWorkerField, err := client.CustomWorkerFields.Get(context.Background(), "cf_1234")
+	customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase3() {
-	customWorkerField, err := client.CustomWorkerFields.Update(context.Background(), "cf_1234", sdk.CustomWorkerFieldUpdateParams{})
+	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase4() {
-	customWorkerField, err := client.CustomWorkerFields.Archive(context.Background(), "cf_1234")
+	customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase5() {
-	customWorkerField, err := client.CustomWorkerFields.NewOption(context.Background(), "cf_1234", sdk.CustomWorkerFieldNewOptionParams{
+	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
 		Label: sdk.F[string]("x"),
 		Value: sdk.F[string]("x"),
 	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase6() {
-	customWorkerField, err := client.CustomWorkerFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomWorkerFieldUpdateOptionParams{})
+	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase7() {
-	err := client.CustomWorkerFields.DeleteOption(context.Background(), "cfo_1234")
+	err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
 	if err != nil {
 		panic(err)
 	}
 }
 
 func _smokeCase8() {
-	customWorkerField, err := client.CustomWorkerFields.ArchiveOption(context.Background(), "cfo_1234")
+	customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase9() {
-	customWorkerField, err := client.CustomWorkerFields.ListValues(context.Background(), sdk.CustomWorkerFieldListValuesParams{})
+	customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase10() {
-	customWorkerField, err := client.CustomWorkerFields.UpsertValue(context.Background(), sdk.CustomWorkerFieldUpsertValueParams{
+	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
 		FieldID: sdk.F[string]("cf_1234"),
-		Value: sdk.F[sdk.CustomWorkerFieldUpsertValueParamsValueUnion](sdk.CustomWorkerFieldUpsertValueParamsValueUnion{}),
+		Value: sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
 		WorkerID: sdk.F[string]("wrk_1234"),
 	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customWorkerField)
+	fmt.Println(customField)
 }
 
 func _smokeCase11() {
-	err := client.CustomWorkerFields.ClearValue(context.Background(), sdk.CustomWorkerFieldClearValueParams{
+	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
 		FieldID: sdk.F[string]("cf_1234"),
 		WorkerID: sdk.F[string]("wrk_1234"),
 	})
@@ -368,84 +368,84 @@ var cases = []smokeCase{
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/custom-worker-fields",
+		Path:      "/v1/custom_fields",
 		Run:       _smokeCase0,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
-		Path:      "/v1/custom-worker-fields",
+		Path:      "/v1/custom_fields",
 		Run:       _smokeCase1,
 	},
 
 	{
 		Operation: "retrieve",
 		Method:    "GET",
-		Path:      "/v1/custom-worker-fields/{id}",
+		Path:      "/v1/custom_fields/{id}",
 		Run:       _smokeCase2,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
-		Path:      "/v1/custom-worker-fields/{id}",
+		Path:      "/v1/custom_fields/{id}",
 		Run:       _smokeCase3,
 	},
 
 	{
 		Operation: "archive",
 		Method:    "POST",
-		Path:      "/v1/custom-worker-fields/{id}/archive",
+		Path:      "/v1/custom_fields/{id}/archive",
 		Run:       _smokeCase4,
 	},
 
 	{
 		Operation: "createOption",
 		Method:    "POST",
-		Path:      "/v1/custom-worker-fields/{id}/options",
+		Path:      "/v1/custom_fields/{id}/options",
 		Run:       _smokeCase5,
 	},
 
 	{
 		Operation: "updateOption",
 		Method:    "PATCH",
-		Path:      "/v1/custom-worker-field-options/{id}",
+		Path:      "/v1/custom_field_options/{id}",
 		Run:       _smokeCase6,
 	},
 
 	{
 		Operation: "deleteOption",
 		Method:    "DELETE",
-		Path:      "/v1/custom-worker-field-options/{id}",
+		Path:      "/v1/custom_field_options/{id}",
 		Run:       _smokeCase7,
 	},
 
 	{
 		Operation: "archiveOption",
 		Method:    "POST",
-		Path:      "/v1/custom-worker-field-options/{id}/archive",
+		Path:      "/v1/custom_field_options/{id}/archive",
 		Run:       _smokeCase8,
 	},
 
 	{
 		Operation: "listValues",
 		Method:    "GET",
-		Path:      "/v1/worker-custom-field-values",
+		Path:      "/v1/custom_field_values",
 		Run:       _smokeCase9,
 	},
 
 	{
 		Operation: "upsertValue",
 		Method:    "PUT",
-		Path:      "/v1/worker-custom-field-values",
+		Path:      "/v1/custom_field_values",
 		Run:       _smokeCase10,
 	},
 
 	{
 		Operation: "clearValue",
 		Method:    "DELETE",
-		Path:      "/v1/worker-custom-field-values",
+		Path:      "/v1/custom_field_values",
 		Run:       _smokeCase11,
 	},
 
