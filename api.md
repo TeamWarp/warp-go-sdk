@@ -4,6 +4,16 @@ Complete reference of every operation, grouped by resource. See [the README](./R
 
 ## Contents
 
+- [`Benefits`](#benefits)
+  - [`Benefits HealthPlans`](#benefits-healthplans)
+    - [List Health Plans](#list-health-plans)
+    - [Get Health Plan](#get-health-plan)
+  - [`Benefits RetirementPlans`](#benefits-retirementplans)
+    - [List Retirement Plans](#list-retirement-plans)
+    - [Get Retirement Plan](#get-retirement-plan)
+  - [`Benefits Deductions`](#benefits-deductions)
+    - [List Benefit Deductions](#list-benefit-deductions)
+    - [Get Benefit Deduction](#get-benefit-deduction)
 - [`CustomFields`](#customfields)
   - [List Fields](#list-fields)
   - [Create Field](#create-field)
@@ -57,6 +67,125 @@ import (
 )
 
 client := sdk.NewClient()
+```
+
+## `Benefits`
+
+### `Benefits HealthPlans`
+
+#### List Health Plans
+
+List company health plans. Defaults to active plans. A plan whose effectiveEndDate has elapsed is reported and filtered as terminated.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BenefitHealthPlanBenefitsListParams`](./benefithealthplan.go) |
+| Response | [`BenefitHealthPlanBenefitsListResponse`](./benefithealthplan.go) |
+
+```go
+healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
+	Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(healthPlan)
+```
+
+#### Get Health Plan
+
+Get a publicly visible company health plan by id.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`BenefitHealthPlanBenefitsGetResponse`](./benefithealthplan.go) |
+
+```go
+healthPlan, err := client.Benefits.HealthPlans.BenefitsGet(context.Background(), "chpl_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(healthPlan)
+```
+
+### `Benefits RetirementPlans`
+
+#### List Retirement Plans
+
+List company retirement plans. Defaults to active plans. A plan whose effectiveEndDate has elapsed is reported and filtered as terminated.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BenefitRetirementPlanBenefitsListParams`](./benefitretirementplan.go) |
+| Response | [`BenefitRetirementPlanBenefitsListResponse`](./benefitretirementplan.go) |
+
+```go
+retirementPlan, err := client.Benefits.RetirementPlans.BenefitsList(context.Background(), sdk.BenefitRetirementPlanBenefitsListParams{
+	Statuses: sdk.F[[]sdk.BenefitRetirementPlanBenefitsListParamsStatus]([]sdk.BenefitRetirementPlanBenefitsListParamsStatus{"active"}),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(retirementPlan)
+```
+
+#### Get Retirement Plan
+
+Get a company retirement plan by id, regardless of status.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`BenefitRetirementPlanBenefitsGetResponse`](./benefitretirementplan.go) |
+
+```go
+retirementPlan, err := client.Benefits.RetirementPlans.BenefitsGet(context.Background(), "crpl_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(retirementPlan)
+```
+
+### `Benefits Deductions`
+
+#### List Benefit Deductions
+
+List current payroll benefit deductions. Defaults to active deductions. A deduction whose effectiveEndDate has elapsed is reported and filtered as terminated.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BenefitDeductionBenefitsListParams`](./benefitdeduction.go) |
+| Response | [`BenefitDeductionBenefitsListResponse`](./benefitdeduction.go) |
+
+```go
+deduction, err := client.Benefits.Deductions.BenefitsList(context.Background(), sdk.BenefitDeductionBenefitsListParams{
+	Statuses: sdk.F[[]sdk.BenefitDeductionBenefitsListParamsStatus]([]sdk.BenefitDeductionBenefitsListParamsStatus{"active"}),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(deduction)
+```
+
+#### Get Benefit Deduction
+
+Get the current version of a company benefit deduction by id.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`BenefitDeductionBenefitsGetResponse`](./benefitdeduction.go) |
+
+```go
+deduction, err := client.Benefits.Deductions.BenefitsGet(context.Background(), "pbdg_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(deduction)
 ```
 
 ## `CustomFields`
