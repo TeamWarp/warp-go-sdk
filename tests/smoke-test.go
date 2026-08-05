@@ -41,6 +41,7 @@ func _smokeCase0() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -51,6 +52,7 @@ func _smokeCase1() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -59,6 +61,7 @@ func _smokeCase2() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -67,6 +70,7 @@ func _smokeCase3() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -75,6 +79,7 @@ func _smokeCase4() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -86,6 +91,7 @@ func _smokeCase5() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -94,6 +100,7 @@ func _smokeCase6() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -109,6 +116,7 @@ func _smokeCase8() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -117,6 +125,7 @@ func _smokeCase9() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -129,6 +138,7 @@ func _smokeCase10() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
@@ -147,6 +157,7 @@ func _smokeCase12() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(department)
 }
 
@@ -157,6 +168,7 @@ func _smokeCase13() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(department)
 }
 
@@ -165,6 +177,7 @@ func _smokeCase14() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(department)
 }
 
@@ -173,6 +186,7 @@ func _smokeCase15() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
@@ -194,6 +208,7 @@ func _smokeCase16() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
@@ -202,6 +217,7 @@ func _smokeCase17() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
@@ -212,6 +228,7 @@ func _smokeCase18() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
@@ -220,6 +237,7 @@ func _smokeCase19() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
@@ -228,6 +246,7 @@ func _smokeCase20() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(timeOff)
 }
 
@@ -236,6 +255,7 @@ func _smokeCase21() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(timeOff)
 }
 
@@ -244,6 +264,7 @@ func _smokeCase22() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(timeOff)
 }
 
@@ -252,6 +273,7 @@ func _smokeCase23() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(policy)
 }
 
@@ -260,6 +282,7 @@ func _smokeCase24() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(policy)
 }
 
@@ -268,6 +291,7 @@ func _smokeCase25() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
@@ -276,6 +300,7 @@ func _smokeCase26() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
@@ -305,6 +330,7 @@ func _smokeCase28() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
@@ -321,6 +347,7 @@ func _smokeCase29() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
@@ -329,6 +356,7 @@ func _smokeCase30() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
@@ -337,6 +365,7 @@ func _smokeCase31() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(workplace)
 }
 
@@ -352,6 +381,7 @@ func _smokeCase32() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(workplace)
 }
 
@@ -360,6 +390,7 @@ func _smokeCase33() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(workplace)
 }
 

@@ -74,6 +74,7 @@ customField, err := client.CustomFields.List(context.Background())
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -93,6 +94,7 @@ customField, err := client.CustomFields.New(context.Background(), sdk.CustomFiel
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -109,6 +111,7 @@ customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -126,6 +129,7 @@ customField, err := client.CustomFields.Update(context.Background(), "cf_1234", 
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -142,6 +146,7 @@ customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -162,6 +167,7 @@ customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -179,6 +185,7 @@ customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -206,6 +213,7 @@ customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -223,6 +231,7 @@ customField, err := client.CustomFields.ListValues(context.Background(), sdk.Cus
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -244,6 +253,7 @@ customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.Cu
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -281,6 +291,7 @@ department, err := client.Departments.List(context.Background(), sdk.DepartmentL
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(department)
 ```
 
@@ -300,6 +311,7 @@ department, err := client.Departments.New(context.Background(), sdk.DepartmentNe
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(department)
 ```
 
@@ -317,6 +329,7 @@ department, err := client.Departments.Update(context.Background(), "dpt_1234", s
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(department)
 ```
 
@@ -336,6 +349,7 @@ offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -366,6 +380,7 @@ offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -382,6 +397,7 @@ offer, err := client.Offers.Void(context.Background(), "offr_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -401,6 +417,7 @@ offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sd
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -417,6 +434,7 @@ offer, err := client.Offers.Resend(context.Background(), "offr_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -436,6 +454,7 @@ timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOff
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(timeOff)
 ```
 
@@ -453,6 +472,7 @@ timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffLis
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(timeOff)
 ```
 
@@ -470,6 +490,7 @@ timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffLis
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(timeOff)
 ```
 
@@ -489,6 +510,7 @@ policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.Time
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(policy)
 ```
 
@@ -505,6 +527,7 @@ policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_12
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(policy)
 ```
 
@@ -524,6 +547,7 @@ worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -540,6 +564,7 @@ worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -582,6 +607,7 @@ worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmp
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -607,6 +633,7 @@ worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewC
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -623,6 +650,7 @@ worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -642,6 +670,7 @@ workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceList
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(workplace)
 ```
 
@@ -666,6 +695,7 @@ workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewPa
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(workplace)
 ```
 
@@ -683,5 +713,6 @@ workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(workplace)
 ```
