@@ -4,6 +4,16 @@ Complete reference of every operation, grouped by resource. See [the README](./R
 
 ## Contents
 
+- [`Benefits`](#benefits)
+  - [`Benefits HealthPlans`](#benefits-healthplans)
+    - [List Health Plans](#list-health-plans)
+    - [Get Health Plan](#get-health-plan)
+  - [`Benefits RetirementPlans`](#benefits-retirementplans)
+    - [List Retirement Plans](#list-retirement-plans)
+    - [Get Retirement Plan](#get-retirement-plan)
+  - [`Benefits Deductions`](#benefits-deductions)
+    - [List Benefit Deductions](#list-benefit-deductions)
+    - [Get Benefit Deduction](#get-benefit-deduction)
 - [`CustomFields`](#customfields)
   - [List Fields](#list-fields)
   - [Create Field](#create-field)
@@ -59,6 +69,125 @@ import (
 client := sdk.NewClient()
 ```
 
+## `Benefits`
+
+### `Benefits HealthPlans`
+
+#### List Health Plans
+
+List company health plans. Defaults to active plans. A plan whose effectiveEndDate has elapsed is reported and filtered as terminated.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BenefitHealthPlanBenefitsListParams`](./benefithealthplan.go) |
+| Response | [`BenefitHealthPlanBenefitsListResponse`](./benefithealthplan.go) |
+
+```go
+healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
+	Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(healthPlan)
+```
+
+#### Get Health Plan
+
+Get a publicly visible company health plan by id.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`BenefitHealthPlanBenefitsGetResponse`](./benefithealthplan.go) |
+
+```go
+healthPlan, err := client.Benefits.HealthPlans.BenefitsGet(context.Background(), "chpl_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(healthPlan)
+```
+
+### `Benefits RetirementPlans`
+
+#### List Retirement Plans
+
+List company retirement plans. Defaults to active plans. A plan whose effectiveEndDate has elapsed is reported and filtered as terminated.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BenefitRetirementPlanBenefitsListParams`](./benefitretirementplan.go) |
+| Response | [`BenefitRetirementPlanBenefitsListResponse`](./benefitretirementplan.go) |
+
+```go
+retirementPlan, err := client.Benefits.RetirementPlans.BenefitsList(context.Background(), sdk.BenefitRetirementPlanBenefitsListParams{
+	Statuses: sdk.F[[]sdk.BenefitRetirementPlanBenefitsListParamsStatus]([]sdk.BenefitRetirementPlanBenefitsListParamsStatus{"active"}),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(retirementPlan)
+```
+
+#### Get Retirement Plan
+
+Get a company retirement plan by id, regardless of status.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`BenefitRetirementPlanBenefitsGetResponse`](./benefitretirementplan.go) |
+
+```go
+retirementPlan, err := client.Benefits.RetirementPlans.BenefitsGet(context.Background(), "crpl_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(retirementPlan)
+```
+
+### `Benefits Deductions`
+
+#### List Benefit Deductions
+
+List current payroll benefit deductions. Defaults to active deductions. A deduction whose effectiveEndDate has elapsed is reported and filtered as terminated.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BenefitDeductionBenefitsListParams`](./benefitdeduction.go) |
+| Response | [`BenefitDeductionBenefitsListResponse`](./benefitdeduction.go) |
+
+```go
+deduction, err := client.Benefits.Deductions.BenefitsList(context.Background(), sdk.BenefitDeductionBenefitsListParams{
+	Statuses: sdk.F[[]sdk.BenefitDeductionBenefitsListParamsStatus]([]sdk.BenefitDeductionBenefitsListParamsStatus{"active"}),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(deduction)
+```
+
+#### Get Benefit Deduction
+
+Get the current version of a company benefit deduction by id.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`BenefitDeductionBenefitsGetResponse`](./benefitdeduction.go) |
+
+```go
+deduction, err := client.Benefits.Deductions.BenefitsGet(context.Background(), "pbdg_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(deduction)
+```
+
 ## `CustomFields`
 
 ### List Fields
@@ -74,6 +203,7 @@ customField, err := client.CustomFields.List(context.Background())
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -93,6 +223,7 @@ customField, err := client.CustomFields.New(context.Background(), sdk.CustomFiel
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -109,6 +240,7 @@ customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -126,6 +258,7 @@ customField, err := client.CustomFields.Update(context.Background(), "cf_1234", 
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -142,6 +275,7 @@ customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -162,6 +296,7 @@ customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -179,6 +314,7 @@ customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -206,6 +342,7 @@ customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -223,6 +360,7 @@ customField, err := client.CustomFields.ListValues(context.Background(), sdk.Cus
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -244,6 +382,7 @@ customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.Cu
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(customField)
 ```
 
@@ -281,6 +420,7 @@ department, err := client.Departments.List(context.Background(), sdk.DepartmentL
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(department)
 ```
 
@@ -300,6 +440,7 @@ department, err := client.Departments.New(context.Background(), sdk.DepartmentNe
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(department)
 ```
 
@@ -317,6 +458,7 @@ department, err := client.Departments.Update(context.Background(), "dpt_1234", s
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(department)
 ```
 
@@ -336,6 +478,7 @@ offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -366,6 +509,7 @@ offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -382,6 +526,7 @@ offer, err := client.Offers.Void(context.Background(), "offr_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -401,6 +546,7 @@ offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sd
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -417,6 +563,7 @@ offer, err := client.Offers.Resend(context.Background(), "offr_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(offer)
 ```
 
@@ -436,6 +583,7 @@ timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOff
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(timeOff)
 ```
 
@@ -453,6 +601,7 @@ timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffLis
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(timeOff)
 ```
 
@@ -470,6 +619,7 @@ timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffLis
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(timeOff)
 ```
 
@@ -489,6 +639,7 @@ policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.Time
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(policy)
 ```
 
@@ -505,6 +656,7 @@ policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_12
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(policy)
 ```
 
@@ -524,6 +676,7 @@ worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -540,6 +693,7 @@ worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -582,6 +736,7 @@ worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmp
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -607,6 +762,7 @@ worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewC
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -623,6 +779,7 @@ worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(worker)
 ```
 
@@ -642,6 +799,7 @@ workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceList
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(workplace)
 ```
 
@@ -666,6 +824,7 @@ workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewPa
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(workplace)
 ```
 
@@ -683,5 +842,6 @@ workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk
 if err != nil {
 	panic(err)
 }
+
 fmt.Println(workplace)
 ```

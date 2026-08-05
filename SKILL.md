@@ -1,9 +1,9 @@
 ---
-name: warp-api-go-sdk
+name: warp-go-sdk
 description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the github.com/TeamWarp/warp-go-sdk package: installing it, constructing and authenticating the client, and calling API operations."
 ---
 
-# Warp API Go SDK
+# Warp Go SDK
 
 Generated Go client for Warp API, published as `github.com/TeamWarp/warp-go-sdk`. Use the generated client instead of hand-writing HTTP requests.
 
@@ -49,11 +49,14 @@ func main() {
 		option.WithAPIKey(os.Getenv("WARP_API_KEY")),
 	)
 
-	customField, err := client.CustomFields.List(context.Background())
+	healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
+		Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customField)
+
+	fmt.Println(healthPlan)
 }
 ```
 
@@ -64,7 +67,7 @@ Method names, parameter shapes, and response types are generated from the API de
 Non-success responses return generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```go
-customField, err := client.CustomFields.List(context.Background())
+healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {

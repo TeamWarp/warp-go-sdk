@@ -1,6 +1,6 @@
-# Warp API
+# Warp
 
-This library provides convenient access to the Warp API from Go.
+This library provides convenient access to the Warp REST API from Go.
 
 The full API of this library can be found in [api.md](./api.md).
 
@@ -49,11 +49,14 @@ func main() {
 		option.WithAPIKey(os.Getenv("WARP_API_KEY")),
 	)
 
-	customField, err := client.CustomFields.List(context.Background())
+	healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
+		Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(customField)
+
+	fmt.Println(healthPlan)
 }
 ```
 
@@ -82,7 +85,7 @@ Declared schemes:
 Non-success responses return generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```go
-customField, err := client.CustomFields.List(context.Background())
+healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {

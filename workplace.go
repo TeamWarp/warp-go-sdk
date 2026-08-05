@@ -49,6 +49,7 @@ func NewWorkplaceService(opts ...option.RequestOption) (r *WorkplaceService) {
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(workplace)
 func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, opts ...option.RequestOption) (res *WorkplaceListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -80,6 +81,7 @@ func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, 
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(workplace)
 func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opts ...option.RequestOption) (res *WorkplaceNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -105,6 +107,7 @@ func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opt
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(workplace)
 func (r *WorkplaceService) Update(ctx context.Context, id string, body WorkplaceUpdateParams, opts ...option.RequestOption) (res *WorkplaceUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)

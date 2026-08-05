@@ -1,10 +1,11 @@
 # Changelog
 
-## [0.3.0](https://github.com/TeamWarp/warp-sdk-go/compare/v0.2.0...v0.3.0) (2026-08-03)
+## [0.3.0](https://github.com/TeamWarp/warp-sdk-go/compare/v0.2.0...v0.3.0) (2026-08-05)
 
 
 ### ⚠ BREAKING CHANGES
 
+* **api:** Renamed SDK from `WarpApi` to `Warp`.
 * **api:** 20 breaking changes to the SDK surface.
     - Removed operation `customWorkerFields.list` (`GET /v1/custom-worker-fields`).
     - Removed operation `customWorkerFields.create` (`POST /v1/custom-worker-fields`).
@@ -118,17 +119,21 @@
 ### Features
 
 * **api:** add operation customFields.list (+20 more changes) ([9517c37](https://github.com/TeamWarp/warp-sdk-go/commit/9517c37fc8673889431c6688bfa34202ca1896e1))
+* **api:** add schema public_money_amount (+1 more change) ([697c33d](https://github.com/TeamWarp/warp-sdk-go/commit/697c33dd6fc59aa298eeb249edca58aec2afae38))
 * **api:** initial SDK generation ([8561f11](https://github.com/TeamWarp/warp-sdk-go/commit/8561f11f168401b3ced29c591fe7c59fb1bea64c))
 * **api:** remove operation customWorkerFields.list (+19 more changes) ([46a5ca0](https://github.com/TeamWarp/warp-sdk-go/commit/46a5ca0b4e6a63cabed0d0f6806e0f58b28d6e55))
 * **api:** update import names to warp ([87831bc](https://github.com/TeamWarp/warp-sdk-go/commit/87831bc83f412d1069ef9435c1ae7dd00823391f))
 * **api:** update SDK name (+145 more changes) ([6ac93ee](https://github.com/TeamWarp/warp-sdk-go/commit/6ac93ee5b2ffb457a3c6a21bc75eaeeb2ca5f5fc))
+* **api:** update SDK name (+27 more changes) ([1f0c2a5](https://github.com/TeamWarp/warp-sdk-go/commit/1f0c2a57eb0d071d907deef400eeddd839f3ae49))
 * **api:** update SDK surface (2 changes) ([ea40d6f](https://github.com/TeamWarp/warp-sdk-go/commit/ea40d6faf17e53ddcdb7b83d1d305602b82897d0))
 
 
 ### Chores
 
+* **api:** regenerate SDK ([cd4d20f](https://github.com/TeamWarp/warp-sdk-go/commit/cd4d20f18cc55b7d99265ebee7b420af23a5d4e9))
 * **api:** regenerate SDK ([5f693d8](https://github.com/TeamWarp/warp-sdk-go/commit/5f693d87cd0c64f107eb57356b8ddb22932f0d7a))
 * **api:** regenerate SDK ([ac04211](https://github.com/TeamWarp/warp-sdk-go/commit/ac042115bb63da525c083edb0ceb0b6fd6acc527))
+* **api:** update generated SDK content ([c30a172](https://github.com/TeamWarp/warp-sdk-go/commit/c30a172959b057054fa6e84320a98cc887889551))
 * **api:** update generated SDK content ([e02c75c](https://github.com/TeamWarp/warp-sdk-go/commit/e02c75c417391e38cfbf130f1ee9ba2a6594d10a))
 
 ## [0.2.0](https://github.com/TeamWarp/warp-sdk-go/compare/v0.1.0...v0.2.0) (2026-07-29)

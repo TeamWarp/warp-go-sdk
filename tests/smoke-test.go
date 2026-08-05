@@ -37,48 +37,113 @@ type smokeCase struct {
 }
 
 func _smokeCase0() {
+	healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
+		Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(healthPlan)
+}
+
+func _smokeCase1() {
+	healthPlan, err := client.Benefits.HealthPlans.BenefitsGet(context.Background(), "chpl_1234")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(healthPlan)
+}
+
+func _smokeCase2() {
+	retirementPlan, err := client.Benefits.RetirementPlans.BenefitsList(context.Background(), sdk.BenefitRetirementPlanBenefitsListParams{
+		Statuses: sdk.F[[]sdk.BenefitRetirementPlanBenefitsListParamsStatus]([]sdk.BenefitRetirementPlanBenefitsListParamsStatus{"active"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(retirementPlan)
+}
+
+func _smokeCase3() {
+	retirementPlan, err := client.Benefits.RetirementPlans.BenefitsGet(context.Background(), "crpl_1234")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(retirementPlan)
+}
+
+func _smokeCase4() {
+	deduction, err := client.Benefits.Deductions.BenefitsList(context.Background(), sdk.BenefitDeductionBenefitsListParams{
+		Statuses: sdk.F[[]sdk.BenefitDeductionBenefitsListParamsStatus]([]sdk.BenefitDeductionBenefitsListParamsStatus{"active"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(deduction)
+}
+
+func _smokeCase5() {
+	deduction, err := client.Benefits.Deductions.BenefitsGet(context.Background(), "pbdg_1234")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(deduction)
+}
+
+func _smokeCase6() {
 	customField, err := client.CustomFields.List(context.Background())
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase1() {
+func _smokeCase7() {
 	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
 		Name: sdk.F[string](""),
 	})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase2() {
+func _smokeCase8() {
 	customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase3() {
+func _smokeCase9() {
 	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase4() {
+func _smokeCase10() {
 	customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase5() {
+func _smokeCase11() {
 	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
 		Label: sdk.F[string]("x"),
 		Value: sdk.F[string]("x"),
@@ -86,41 +151,45 @@ func _smokeCase5() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase6() {
+func _smokeCase12() {
 	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase7() {
+func _smokeCase13() {
 	err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func _smokeCase8() {
+func _smokeCase14() {
 	customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase9() {
+func _smokeCase15() {
 	customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase10() {
+func _smokeCase16() {
 	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
 		FieldID: sdk.F[string]("cf_1234"),
 		Value: sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
@@ -129,10 +198,11 @@ func _smokeCase10() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(customField)
 }
 
-func _smokeCase11() {
+func _smokeCase17() {
 	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
 		FieldID: sdk.F[string]("cf_1234"),
 		WorkerID: sdk.F[string]("wrk_1234"),
@@ -142,41 +212,45 @@ func _smokeCase11() {
 	}
 }
 
-func _smokeCase12() {
+func _smokeCase18() {
 	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(department)
 }
 
-func _smokeCase13() {
+func _smokeCase19() {
 	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
 		Name: sdk.F[string](""),
 	})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(department)
 }
 
-func _smokeCase14() {
+func _smokeCase20() {
 	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(department)
 }
 
-func _smokeCase15() {
+func _smokeCase21() {
 	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
-func _smokeCase16() {
+func _smokeCase22() {
 	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
 			FirstName: sdk.F[string]("x"),
@@ -194,99 +268,110 @@ func _smokeCase16() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
-func _smokeCase17() {
+func _smokeCase23() {
 	offer, err := client.Offers.Void(context.Background(), "offr_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
-func _smokeCase18() {
+func _smokeCase24() {
 	offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
 		ExpirationTime: sdk.F[string](""),
 	})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
-func _smokeCase19() {
+func _smokeCase25() {
 	offer, err := client.Offers.Resend(context.Background(), "offr_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(offer)
 }
 
-func _smokeCase20() {
+func _smokeCase26() {
 	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(timeOff)
 }
 
-func _smokeCase21() {
+func _smokeCase27() {
 	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(timeOff)
 }
 
-func _smokeCase22() {
+func _smokeCase28() {
 	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(timeOff)
 }
 
-func _smokeCase23() {
+func _smokeCase29() {
 	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(policy)
 }
 
-func _smokeCase24() {
+func _smokeCase30() {
 	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(policy)
 }
 
-func _smokeCase25() {
+func _smokeCase31() {
 	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
-func _smokeCase26() {
+func _smokeCase32() {
 	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
-func _smokeCase27() {
+func _smokeCase33() {
 	err := client.Workers.Delete(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func _smokeCase28() {
+func _smokeCase34() {
 	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
 			Amount: sdk.F[float64](0),
@@ -305,10 +390,11 @@ func _smokeCase28() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
-func _smokeCase29() {
+func _smokeCase35() {
 	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
 		DepartmentID: sdk.F[string]("dpt_1234"),
 		Email: sdk.F[string]("john@joinwarp.com"),
@@ -321,26 +407,29 @@ func _smokeCase29() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
-func _smokeCase30() {
+func _smokeCase36() {
 	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(worker)
 }
 
-func _smokeCase31() {
+func _smokeCase37() {
 	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(workplace)
 }
 
-func _smokeCase32() {
+func _smokeCase38() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 			Line1: sdk.F[string]("x"),
@@ -352,255 +441,299 @@ func _smokeCase32() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(workplace)
 }
 
-func _smokeCase33() {
+func _smokeCase39() {
 	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println(workplace)
 }
 
 
 var cases = []smokeCase{
 	{
+		Operation: "benefitsList",
+		Method:    "GET",
+		Path:      "/v1/benefits/health_plans",
+		Run:       _smokeCase0,
+	},
+
+	{
+		Operation: "benefitsGet",
+		Method:    "GET",
+		Path:      "/v1/benefits/health_plans/{id}",
+		Run:       _smokeCase1,
+	},
+
+	{
+		Operation: "benefitsList",
+		Method:    "GET",
+		Path:      "/v1/benefits/retirement_plans",
+		Run:       _smokeCase2,
+	},
+
+	{
+		Operation: "benefitsGet",
+		Method:    "GET",
+		Path:      "/v1/benefits/retirement_plans/{id}",
+		Run:       _smokeCase3,
+	},
+
+	{
+		Operation: "benefitsList",
+		Method:    "GET",
+		Path:      "/v1/benefits/deductions",
+		Run:       _smokeCase4,
+	},
+
+	{
+		Operation: "benefitsGet",
+		Method:    "GET",
+		Path:      "/v1/benefits/deductions/{id}",
+		Run:       _smokeCase5,
+	},
+
+	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/custom_fields",
-		Run:       _smokeCase0,
+		Run:       _smokeCase6,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/custom_fields",
-		Run:       _smokeCase1,
+		Run:       _smokeCase7,
 	},
 
 	{
 		Operation: "retrieve",
 		Method:    "GET",
 		Path:      "/v1/custom_fields/{id}",
-		Run:       _smokeCase2,
+		Run:       _smokeCase8,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/custom_fields/{id}",
-		Run:       _smokeCase3,
+		Run:       _smokeCase9,
 	},
 
 	{
 		Operation: "archive",
 		Method:    "POST",
 		Path:      "/v1/custom_fields/{id}/archive",
-		Run:       _smokeCase4,
+		Run:       _smokeCase10,
 	},
 
 	{
 		Operation: "createOption",
 		Method:    "POST",
 		Path:      "/v1/custom_fields/{id}/options",
-		Run:       _smokeCase5,
+		Run:       _smokeCase11,
 	},
 
 	{
 		Operation: "updateOption",
 		Method:    "PATCH",
 		Path:      "/v1/custom_field_options/{id}",
-		Run:       _smokeCase6,
+		Run:       _smokeCase12,
 	},
 
 	{
 		Operation: "deleteOption",
 		Method:    "DELETE",
 		Path:      "/v1/custom_field_options/{id}",
-		Run:       _smokeCase7,
+		Run:       _smokeCase13,
 	},
 
 	{
 		Operation: "archiveOption",
 		Method:    "POST",
 		Path:      "/v1/custom_field_options/{id}/archive",
-		Run:       _smokeCase8,
+		Run:       _smokeCase14,
 	},
 
 	{
 		Operation: "listValues",
 		Method:    "GET",
 		Path:      "/v1/custom_field_values",
-		Run:       _smokeCase9,
+		Run:       _smokeCase15,
 	},
 
 	{
 		Operation: "upsertValue",
 		Method:    "PUT",
 		Path:      "/v1/custom_field_values",
-		Run:       _smokeCase10,
+		Run:       _smokeCase16,
 	},
 
 	{
 		Operation: "clearValue",
 		Method:    "DELETE",
 		Path:      "/v1/custom_field_values",
-		Run:       _smokeCase11,
+		Run:       _smokeCase17,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/departments",
-		Run:       _smokeCase12,
+		Run:       _smokeCase18,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/departments",
-		Run:       _smokeCase13,
+		Run:       _smokeCase19,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/departments/{id}",
-		Run:       _smokeCase14,
+		Run:       _smokeCase20,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/offers",
-		Run:       _smokeCase15,
+		Run:       _smokeCase21,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/offers",
-		Run:       _smokeCase16,
+		Run:       _smokeCase22,
 	},
 
 	{
 		Operation: "void",
 		Method:    "POST",
 		Path:      "/v1/offers/{id}/void",
-		Run:       _smokeCase17,
+		Run:       _smokeCase23,
 	},
 
 	{
 		Operation: "extendDeadline",
 		Method:    "POST",
 		Path:      "/v1/offers/{id}/extend-deadline",
-		Run:       _smokeCase18,
+		Run:       _smokeCase24,
 	},
 
 	{
 		Operation: "resend",
 		Method:    "POST",
 		Path:      "/v1/offers/{id}/resend",
-		Run:       _smokeCase19,
+		Run:       _smokeCase25,
 	},
 
 	{
 		Operation: "listAssignments",
 		Method:    "GET",
 		Path:      "/v1/time_off/assignments",
-		Run:       _smokeCase20,
+		Run:       _smokeCase26,
 	},
 
 	{
 		Operation: "listBalances",
 		Method:    "GET",
 		Path:      "/v1/time_off/balances",
-		Run:       _smokeCase21,
+		Run:       _smokeCase27,
 	},
 
 	{
 		Operation: "listRequests",
 		Method:    "GET",
 		Path:      "/v1/time_off/requests",
-		Run:       _smokeCase22,
+		Run:       _smokeCase28,
 	},
 
 	{
 		Operation: "timeOffGet",
 		Method:    "GET",
 		Path:      "/v1/time_off/policies",
-		Run:       _smokeCase23,
+		Run:       _smokeCase29,
 	},
 
 	{
 		Operation: "timeOffGet2",
 		Method:    "GET",
 		Path:      "/v1/time_off/policies/{id}",
-		Run:       _smokeCase24,
-	},
-
-	{
-		Operation: "list",
-		Method:    "GET",
-		Path:      "/v1/workers",
-		Run:       _smokeCase25,
-	},
-
-	{
-		Operation: "retrieve",
-		Method:    "GET",
-		Path:      "/v1/workers/{id}",
-		Run:       _smokeCase26,
-	},
-
-	{
-		Operation: "delete",
-		Method:    "DELETE",
-		Path:      "/v1/workers/{id}",
-		Run:       _smokeCase27,
-	},
-
-	{
-		Operation: "createEmployee",
-		Method:    "POST",
-		Path:      "/v1/workers/employee",
-		Run:       _smokeCase28,
-	},
-
-	{
-		Operation: "createContractor",
-		Method:    "POST",
-		Path:      "/v1/workers/contractor",
-		Run:       _smokeCase29,
-	},
-
-	{
-		Operation: "invite",
-		Method:    "POST",
-		Path:      "/v1/workers/{id}/invite",
 		Run:       _smokeCase30,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/workplaces",
+		Path:      "/v1/workers",
 		Run:       _smokeCase31,
+	},
+
+	{
+		Operation: "retrieve",
+		Method:    "GET",
+		Path:      "/v1/workers/{id}",
+		Run:       _smokeCase32,
+	},
+
+	{
+		Operation: "delete",
+		Method:    "DELETE",
+		Path:      "/v1/workers/{id}",
+		Run:       _smokeCase33,
+	},
+
+	{
+		Operation: "createEmployee",
+		Method:    "POST",
+		Path:      "/v1/workers/employee",
+		Run:       _smokeCase34,
+	},
+
+	{
+		Operation: "createContractor",
+		Method:    "POST",
+		Path:      "/v1/workers/contractor",
+		Run:       _smokeCase35,
+	},
+
+	{
+		Operation: "invite",
+		Method:    "POST",
+		Path:      "/v1/workers/{id}/invite",
+		Run:       _smokeCase36,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/workplaces",
+		Run:       _smokeCase37,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/workplaces",
-		Run:       _smokeCase32,
+		Run:       _smokeCase38,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/workplaces/{id}",
-		Run:       _smokeCase33,
+		Run:       _smokeCase39,
 	},
 
 }

@@ -49,6 +49,7 @@ func NewDepartmentService(opts ...option.RequestOption) (r *DepartmentService) {
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(department)
 func (r *DepartmentService) List(ctx context.Context, query DepartmentListParams, opts ...option.RequestOption) (res *DepartmentListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -75,6 +76,7 @@ func (r *DepartmentService) List(ctx context.Context, query DepartmentListParams
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(department)
 func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, opts ...option.RequestOption) (res *DepartmentNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -100,6 +102,7 @@ func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, o
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(department)
 func (r *DepartmentService) Update(ctx context.Context, id string, body DepartmentUpdateParams, opts ...option.RequestOption) (res *DepartmentUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)

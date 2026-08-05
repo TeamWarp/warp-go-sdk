@@ -2556,6 +2556,7 @@ func (r offerCreatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferCreatedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferCreatedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferCreatedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -3576,6 +3577,7 @@ func (r offerSentWebhookEventPayloadCompensationJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferSentWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferSentWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferSentWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -4596,6 +4598,7 @@ func (r offerViewedWebhookEventPayloadCompensationJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferViewedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferViewedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferViewedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -5616,6 +5619,7 @@ func (r offerAcceptedWebhookEventPayloadCompensationJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferAcceptedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferAcceptedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferAcceptedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -6636,6 +6640,7 @@ func (r offerVoidedWebhookEventPayloadCompensationJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferVoidedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferVoidedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferVoidedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
