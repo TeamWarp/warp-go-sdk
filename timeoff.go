@@ -49,6 +49,7 @@ func NewTimeOffService(opts ...option.RequestOption) (r *TimeOffService) {
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(timeOff)
 func (r *TimeOffService) ListAssignments(ctx context.Context, query TimeOffListAssignmentsParams, opts ...option.RequestOption) (res *TimeOffListAssignmentsResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -73,6 +74,7 @@ func (r *TimeOffService) ListAssignments(ctx context.Context, query TimeOffListA
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(timeOff)
 func (r *TimeOffService) ListBalances(ctx context.Context, query TimeOffListBalancesParams, opts ...option.RequestOption) (res *TimeOffListBalancesResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -97,6 +99,7 @@ func (r *TimeOffService) ListBalances(ctx context.Context, query TimeOffListBala
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(timeOff)
 func (r *TimeOffService) ListRequests(ctx context.Context, query TimeOffListRequestsParams, opts ...option.RequestOption) (res *TimeOffListRequestsResponse, err error) {
 	opts = slices.Concat(r.Options, opts)

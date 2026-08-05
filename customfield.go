@@ -51,6 +51,7 @@ func NewCustomFieldService(opts ...option.RequestOption) (r *CustomFieldService)
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOption) (res *[]CustomFieldListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -77,6 +78,7 @@ func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOpt
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) New(ctx context.Context, body CustomFieldNewParams, opts ...option.RequestOption) (res *CustomFieldNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -101,6 +103,7 @@ func (r *CustomFieldService) New(ctx context.Context, body CustomFieldNewParams,
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -130,6 +133,7 @@ func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomFieldUpdateParams, opts ...option.RequestOption) (res *CustomFieldUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -158,6 +162,7 @@ func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomF
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldArchiveResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -190,6 +195,7 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) NewOption(ctx context.Context, id string, body CustomFieldNewOptionParams, opts ...option.RequestOption) (res *CustomFieldNewOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -219,6 +225,7 @@ func (r *CustomFieldService) NewOption(ctx context.Context, id string, body Cust
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body CustomFieldUpdateOptionParams, opts ...option.RequestOption) (res *CustomFieldUpdateOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -275,6 +282,7 @@ func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts .
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldArchiveOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -303,6 +311,7 @@ func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts 
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldListValuesParams, opts ...option.RequestOption) (res *[]CustomFieldListValuesResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -331,6 +340,7 @@ func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldLi
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(customField)
 func (r *CustomFieldService) UpsertValue(ctx context.Context, body CustomFieldUpsertValueParams, opts ...option.RequestOption) (res *CustomFieldUpsertValueResponse, err error) {
 	opts = slices.Concat(r.Options, opts)

@@ -49,6 +49,7 @@ func NewTimeOffPolicyService(opts ...option.RequestOption) (r *TimeOffPolicyServ
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(policy)
 func (r *TimeOffPolicyService) TimeOffGet(ctx context.Context, query TimeOffPolicyTimeOffGetParams, opts ...option.RequestOption) (res *TimeOffPolicyTimeOffGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -73,6 +74,7 @@ func (r *TimeOffPolicyService) TimeOffGet(ctx context.Context, query TimeOffPoli
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(policy)
 func (r *TimeOffPolicyService) TimeOffGet2(ctx context.Context, id string, opts ...option.RequestOption) (res *TimeOffPolicyTimeOffGet2Response, err error) {
 	opts = slices.Concat(r.Options, opts)

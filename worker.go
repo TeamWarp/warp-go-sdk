@@ -49,6 +49,7 @@ func NewWorkerService(opts ...option.RequestOption) (r *WorkerService) {
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(worker)
 func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts ...option.RequestOption) (res *WorkerListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -73,6 +74,7 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(worker)
 func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -143,6 +145,7 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(worker)
 func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeParams, opts ...option.RequestOption) (res *WorkerNewEmployeeResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -175,6 +178,7 @@ func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeP
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(worker)
 func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContractorParams, opts ...option.RequestOption) (res *WorkerNewContractorResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -199,6 +203,7 @@ func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContrac
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(worker)
 func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerInviteResponse, err error) {
 	opts = slices.Concat(r.Options, opts)

@@ -49,6 +49,7 @@ func NewOfferService(opts ...option.RequestOption) (r *OfferService) {
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(offer)
 func (r *OfferService) List(ctx context.Context, query OfferListParams, opts ...option.RequestOption) (res *OfferListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -86,6 +87,7 @@ func (r *OfferService) List(ctx context.Context, query OfferListParams, opts ...
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(offer)
 func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...option.RequestOption) (res *OfferNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -110,6 +112,7 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(offer)
 func (r *OfferService) Void(ctx context.Context, id string, opts ...option.RequestOption) (res *OfferVoidResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -141,6 +144,7 @@ func (r *OfferService) Void(ctx context.Context, id string, opts ...option.Reque
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(offer)
 func (r *OfferService) ExtendDeadline(ctx context.Context, id string, body OfferExtendDeadlineParams, opts ...option.RequestOption) (res *OfferExtendDeadlineResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -169,6 +173,7 @@ func (r *OfferService) ExtendDeadline(ctx context.Context, id string, body Offer
 //     if err != nil {
 //     	panic(err)
 //     }
+//
 //     fmt.Println(offer)
 func (r *OfferService) Resend(ctx context.Context, id string, opts ...option.RequestOption) (res *OfferResendResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
@@ -2051,6 +2056,7 @@ func (r OfferNewResponsePositionCountry) IsKnown() bool {
 }
 
 type OfferNewResponseCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferNewResponseCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferNewResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferNewResponseCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -2439,6 +2445,7 @@ func (r OfferVoidResponsePositionCountry) IsKnown() bool {
 }
 
 type OfferVoidResponseCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferVoidResponseCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferVoidResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferVoidResponseCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -2827,6 +2834,7 @@ func (r OfferExtendDeadlineResponsePositionCountry) IsKnown() bool {
 }
 
 type OfferExtendDeadlineResponseCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferExtendDeadlineResponseCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferExtendDeadlineResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferExtendDeadlineResponseCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -3215,6 +3223,7 @@ func (r OfferResendResponsePositionCountry) IsKnown() bool {
 }
 
 type OfferResendResponseCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferResendResponseCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferResendResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferResendResponseCompensationBasePayType `json:"type" api:"required,nullable"`
@@ -3603,6 +3612,7 @@ func (r OfferListResponseDataPositionCountry) IsKnown() bool {
 }
 
 type OfferListResponseDataCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
 	Amount OfferListResponseDataCompensationBasePayAmount `json:"amount" api:"required"`
 	Basis OfferListResponseDataCompensationBasePayBasis `json:"basis" api:"required"`
 	Type OfferListResponseDataCompensationBasePayType `json:"type" api:"required,nullable"`
