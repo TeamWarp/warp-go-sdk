@@ -36,21 +36,23 @@ func NewWorkerService(opts ...option.RequestOption) (r *WorkerService) {
 // List all workers. Workers include anyone employed by the company, whether US or international, full-time employees or contractors.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: WorkerListParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: WorkerListParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkerListResponse: Success
+//
+//	*WorkerListResponse: Success
 //
 // Example:
 //
-//     worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(worker)
+//	fmt.Println(worker)
 func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts ...option.RequestOption) (res *WorkerListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/workers"
@@ -61,21 +63,23 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 // Get a specific worker by id.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The id of the worker.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The id of the worker.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkerGetResponse: Success
+//
+//	*WorkerGetResponse: Success
 //
 // Example:
 //
-//     worker, err := client.Workers.Get(context.Background(), "wrk_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(worker)
+//	fmt.Println(worker)
 func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -90,19 +94,21 @@ func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.Reque
 // Delete a worker. Only workers who have not yet completed onboarding can be deleted. Active workers must be properly offboarded.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The id of the worker.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The id of the worker.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     error: Success
+//
+//	error: Success
 //
 // Example:
 //
-//     err := client.Workers.Delete(context.Background(), "wrk_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	err := client.Workers.Delete(context.Background(), "wrk_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -118,35 +124,37 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 // Create a new US employee. The worker will be created in draft status and must be invited separately via the invite endpoint. If hiring in a state without an existing tax registration, you must specify the stateRegistration field.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: WorkerNewEmployeeParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: WorkerNewEmployeeParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkerNewEmployeeResponse: Success
+//
+//	*WorkerNewEmployeeResponse: Success
 //
 // Example:
 //
-//     worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
-//     	Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
-//     		Amount: sdk.F[float64](0),
-//     	}),
-//     	DepartmentID: sdk.F[string]("dpt_1234"),
-//     	Email: sdk.F[string]("john@joinwarp.com"),
-//     	FirstName: sdk.F[string](""),
-//     	LastName: sdk.F[string](""),
-//     	ManagerID: sdk.F[string]("wrk_1234"),
-//     	Position: sdk.F[string](""),
-//     	StartDate: sdk.F[string]("2000-01-01"),
-//     	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
-//     		WorkplaceID: sdk.F[string]("wkp_1234"),
-//     	}),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
+//		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
+//			Amount: sdk.F[float64](0),
+//		}),
+//		DepartmentID: sdk.F[string]("dpt_1234"),
+//		Email:        sdk.F[string]("john@joinwarp.com"),
+//		FirstName:    sdk.F[string](""),
+//		LastName:     sdk.F[string](""),
+//		ManagerID:    sdk.F[string]("wrk_1234"),
+//		Position:     sdk.F[string](""),
+//		StartDate:    sdk.F[string]("2000-01-01"),
+//		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
+//			WorkplaceID: sdk.F[string]("wkp_1234"),
+//		}),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(worker)
+//	fmt.Println(worker)
 func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeParams, opts ...option.RequestOption) (res *WorkerNewEmployeeResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/workers/employee"
@@ -157,29 +165,31 @@ func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeP
 // Create a new contractor. The worker will be created in draft status and must be invited separately via the invite endpoint. For business contractors, the businessName field is required.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: WorkerNewContractorParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: WorkerNewContractorParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkerNewContractorResponse: Success
+//
+//	*WorkerNewContractorResponse: Success
 //
 // Example:
 //
-//     worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
-//     	DepartmentID: sdk.F[string]("dpt_1234"),
-//     	Email: sdk.F[string]("john@joinwarp.com"),
-//     	FirstName: sdk.F[string](""),
-//     	LastName: sdk.F[string](""),
-//     	ManagerID: sdk.F[string]("wrk_1234"),
-//     	Position: sdk.F[string](""),
-//     	StartDate: sdk.F[string]("2000-01-01"),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
+//		DepartmentID: sdk.F[string]("dpt_1234"),
+//		Email:        sdk.F[string]("john@joinwarp.com"),
+//		FirstName:    sdk.F[string](""),
+//		LastName:     sdk.F[string](""),
+//		ManagerID:    sdk.F[string]("wrk_1234"),
+//		Position:     sdk.F[string](""),
+//		StartDate:    sdk.F[string]("2000-01-01"),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(worker)
+//	fmt.Println(worker)
 func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContractorParams, opts ...option.RequestOption) (res *WorkerNewContractorResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/workers/contractor"
@@ -190,21 +200,23 @@ func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContrac
 // Send or resend the worker invite so they can accept and complete onboarding to Warp. If the worker has already been invited, the invite will be resent with extended validity.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The id of the worker.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The id of the worker.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkerInviteResponse: Success
+//
+//	*WorkerInviteResponse: Success
 //
 // Example:
 //
-//     worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(worker)
+//	fmt.Println(worker)
 func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerInviteResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -243,7 +255,7 @@ func (r OfficeWorkLocationType) IsKnown() bool {
 type RemoteWorkLocationParam struct {
 	// The US state where the remote employee works. Required for tax purposes.
 	State param.Field[RemoteWorkLocationState] `json:"state" api:"required"`
-	Type param.Field[RemoteWorkLocationType] `json:"type" api:"required"`
+	Type  param.Field[RemoteWorkLocationType]  `json:"type" api:"required"`
 }
 
 func (r RemoteWorkLocationParam) MarshalJSON() (data []byte, err error) {
@@ -334,10 +346,10 @@ type WorkerListParams struct {
 	// The id of the worker.
 	BeforeID param.Field[string] `query:"beforeId"`
 	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
-	Statuses param.Field[[]WorkerListParamsStatus] `query:"statuses"`
-	Types param.Field[[]WorkerListParamsType] `query:"types"`
-	WorkEmail param.Field[string] `query:"workEmail"`
+	Limit     param.Field[string]                   `query:"limit"`
+	Statuses  param.Field[[]WorkerListParamsStatus] `query:"statuses"`
+	Types     param.Field[[]WorkerListParamsType]   `query:"types"`
+	WorkEmail param.Field[string]                   `query:"workEmail"`
 }
 
 // URLQuery serializes [WorkerListParams]'s query parameters as `url.Values`.
@@ -351,12 +363,12 @@ func (r WorkerListParams) URLQuery() (v url.Values) {
 type WorkerListParamsStatus string
 
 const (
-	WorkerListParamsStatusDraft WorkerListParamsStatus = "draft"
-	WorkerListParamsStatusInvited WorkerListParamsStatus = "invited"
-	WorkerListParamsStatusOnboarding WorkerListParamsStatus = "onboarding"
-	WorkerListParamsStatusActive WorkerListParamsStatus = "active"
+	WorkerListParamsStatusDraft       WorkerListParamsStatus = "draft"
+	WorkerListParamsStatusInvited     WorkerListParamsStatus = "invited"
+	WorkerListParamsStatusOnboarding  WorkerListParamsStatus = "onboarding"
+	WorkerListParamsStatusActive      WorkerListParamsStatus = "active"
 	WorkerListParamsStatusOffboarding WorkerListParamsStatus = "offboarding"
-	WorkerListParamsStatusInactive WorkerListParamsStatus = "inactive"
+	WorkerListParamsStatusInactive    WorkerListParamsStatus = "inactive"
 )
 
 func (r WorkerListParamsStatus) IsKnown() bool {
@@ -370,7 +382,7 @@ func (r WorkerListParamsStatus) IsKnown() bool {
 type WorkerListParamsType string
 
 const (
-	WorkerListParamsTypeEmployee WorkerListParamsType = "employee"
+	WorkerListParamsTypeEmployee   WorkerListParamsType = "employee"
 	WorkerListParamsTypeContractor WorkerListParamsType = "contractor"
 )
 
@@ -443,9 +455,11 @@ type WorkerNewEmployeeParamsWorkLocationUnion interface {
 	implementsWorkerNewEmployeeParamsWorkLocationUnion()
 }
 
-func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {}
+func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {
+}
 
-func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {}
+func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) implementsWorkerNewEmployeeParamsWorkLocationUnion() {
+}
 
 type WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation struct {
 	Type param.Field[WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType] `json:"type" api:"required"`
@@ -460,7 +474,7 @@ func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) MarshalJSON() (da
 type WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation struct {
 	// The US state where the remote employee works. Required for tax purposes.
 	State param.Field[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState] `json:"state" api:"required"`
-	Type param.Field[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationType] `json:"type" api:"required"`
+	Type  param.Field[WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationType]  `json:"type" api:"required"`
 }
 
 func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) MarshalJSON() (data []byte, err error) {
@@ -588,12 +602,12 @@ func (r WorkerNewEmployeeParamsCompensationPer) IsKnown() bool {
 type WorkerNewEmployeeParamsPaySchedule string
 
 const (
-	WorkerNewEmployeeParamsPayScheduleWeekly WorkerNewEmployeeParamsPaySchedule = "weekly"
-	WorkerNewEmployeeParamsPayScheduleBiweekly WorkerNewEmployeeParamsPaySchedule = "biweekly"
-	WorkerNewEmployeeParamsPayScheduleMonthly WorkerNewEmployeeParamsPaySchedule = "monthly"
+	WorkerNewEmployeeParamsPayScheduleWeekly      WorkerNewEmployeeParamsPaySchedule = "weekly"
+	WorkerNewEmployeeParamsPayScheduleBiweekly    WorkerNewEmployeeParamsPaySchedule = "biweekly"
+	WorkerNewEmployeeParamsPayScheduleMonthly     WorkerNewEmployeeParamsPaySchedule = "monthly"
 	WorkerNewEmployeeParamsPayScheduleSemimonthly WorkerNewEmployeeParamsPaySchedule = "semimonthly"
-	WorkerNewEmployeeParamsPayScheduleQuarterly WorkerNewEmployeeParamsPaySchedule = "quarterly"
-	WorkerNewEmployeeParamsPayScheduleAnnually WorkerNewEmployeeParamsPaySchedule = "annually"
+	WorkerNewEmployeeParamsPayScheduleQuarterly   WorkerNewEmployeeParamsPaySchedule = "quarterly"
+	WorkerNewEmployeeParamsPayScheduleAnnually    WorkerNewEmployeeParamsPaySchedule = "annually"
 )
 
 func (r WorkerNewEmployeeParamsPaySchedule) IsKnown() bool {
@@ -620,7 +634,7 @@ type WorkerNewContractorParams struct {
 	// The contractor's role or job title.
 	Position param.Field[string] `json:"position" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate param.Field[string] `json:"startDate" api:"required"`
+	StartDate   param.Field[string]                               `json:"startDate" api:"required"`
 	WorkCountry param.Field[WorkerNewContractorParamsWorkCountry] `json:"workCountry" api:"required"`
 	// Required when entityType is "business". The legal name of the contractor's
 	// business.
@@ -644,7 +658,7 @@ type WorkerNewContractorParamsEntityType string
 
 const (
 	WorkerNewContractorParamsEntityTypeIndividual WorkerNewContractorParamsEntityType = "individual"
-	WorkerNewContractorParamsEntityTypeBusiness WorkerNewContractorParamsEntityType = "business"
+	WorkerNewContractorParamsEntityTypeBusiness   WorkerNewContractorParamsEntityType = "business"
 )
 
 func (r WorkerNewContractorParamsEntityType) IsKnown() bool {
@@ -920,7 +934,7 @@ func (r WorkerNewContractorParamsWorkCountry) IsKnown() bool {
 
 type WorkerNewContractorParamsCompensation struct {
 	// a positive number
-	Amount param.Field[float64] `json:"amount" api:"required"`
+	Amount   param.Field[float64]                                       `json:"amount" api:"required"`
 	Currency param.Field[WorkerNewContractorParamsCompensationCurrency] `json:"currency" api:"required"`
 	// The pay period for the compensation amount.
 	Per param.Field[WorkerNewContractorParamsCompensationPer] `json:"per" api:"required"`
@@ -1007,10 +1021,10 @@ func (r WorkerNewContractorParamsCompensationCurrency) IsKnown() bool {
 type WorkerNewContractorParamsCompensationPer string
 
 const (
-	WorkerNewContractorParamsCompensationPerHour WorkerNewContractorParamsCompensationPer = "hour"
-	WorkerNewContractorParamsCompensationPerYear WorkerNewContractorParamsCompensationPer = "year"
+	WorkerNewContractorParamsCompensationPerHour  WorkerNewContractorParamsCompensationPer = "hour"
+	WorkerNewContractorParamsCompensationPerYear  WorkerNewContractorParamsCompensationPer = "year"
 	WorkerNewContractorParamsCompensationPerMonth WorkerNewContractorParamsCompensationPer = "month"
-	WorkerNewContractorParamsCompensationPerWeek WorkerNewContractorParamsCompensationPer = "week"
+	WorkerNewContractorParamsCompensationPerWeek  WorkerNewContractorParamsCompensationPer = "week"
 )
 
 func (r WorkerNewContractorParamsCompensationPer) IsKnown() bool {
@@ -1024,12 +1038,12 @@ func (r WorkerNewContractorParamsCompensationPer) IsKnown() bool {
 type WorkerNewContractorParamsPaySchedule string
 
 const (
-	WorkerNewContractorParamsPayScheduleWeekly WorkerNewContractorParamsPaySchedule = "weekly"
-	WorkerNewContractorParamsPayScheduleBiweekly WorkerNewContractorParamsPaySchedule = "biweekly"
-	WorkerNewContractorParamsPayScheduleMonthly WorkerNewContractorParamsPaySchedule = "monthly"
+	WorkerNewContractorParamsPayScheduleWeekly      WorkerNewContractorParamsPaySchedule = "weekly"
+	WorkerNewContractorParamsPayScheduleBiweekly    WorkerNewContractorParamsPaySchedule = "biweekly"
+	WorkerNewContractorParamsPayScheduleMonthly     WorkerNewContractorParamsPaySchedule = "monthly"
 	WorkerNewContractorParamsPayScheduleSemimonthly WorkerNewContractorParamsPaySchedule = "semimonthly"
-	WorkerNewContractorParamsPayScheduleQuarterly WorkerNewContractorParamsPaySchedule = "quarterly"
-	WorkerNewContractorParamsPayScheduleAnnually WorkerNewContractorParamsPaySchedule = "annually"
+	WorkerNewContractorParamsPayScheduleQuarterly   WorkerNewContractorParamsPaySchedule = "quarterly"
+	WorkerNewContractorParamsPayScheduleAnnually    WorkerNewContractorParamsPaySchedule = "annually"
 )
 
 func (r WorkerNewContractorParamsPaySchedule) IsKnown() bool {
@@ -1043,16 +1057,16 @@ func (r WorkerNewContractorParamsPaySchedule) IsKnown() bool {
 type WorkerListResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []WorkerListResponseData `json:"data" api:"required"`
-	JSON workerListResponseJSON `json:"-"`
+	Count int64                    `json:"count" api:"required"`
+	Data  []WorkerListResponseData `json:"data" api:"required"`
+	JSON  workerListResponseJSON   `json:"-"`
 }
 
 // workerListResponseJSON contains the JSON metadata for the struct [WorkerListResponse]
 type workerListResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1067,20 +1081,20 @@ func (r workerListResponseJSON) RawJSON() string {
 
 type WorkerGetResponse struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerGetResponseType `json:"type" api:"required"`
-	Status WorkerGetResponseStatus `json:"status" api:"required"`
+	ID       string                  `json:"id" api:"required"`
+	Position string                  `json:"position" api:"required"`
+	Type     WorkerGetResponseType   `json:"type" api:"required"`
+	Status   WorkerGetResponseStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1089,29 +1103,29 @@ type WorkerGetResponse struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
-	JSON workerGetResponseJSON `json:"-"`
+	JSON       workerGetResponseJSON       `json:"-"`
 }
 
 // workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
 type workerGetResponseJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
@@ -1124,20 +1138,20 @@ func (r workerGetResponseJSON) RawJSON() string {
 
 type WorkerNewEmployeeResponse struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerNewEmployeeResponseType `json:"type" api:"required"`
-	Status WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
+	ID       string                          `json:"id" api:"required"`
+	Position string                          `json:"position" api:"required"`
+	Type     WorkerNewEmployeeResponseType   `json:"type" api:"required"`
+	Status   WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1146,29 +1160,29 @@ type WorkerNewEmployeeResponse struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
-	JSON workerNewEmployeeResponseJSON `json:"-"`
+	JSON       workerNewEmployeeResponseJSON       `json:"-"`
 }
 
 // workerNewEmployeeResponseJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponse]
 type workerNewEmployeeResponseJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerNewEmployeeResponse) UnmarshalJSON(data []byte) (err error) {
@@ -1181,20 +1195,20 @@ func (r workerNewEmployeeResponseJSON) RawJSON() string {
 
 type WorkerNewContractorResponse struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerNewContractorResponseType `json:"type" api:"required"`
-	Status WorkerNewContractorResponseStatus `json:"status" api:"required"`
+	ID       string                            `json:"id" api:"required"`
+	Position string                            `json:"position" api:"required"`
+	Type     WorkerNewContractorResponseType   `json:"type" api:"required"`
+	Status   WorkerNewContractorResponseStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1203,29 +1217,29 @@ type WorkerNewContractorResponse struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerNewContractorResponseDepartment `json:"department" api:"required,nullable"`
-	JSON workerNewContractorResponseJSON `json:"-"`
+	JSON       workerNewContractorResponseJSON       `json:"-"`
 }
 
 // workerNewContractorResponseJSON contains the JSON metadata for the struct [WorkerNewContractorResponse]
 type workerNewContractorResponseJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerNewContractorResponse) UnmarshalJSON(data []byte) (err error) {
@@ -1238,20 +1252,20 @@ func (r workerNewContractorResponseJSON) RawJSON() string {
 
 type WorkerInviteResponse struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerInviteResponseType `json:"type" api:"required"`
-	Status WorkerInviteResponseStatus `json:"status" api:"required"`
+	ID       string                     `json:"id" api:"required"`
+	Position string                     `json:"position" api:"required"`
+	Type     WorkerInviteResponseType   `json:"type" api:"required"`
+	Status   WorkerInviteResponseStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1260,29 +1274,29 @@ type WorkerInviteResponse struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteResponseDepartment `json:"department" api:"required,nullable"`
-	JSON workerInviteResponseJSON `json:"-"`
+	JSON       workerInviteResponseJSON       `json:"-"`
 }
 
 // workerInviteResponseJSON contains the JSON metadata for the struct [WorkerInviteResponse]
 type workerInviteResponseJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) (err error) {
@@ -1295,20 +1309,20 @@ func (r workerInviteResponseJSON) RawJSON() string {
 
 type WorkerListResponseData struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerListResponseDataType `json:"type" api:"required"`
-	Status WorkerListResponseDataStatus `json:"status" api:"required"`
+	ID       string                       `json:"id" api:"required"`
+	Position string                       `json:"position" api:"required"`
+	Type     WorkerListResponseDataType   `json:"type" api:"required"`
+	Status   WorkerListResponseDataStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1317,29 +1331,29 @@ type WorkerListResponseData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerListResponseDataDepartment `json:"department" api:"required,nullable"`
-	JSON workerListResponseDataJSON `json:"-"`
+	JSON       workerListResponseDataJSON       `json:"-"`
 }
 
 // workerListResponseDataJSON contains the JSON metadata for the struct [WorkerListResponseData]
 type workerListResponseDataJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerListResponseData) UnmarshalJSON(data []byte) (err error) {
@@ -1353,7 +1367,7 @@ func (r workerListResponseDataJSON) RawJSON() string {
 type WorkerGetResponseType string
 
 const (
-	WorkerGetResponseTypeEmployee WorkerGetResponseType = "employee"
+	WorkerGetResponseTypeEmployee   WorkerGetResponseType = "employee"
 	WorkerGetResponseTypeContractor WorkerGetResponseType = "contractor"
 )
 
@@ -1368,12 +1382,12 @@ func (r WorkerGetResponseType) IsKnown() bool {
 type WorkerGetResponseStatus string
 
 const (
-	WorkerGetResponseStatusDraft WorkerGetResponseStatus = "draft"
-	WorkerGetResponseStatusInvited WorkerGetResponseStatus = "invited"
-	WorkerGetResponseStatusOnboarding WorkerGetResponseStatus = "onboarding"
-	WorkerGetResponseStatusActive WorkerGetResponseStatus = "active"
+	WorkerGetResponseStatusDraft       WorkerGetResponseStatus = "draft"
+	WorkerGetResponseStatusInvited     WorkerGetResponseStatus = "invited"
+	WorkerGetResponseStatusOnboarding  WorkerGetResponseStatus = "onboarding"
+	WorkerGetResponseStatusActive      WorkerGetResponseStatus = "active"
 	WorkerGetResponseStatusOffboarding WorkerGetResponseStatus = "offboarding"
-	WorkerGetResponseStatusInactive WorkerGetResponseStatus = "inactive"
+	WorkerGetResponseStatusInactive    WorkerGetResponseStatus = "inactive"
 )
 
 func (r WorkerGetResponseStatus) IsKnown() bool {
@@ -1386,15 +1400,15 @@ func (r WorkerGetResponseStatus) IsKnown() bool {
 
 type WorkerGetResponseDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                          `json:"id" api:"required"`
+	Name string                          `json:"name" api:"required"`
 	JSON workerGetResponseDepartmentJSON `json:"-"`
 }
 
 // workerGetResponseDepartmentJSON contains the JSON metadata for the struct [WorkerGetResponseDepartment]
 type workerGetResponseDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1410,7 +1424,7 @@ func (r workerGetResponseDepartmentJSON) RawJSON() string {
 type WorkerNewEmployeeResponseType string
 
 const (
-	WorkerNewEmployeeResponseTypeEmployee WorkerNewEmployeeResponseType = "employee"
+	WorkerNewEmployeeResponseTypeEmployee   WorkerNewEmployeeResponseType = "employee"
 	WorkerNewEmployeeResponseTypeContractor WorkerNewEmployeeResponseType = "contractor"
 )
 
@@ -1425,12 +1439,12 @@ func (r WorkerNewEmployeeResponseType) IsKnown() bool {
 type WorkerNewEmployeeResponseStatus string
 
 const (
-	WorkerNewEmployeeResponseStatusDraft WorkerNewEmployeeResponseStatus = "draft"
-	WorkerNewEmployeeResponseStatusInvited WorkerNewEmployeeResponseStatus = "invited"
-	WorkerNewEmployeeResponseStatusOnboarding WorkerNewEmployeeResponseStatus = "onboarding"
-	WorkerNewEmployeeResponseStatusActive WorkerNewEmployeeResponseStatus = "active"
+	WorkerNewEmployeeResponseStatusDraft       WorkerNewEmployeeResponseStatus = "draft"
+	WorkerNewEmployeeResponseStatusInvited     WorkerNewEmployeeResponseStatus = "invited"
+	WorkerNewEmployeeResponseStatusOnboarding  WorkerNewEmployeeResponseStatus = "onboarding"
+	WorkerNewEmployeeResponseStatusActive      WorkerNewEmployeeResponseStatus = "active"
 	WorkerNewEmployeeResponseStatusOffboarding WorkerNewEmployeeResponseStatus = "offboarding"
-	WorkerNewEmployeeResponseStatusInactive WorkerNewEmployeeResponseStatus = "inactive"
+	WorkerNewEmployeeResponseStatusInactive    WorkerNewEmployeeResponseStatus = "inactive"
 )
 
 func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
@@ -1443,15 +1457,15 @@ func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
 
 type WorkerNewEmployeeResponseDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                  `json:"id" api:"required"`
+	Name string                                  `json:"name" api:"required"`
 	JSON workerNewEmployeeResponseDepartmentJSON `json:"-"`
 }
 
 // workerNewEmployeeResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseDepartment]
 type workerNewEmployeeResponseDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1467,7 +1481,7 @@ func (r workerNewEmployeeResponseDepartmentJSON) RawJSON() string {
 type WorkerNewContractorResponseType string
 
 const (
-	WorkerNewContractorResponseTypeEmployee WorkerNewContractorResponseType = "employee"
+	WorkerNewContractorResponseTypeEmployee   WorkerNewContractorResponseType = "employee"
 	WorkerNewContractorResponseTypeContractor WorkerNewContractorResponseType = "contractor"
 )
 
@@ -1482,12 +1496,12 @@ func (r WorkerNewContractorResponseType) IsKnown() bool {
 type WorkerNewContractorResponseStatus string
 
 const (
-	WorkerNewContractorResponseStatusDraft WorkerNewContractorResponseStatus = "draft"
-	WorkerNewContractorResponseStatusInvited WorkerNewContractorResponseStatus = "invited"
-	WorkerNewContractorResponseStatusOnboarding WorkerNewContractorResponseStatus = "onboarding"
-	WorkerNewContractorResponseStatusActive WorkerNewContractorResponseStatus = "active"
+	WorkerNewContractorResponseStatusDraft       WorkerNewContractorResponseStatus = "draft"
+	WorkerNewContractorResponseStatusInvited     WorkerNewContractorResponseStatus = "invited"
+	WorkerNewContractorResponseStatusOnboarding  WorkerNewContractorResponseStatus = "onboarding"
+	WorkerNewContractorResponseStatusActive      WorkerNewContractorResponseStatus = "active"
 	WorkerNewContractorResponseStatusOffboarding WorkerNewContractorResponseStatus = "offboarding"
-	WorkerNewContractorResponseStatusInactive WorkerNewContractorResponseStatus = "inactive"
+	WorkerNewContractorResponseStatusInactive    WorkerNewContractorResponseStatus = "inactive"
 )
 
 func (r WorkerNewContractorResponseStatus) IsKnown() bool {
@@ -1500,15 +1514,15 @@ func (r WorkerNewContractorResponseStatus) IsKnown() bool {
 
 type WorkerNewContractorResponseDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                    `json:"id" api:"required"`
+	Name string                                    `json:"name" api:"required"`
 	JSON workerNewContractorResponseDepartmentJSON `json:"-"`
 }
 
 // workerNewContractorResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewContractorResponseDepartment]
 type workerNewContractorResponseDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1524,7 +1538,7 @@ func (r workerNewContractorResponseDepartmentJSON) RawJSON() string {
 type WorkerInviteResponseType string
 
 const (
-	WorkerInviteResponseTypeEmployee WorkerInviteResponseType = "employee"
+	WorkerInviteResponseTypeEmployee   WorkerInviteResponseType = "employee"
 	WorkerInviteResponseTypeContractor WorkerInviteResponseType = "contractor"
 )
 
@@ -1539,12 +1553,12 @@ func (r WorkerInviteResponseType) IsKnown() bool {
 type WorkerInviteResponseStatus string
 
 const (
-	WorkerInviteResponseStatusDraft WorkerInviteResponseStatus = "draft"
-	WorkerInviteResponseStatusInvited WorkerInviteResponseStatus = "invited"
-	WorkerInviteResponseStatusOnboarding WorkerInviteResponseStatus = "onboarding"
-	WorkerInviteResponseStatusActive WorkerInviteResponseStatus = "active"
+	WorkerInviteResponseStatusDraft       WorkerInviteResponseStatus = "draft"
+	WorkerInviteResponseStatusInvited     WorkerInviteResponseStatus = "invited"
+	WorkerInviteResponseStatusOnboarding  WorkerInviteResponseStatus = "onboarding"
+	WorkerInviteResponseStatusActive      WorkerInviteResponseStatus = "active"
 	WorkerInviteResponseStatusOffboarding WorkerInviteResponseStatus = "offboarding"
-	WorkerInviteResponseStatusInactive WorkerInviteResponseStatus = "inactive"
+	WorkerInviteResponseStatusInactive    WorkerInviteResponseStatus = "inactive"
 )
 
 func (r WorkerInviteResponseStatus) IsKnown() bool {
@@ -1557,15 +1571,15 @@ func (r WorkerInviteResponseStatus) IsKnown() bool {
 
 type WorkerInviteResponseDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                             `json:"id" api:"required"`
+	Name string                             `json:"name" api:"required"`
 	JSON workerInviteResponseDepartmentJSON `json:"-"`
 }
 
 // workerInviteResponseDepartmentJSON contains the JSON metadata for the struct [WorkerInviteResponseDepartment]
 type workerInviteResponseDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1581,7 +1595,7 @@ func (r workerInviteResponseDepartmentJSON) RawJSON() string {
 type WorkerListResponseDataType string
 
 const (
-	WorkerListResponseDataTypeEmployee WorkerListResponseDataType = "employee"
+	WorkerListResponseDataTypeEmployee   WorkerListResponseDataType = "employee"
 	WorkerListResponseDataTypeContractor WorkerListResponseDataType = "contractor"
 )
 
@@ -1596,12 +1610,12 @@ func (r WorkerListResponseDataType) IsKnown() bool {
 type WorkerListResponseDataStatus string
 
 const (
-	WorkerListResponseDataStatusDraft WorkerListResponseDataStatus = "draft"
-	WorkerListResponseDataStatusInvited WorkerListResponseDataStatus = "invited"
-	WorkerListResponseDataStatusOnboarding WorkerListResponseDataStatus = "onboarding"
-	WorkerListResponseDataStatusActive WorkerListResponseDataStatus = "active"
+	WorkerListResponseDataStatusDraft       WorkerListResponseDataStatus = "draft"
+	WorkerListResponseDataStatusInvited     WorkerListResponseDataStatus = "invited"
+	WorkerListResponseDataStatusOnboarding  WorkerListResponseDataStatus = "onboarding"
+	WorkerListResponseDataStatusActive      WorkerListResponseDataStatus = "active"
 	WorkerListResponseDataStatusOffboarding WorkerListResponseDataStatus = "offboarding"
-	WorkerListResponseDataStatusInactive WorkerListResponseDataStatus = "inactive"
+	WorkerListResponseDataStatusInactive    WorkerListResponseDataStatus = "inactive"
 )
 
 func (r WorkerListResponseDataStatus) IsKnown() bool {
@@ -1614,15 +1628,15 @@ func (r WorkerListResponseDataStatus) IsKnown() bool {
 
 type WorkerListResponseDataDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                               `json:"id" api:"required"`
+	Name string                               `json:"name" api:"required"`
 	JSON workerListResponseDataDepartmentJSON `json:"-"`
 }
 
 // workerListResponseDataDepartmentJSON contains the JSON metadata for the struct [WorkerListResponseDataDepartment]
 type workerListResponseDataDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }

@@ -36,21 +36,23 @@ func NewWorkplaceService(opts ...option.RequestOption) (r *WorkplaceService) {
 // List all workplaces for your company.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: WorkplaceListParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: WorkplaceListParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkplaceListResponse: Success
+//
+//	*WorkplaceListResponse: Success
 //
 // Example:
 //
-//     workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(workplace)
+//	fmt.Println(workplace)
 func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, opts ...option.RequestOption) (res *WorkplaceListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/workplaces"
@@ -61,28 +63,30 @@ func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, 
 // Create a new workplace.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: WorkplaceNewParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: WorkplaceNewParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkplaceNewResponse: Success
+//
+//	*WorkplaceNewResponse: Success
 //
 // Example:
 //
-//     workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-//     	Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
-//     		Line1: sdk.F[string]("x"),
-//     		City: sdk.F[string](""),
-//     		PostalCode: sdk.F[string](""),
-//     	}),
-//     	Name: sdk.F[string](""),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
+//		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
+//			Line1:      sdk.F[string]("x"),
+//			City:       sdk.F[string](""),
+//			PostalCode: sdk.F[string](""),
+//		}),
+//		Name: sdk.F[string](""),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(workplace)
+//	fmt.Println(workplace)
 func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opts ...option.RequestOption) (res *WorkplaceNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/workplaces"
@@ -93,22 +97,24 @@ func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opt
 // Update an existing workplace.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: Public workplace identifier
-//     body: WorkplaceUpdateParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: Public workplace identifier
+//	body: WorkplaceUpdateParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *WorkplaceUpdateResponse: Success
+//
+//	*WorkplaceUpdateResponse: Success
 //
 // Example:
 //
-//     workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(workplace)
+//	fmt.Println(workplace)
 func (r *WorkplaceService) Update(ctx context.Context, id string, body WorkplaceUpdateParams, opts ...option.RequestOption) (res *WorkplaceUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -141,7 +147,7 @@ type WorkplaceNewParams struct {
 	// A valid US address
 	Address param.Field[WorkplaceNewParamsAddress] `json:"address" api:"required"`
 	// a non empty string
-	Name param.Field[string] `json:"name" api:"required"`
+	Name param.Field[string]                 `json:"name" api:"required"`
 	Type param.Field[WorkplaceNewParamsType] `json:"type" api:"required"`
 }
 
@@ -165,13 +171,13 @@ func (r WorkplaceNewParamsType) IsKnown() bool {
 }
 
 type WorkplaceNewParamsAddress struct {
-	City param.Field[string] `json:"city" api:"required"`
+	City    param.Field[string]                           `json:"city" api:"required"`
 	Country param.Field[WorkplaceNewParamsAddressCountry] `json:"country" api:"required"`
 	// a non empty string
-	Line1 param.Field[string] `json:"line1" api:"required"`
-	PostalCode param.Field[string] `json:"postalCode" api:"required"`
-	State param.Field[WorkplaceNewParamsAddressState] `json:"state" api:"required"`
-	Line2 param.Field[string] `json:"line2"`
+	Line1      param.Field[string]                         `json:"line1" api:"required"`
+	PostalCode param.Field[string]                         `json:"postalCode" api:"required"`
+	State      param.Field[WorkplaceNewParamsAddressState] `json:"state" api:"required"`
+	Line2      param.Field[string]                         `json:"line2"`
 }
 
 func (r WorkplaceNewParamsAddress) MarshalJSON() (data []byte, err error) {
@@ -267,16 +273,16 @@ func (r WorkplaceUpdateParams) MarshalJSON() (data []byte, err error) {
 type WorkplaceListResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []WorkplaceListResponseData `json:"data" api:"required"`
-	JSON workplaceListResponseJSON `json:"-"`
+	Count int64                       `json:"count" api:"required"`
+	Data  []WorkplaceListResponseData `json:"data" api:"required"`
+	JSON  workplaceListResponseJSON   `json:"-"`
 }
 
 // workplaceListResponseJSON contains the JSON metadata for the struct [WorkplaceListResponse]
 type workplaceListResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -291,25 +297,25 @@ func (r workplaceListResponseJSON) RawJSON() string {
 
 type WorkplaceNewResponse struct {
 	// Public workplace identifier
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Type WorkplaceNewResponseType `json:"type" api:"required"`
+	ID     string                     `json:"id" api:"required"`
+	Name   string                     `json:"name" api:"required"`
+	Type   WorkplaceNewResponseType   `json:"type" api:"required"`
 	Status WorkplaceNewResponseStatus `json:"status" api:"required"`
 	// A valid US address
 	Address WorkplaceNewResponseAddress `json:"address" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON workplaceNewResponseJSON `json:"-"`
+	CreatedAt string                   `json:"createdAt" api:"required"`
+	JSON      workplaceNewResponseJSON `json:"-"`
 }
 
 // workplaceNewResponseJSON contains the JSON metadata for the struct [WorkplaceNewResponse]
 type workplaceNewResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	Address apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Status      apijson.Field
+	Address     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -324,25 +330,25 @@ func (r workplaceNewResponseJSON) RawJSON() string {
 
 type WorkplaceUpdateResponse struct {
 	// Public workplace identifier
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Type WorkplaceUpdateResponseType `json:"type" api:"required"`
+	ID     string                        `json:"id" api:"required"`
+	Name   string                        `json:"name" api:"required"`
+	Type   WorkplaceUpdateResponseType   `json:"type" api:"required"`
 	Status WorkplaceUpdateResponseStatus `json:"status" api:"required"`
 	// A valid US address
 	Address WorkplaceUpdateResponseAddress `json:"address" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON workplaceUpdateResponseJSON `json:"-"`
+	CreatedAt string                      `json:"createdAt" api:"required"`
+	JSON      workplaceUpdateResponseJSON `json:"-"`
 }
 
 // workplaceUpdateResponseJSON contains the JSON metadata for the struct [WorkplaceUpdateResponse]
 type workplaceUpdateResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	Address apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Status      apijson.Field
+	Address     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -357,25 +363,25 @@ func (r workplaceUpdateResponseJSON) RawJSON() string {
 
 type WorkplaceListResponseData struct {
 	// Public workplace identifier
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Type WorkplaceListResponseDataType `json:"type" api:"required"`
+	ID     string                          `json:"id" api:"required"`
+	Name   string                          `json:"name" api:"required"`
+	Type   WorkplaceListResponseDataType   `json:"type" api:"required"`
 	Status WorkplaceListResponseDataStatus `json:"status" api:"required"`
 	// A valid US address
 	Address WorkplaceListResponseDataAddress `json:"address" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON workplaceListResponseDataJSON `json:"-"`
+	CreatedAt string                        `json:"createdAt" api:"required"`
+	JSON      workplaceListResponseDataJSON `json:"-"`
 }
 
 // workplaceListResponseDataJSON contains the JSON metadata for the struct [WorkplaceListResponseData]
 type workplaceListResponseDataJSON struct {
-	ID apijson.Field
-	Name apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	Address apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Status      apijson.Field
+	Address     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -406,7 +412,7 @@ func (r WorkplaceNewResponseType) IsKnown() bool {
 type WorkplaceNewResponseStatus string
 
 const (
-	WorkplaceNewResponseStatusActive WorkplaceNewResponseStatus = "active"
+	WorkplaceNewResponseStatusActive   WorkplaceNewResponseStatus = "active"
 	WorkplaceNewResponseStatusArchived WorkplaceNewResponseStatus = "archived"
 )
 
@@ -420,23 +426,23 @@ func (r WorkplaceNewResponseStatus) IsKnown() bool {
 
 type WorkplaceNewResponseAddress struct {
 	// a non empty string
-	Line1 string `json:"line1" api:"required"`
-	City string `json:"city" api:"required"`
-	PostalCode string `json:"postalCode" api:"required"`
-	State WorkplaceNewResponseAddressState `json:"state" api:"required"`
-	Country WorkplaceNewResponseAddressCountry `json:"country" api:"required"`
-	Line2 string `json:"line2" api:"nullable"`
-	JSON workplaceNewResponseAddressJSON `json:"-"`
+	Line1      string                             `json:"line1" api:"required"`
+	City       string                             `json:"city" api:"required"`
+	PostalCode string                             `json:"postalCode" api:"required"`
+	State      WorkplaceNewResponseAddressState   `json:"state" api:"required"`
+	Country    WorkplaceNewResponseAddressCountry `json:"country" api:"required"`
+	Line2      string                             `json:"line2" api:"nullable"`
+	JSON       workplaceNewResponseAddressJSON    `json:"-"`
 }
 
 // workplaceNewResponseAddressJSON contains the JSON metadata for the struct [WorkplaceNewResponseAddress]
 type workplaceNewResponseAddressJSON struct {
-	Line1 apijson.Field
-	City apijson.Field
-	PostalCode apijson.Field
-	State apijson.Field
-	Country apijson.Field
-	Line2 apijson.Field
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -467,7 +473,7 @@ func (r WorkplaceUpdateResponseType) IsKnown() bool {
 type WorkplaceUpdateResponseStatus string
 
 const (
-	WorkplaceUpdateResponseStatusActive WorkplaceUpdateResponseStatus = "active"
+	WorkplaceUpdateResponseStatusActive   WorkplaceUpdateResponseStatus = "active"
 	WorkplaceUpdateResponseStatusArchived WorkplaceUpdateResponseStatus = "archived"
 )
 
@@ -481,23 +487,23 @@ func (r WorkplaceUpdateResponseStatus) IsKnown() bool {
 
 type WorkplaceUpdateResponseAddress struct {
 	// a non empty string
-	Line1 string `json:"line1" api:"required"`
-	City string `json:"city" api:"required"`
-	PostalCode string `json:"postalCode" api:"required"`
-	State WorkplaceUpdateResponseAddressState `json:"state" api:"required"`
-	Country WorkplaceUpdateResponseAddressCountry `json:"country" api:"required"`
-	Line2 string `json:"line2" api:"nullable"`
-	JSON workplaceUpdateResponseAddressJSON `json:"-"`
+	Line1      string                                `json:"line1" api:"required"`
+	City       string                                `json:"city" api:"required"`
+	PostalCode string                                `json:"postalCode" api:"required"`
+	State      WorkplaceUpdateResponseAddressState   `json:"state" api:"required"`
+	Country    WorkplaceUpdateResponseAddressCountry `json:"country" api:"required"`
+	Line2      string                                `json:"line2" api:"nullable"`
+	JSON       workplaceUpdateResponseAddressJSON    `json:"-"`
 }
 
 // workplaceUpdateResponseAddressJSON contains the JSON metadata for the struct [WorkplaceUpdateResponseAddress]
 type workplaceUpdateResponseAddressJSON struct {
-	Line1 apijson.Field
-	City apijson.Field
-	PostalCode apijson.Field
-	State apijson.Field
-	Country apijson.Field
-	Line2 apijson.Field
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -528,7 +534,7 @@ func (r WorkplaceListResponseDataType) IsKnown() bool {
 type WorkplaceListResponseDataStatus string
 
 const (
-	WorkplaceListResponseDataStatusActive WorkplaceListResponseDataStatus = "active"
+	WorkplaceListResponseDataStatusActive   WorkplaceListResponseDataStatus = "active"
 	WorkplaceListResponseDataStatusArchived WorkplaceListResponseDataStatus = "archived"
 )
 
@@ -542,23 +548,23 @@ func (r WorkplaceListResponseDataStatus) IsKnown() bool {
 
 type WorkplaceListResponseDataAddress struct {
 	// a non empty string
-	Line1 string `json:"line1" api:"required"`
-	City string `json:"city" api:"required"`
-	PostalCode string `json:"postalCode" api:"required"`
-	State WorkplaceListResponseDataAddressState `json:"state" api:"required"`
-	Country WorkplaceListResponseDataAddressCountry `json:"country" api:"required"`
-	Line2 string `json:"line2" api:"nullable"`
-	JSON workplaceListResponseDataAddressJSON `json:"-"`
+	Line1      string                                  `json:"line1" api:"required"`
+	City       string                                  `json:"city" api:"required"`
+	PostalCode string                                  `json:"postalCode" api:"required"`
+	State      WorkplaceListResponseDataAddressState   `json:"state" api:"required"`
+	Country    WorkplaceListResponseDataAddressCountry `json:"country" api:"required"`
+	Line2      string                                  `json:"line2" api:"nullable"`
+	JSON       workplaceListResponseDataAddressJSON    `json:"-"`
 }
 
 // workplaceListResponseDataAddressJSON contains the JSON metadata for the struct [WorkplaceListResponseDataAddress]
 type workplaceListResponseDataAddressJSON struct {
-	Line1 apijson.Field
-	City apijson.Field
-	PostalCode apijson.Field
-	State apijson.Field
-	Country apijson.Field
-	Line2 apijson.Field
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }

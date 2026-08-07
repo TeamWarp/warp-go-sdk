@@ -36,21 +36,23 @@ func NewDepartmentService(opts ...option.RequestOption) (r *DepartmentService) {
 // List all departments for your company.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: DepartmentListParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: DepartmentListParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *DepartmentListResponse: Success
+//
+//	*DepartmentListResponse: Success
 //
 // Example:
 //
-//     department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(department)
+//	fmt.Println(department)
 func (r *DepartmentService) List(ctx context.Context, query DepartmentListParams, opts ...option.RequestOption) (res *DepartmentListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/departments"
@@ -61,23 +63,25 @@ func (r *DepartmentService) List(ctx context.Context, query DepartmentListParams
 // Create a new department.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: DepartmentNewParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: DepartmentNewParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *DepartmentNewResponse: Success
+//
+//	*DepartmentNewResponse: Success
 //
 // Example:
 //
-//     department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-//     	Name: sdk.F[string](""),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
+//		Name: sdk.F[string](""),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(department)
+//	fmt.Println(department)
 func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, opts ...option.RequestOption) (res *DepartmentNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/departments"
@@ -88,22 +92,24 @@ func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, o
 // Update an existing department.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The unique public id of the department
-//     body: DepartmentUpdateParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The unique public id of the department
+//	body: DepartmentUpdateParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *DepartmentUpdateResponse: Success
+//
+//	*DepartmentUpdateResponse: Success
 //
 // Example:
 //
-//     department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(department)
+//	fmt.Println(department)
 func (r *DepartmentService) Update(ctx context.Context, id string, body DepartmentUpdateParams, opts ...option.RequestOption) (res *DepartmentUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -152,16 +158,16 @@ func (r DepartmentUpdateParams) MarshalJSON() (data []byte, err error) {
 type DepartmentListResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []DepartmentListResponseData `json:"data" api:"required"`
-	JSON departmentListResponseJSON `json:"-"`
+	Count int64                        `json:"count" api:"required"`
+	Data  []DepartmentListResponseData `json:"data" api:"required"`
+	JSON  departmentListResponseJSON   `json:"-"`
 }
 
 // departmentListResponseJSON contains the JSON metadata for the struct [DepartmentListResponse]
 type departmentListResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -176,18 +182,18 @@ func (r departmentListResponseJSON) RawJSON() string {
 
 type DepartmentNewResponse struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
+	ID   string `json:"id" api:"required"`
 	Name string `json:"name" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON departmentNewResponseJSON `json:"-"`
+	CreatedAt string                    `json:"createdAt" api:"required"`
+	JSON      departmentNewResponseJSON `json:"-"`
 }
 
 // departmentNewResponseJSON contains the JSON metadata for the struct [DepartmentNewResponse]
 type departmentNewResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -202,18 +208,18 @@ func (r departmentNewResponseJSON) RawJSON() string {
 
 type DepartmentUpdateResponse struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
+	ID   string `json:"id" api:"required"`
 	Name string `json:"name" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON departmentUpdateResponseJSON `json:"-"`
+	CreatedAt string                       `json:"createdAt" api:"required"`
+	JSON      departmentUpdateResponseJSON `json:"-"`
 }
 
 // departmentUpdateResponseJSON contains the JSON metadata for the struct [DepartmentUpdateResponse]
 type departmentUpdateResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -228,18 +234,18 @@ func (r departmentUpdateResponseJSON) RawJSON() string {
 
 type DepartmentListResponseData struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
+	ID   string `json:"id" api:"required"`
 	Name string `json:"name" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON departmentListResponseDataJSON `json:"-"`
+	CreatedAt string                         `json:"createdAt" api:"required"`
+	JSON      departmentListResponseDataJSON `json:"-"`
 }
 
 // departmentListResponseDataJSON contains the JSON metadata for the struct [DepartmentListResponseData]
 type departmentListResponseDataJSON struct {
-	ID apijson.Field
-	Name apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
