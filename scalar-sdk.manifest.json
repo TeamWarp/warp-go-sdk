@@ -1,7 +1,7 @@
 {
   "name": "Warp",
   "slug": "warp",
-  "generatorVersion": "0.22.5",
+  "generatorVersion": "0.22.10",
   "servers": [
     "https://api.joinwarp.com"
   ],
@@ -2793,6 +2793,65 @@
       }
     },
     {
+      "name": "workplace_not_found",
+      "source": "workplace_not_found",
+      "publicAliases": [],
+      "deprecated": false,
+      "type": {
+        "kind": "object",
+        "properties": [
+          {
+            "name": "id",
+            "publicName": "id",
+            "required": true,
+            "deprecated": false,
+            "extensions": {
+              "source": [
+                "examples"
+              ],
+              "examples": "wkp_1234"
+            },
+            "type": {
+              "kind": "primitive",
+              "type": "string",
+              "validation": {
+                "pattern": "^wkp_"
+              }
+            }
+          },
+          {
+            "name": "message",
+            "publicName": "message",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "string"
+            }
+          },
+          {
+            "name": "_tag",
+            "publicName": "_tag",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "enum",
+              "values": [
+                "WorkplaceNotFound"
+              ],
+              "names": [
+                "WorkplaceNotFound"
+              ],
+              "deprecations": [
+                false
+              ]
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "manager_not_found_error",
       "source": "manager_not_found_error",
       "publicAliases": [],
@@ -3471,65 +3530,6 @@
               ],
               "names": [
                 "StateRegistrationRequired"
-              ],
-              "deprecations": [
-                false
-              ]
-            }
-          }
-        ],
-        "additionalProperties": false
-      }
-    },
-    {
-      "name": "workplace_not_found",
-      "source": "workplace_not_found",
-      "publicAliases": [],
-      "deprecated": false,
-      "type": {
-        "kind": "object",
-        "properties": [
-          {
-            "name": "id",
-            "publicName": "id",
-            "required": true,
-            "deprecated": false,
-            "extensions": {
-              "source": [
-                "examples"
-              ],
-              "examples": "wkp_1234"
-            },
-            "type": {
-              "kind": "primitive",
-              "type": "string",
-              "validation": {
-                "pattern": "^wkp_"
-              }
-            }
-          },
-          {
-            "name": "message",
-            "publicName": "message",
-            "required": true,
-            "deprecated": false,
-            "type": {
-              "kind": "primitive",
-              "type": "string"
-            }
-          },
-          {
-            "name": "_tag",
-            "publicName": "_tag",
-            "required": true,
-            "deprecated": false,
-            "type": {
-              "kind": "enum",
-              "values": [
-                "WorkplaceNotFound"
-              ],
-              "names": [
-                "WorkplaceNotFound"
               ],
               "deprecations": [
                 false
@@ -4797,8 +4797,8 @@
     {
       "resource": "benefits.healthPlans",
       "publicResource": "benefits.healthPlans",
-      "operation": "benefitsList",
-      "publicOperation": "benefitsList",
+      "operation": "list",
+      "publicOperation": "list",
       "deprecated": false,
       "method": "GET",
       "path": "/v1/benefits/health_plans",
@@ -4872,7 +4872,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "HealthPlanBenefitsListParams"
+        "publicName": "HealthPlanListParams"
       },
       "response": {
         "status": "200",
@@ -4970,8 +4970,8 @@
     {
       "resource": "benefits.healthPlans",
       "publicResource": "benefits.healthPlans",
-      "operation": "benefitsGet",
-      "publicOperation": "benefitsGet",
+      "operation": "get",
+      "publicOperation": "get",
       "deprecated": false,
       "method": "GET",
       "path": "/v1/benefits/health_plans/{id}",
@@ -5002,7 +5002,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "HealthPlanBenefitsGetParams"
+        "publicName": "HealthPlanGetParams"
       },
       "response": {
         "status": "200",
@@ -5120,8 +5120,8 @@
     {
       "resource": "benefits.retirementPlans",
       "publicResource": "benefits.retirementPlans",
-      "operation": "benefitsList",
-      "publicOperation": "benefitsList",
+      "operation": "list",
+      "publicOperation": "list",
       "deprecated": false,
       "method": "GET",
       "path": "/v1/benefits/retirement_plans",
@@ -5187,7 +5187,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "RetirementPlanBenefitsListParams"
+        "publicName": "RetirementPlanListParams"
       },
       "response": {
         "status": "200",
@@ -5285,8 +5285,8 @@
     {
       "resource": "benefits.retirementPlans",
       "publicResource": "benefits.retirementPlans",
-      "operation": "benefitsGet",
-      "publicOperation": "benefitsGet",
+      "operation": "get",
+      "publicOperation": "get",
       "deprecated": false,
       "method": "GET",
       "path": "/v1/benefits/retirement_plans/{id}",
@@ -5317,7 +5317,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "RetirementPlanBenefitsGetParams"
+        "publicName": "RetirementPlanGetParams"
       },
       "response": {
         "status": "200",
@@ -5435,8 +5435,8 @@
     {
       "resource": "benefits.deductions",
       "publicResource": "benefits.deductions",
-      "operation": "benefitsList",
-      "publicOperation": "benefitsList",
+      "operation": "list",
+      "publicOperation": "list",
       "deprecated": false,
       "method": "GET",
       "path": "/v1/benefits/deductions",
@@ -5534,7 +5534,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "DeductionBenefitsListParams"
+        "publicName": "DeductionListParams"
       },
       "response": {
         "status": "200",
@@ -5632,8 +5632,8 @@
     {
       "resource": "benefits.deductions",
       "publicResource": "benefits.deductions",
-      "operation": "benefitsGet",
-      "publicOperation": "benefitsGet",
+      "operation": "get",
+      "publicOperation": "get",
       "deprecated": false,
       "method": "GET",
       "path": "/v1/benefits/deductions/{id}",
@@ -5664,7 +5664,7 @@
       "publicCookieParams": [],
       "cookieParamDetails": [],
       "paramsModel": {
-        "publicName": "DeductionBenefitsGetParams"
+        "publicName": "DeductionGetParams"
       },
       "response": {
         "status": "200",
@@ -8388,6 +8388,7 @@
         "candidate",
         "position",
         "departmentId",
+        "workplaceId",
         "managerId",
         "workerType",
         "compensation",
@@ -8397,6 +8398,7 @@
         "candidate",
         "position",
         "departmentId",
+        "workplaceId",
         "managerId",
         "workerType",
         "compensation",
@@ -8413,6 +8415,10 @@
         },
         {
           "name": "departmentId",
+          "required": false
+        },
+        {
+          "name": "workplaceId",
           "required": false
         },
         {

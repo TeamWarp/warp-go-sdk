@@ -10,10 +10,10 @@ import (
 // with the API. You should not instantiate this service directly, and instead use
 // the [NewBenefitService] method instead.
 type BenefitService struct {
-	Options []option.RequestOption
-	HealthPlans *BenefitHealthPlanService
+	Options         []option.RequestOption
+	HealthPlans     *BenefitHealthPlanService
 	RetirementPlans *BenefitRetirementPlanService
-	Deductions *BenefitDeductionService
+	Deductions      *BenefitDeductionService
 }
 
 // NewBenefitService generates a new service that applies the given options to each request.

@@ -37,8 +37,8 @@ type smokeCase struct {
 }
 
 func _smokeCase0() {
-	healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
-		Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -48,7 +48,7 @@ func _smokeCase0() {
 }
 
 func _smokeCase1() {
-	healthPlan, err := client.Benefits.HealthPlans.BenefitsGet(context.Background(), "chpl_1234")
+	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
 	if err != nil {
 		panic(err)
 	}
@@ -57,8 +57,8 @@ func _smokeCase1() {
 }
 
 func _smokeCase2() {
-	retirementPlan, err := client.Benefits.RetirementPlans.BenefitsList(context.Background(), sdk.BenefitRetirementPlanBenefitsListParams{
-		Statuses: sdk.F[[]sdk.BenefitRetirementPlanBenefitsListParamsStatus]([]sdk.BenefitRetirementPlanBenefitsListParamsStatus{"active"}),
+	retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
+		Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -68,7 +68,7 @@ func _smokeCase2() {
 }
 
 func _smokeCase3() {
-	retirementPlan, err := client.Benefits.RetirementPlans.BenefitsGet(context.Background(), "crpl_1234")
+	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
 	if err != nil {
 		panic(err)
 	}
@@ -77,8 +77,8 @@ func _smokeCase3() {
 }
 
 func _smokeCase4() {
-	deduction, err := client.Benefits.Deductions.BenefitsList(context.Background(), sdk.BenefitDeductionBenefitsListParams{
-		Statuses: sdk.F[[]sdk.BenefitDeductionBenefitsListParamsStatus]([]sdk.BenefitDeductionBenefitsListParamsStatus{"active"}),
+	deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
+		Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -88,7 +88,7 @@ func _smokeCase4() {
 }
 
 func _smokeCase5() {
-	deduction, err := client.Benefits.Deductions.BenefitsGet(context.Background(), "pbdg_1234")
+	deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
 	if err != nil {
 		panic(err)
 	}
@@ -191,8 +191,8 @@ func _smokeCase15() {
 
 func _smokeCase16() {
 	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
-		FieldID: sdk.F[string]("cf_1234"),
-		Value: sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
+		FieldID:  sdk.F[string]("cf_1234"),
+		Value:    sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
 		WorkerID: sdk.F[string]("wrk_1234"),
 	})
 	if err != nil {
@@ -204,7 +204,7 @@ func _smokeCase16() {
 
 func _smokeCase17() {
 	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
-		FieldID: sdk.F[string]("cf_1234"),
+		FieldID:  sdk.F[string]("cf_1234"),
 		WorkerID: sdk.F[string]("wrk_1234"),
 	})
 	if err != nil {
@@ -254,14 +254,14 @@ func _smokeCase22() {
 	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
 			FirstName: sdk.F[string]("x"),
-			LastName: sdk.F[string]("x"),
-			Email: sdk.F[string]("john@joinwarp.com"),
+			LastName:  sdk.F[string]("x"),
+			Email:     sdk.F[string]("john@joinwarp.com"),
 		}),
 		Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
 			PayRate: sdk.F[float64](0),
 		}),
 		Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
-			Title: sdk.F[string]("x"),
+			Title:     sdk.F[string]("x"),
 			StartDate: sdk.F[string]("2000-01-01"),
 		}),
 	})
@@ -377,12 +377,12 @@ func _smokeCase34() {
 			Amount: sdk.F[float64](0),
 		}),
 		DepartmentID: sdk.F[string]("dpt_1234"),
-		Email: sdk.F[string]("john@joinwarp.com"),
-		FirstName: sdk.F[string](""),
-		LastName: sdk.F[string](""),
-		ManagerID: sdk.F[string]("wrk_1234"),
-		Position: sdk.F[string](""),
-		StartDate: sdk.F[string]("2000-01-01"),
+		Email:        sdk.F[string]("john@joinwarp.com"),
+		FirstName:    sdk.F[string](""),
+		LastName:     sdk.F[string](""),
+		ManagerID:    sdk.F[string]("wrk_1234"),
+		Position:     sdk.F[string](""),
+		StartDate:    sdk.F[string]("2000-01-01"),
 		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
 			WorkplaceID: sdk.F[string]("wkp_1234"),
 		}),
@@ -397,12 +397,12 @@ func _smokeCase34() {
 func _smokeCase35() {
 	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
 		DepartmentID: sdk.F[string]("dpt_1234"),
-		Email: sdk.F[string]("john@joinwarp.com"),
-		FirstName: sdk.F[string](""),
-		LastName: sdk.F[string](""),
-		ManagerID: sdk.F[string]("wrk_1234"),
-		Position: sdk.F[string](""),
-		StartDate: sdk.F[string]("2000-01-01"),
+		Email:        sdk.F[string]("john@joinwarp.com"),
+		FirstName:    sdk.F[string](""),
+		LastName:     sdk.F[string](""),
+		ManagerID:    sdk.F[string]("wrk_1234"),
+		Position:     sdk.F[string](""),
+		StartDate:    sdk.F[string]("2000-01-01"),
 	})
 	if err != nil {
 		panic(err)
@@ -432,8 +432,8 @@ func _smokeCase37() {
 func _smokeCase38() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
-			Line1: sdk.F[string]("x"),
-			City: sdk.F[string](""),
+			Line1:      sdk.F[string]("x"),
+			City:       sdk.F[string](""),
 			PostalCode: sdk.F[string](""),
 		}),
 		Name: sdk.F[string](""),
@@ -454,45 +454,44 @@ func _smokeCase39() {
 	fmt.Println(workplace)
 }
 
-
 var cases = []smokeCase{
 	{
-		Operation: "benefitsList",
+		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/benefits/health_plans",
 		Run:       _smokeCase0,
 	},
 
 	{
-		Operation: "benefitsGet",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/benefits/health_plans/{id}",
 		Run:       _smokeCase1,
 	},
 
 	{
-		Operation: "benefitsList",
+		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/benefits/retirement_plans",
 		Run:       _smokeCase2,
 	},
 
 	{
-		Operation: "benefitsGet",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/benefits/retirement_plans/{id}",
 		Run:       _smokeCase3,
 	},
 
 	{
-		Operation: "benefitsList",
+		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/benefits/deductions",
 		Run:       _smokeCase4,
 	},
 
 	{
-		Operation: "benefitsGet",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/benefits/deductions/{id}",
 		Run:       _smokeCase5,
@@ -735,7 +734,6 @@ var cases = []smokeCase{
 		Path:      "/v1/workplaces/{id}",
 		Run:       _smokeCase39,
 	},
-
 }
 
 func selectedCases() []smokeCase {

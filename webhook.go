@@ -65,18 +65,18 @@ type TimeOffRequestCreatedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType TimeOffRequestCreatedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload TimeOffRequestCreatedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   TimeOffRequestCreatedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON timeOffRequestCreatedWebhookEventJSON `json:"-"`
+	CreatedAt string                                `json:"created_at" api:"required"`
+	JSON      timeOffRequestCreatedWebhookEventJSON `json:"-"`
 }
 
 // timeOffRequestCreatedWebhookEventJSON contains the JSON metadata for the struct [TimeOffRequestCreatedWebhookEvent]
 type timeOffRequestCreatedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -108,39 +108,39 @@ type TimeOffRequestCreatedWebhookEventPayload struct {
 	// a string starting with "top_"
 	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	Status TimeOffRequestCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	WorkerID string                                         `json:"workerId" api:"required"`
+	Status   TimeOffRequestCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	StartAt string `json:"startAt" api:"required"`
+	StartAt        string                                                 `json:"startAt" api:"required"`
 	StartRangeType TimeOffRequestCreatedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
 	// a string to be decoded into a Date
-	EndAt string `json:"endAt" api:"required"`
+	EndAt        string                                               `json:"endAt" api:"required"`
 	EndRangeType TimeOffRequestCreatedWebhookEventPayloadEndRangeType `json:"endRangeType" api:"required"`
-	Reason string `json:"reason" api:"required,nullable"`
+	Reason       string                                               `json:"reason" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
+	CreatedAt        string  `json:"createdAt" api:"required"`
 	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	JSON timeOffRequestCreatedWebhookEventPayloadJSON `json:"-"`
+	TimeZone string                                       `json:"timeZone" api:"required,nullable"`
+	JSON     timeOffRequestCreatedWebhookEventPayloadJSON `json:"-"`
 }
 
 // timeOffRequestCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffRequestCreatedWebhookEventPayload]
 type timeOffRequestCreatedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	TimeOffPolicyID apijson.Field
-	WorkerID apijson.Field
-	Status apijson.Field
-	StartAt apijson.Field
-	StartRangeType apijson.Field
-	EndAt apijson.Field
-	EndRangeType apijson.Field
-	Reason apijson.Field
-	CreatedAt apijson.Field
+	ID               apijson.Field
+	TimeOffPolicyID  apijson.Field
+	WorkerID         apijson.Field
+	Status           apijson.Field
+	StartAt          apijson.Field
+	StartRangeType   apijson.Field
+	EndAt            apijson.Field
+	EndRangeType     apijson.Field
+	Reason           apijson.Field
+	CreatedAt        apijson.Field
 	RequestedMinutes apijson.Field
-	TimeZone apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	TimeZone         apijson.Field
+	raw              string
+	ExtraFields      map[string]apijson.Field
 }
 
 func (r *TimeOffRequestCreatedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -154,9 +154,9 @@ func (r timeOffRequestCreatedWebhookEventPayloadJSON) RawJSON() string {
 type TimeOffRequestCreatedWebhookEventPayloadStatus string
 
 const (
-	TimeOffRequestCreatedWebhookEventPayloadStatusPending TimeOffRequestCreatedWebhookEventPayloadStatus = "pending"
+	TimeOffRequestCreatedWebhookEventPayloadStatusPending  TimeOffRequestCreatedWebhookEventPayloadStatus = "pending"
 	TimeOffRequestCreatedWebhookEventPayloadStatusApproved TimeOffRequestCreatedWebhookEventPayloadStatus = "approved"
-	TimeOffRequestCreatedWebhookEventPayloadStatusDenied TimeOffRequestCreatedWebhookEventPayloadStatus = "denied"
+	TimeOffRequestCreatedWebhookEventPayloadStatusDenied   TimeOffRequestCreatedWebhookEventPayloadStatus = "denied"
 )
 
 func (r TimeOffRequestCreatedWebhookEventPayloadStatus) IsKnown() bool {
@@ -170,7 +170,7 @@ func (r TimeOffRequestCreatedWebhookEventPayloadStatus) IsKnown() bool {
 type TimeOffRequestCreatedWebhookEventPayloadStartRangeType string
 
 const (
-	TimeOffRequestCreatedWebhookEventPayloadStartRangeTypeDate TimeOffRequestCreatedWebhookEventPayloadStartRangeType = "date"
+	TimeOffRequestCreatedWebhookEventPayloadStartRangeTypeDate     TimeOffRequestCreatedWebhookEventPayloadStartRangeType = "date"
 	TimeOffRequestCreatedWebhookEventPayloadStartRangeTypeDatetime TimeOffRequestCreatedWebhookEventPayloadStartRangeType = "datetime"
 )
 
@@ -185,7 +185,7 @@ func (r TimeOffRequestCreatedWebhookEventPayloadStartRangeType) IsKnown() bool {
 type TimeOffRequestCreatedWebhookEventPayloadEndRangeType string
 
 const (
-	TimeOffRequestCreatedWebhookEventPayloadEndRangeTypeDate TimeOffRequestCreatedWebhookEventPayloadEndRangeType = "date"
+	TimeOffRequestCreatedWebhookEventPayloadEndRangeTypeDate     TimeOffRequestCreatedWebhookEventPayloadEndRangeType = "date"
 	TimeOffRequestCreatedWebhookEventPayloadEndRangeTypeDatetime TimeOffRequestCreatedWebhookEventPayloadEndRangeType = "datetime"
 )
 
@@ -202,18 +202,18 @@ type TimeOffRequestReviewedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType TimeOffRequestReviewedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload TimeOffRequestReviewedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   TimeOffRequestReviewedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON timeOffRequestReviewedWebhookEventJSON `json:"-"`
+	CreatedAt string                                 `json:"created_at" api:"required"`
+	JSON      timeOffRequestReviewedWebhookEventJSON `json:"-"`
 }
 
 // timeOffRequestReviewedWebhookEventJSON contains the JSON metadata for the struct [TimeOffRequestReviewedWebhookEvent]
 type timeOffRequestReviewedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -245,39 +245,39 @@ type TimeOffRequestReviewedWebhookEventPayload struct {
 	// a string starting with "top_"
 	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	Status TimeOffRequestReviewedWebhookEventPayloadStatus `json:"status" api:"required"`
+	WorkerID string                                          `json:"workerId" api:"required"`
+	Status   TimeOffRequestReviewedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	StartAt string `json:"startAt" api:"required"`
+	StartAt        string                                                  `json:"startAt" api:"required"`
 	StartRangeType TimeOffRequestReviewedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
 	// a string to be decoded into a Date
-	EndAt string `json:"endAt" api:"required"`
+	EndAt        string                                                `json:"endAt" api:"required"`
 	EndRangeType TimeOffRequestReviewedWebhookEventPayloadEndRangeType `json:"endRangeType" api:"required"`
-	Reason string `json:"reason" api:"required,nullable"`
+	Reason       string                                                `json:"reason" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
+	CreatedAt        string  `json:"createdAt" api:"required"`
 	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	JSON timeOffRequestReviewedWebhookEventPayloadJSON `json:"-"`
+	TimeZone string                                        `json:"timeZone" api:"required,nullable"`
+	JSON     timeOffRequestReviewedWebhookEventPayloadJSON `json:"-"`
 }
 
 // timeOffRequestReviewedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffRequestReviewedWebhookEventPayload]
 type timeOffRequestReviewedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	TimeOffPolicyID apijson.Field
-	WorkerID apijson.Field
-	Status apijson.Field
-	StartAt apijson.Field
-	StartRangeType apijson.Field
-	EndAt apijson.Field
-	EndRangeType apijson.Field
-	Reason apijson.Field
-	CreatedAt apijson.Field
+	ID               apijson.Field
+	TimeOffPolicyID  apijson.Field
+	WorkerID         apijson.Field
+	Status           apijson.Field
+	StartAt          apijson.Field
+	StartRangeType   apijson.Field
+	EndAt            apijson.Field
+	EndRangeType     apijson.Field
+	Reason           apijson.Field
+	CreatedAt        apijson.Field
 	RequestedMinutes apijson.Field
-	TimeZone apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	TimeZone         apijson.Field
+	raw              string
+	ExtraFields      map[string]apijson.Field
 }
 
 func (r *TimeOffRequestReviewedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -291,9 +291,9 @@ func (r timeOffRequestReviewedWebhookEventPayloadJSON) RawJSON() string {
 type TimeOffRequestReviewedWebhookEventPayloadStatus string
 
 const (
-	TimeOffRequestReviewedWebhookEventPayloadStatusPending TimeOffRequestReviewedWebhookEventPayloadStatus = "pending"
+	TimeOffRequestReviewedWebhookEventPayloadStatusPending  TimeOffRequestReviewedWebhookEventPayloadStatus = "pending"
 	TimeOffRequestReviewedWebhookEventPayloadStatusApproved TimeOffRequestReviewedWebhookEventPayloadStatus = "approved"
-	TimeOffRequestReviewedWebhookEventPayloadStatusDenied TimeOffRequestReviewedWebhookEventPayloadStatus = "denied"
+	TimeOffRequestReviewedWebhookEventPayloadStatusDenied   TimeOffRequestReviewedWebhookEventPayloadStatus = "denied"
 )
 
 func (r TimeOffRequestReviewedWebhookEventPayloadStatus) IsKnown() bool {
@@ -307,7 +307,7 @@ func (r TimeOffRequestReviewedWebhookEventPayloadStatus) IsKnown() bool {
 type TimeOffRequestReviewedWebhookEventPayloadStartRangeType string
 
 const (
-	TimeOffRequestReviewedWebhookEventPayloadStartRangeTypeDate TimeOffRequestReviewedWebhookEventPayloadStartRangeType = "date"
+	TimeOffRequestReviewedWebhookEventPayloadStartRangeTypeDate     TimeOffRequestReviewedWebhookEventPayloadStartRangeType = "date"
 	TimeOffRequestReviewedWebhookEventPayloadStartRangeTypeDatetime TimeOffRequestReviewedWebhookEventPayloadStartRangeType = "datetime"
 )
 
@@ -322,7 +322,7 @@ func (r TimeOffRequestReviewedWebhookEventPayloadStartRangeType) IsKnown() bool 
 type TimeOffRequestReviewedWebhookEventPayloadEndRangeType string
 
 const (
-	TimeOffRequestReviewedWebhookEventPayloadEndRangeTypeDate TimeOffRequestReviewedWebhookEventPayloadEndRangeType = "date"
+	TimeOffRequestReviewedWebhookEventPayloadEndRangeTypeDate     TimeOffRequestReviewedWebhookEventPayloadEndRangeType = "date"
 	TimeOffRequestReviewedWebhookEventPayloadEndRangeTypeDatetime TimeOffRequestReviewedWebhookEventPayloadEndRangeType = "datetime"
 )
 
@@ -339,18 +339,18 @@ type TimeOffRequestDeletedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType TimeOffRequestDeletedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload TimeOffRequestDeletedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   TimeOffRequestDeletedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON timeOffRequestDeletedWebhookEventJSON `json:"-"`
+	CreatedAt string                                `json:"created_at" api:"required"`
+	JSON      timeOffRequestDeletedWebhookEventJSON `json:"-"`
 }
 
 // timeOffRequestDeletedWebhookEventJSON contains the JSON metadata for the struct [TimeOffRequestDeletedWebhookEvent]
 type timeOffRequestDeletedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -382,39 +382,39 @@ type TimeOffRequestDeletedWebhookEventPayload struct {
 	// a string starting with "top_"
 	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	Status TimeOffRequestDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	WorkerID string                                         `json:"workerId" api:"required"`
+	Status   TimeOffRequestDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	StartAt string `json:"startAt" api:"required"`
+	StartAt        string                                                 `json:"startAt" api:"required"`
 	StartRangeType TimeOffRequestDeletedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
 	// a string to be decoded into a Date
-	EndAt string `json:"endAt" api:"required"`
+	EndAt        string                                               `json:"endAt" api:"required"`
 	EndRangeType TimeOffRequestDeletedWebhookEventPayloadEndRangeType `json:"endRangeType" api:"required"`
-	Reason string `json:"reason" api:"required,nullable"`
+	Reason       string                                               `json:"reason" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
+	CreatedAt        string  `json:"createdAt" api:"required"`
 	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	JSON timeOffRequestDeletedWebhookEventPayloadJSON `json:"-"`
+	TimeZone string                                       `json:"timeZone" api:"required,nullable"`
+	JSON     timeOffRequestDeletedWebhookEventPayloadJSON `json:"-"`
 }
 
 // timeOffRequestDeletedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffRequestDeletedWebhookEventPayload]
 type timeOffRequestDeletedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	TimeOffPolicyID apijson.Field
-	WorkerID apijson.Field
-	Status apijson.Field
-	StartAt apijson.Field
-	StartRangeType apijson.Field
-	EndAt apijson.Field
-	EndRangeType apijson.Field
-	Reason apijson.Field
-	CreatedAt apijson.Field
+	ID               apijson.Field
+	TimeOffPolicyID  apijson.Field
+	WorkerID         apijson.Field
+	Status           apijson.Field
+	StartAt          apijson.Field
+	StartRangeType   apijson.Field
+	EndAt            apijson.Field
+	EndRangeType     apijson.Field
+	Reason           apijson.Field
+	CreatedAt        apijson.Field
 	RequestedMinutes apijson.Field
-	TimeZone apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	TimeZone         apijson.Field
+	raw              string
+	ExtraFields      map[string]apijson.Field
 }
 
 func (r *TimeOffRequestDeletedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -428,9 +428,9 @@ func (r timeOffRequestDeletedWebhookEventPayloadJSON) RawJSON() string {
 type TimeOffRequestDeletedWebhookEventPayloadStatus string
 
 const (
-	TimeOffRequestDeletedWebhookEventPayloadStatusPending TimeOffRequestDeletedWebhookEventPayloadStatus = "pending"
+	TimeOffRequestDeletedWebhookEventPayloadStatusPending  TimeOffRequestDeletedWebhookEventPayloadStatus = "pending"
 	TimeOffRequestDeletedWebhookEventPayloadStatusApproved TimeOffRequestDeletedWebhookEventPayloadStatus = "approved"
-	TimeOffRequestDeletedWebhookEventPayloadStatusDenied TimeOffRequestDeletedWebhookEventPayloadStatus = "denied"
+	TimeOffRequestDeletedWebhookEventPayloadStatusDenied   TimeOffRequestDeletedWebhookEventPayloadStatus = "denied"
 )
 
 func (r TimeOffRequestDeletedWebhookEventPayloadStatus) IsKnown() bool {
@@ -444,7 +444,7 @@ func (r TimeOffRequestDeletedWebhookEventPayloadStatus) IsKnown() bool {
 type TimeOffRequestDeletedWebhookEventPayloadStartRangeType string
 
 const (
-	TimeOffRequestDeletedWebhookEventPayloadStartRangeTypeDate TimeOffRequestDeletedWebhookEventPayloadStartRangeType = "date"
+	TimeOffRequestDeletedWebhookEventPayloadStartRangeTypeDate     TimeOffRequestDeletedWebhookEventPayloadStartRangeType = "date"
 	TimeOffRequestDeletedWebhookEventPayloadStartRangeTypeDatetime TimeOffRequestDeletedWebhookEventPayloadStartRangeType = "datetime"
 )
 
@@ -459,7 +459,7 @@ func (r TimeOffRequestDeletedWebhookEventPayloadStartRangeType) IsKnown() bool {
 type TimeOffRequestDeletedWebhookEventPayloadEndRangeType string
 
 const (
-	TimeOffRequestDeletedWebhookEventPayloadEndRangeTypeDate TimeOffRequestDeletedWebhookEventPayloadEndRangeType = "date"
+	TimeOffRequestDeletedWebhookEventPayloadEndRangeTypeDate     TimeOffRequestDeletedWebhookEventPayloadEndRangeType = "date"
 	TimeOffRequestDeletedWebhookEventPayloadEndRangeTypeDatetime TimeOffRequestDeletedWebhookEventPayloadEndRangeType = "datetime"
 )
 
@@ -476,18 +476,18 @@ type TimeOffBalanceAdjustedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType TimeOffBalanceAdjustedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload TimeOffBalanceAdjustedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   TimeOffBalanceAdjustedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON timeOffBalanceAdjustedWebhookEventJSON `json:"-"`
+	CreatedAt string                                 `json:"created_at" api:"required"`
+	JSON      timeOffBalanceAdjustedWebhookEventJSON `json:"-"`
 }
 
 // timeOffBalanceAdjustedWebhookEventJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEvent]
 type timeOffBalanceAdjustedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -524,22 +524,22 @@ type TimeOffBalanceAdjustedWebhookEventPayload struct {
 	AdjustmentMinutes float64 `json:"adjustmentMinutes"`
 	// The date the adjustment takes effect. Omitted when no balance snapshot was
 	// captured.
-	EffectiveDate string `json:"effectiveDate"`
+	EffectiveDate   string                                                   `json:"effectiveDate"`
 	PreviousBalance TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance `json:"previousBalance"`
-	NewBalance TimeOffBalanceAdjustedWebhookEventPayloadNewBalance `json:"newBalance"`
-	JSON timeOffBalanceAdjustedWebhookEventPayloadJSON `json:"-"`
+	NewBalance      TimeOffBalanceAdjustedWebhookEventPayloadNewBalance      `json:"newBalance"`
+	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON            `json:"-"`
 }
 
 // timeOffBalanceAdjustedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayload]
 type timeOffBalanceAdjustedWebhookEventPayloadJSON struct {
-	WorkerID apijson.Field
-	PolicyID apijson.Field
+	WorkerID          apijson.Field
+	PolicyID          apijson.Field
 	AdjustmentMinutes apijson.Field
-	EffectiveDate apijson.Field
-	PreviousBalance apijson.Field
-	NewBalance apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	EffectiveDate     apijson.Field
+	PreviousBalance   apijson.Field
+	NewBalance        apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *TimeOffBalanceAdjustedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -551,23 +551,23 @@ func (r timeOffBalanceAdjustedWebhookEventPayloadJSON) RawJSON() string {
 }
 
 type TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance struct {
-	AccruedUnlocked float64 `json:"accruedUnlocked" api:"required"`
-	AccruedLocked float64 `json:"accruedLocked" api:"required"`
-	Used float64 `json:"used" api:"required"`
-	Holds float64 `json:"holds" api:"required"`
-	Available float64 `json:"available" api:"required"`
-	JSON timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON `json:"-"`
+	AccruedUnlocked float64                                                      `json:"accruedUnlocked" api:"required"`
+	AccruedLocked   float64                                                      `json:"accruedLocked" api:"required"`
+	Used            float64                                                      `json:"used" api:"required"`
+	Holds           float64                                                      `json:"holds" api:"required"`
+	Available       float64                                                      `json:"available" api:"required"`
+	JSON            timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON `json:"-"`
 }
 
 // timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance]
 type timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON struct {
 	AccruedUnlocked apijson.Field
-	AccruedLocked apijson.Field
-	Used apijson.Field
-	Holds apijson.Field
-	Available apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	AccruedLocked   apijson.Field
+	Used            apijson.Field
+	Holds           apijson.Field
+	Available       apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance) UnmarshalJSON(data []byte) (err error) {
@@ -579,23 +579,23 @@ func (r timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON) RawJSON() 
 }
 
 type TimeOffBalanceAdjustedWebhookEventPayloadNewBalance struct {
-	AccruedUnlocked float64 `json:"accruedUnlocked" api:"required"`
-	AccruedLocked float64 `json:"accruedLocked" api:"required"`
-	Used float64 `json:"used" api:"required"`
-	Holds float64 `json:"holds" api:"required"`
-	Available float64 `json:"available" api:"required"`
-	JSON timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON `json:"-"`
+	AccruedUnlocked float64                                                 `json:"accruedUnlocked" api:"required"`
+	AccruedLocked   float64                                                 `json:"accruedLocked" api:"required"`
+	Used            float64                                                 `json:"used" api:"required"`
+	Holds           float64                                                 `json:"holds" api:"required"`
+	Available       float64                                                 `json:"available" api:"required"`
+	JSON            timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON `json:"-"`
 }
 
 // timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayloadNewBalance]
 type timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON struct {
 	AccruedUnlocked apijson.Field
-	AccruedLocked apijson.Field
-	Used apijson.Field
-	Holds apijson.Field
-	Available apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	AccruedLocked   apijson.Field
+	Used            apijson.Field
+	Holds           apijson.Field
+	Available       apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *TimeOffBalanceAdjustedWebhookEventPayloadNewBalance) UnmarshalJSON(data []byte) (err error) {
@@ -611,18 +611,18 @@ type WorkerCreatedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerCreatedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerCreatedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerCreatedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerCreatedWebhookEventJSON `json:"-"`
+	CreatedAt string                        `json:"created_at" api:"required"`
+	JSON      workerCreatedWebhookEventJSON `json:"-"`
 }
 
 // workerCreatedWebhookEventJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEvent]
 type workerCreatedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -651,20 +651,20 @@ func (r WorkerCreatedWebhookEventEventType) IsKnown() bool {
 
 type WorkerCreatedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerCreatedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                 `json:"id" api:"required"`
+	Position string                                 `json:"position" api:"required"`
+	Type     WorkerCreatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -673,29 +673,29 @@ type WorkerCreatedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerCreatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerCreatedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerCreatedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayload]
 type workerCreatedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerCreatedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -709,7 +709,7 @@ func (r workerCreatedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerCreatedWebhookEventPayloadType string
 
 const (
-	WorkerCreatedWebhookEventPayloadTypeEmployee WorkerCreatedWebhookEventPayloadType = "employee"
+	WorkerCreatedWebhookEventPayloadTypeEmployee   WorkerCreatedWebhookEventPayloadType = "employee"
 	WorkerCreatedWebhookEventPayloadTypeContractor WorkerCreatedWebhookEventPayloadType = "contractor"
 )
 
@@ -724,12 +724,12 @@ func (r WorkerCreatedWebhookEventPayloadType) IsKnown() bool {
 type WorkerCreatedWebhookEventPayloadStatus string
 
 const (
-	WorkerCreatedWebhookEventPayloadStatusDraft WorkerCreatedWebhookEventPayloadStatus = "draft"
-	WorkerCreatedWebhookEventPayloadStatusInvited WorkerCreatedWebhookEventPayloadStatus = "invited"
-	WorkerCreatedWebhookEventPayloadStatusOnboarding WorkerCreatedWebhookEventPayloadStatus = "onboarding"
-	WorkerCreatedWebhookEventPayloadStatusActive WorkerCreatedWebhookEventPayloadStatus = "active"
+	WorkerCreatedWebhookEventPayloadStatusDraft       WorkerCreatedWebhookEventPayloadStatus = "draft"
+	WorkerCreatedWebhookEventPayloadStatusInvited     WorkerCreatedWebhookEventPayloadStatus = "invited"
+	WorkerCreatedWebhookEventPayloadStatusOnboarding  WorkerCreatedWebhookEventPayloadStatus = "onboarding"
+	WorkerCreatedWebhookEventPayloadStatusActive      WorkerCreatedWebhookEventPayloadStatus = "active"
 	WorkerCreatedWebhookEventPayloadStatusOffboarding WorkerCreatedWebhookEventPayloadStatus = "offboarding"
-	WorkerCreatedWebhookEventPayloadStatusInactive WorkerCreatedWebhookEventPayloadStatus = "inactive"
+	WorkerCreatedWebhookEventPayloadStatusInactive    WorkerCreatedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerCreatedWebhookEventPayloadStatus) IsKnown() bool {
@@ -742,15 +742,15 @@ func (r WorkerCreatedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerCreatedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                         `json:"id" api:"required"`
+	Name string                                         `json:"name" api:"required"`
 	JSON workerCreatedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadDepartment]
 type workerCreatedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -768,18 +768,18 @@ type WorkerUpdatedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerUpdatedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerUpdatedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerUpdatedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerUpdatedWebhookEventJSON `json:"-"`
+	CreatedAt string                        `json:"created_at" api:"required"`
+	JSON      workerUpdatedWebhookEventJSON `json:"-"`
 }
 
 // workerUpdatedWebhookEventJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEvent]
 type workerUpdatedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -808,20 +808,20 @@ func (r WorkerUpdatedWebhookEventEventType) IsKnown() bool {
 
 type WorkerUpdatedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerUpdatedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerUpdatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                 `json:"id" api:"required"`
+	Position string                                 `json:"position" api:"required"`
+	Type     WorkerUpdatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerUpdatedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -830,29 +830,29 @@ type WorkerUpdatedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerUpdatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerUpdatedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerUpdatedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerUpdatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayload]
 type workerUpdatedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerUpdatedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -866,7 +866,7 @@ func (r workerUpdatedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerUpdatedWebhookEventPayloadType string
 
 const (
-	WorkerUpdatedWebhookEventPayloadTypeEmployee WorkerUpdatedWebhookEventPayloadType = "employee"
+	WorkerUpdatedWebhookEventPayloadTypeEmployee   WorkerUpdatedWebhookEventPayloadType = "employee"
 	WorkerUpdatedWebhookEventPayloadTypeContractor WorkerUpdatedWebhookEventPayloadType = "contractor"
 )
 
@@ -881,12 +881,12 @@ func (r WorkerUpdatedWebhookEventPayloadType) IsKnown() bool {
 type WorkerUpdatedWebhookEventPayloadStatus string
 
 const (
-	WorkerUpdatedWebhookEventPayloadStatusDraft WorkerUpdatedWebhookEventPayloadStatus = "draft"
-	WorkerUpdatedWebhookEventPayloadStatusInvited WorkerUpdatedWebhookEventPayloadStatus = "invited"
-	WorkerUpdatedWebhookEventPayloadStatusOnboarding WorkerUpdatedWebhookEventPayloadStatus = "onboarding"
-	WorkerUpdatedWebhookEventPayloadStatusActive WorkerUpdatedWebhookEventPayloadStatus = "active"
+	WorkerUpdatedWebhookEventPayloadStatusDraft       WorkerUpdatedWebhookEventPayloadStatus = "draft"
+	WorkerUpdatedWebhookEventPayloadStatusInvited     WorkerUpdatedWebhookEventPayloadStatus = "invited"
+	WorkerUpdatedWebhookEventPayloadStatusOnboarding  WorkerUpdatedWebhookEventPayloadStatus = "onboarding"
+	WorkerUpdatedWebhookEventPayloadStatusActive      WorkerUpdatedWebhookEventPayloadStatus = "active"
 	WorkerUpdatedWebhookEventPayloadStatusOffboarding WorkerUpdatedWebhookEventPayloadStatus = "offboarding"
-	WorkerUpdatedWebhookEventPayloadStatusInactive WorkerUpdatedWebhookEventPayloadStatus = "inactive"
+	WorkerUpdatedWebhookEventPayloadStatusInactive    WorkerUpdatedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerUpdatedWebhookEventPayloadStatus) IsKnown() bool {
@@ -899,15 +899,15 @@ func (r WorkerUpdatedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerUpdatedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                         `json:"id" api:"required"`
+	Name string                                         `json:"name" api:"required"`
 	JSON workerUpdatedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerUpdatedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadDepartment]
 type workerUpdatedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -925,18 +925,18 @@ type WorkerDeletedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerDeletedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerDeletedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerDeletedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerDeletedWebhookEventJSON `json:"-"`
+	CreatedAt string                        `json:"created_at" api:"required"`
+	JSON      workerDeletedWebhookEventJSON `json:"-"`
 }
 
 // workerDeletedWebhookEventJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEvent]
 type workerDeletedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -965,20 +965,20 @@ func (r WorkerDeletedWebhookEventEventType) IsKnown() bool {
 
 type WorkerDeletedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerDeletedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                 `json:"id" api:"required"`
+	Position string                                 `json:"position" api:"required"`
+	Type     WorkerDeletedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -987,29 +987,29 @@ type WorkerDeletedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerDeletedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerDeletedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerDeletedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerDeletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayload]
 type workerDeletedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerDeletedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1023,7 +1023,7 @@ func (r workerDeletedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerDeletedWebhookEventPayloadType string
 
 const (
-	WorkerDeletedWebhookEventPayloadTypeEmployee WorkerDeletedWebhookEventPayloadType = "employee"
+	WorkerDeletedWebhookEventPayloadTypeEmployee   WorkerDeletedWebhookEventPayloadType = "employee"
 	WorkerDeletedWebhookEventPayloadTypeContractor WorkerDeletedWebhookEventPayloadType = "contractor"
 )
 
@@ -1038,12 +1038,12 @@ func (r WorkerDeletedWebhookEventPayloadType) IsKnown() bool {
 type WorkerDeletedWebhookEventPayloadStatus string
 
 const (
-	WorkerDeletedWebhookEventPayloadStatusDraft WorkerDeletedWebhookEventPayloadStatus = "draft"
-	WorkerDeletedWebhookEventPayloadStatusInvited WorkerDeletedWebhookEventPayloadStatus = "invited"
-	WorkerDeletedWebhookEventPayloadStatusOnboarding WorkerDeletedWebhookEventPayloadStatus = "onboarding"
-	WorkerDeletedWebhookEventPayloadStatusActive WorkerDeletedWebhookEventPayloadStatus = "active"
+	WorkerDeletedWebhookEventPayloadStatusDraft       WorkerDeletedWebhookEventPayloadStatus = "draft"
+	WorkerDeletedWebhookEventPayloadStatusInvited     WorkerDeletedWebhookEventPayloadStatus = "invited"
+	WorkerDeletedWebhookEventPayloadStatusOnboarding  WorkerDeletedWebhookEventPayloadStatus = "onboarding"
+	WorkerDeletedWebhookEventPayloadStatusActive      WorkerDeletedWebhookEventPayloadStatus = "active"
 	WorkerDeletedWebhookEventPayloadStatusOffboarding WorkerDeletedWebhookEventPayloadStatus = "offboarding"
-	WorkerDeletedWebhookEventPayloadStatusInactive WorkerDeletedWebhookEventPayloadStatus = "inactive"
+	WorkerDeletedWebhookEventPayloadStatusInactive    WorkerDeletedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerDeletedWebhookEventPayloadStatus) IsKnown() bool {
@@ -1056,15 +1056,15 @@ func (r WorkerDeletedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerDeletedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                         `json:"id" api:"required"`
+	Name string                                         `json:"name" api:"required"`
 	JSON workerDeletedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerDeletedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadDepartment]
 type workerDeletedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1082,18 +1082,18 @@ type WorkerInviteSentWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerInviteSentWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerInviteSentWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerInviteSentWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerInviteSentWebhookEventJSON `json:"-"`
+	CreatedAt string                           `json:"created_at" api:"required"`
+	JSON      workerInviteSentWebhookEventJSON `json:"-"`
 }
 
 // workerInviteSentWebhookEventJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEvent]
 type workerInviteSentWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1122,20 +1122,20 @@ func (r WorkerInviteSentWebhookEventEventType) IsKnown() bool {
 
 type WorkerInviteSentWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerInviteSentWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerInviteSentWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                    `json:"id" api:"required"`
+	Position string                                    `json:"position" api:"required"`
+	Type     WorkerInviteSentWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerInviteSentWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1144,29 +1144,29 @@ type WorkerInviteSentWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteSentWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerInviteSentWebhookEventPayloadJSON `json:"-"`
+	JSON       workerInviteSentWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerInviteSentWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayload]
 type workerInviteSentWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerInviteSentWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1180,7 +1180,7 @@ func (r workerInviteSentWebhookEventPayloadJSON) RawJSON() string {
 type WorkerInviteSentWebhookEventPayloadType string
 
 const (
-	WorkerInviteSentWebhookEventPayloadTypeEmployee WorkerInviteSentWebhookEventPayloadType = "employee"
+	WorkerInviteSentWebhookEventPayloadTypeEmployee   WorkerInviteSentWebhookEventPayloadType = "employee"
 	WorkerInviteSentWebhookEventPayloadTypeContractor WorkerInviteSentWebhookEventPayloadType = "contractor"
 )
 
@@ -1195,12 +1195,12 @@ func (r WorkerInviteSentWebhookEventPayloadType) IsKnown() bool {
 type WorkerInviteSentWebhookEventPayloadStatus string
 
 const (
-	WorkerInviteSentWebhookEventPayloadStatusDraft WorkerInviteSentWebhookEventPayloadStatus = "draft"
-	WorkerInviteSentWebhookEventPayloadStatusInvited WorkerInviteSentWebhookEventPayloadStatus = "invited"
-	WorkerInviteSentWebhookEventPayloadStatusOnboarding WorkerInviteSentWebhookEventPayloadStatus = "onboarding"
-	WorkerInviteSentWebhookEventPayloadStatusActive WorkerInviteSentWebhookEventPayloadStatus = "active"
+	WorkerInviteSentWebhookEventPayloadStatusDraft       WorkerInviteSentWebhookEventPayloadStatus = "draft"
+	WorkerInviteSentWebhookEventPayloadStatusInvited     WorkerInviteSentWebhookEventPayloadStatus = "invited"
+	WorkerInviteSentWebhookEventPayloadStatusOnboarding  WorkerInviteSentWebhookEventPayloadStatus = "onboarding"
+	WorkerInviteSentWebhookEventPayloadStatusActive      WorkerInviteSentWebhookEventPayloadStatus = "active"
 	WorkerInviteSentWebhookEventPayloadStatusOffboarding WorkerInviteSentWebhookEventPayloadStatus = "offboarding"
-	WorkerInviteSentWebhookEventPayloadStatusInactive WorkerInviteSentWebhookEventPayloadStatus = "inactive"
+	WorkerInviteSentWebhookEventPayloadStatusInactive    WorkerInviteSentWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerInviteSentWebhookEventPayloadStatus) IsKnown() bool {
@@ -1213,15 +1213,15 @@ func (r WorkerInviteSentWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerInviteSentWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                            `json:"id" api:"required"`
+	Name string                                            `json:"name" api:"required"`
 	JSON workerInviteSentWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerInviteSentWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadDepartment]
 type workerInviteSentWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1239,18 +1239,18 @@ type WorkerInviteAcceptedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerInviteAcceptedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerInviteAcceptedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerInviteAcceptedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerInviteAcceptedWebhookEventJSON `json:"-"`
+	CreatedAt string                               `json:"created_at" api:"required"`
+	JSON      workerInviteAcceptedWebhookEventJSON `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEvent]
 type workerInviteAcceptedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1279,20 +1279,20 @@ func (r WorkerInviteAcceptedWebhookEventEventType) IsKnown() bool {
 
 type WorkerInviteAcceptedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerInviteAcceptedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerInviteAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                        `json:"id" api:"required"`
+	Position string                                        `json:"position" api:"required"`
+	Type     WorkerInviteAcceptedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerInviteAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1301,29 +1301,29 @@ type WorkerInviteAcceptedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteAcceptedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerInviteAcceptedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerInviteAcceptedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayload]
 type workerInviteAcceptedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerInviteAcceptedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1337,7 +1337,7 @@ func (r workerInviteAcceptedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerInviteAcceptedWebhookEventPayloadType string
 
 const (
-	WorkerInviteAcceptedWebhookEventPayloadTypeEmployee WorkerInviteAcceptedWebhookEventPayloadType = "employee"
+	WorkerInviteAcceptedWebhookEventPayloadTypeEmployee   WorkerInviteAcceptedWebhookEventPayloadType = "employee"
 	WorkerInviteAcceptedWebhookEventPayloadTypeContractor WorkerInviteAcceptedWebhookEventPayloadType = "contractor"
 )
 
@@ -1352,12 +1352,12 @@ func (r WorkerInviteAcceptedWebhookEventPayloadType) IsKnown() bool {
 type WorkerInviteAcceptedWebhookEventPayloadStatus string
 
 const (
-	WorkerInviteAcceptedWebhookEventPayloadStatusDraft WorkerInviteAcceptedWebhookEventPayloadStatus = "draft"
-	WorkerInviteAcceptedWebhookEventPayloadStatusInvited WorkerInviteAcceptedWebhookEventPayloadStatus = "invited"
-	WorkerInviteAcceptedWebhookEventPayloadStatusOnboarding WorkerInviteAcceptedWebhookEventPayloadStatus = "onboarding"
-	WorkerInviteAcceptedWebhookEventPayloadStatusActive WorkerInviteAcceptedWebhookEventPayloadStatus = "active"
+	WorkerInviteAcceptedWebhookEventPayloadStatusDraft       WorkerInviteAcceptedWebhookEventPayloadStatus = "draft"
+	WorkerInviteAcceptedWebhookEventPayloadStatusInvited     WorkerInviteAcceptedWebhookEventPayloadStatus = "invited"
+	WorkerInviteAcceptedWebhookEventPayloadStatusOnboarding  WorkerInviteAcceptedWebhookEventPayloadStatus = "onboarding"
+	WorkerInviteAcceptedWebhookEventPayloadStatusActive      WorkerInviteAcceptedWebhookEventPayloadStatus = "active"
 	WorkerInviteAcceptedWebhookEventPayloadStatusOffboarding WorkerInviteAcceptedWebhookEventPayloadStatus = "offboarding"
-	WorkerInviteAcceptedWebhookEventPayloadStatusInactive WorkerInviteAcceptedWebhookEventPayloadStatus = "inactive"
+	WorkerInviteAcceptedWebhookEventPayloadStatusInactive    WorkerInviteAcceptedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerInviteAcceptedWebhookEventPayloadStatus) IsKnown() bool {
@@ -1370,15 +1370,15 @@ func (r WorkerInviteAcceptedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerInviteAcceptedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                                `json:"id" api:"required"`
+	Name string                                                `json:"name" api:"required"`
 	JSON workerInviteAcceptedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadDepartment]
 type workerInviteAcceptedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1396,18 +1396,18 @@ type WorkerOnboardingCompletedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerOnboardingCompletedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerOnboardingCompletedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerOnboardingCompletedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerOnboardingCompletedWebhookEventJSON `json:"-"`
+	CreatedAt string                                    `json:"created_at" api:"required"`
+	JSON      workerOnboardingCompletedWebhookEventJSON `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEvent]
 type workerOnboardingCompletedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1436,20 +1436,20 @@ func (r WorkerOnboardingCompletedWebhookEventEventType) IsKnown() bool {
 
 type WorkerOnboardingCompletedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerOnboardingCompletedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerOnboardingCompletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                             `json:"id" api:"required"`
+	Position string                                             `json:"position" api:"required"`
+	Type     WorkerOnboardingCompletedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerOnboardingCompletedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1458,29 +1458,29 @@ type WorkerOnboardingCompletedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOnboardingCompletedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerOnboardingCompletedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerOnboardingCompletedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayload]
 type workerOnboardingCompletedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerOnboardingCompletedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1494,7 +1494,7 @@ func (r workerOnboardingCompletedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerOnboardingCompletedWebhookEventPayloadType string
 
 const (
-	WorkerOnboardingCompletedWebhookEventPayloadTypeEmployee WorkerOnboardingCompletedWebhookEventPayloadType = "employee"
+	WorkerOnboardingCompletedWebhookEventPayloadTypeEmployee   WorkerOnboardingCompletedWebhookEventPayloadType = "employee"
 	WorkerOnboardingCompletedWebhookEventPayloadTypeContractor WorkerOnboardingCompletedWebhookEventPayloadType = "contractor"
 )
 
@@ -1509,12 +1509,12 @@ func (r WorkerOnboardingCompletedWebhookEventPayloadType) IsKnown() bool {
 type WorkerOnboardingCompletedWebhookEventPayloadStatus string
 
 const (
-	WorkerOnboardingCompletedWebhookEventPayloadStatusDraft WorkerOnboardingCompletedWebhookEventPayloadStatus = "draft"
-	WorkerOnboardingCompletedWebhookEventPayloadStatusInvited WorkerOnboardingCompletedWebhookEventPayloadStatus = "invited"
-	WorkerOnboardingCompletedWebhookEventPayloadStatusOnboarding WorkerOnboardingCompletedWebhookEventPayloadStatus = "onboarding"
-	WorkerOnboardingCompletedWebhookEventPayloadStatusActive WorkerOnboardingCompletedWebhookEventPayloadStatus = "active"
+	WorkerOnboardingCompletedWebhookEventPayloadStatusDraft       WorkerOnboardingCompletedWebhookEventPayloadStatus = "draft"
+	WorkerOnboardingCompletedWebhookEventPayloadStatusInvited     WorkerOnboardingCompletedWebhookEventPayloadStatus = "invited"
+	WorkerOnboardingCompletedWebhookEventPayloadStatusOnboarding  WorkerOnboardingCompletedWebhookEventPayloadStatus = "onboarding"
+	WorkerOnboardingCompletedWebhookEventPayloadStatusActive      WorkerOnboardingCompletedWebhookEventPayloadStatus = "active"
 	WorkerOnboardingCompletedWebhookEventPayloadStatusOffboarding WorkerOnboardingCompletedWebhookEventPayloadStatus = "offboarding"
-	WorkerOnboardingCompletedWebhookEventPayloadStatusInactive WorkerOnboardingCompletedWebhookEventPayloadStatus = "inactive"
+	WorkerOnboardingCompletedWebhookEventPayloadStatusInactive    WorkerOnboardingCompletedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerOnboardingCompletedWebhookEventPayloadStatus) IsKnown() bool {
@@ -1527,15 +1527,15 @@ func (r WorkerOnboardingCompletedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerOnboardingCompletedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                                     `json:"id" api:"required"`
+	Name string                                                     `json:"name" api:"required"`
 	JSON workerOnboardingCompletedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadDepartment]
 type workerOnboardingCompletedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1553,18 +1553,18 @@ type WorkerOffboardingStartedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerOffboardingStartedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerOffboardingStartedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerOffboardingStartedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerOffboardingStartedWebhookEventJSON `json:"-"`
+	CreatedAt string                                   `json:"created_at" api:"required"`
+	JSON      workerOffboardingStartedWebhookEventJSON `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEvent]
 type workerOffboardingStartedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1593,20 +1593,20 @@ func (r WorkerOffboardingStartedWebhookEventEventType) IsKnown() bool {
 
 type WorkerOffboardingStartedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerOffboardingStartedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerOffboardingStartedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                            `json:"id" api:"required"`
+	Position string                                            `json:"position" api:"required"`
+	Type     WorkerOffboardingStartedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerOffboardingStartedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1615,29 +1615,29 @@ type WorkerOffboardingStartedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOffboardingStartedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerOffboardingStartedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerOffboardingStartedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayload]
 type workerOffboardingStartedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerOffboardingStartedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1651,7 +1651,7 @@ func (r workerOffboardingStartedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerOffboardingStartedWebhookEventPayloadType string
 
 const (
-	WorkerOffboardingStartedWebhookEventPayloadTypeEmployee WorkerOffboardingStartedWebhookEventPayloadType = "employee"
+	WorkerOffboardingStartedWebhookEventPayloadTypeEmployee   WorkerOffboardingStartedWebhookEventPayloadType = "employee"
 	WorkerOffboardingStartedWebhookEventPayloadTypeContractor WorkerOffboardingStartedWebhookEventPayloadType = "contractor"
 )
 
@@ -1666,12 +1666,12 @@ func (r WorkerOffboardingStartedWebhookEventPayloadType) IsKnown() bool {
 type WorkerOffboardingStartedWebhookEventPayloadStatus string
 
 const (
-	WorkerOffboardingStartedWebhookEventPayloadStatusDraft WorkerOffboardingStartedWebhookEventPayloadStatus = "draft"
-	WorkerOffboardingStartedWebhookEventPayloadStatusInvited WorkerOffboardingStartedWebhookEventPayloadStatus = "invited"
-	WorkerOffboardingStartedWebhookEventPayloadStatusOnboarding WorkerOffboardingStartedWebhookEventPayloadStatus = "onboarding"
-	WorkerOffboardingStartedWebhookEventPayloadStatusActive WorkerOffboardingStartedWebhookEventPayloadStatus = "active"
+	WorkerOffboardingStartedWebhookEventPayloadStatusDraft       WorkerOffboardingStartedWebhookEventPayloadStatus = "draft"
+	WorkerOffboardingStartedWebhookEventPayloadStatusInvited     WorkerOffboardingStartedWebhookEventPayloadStatus = "invited"
+	WorkerOffboardingStartedWebhookEventPayloadStatusOnboarding  WorkerOffboardingStartedWebhookEventPayloadStatus = "onboarding"
+	WorkerOffboardingStartedWebhookEventPayloadStatusActive      WorkerOffboardingStartedWebhookEventPayloadStatus = "active"
 	WorkerOffboardingStartedWebhookEventPayloadStatusOffboarding WorkerOffboardingStartedWebhookEventPayloadStatus = "offboarding"
-	WorkerOffboardingStartedWebhookEventPayloadStatusInactive WorkerOffboardingStartedWebhookEventPayloadStatus = "inactive"
+	WorkerOffboardingStartedWebhookEventPayloadStatusInactive    WorkerOffboardingStartedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerOffboardingStartedWebhookEventPayloadStatus) IsKnown() bool {
@@ -1684,15 +1684,15 @@ func (r WorkerOffboardingStartedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerOffboardingStartedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                                    `json:"id" api:"required"`
+	Name string                                                    `json:"name" api:"required"`
 	JSON workerOffboardingStartedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadDepartment]
 type workerOffboardingStartedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1710,18 +1710,18 @@ type WorkerOffboardedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerOffboardedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerOffboardedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerOffboardedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerOffboardedWebhookEventJSON `json:"-"`
+	CreatedAt string                           `json:"created_at" api:"required"`
+	JSON      workerOffboardedWebhookEventJSON `json:"-"`
 }
 
 // workerOffboardedWebhookEventJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEvent]
 type workerOffboardedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1750,20 +1750,20 @@ func (r WorkerOffboardedWebhookEventEventType) IsKnown() bool {
 
 type WorkerOffboardedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerOffboardedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerOffboardedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                    `json:"id" api:"required"`
+	Position string                                    `json:"position" api:"required"`
+	Type     WorkerOffboardedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerOffboardedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1772,29 +1772,29 @@ type WorkerOffboardedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOffboardedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerOffboardedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerOffboardedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerOffboardedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayload]
 type workerOffboardedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerOffboardedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1808,7 +1808,7 @@ func (r workerOffboardedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerOffboardedWebhookEventPayloadType string
 
 const (
-	WorkerOffboardedWebhookEventPayloadTypeEmployee WorkerOffboardedWebhookEventPayloadType = "employee"
+	WorkerOffboardedWebhookEventPayloadTypeEmployee   WorkerOffboardedWebhookEventPayloadType = "employee"
 	WorkerOffboardedWebhookEventPayloadTypeContractor WorkerOffboardedWebhookEventPayloadType = "contractor"
 )
 
@@ -1823,12 +1823,12 @@ func (r WorkerOffboardedWebhookEventPayloadType) IsKnown() bool {
 type WorkerOffboardedWebhookEventPayloadStatus string
 
 const (
-	WorkerOffboardedWebhookEventPayloadStatusDraft WorkerOffboardedWebhookEventPayloadStatus = "draft"
-	WorkerOffboardedWebhookEventPayloadStatusInvited WorkerOffboardedWebhookEventPayloadStatus = "invited"
-	WorkerOffboardedWebhookEventPayloadStatusOnboarding WorkerOffboardedWebhookEventPayloadStatus = "onboarding"
-	WorkerOffboardedWebhookEventPayloadStatusActive WorkerOffboardedWebhookEventPayloadStatus = "active"
+	WorkerOffboardedWebhookEventPayloadStatusDraft       WorkerOffboardedWebhookEventPayloadStatus = "draft"
+	WorkerOffboardedWebhookEventPayloadStatusInvited     WorkerOffboardedWebhookEventPayloadStatus = "invited"
+	WorkerOffboardedWebhookEventPayloadStatusOnboarding  WorkerOffboardedWebhookEventPayloadStatus = "onboarding"
+	WorkerOffboardedWebhookEventPayloadStatusActive      WorkerOffboardedWebhookEventPayloadStatus = "active"
 	WorkerOffboardedWebhookEventPayloadStatusOffboarding WorkerOffboardedWebhookEventPayloadStatus = "offboarding"
-	WorkerOffboardedWebhookEventPayloadStatusInactive WorkerOffboardedWebhookEventPayloadStatus = "inactive"
+	WorkerOffboardedWebhookEventPayloadStatusInactive    WorkerOffboardedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerOffboardedWebhookEventPayloadStatus) IsKnown() bool {
@@ -1841,15 +1841,15 @@ func (r WorkerOffboardedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerOffboardedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                            `json:"id" api:"required"`
+	Name string                                            `json:"name" api:"required"`
 	JSON workerOffboardedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerOffboardedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadDepartment]
 type workerOffboardedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1867,18 +1867,18 @@ type WorkerReactivatedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType WorkerReactivatedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload WorkerReactivatedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   WorkerReactivatedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON workerReactivatedWebhookEventJSON `json:"-"`
+	CreatedAt string                            `json:"created_at" api:"required"`
+	JSON      workerReactivatedWebhookEventJSON `json:"-"`
 }
 
 // workerReactivatedWebhookEventJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEvent]
 type workerReactivatedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1907,20 +1907,20 @@ func (r WorkerReactivatedWebhookEventEventType) IsKnown() bool {
 
 type WorkerReactivatedWebhookEventPayload struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Position string `json:"position" api:"required"`
-	Type WorkerReactivatedWebhookEventPayloadType `json:"type" api:"required"`
-	Status WorkerReactivatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID       string                                     `json:"id" api:"required"`
+	Position string                                     `json:"position" api:"required"`
+	Type     WorkerReactivatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status   WorkerReactivatedWebhookEventPayloadStatus `json:"status" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	EndDate string `json:"endDate" api:"required,nullable"`
-	IsBusiness bool `json:"isBusiness" api:"required,nullable"`
+	StartDate    string `json:"startDate" api:"required"`
+	EndDate      string `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
 	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	FirstName    string `json:"firstName" api:"required"`
+	LastName     string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
-	WorkEmail string `json:"workEmail" api:"required,nullable"`
+	Email         string `json:"email" api:"required"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1929,29 +1929,29 @@ type WorkerReactivatedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerReactivatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON workerReactivatedWebhookEventPayloadJSON `json:"-"`
+	JSON       workerReactivatedWebhookEventPayloadJSON       `json:"-"`
 }
 
 // workerReactivatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayload]
 type workerReactivatedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Position apijson.Field
-	Type apijson.Field
-	Status apijson.Field
-	StartDate apijson.Field
-	EndDate apijson.Field
-	IsBusiness apijson.Field
-	BusinessName apijson.Field
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
-	WorkEmail apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
 	PreferredName apijson.Field
-	DisplayName apijson.Field
-	TimeZone apijson.Field
-	Department apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *WorkerReactivatedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -1965,7 +1965,7 @@ func (r workerReactivatedWebhookEventPayloadJSON) RawJSON() string {
 type WorkerReactivatedWebhookEventPayloadType string
 
 const (
-	WorkerReactivatedWebhookEventPayloadTypeEmployee WorkerReactivatedWebhookEventPayloadType = "employee"
+	WorkerReactivatedWebhookEventPayloadTypeEmployee   WorkerReactivatedWebhookEventPayloadType = "employee"
 	WorkerReactivatedWebhookEventPayloadTypeContractor WorkerReactivatedWebhookEventPayloadType = "contractor"
 )
 
@@ -1980,12 +1980,12 @@ func (r WorkerReactivatedWebhookEventPayloadType) IsKnown() bool {
 type WorkerReactivatedWebhookEventPayloadStatus string
 
 const (
-	WorkerReactivatedWebhookEventPayloadStatusDraft WorkerReactivatedWebhookEventPayloadStatus = "draft"
-	WorkerReactivatedWebhookEventPayloadStatusInvited WorkerReactivatedWebhookEventPayloadStatus = "invited"
-	WorkerReactivatedWebhookEventPayloadStatusOnboarding WorkerReactivatedWebhookEventPayloadStatus = "onboarding"
-	WorkerReactivatedWebhookEventPayloadStatusActive WorkerReactivatedWebhookEventPayloadStatus = "active"
+	WorkerReactivatedWebhookEventPayloadStatusDraft       WorkerReactivatedWebhookEventPayloadStatus = "draft"
+	WorkerReactivatedWebhookEventPayloadStatusInvited     WorkerReactivatedWebhookEventPayloadStatus = "invited"
+	WorkerReactivatedWebhookEventPayloadStatusOnboarding  WorkerReactivatedWebhookEventPayloadStatus = "onboarding"
+	WorkerReactivatedWebhookEventPayloadStatusActive      WorkerReactivatedWebhookEventPayloadStatus = "active"
 	WorkerReactivatedWebhookEventPayloadStatusOffboarding WorkerReactivatedWebhookEventPayloadStatus = "offboarding"
-	WorkerReactivatedWebhookEventPayloadStatusInactive WorkerReactivatedWebhookEventPayloadStatus = "inactive"
+	WorkerReactivatedWebhookEventPayloadStatusInactive    WorkerReactivatedWebhookEventPayloadStatus = "inactive"
 )
 
 func (r WorkerReactivatedWebhookEventPayloadStatus) IsKnown() bool {
@@ -1998,15 +1998,15 @@ func (r WorkerReactivatedWebhookEventPayloadStatus) IsKnown() bool {
 
 type WorkerReactivatedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                             `json:"id" api:"required"`
+	Name string                                             `json:"name" api:"required"`
 	JSON workerReactivatedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // workerReactivatedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadDepartment]
 type workerReactivatedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2024,18 +2024,18 @@ type OfferCreatedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType OfferCreatedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload OfferCreatedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   OfferCreatedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON offerCreatedWebhookEventJSON `json:"-"`
+	CreatedAt string                       `json:"created_at" api:"required"`
+	JSON      offerCreatedWebhookEventJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventJSON contains the JSON metadata for the struct [OfferCreatedWebhookEvent]
 type offerCreatedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2064,43 +2064,45 @@ func (r OfferCreatedWebhookEventEventType) IsKnown() bool {
 
 type OfferCreatedWebhookEventPayload struct {
 	// The tag of the offer.
-	ID string `json:"id" api:"required"`
-	Status OfferCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID         string                                    `json:"id" api:"required"`
+	Status     OfferCreatedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferCreatedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
-	Candidate OfferCreatedWebhookEventPayloadCandidate `json:"candidate" api:"required"`
-	Position OfferCreatedWebhookEventPayloadPosition `json:"position" api:"required"`
+	Candidate  OfferCreatedWebhookEventPayloadCandidate  `json:"candidate" api:"required"`
+	Position   OfferCreatedWebhookEventPayloadPosition   `json:"position" api:"required"`
 	Department OfferCreatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	Manager OfferCreatedWebhookEventPayloadManager `json:"manager" api:"required,nullable"`
+	Workplace  OfferCreatedWebhookEventPayloadWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferCreatedWebhookEventPayloadManager    `json:"manager" api:"required,nullable"`
 	// Display name of the person or company that sent the offer. Null for offers not
 	// yet sent.
-	SentBy string `json:"sentBy" api:"required,nullable"`
+	SentBy       string                                      `json:"sentBy" api:"required,nullable"`
 	Compensation OfferCreatedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL string `json:"offerUrl" api:"required,nullable"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt string `json:"lastViewedAt" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON offerCreatedWebhookEventPayloadJSON `json:"-"`
+	CreatedAt string                              `json:"createdAt" api:"required"`
+	JSON      offerCreatedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayload]
 type offerCreatedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Status apijson.Field
-	WorkerType apijson.Field
-	Candidate apijson.Field
-	Position apijson.Field
-	Department apijson.Field
-	Manager apijson.Field
-	SentBy apijson.Field
-	Compensation apijson.Field
-	OfferURL apijson.Field
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
 	ExpirationTime apijson.Field
-	LastViewedAt apijson.Field
-	CreatedAt apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
 func (r *OfferCreatedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -2114,10 +2116,10 @@ func (r offerCreatedWebhookEventPayloadJSON) RawJSON() string {
 type OfferCreatedWebhookEventPayloadStatus string
 
 const (
-	OfferCreatedWebhookEventPayloadStatusDraft OfferCreatedWebhookEventPayloadStatus = "draft"
-	OfferCreatedWebhookEventPayloadStatusSent OfferCreatedWebhookEventPayloadStatus = "sent"
+	OfferCreatedWebhookEventPayloadStatusDraft    OfferCreatedWebhookEventPayloadStatus = "draft"
+	OfferCreatedWebhookEventPayloadStatusSent     OfferCreatedWebhookEventPayloadStatus = "sent"
 	OfferCreatedWebhookEventPayloadStatusAccepted OfferCreatedWebhookEventPayloadStatus = "accepted"
-	OfferCreatedWebhookEventPayloadStatusVoid OfferCreatedWebhookEventPayloadStatus = "void"
+	OfferCreatedWebhookEventPayloadStatusVoid     OfferCreatedWebhookEventPayloadStatus = "void"
 )
 
 func (r OfferCreatedWebhookEventPayloadStatus) IsKnown() bool {
@@ -2131,8 +2133,8 @@ func (r OfferCreatedWebhookEventPayloadStatus) IsKnown() bool {
 type OfferCreatedWebhookEventPayloadWorkerType string
 
 const (
-	OfferCreatedWebhookEventPayloadWorkerTypeEmployee OfferCreatedWebhookEventPayloadWorkerType = "employee"
-	OfferCreatedWebhookEventPayloadWorkerTypeUsContractor OfferCreatedWebhookEventPayloadWorkerType = "us_contractor"
+	OfferCreatedWebhookEventPayloadWorkerTypeEmployee         OfferCreatedWebhookEventPayloadWorkerType = "employee"
+	OfferCreatedWebhookEventPayloadWorkerTypeUsContractor     OfferCreatedWebhookEventPayloadWorkerType = "us_contractor"
 	OfferCreatedWebhookEventPayloadWorkerTypeGlobalContractor OfferCreatedWebhookEventPayloadWorkerType = "global_contractor"
 )
 
@@ -2146,21 +2148,21 @@ func (r OfferCreatedWebhookEventPayloadWorkerType) IsKnown() bool {
 
 type OfferCreatedWebhookEventPayloadCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
+	Email             string                                                    `json:"email" api:"required"`
 	ContractorDetails OfferCreatedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON offerCreatedWebhookEventPayloadCandidateJSON `json:"-"`
+	JSON              offerCreatedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCandidateJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCandidate]
 type offerCreatedWebhookEventPayloadCandidateJSON struct {
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
 	ContractorDetails apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferCreatedWebhookEventPayloadCandidate) UnmarshalJSON(data []byte) (err error) {
@@ -2172,17 +2174,17 @@ func (r offerCreatedWebhookEventPayloadCandidateJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadCandidateContractorDetails struct {
-	IsBusiness bool `json:"isBusiness" api:"required"`
-	LegalBusinessName string `json:"legalBusinessName" api:"required,nullable"`
-	JSON offerCreatedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
+	IsBusiness        bool                                                          `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                                        `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerCreatedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCandidateContractorDetails]
 type offerCreatedWebhookEventPayloadCandidateContractorDetailsJSON struct {
-	IsBusiness apijson.Field
+	IsBusiness        apijson.Field
 	LegalBusinessName apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferCreatedWebhookEventPayloadCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
@@ -2196,17 +2198,17 @@ func (r offerCreatedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON()
 type OfferCreatedWebhookEventPayloadPosition struct {
 	Title string `json:"title" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	Country OfferCreatedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
-	ScopeOfWork string `json:"scopeOfWork" api:"required,nullable"`
-	JSON offerCreatedWebhookEventPayloadPositionJSON `json:"-"`
+	StartDate   string                                         `json:"startDate" api:"required"`
+	Country     OfferCreatedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                                         `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerCreatedWebhookEventPayloadPositionJSON    `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadPositionJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadPosition]
 type offerCreatedWebhookEventPayloadPositionJSON struct {
-	Title apijson.Field
-	StartDate apijson.Field
-	Country apijson.Field
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
 	ScopeOfWork apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -2485,15 +2487,15 @@ func (r OfferCreatedWebhookEventPayloadPositionCountry) IsKnown() bool {
 
 type OfferCreatedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                        `json:"id" api:"required"`
+	Name string                                        `json:"name" api:"required"`
 	JSON offerCreatedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadDepartment]
 type offerCreatedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2506,17 +2508,40 @@ func (r offerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferCreatedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
+	ID   string                                       `json:"id" api:"required"`
+	Name string                                       `json:"name" api:"required"`
+	JSON offerCreatedWebhookEventPayloadWorkplaceJSON `json:"-"`
+}
+
+// offerCreatedWebhookEventPayloadWorkplaceJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadWorkplace]
+type offerCreatedWebhookEventPayloadWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferCreatedWebhookEventPayloadWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerCreatedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferCreatedWebhookEventPayloadManager struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required,nullable"`
+	ID   string                                     `json:"id" api:"required"`
+	Name string                                     `json:"name" api:"required,nullable"`
 	JSON offerCreatedWebhookEventPayloadManagerJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadManagerJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadManager]
 type offerCreatedWebhookEventPayloadManagerJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2530,21 +2555,21 @@ func (r offerCreatedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadCompensation struct {
-	BasePay OfferCreatedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus OfferCreatedWebhookEventPayloadCompensationSignOnBonus `json:"signOnBonus" api:"required,nullable"`
+	BasePay         OfferCreatedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
+	SignOnBonus     OfferCreatedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
 	RelocationBonus OfferCreatedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock OfferCreatedWebhookEventPayloadCompensationStock `json:"stock" api:"required,nullable"`
-	JSON offerCreatedWebhookEventPayloadCompensationJSON `json:"-"`
+	Stock           OfferCreatedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
+	JSON            offerCreatedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensation]
 type offerCreatedWebhookEventPayloadCompensationJSON struct {
-	BasePay apijson.Field
-	SignOnBonus apijson.Field
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
 	RelocationBonus apijson.Field
-	Stock apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *OfferCreatedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
@@ -2557,21 +2582,21 @@ func (r offerCreatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferCreatedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount OfferCreatedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
-	Basis OfferCreatedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
-	Type OfferCreatedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
+	Amount       OfferCreatedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
+	Basis        OfferCreatedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
+	Type         OfferCreatedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
 	VariableRate OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON offerCreatedWebhookEventPayloadCompensationBasePayJSON `json:"-"`
+	JSON         offerCreatedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationBasePayJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationBasePay]
 type offerCreatedWebhookEventPayloadCompensationBasePayJSON struct {
-	Amount apijson.Field
-	Basis apijson.Field
-	Type apijson.Field
+	Amount       apijson.Field
+	Basis        apijson.Field
+	Type         apijson.Field
 	VariableRate apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *OfferCreatedWebhookEventPayloadCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
@@ -2585,10 +2610,10 @@ func (r offerCreatedWebhookEventPayloadCompensationBasePayJSON) RawJSON() string
 type OfferCreatedWebhookEventPayloadCompensationBasePayBasis string
 
 const (
-	OfferCreatedWebhookEventPayloadCompensationBasePayBasisYear OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "year"
-	OfferCreatedWebhookEventPayloadCompensationBasePayBasisMonth OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "month"
-	OfferCreatedWebhookEventPayloadCompensationBasePayBasisWeek OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "week"
-	OfferCreatedWebhookEventPayloadCompensationBasePayBasisHour OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "hour"
+	OfferCreatedWebhookEventPayloadCompensationBasePayBasisYear     OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "year"
+	OfferCreatedWebhookEventPayloadCompensationBasePayBasisMonth    OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "month"
+	OfferCreatedWebhookEventPayloadCompensationBasePayBasisWeek     OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "week"
+	OfferCreatedWebhookEventPayloadCompensationBasePayBasisHour     OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "hour"
 	OfferCreatedWebhookEventPayloadCompensationBasePayBasisVariable OfferCreatedWebhookEventPayloadCompensationBasePayBasis = "variable"
 )
 
@@ -2603,7 +2628,7 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayBasis) IsKnown() bool 
 type OfferCreatedWebhookEventPayloadCompensationBasePayType string
 
 const (
-	OfferCreatedWebhookEventPayloadCompensationBasePayTypeFixed OfferCreatedWebhookEventPayloadCompensationBasePayType = "fixed"
+	OfferCreatedWebhookEventPayloadCompensationBasePayTypeFixed      OfferCreatedWebhookEventPayloadCompensationBasePayType = "fixed"
 	OfferCreatedWebhookEventPayloadCompensationBasePayTypePayAsYouGo OfferCreatedWebhookEventPayloadCompensationBasePayType = "pay_as_you_go"
 )
 
@@ -2617,18 +2642,18 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 
 type OfferCreatedWebhookEventPayloadCompensationBasePayAmount struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                            `json:"amount" api:"required"`
 	Currency OfferCreatedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerCreatedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
+	Display string                                                       `json:"display" api:"required"`
+	JSON    offerCreatedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationBasePayAmount]
 type offerCreatedWebhookEventPayloadCompensationBasePayAmountJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2717,18 +2742,18 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnow
 
 type OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                                  `json:"amount" api:"required"`
 	Currency OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
+	Display string                                                             `json:"display" api:"required"`
+	JSON    offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate]
 type offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2817,18 +2842,18 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency) 
 
 type OfferCreatedWebhookEventPayloadCompensationSignOnBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                          `json:"amount" api:"required"`
 	Currency OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
+	Display string                                                     `json:"display" api:"required"`
+	JSON    offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationSignOnBonus]
 type offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2917,18 +2942,18 @@ func (r OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown(
 
 type OfferCreatedWebhookEventPayloadCompensationRelocationBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                              `json:"amount" api:"required"`
 	Currency OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
+	Display string                                                         `json:"display" api:"required"`
+	JSON    offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationRelocationBonus]
 type offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3017,19 +3042,19 @@ func (r OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKn
 
 type OfferCreatedWebhookEventPayloadCompensationStock struct {
 	// a non-negative number
-	Options int64 `json:"options" api:"required"`
-	VestingScheduleMonths int64 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths int64 `json:"cliffMonths" api:"required,nullable"`
-	JSON offerCreatedWebhookEventPayloadCompensationStockJSON `json:"-"`
+	Options               int64                                                `json:"options" api:"required"`
+	VestingScheduleMonths int64                                                `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                                `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerCreatedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadCompensationStockJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationStock]
 type offerCreatedWebhookEventPayloadCompensationStockJSON struct {
-	Options apijson.Field
+	Options               apijson.Field
 	VestingScheduleMonths apijson.Field
-	CliffMonths apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	CliffMonths           apijson.Field
+	raw                   string
+	ExtraFields           map[string]apijson.Field
 }
 
 func (r *OfferCreatedWebhookEventPayloadCompensationStock) UnmarshalJSON(data []byte) (err error) {
@@ -3045,18 +3070,18 @@ type OfferSentWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType OfferSentWebhookEventEventType `json:"event_type" api:"required"`
-	Payload OfferSentWebhookEventPayload `json:"payload" api:"required"`
+	Payload   OfferSentWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON offerSentWebhookEventJSON `json:"-"`
+	CreatedAt string                    `json:"created_at" api:"required"`
+	JSON      offerSentWebhookEventJSON `json:"-"`
 }
 
 // offerSentWebhookEventJSON contains the JSON metadata for the struct [OfferSentWebhookEvent]
 type offerSentWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3085,43 +3110,45 @@ func (r OfferSentWebhookEventEventType) IsKnown() bool {
 
 type OfferSentWebhookEventPayload struct {
 	// The tag of the offer.
-	ID string `json:"id" api:"required"`
-	Status OfferSentWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID         string                                 `json:"id" api:"required"`
+	Status     OfferSentWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferSentWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
-	Candidate OfferSentWebhookEventPayloadCandidate `json:"candidate" api:"required"`
-	Position OfferSentWebhookEventPayloadPosition `json:"position" api:"required"`
+	Candidate  OfferSentWebhookEventPayloadCandidate  `json:"candidate" api:"required"`
+	Position   OfferSentWebhookEventPayloadPosition   `json:"position" api:"required"`
 	Department OfferSentWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	Manager OfferSentWebhookEventPayloadManager `json:"manager" api:"required,nullable"`
+	Workplace  OfferSentWebhookEventPayloadWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferSentWebhookEventPayloadManager    `json:"manager" api:"required,nullable"`
 	// Display name of the person or company that sent the offer. Null for offers not
 	// yet sent.
-	SentBy string `json:"sentBy" api:"required,nullable"`
+	SentBy       string                                   `json:"sentBy" api:"required,nullable"`
 	Compensation OfferSentWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL string `json:"offerUrl" api:"required,nullable"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt string `json:"lastViewedAt" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON offerSentWebhookEventPayloadJSON `json:"-"`
+	CreatedAt string                           `json:"createdAt" api:"required"`
+	JSON      offerSentWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayload]
 type offerSentWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Status apijson.Field
-	WorkerType apijson.Field
-	Candidate apijson.Field
-	Position apijson.Field
-	Department apijson.Field
-	Manager apijson.Field
-	SentBy apijson.Field
-	Compensation apijson.Field
-	OfferURL apijson.Field
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
 	ExpirationTime apijson.Field
-	LastViewedAt apijson.Field
-	CreatedAt apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
 func (r *OfferSentWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -3135,10 +3162,10 @@ func (r offerSentWebhookEventPayloadJSON) RawJSON() string {
 type OfferSentWebhookEventPayloadStatus string
 
 const (
-	OfferSentWebhookEventPayloadStatusDraft OfferSentWebhookEventPayloadStatus = "draft"
-	OfferSentWebhookEventPayloadStatusSent OfferSentWebhookEventPayloadStatus = "sent"
+	OfferSentWebhookEventPayloadStatusDraft    OfferSentWebhookEventPayloadStatus = "draft"
+	OfferSentWebhookEventPayloadStatusSent     OfferSentWebhookEventPayloadStatus = "sent"
 	OfferSentWebhookEventPayloadStatusAccepted OfferSentWebhookEventPayloadStatus = "accepted"
-	OfferSentWebhookEventPayloadStatusVoid OfferSentWebhookEventPayloadStatus = "void"
+	OfferSentWebhookEventPayloadStatusVoid     OfferSentWebhookEventPayloadStatus = "void"
 )
 
 func (r OfferSentWebhookEventPayloadStatus) IsKnown() bool {
@@ -3152,8 +3179,8 @@ func (r OfferSentWebhookEventPayloadStatus) IsKnown() bool {
 type OfferSentWebhookEventPayloadWorkerType string
 
 const (
-	OfferSentWebhookEventPayloadWorkerTypeEmployee OfferSentWebhookEventPayloadWorkerType = "employee"
-	OfferSentWebhookEventPayloadWorkerTypeUsContractor OfferSentWebhookEventPayloadWorkerType = "us_contractor"
+	OfferSentWebhookEventPayloadWorkerTypeEmployee         OfferSentWebhookEventPayloadWorkerType = "employee"
+	OfferSentWebhookEventPayloadWorkerTypeUsContractor     OfferSentWebhookEventPayloadWorkerType = "us_contractor"
 	OfferSentWebhookEventPayloadWorkerTypeGlobalContractor OfferSentWebhookEventPayloadWorkerType = "global_contractor"
 )
 
@@ -3167,21 +3194,21 @@ func (r OfferSentWebhookEventPayloadWorkerType) IsKnown() bool {
 
 type OfferSentWebhookEventPayloadCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
+	Email             string                                                 `json:"email" api:"required"`
 	ContractorDetails OfferSentWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON offerSentWebhookEventPayloadCandidateJSON `json:"-"`
+	JSON              offerSentWebhookEventPayloadCandidateJSON              `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCandidateJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCandidate]
 type offerSentWebhookEventPayloadCandidateJSON struct {
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
 	ContractorDetails apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferSentWebhookEventPayloadCandidate) UnmarshalJSON(data []byte) (err error) {
@@ -3193,17 +3220,17 @@ func (r offerSentWebhookEventPayloadCandidateJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadCandidateContractorDetails struct {
-	IsBusiness bool `json:"isBusiness" api:"required"`
-	LegalBusinessName string `json:"legalBusinessName" api:"required,nullable"`
-	JSON offerSentWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
+	IsBusiness        bool                                                       `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                                     `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerSentWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCandidateContractorDetails]
 type offerSentWebhookEventPayloadCandidateContractorDetailsJSON struct {
-	IsBusiness apijson.Field
+	IsBusiness        apijson.Field
 	LegalBusinessName apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferSentWebhookEventPayloadCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
@@ -3217,17 +3244,17 @@ func (r offerSentWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON() st
 type OfferSentWebhookEventPayloadPosition struct {
 	Title string `json:"title" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	Country OfferSentWebhookEventPayloadPositionCountry `json:"country" api:"required"`
-	ScopeOfWork string `json:"scopeOfWork" api:"required,nullable"`
-	JSON offerSentWebhookEventPayloadPositionJSON `json:"-"`
+	StartDate   string                                      `json:"startDate" api:"required"`
+	Country     OfferSentWebhookEventPayloadPositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                                      `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerSentWebhookEventPayloadPositionJSON    `json:"-"`
 }
 
 // offerSentWebhookEventPayloadPositionJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadPosition]
 type offerSentWebhookEventPayloadPositionJSON struct {
-	Title apijson.Field
-	StartDate apijson.Field
-	Country apijson.Field
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
 	ScopeOfWork apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -3506,15 +3533,15 @@ func (r OfferSentWebhookEventPayloadPositionCountry) IsKnown() bool {
 
 type OfferSentWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                     `json:"id" api:"required"`
+	Name string                                     `json:"name" api:"required"`
 	JSON offerSentWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadDepartment]
 type offerSentWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3527,17 +3554,40 @@ func (r offerSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferSentWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
+	ID   string                                    `json:"id" api:"required"`
+	Name string                                    `json:"name" api:"required"`
+	JSON offerSentWebhookEventPayloadWorkplaceJSON `json:"-"`
+}
+
+// offerSentWebhookEventPayloadWorkplaceJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadWorkplace]
+type offerSentWebhookEventPayloadWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferSentWebhookEventPayloadWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerSentWebhookEventPayloadWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferSentWebhookEventPayloadManager struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required,nullable"`
+	ID   string                                  `json:"id" api:"required"`
+	Name string                                  `json:"name" api:"required,nullable"`
 	JSON offerSentWebhookEventPayloadManagerJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadManagerJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadManager]
 type offerSentWebhookEventPayloadManagerJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3551,21 +3601,21 @@ func (r offerSentWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadCompensation struct {
-	BasePay OfferSentWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus OfferSentWebhookEventPayloadCompensationSignOnBonus `json:"signOnBonus" api:"required,nullable"`
+	BasePay         OfferSentWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
+	SignOnBonus     OfferSentWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
 	RelocationBonus OfferSentWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock OfferSentWebhookEventPayloadCompensationStock `json:"stock" api:"required,nullable"`
-	JSON offerSentWebhookEventPayloadCompensationJSON `json:"-"`
+	Stock           OfferSentWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
+	JSON            offerSentWebhookEventPayloadCompensationJSON            `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensation]
 type offerSentWebhookEventPayloadCompensationJSON struct {
-	BasePay apijson.Field
-	SignOnBonus apijson.Field
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
 	RelocationBonus apijson.Field
-	Stock apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *OfferSentWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
@@ -3578,21 +3628,21 @@ func (r offerSentWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferSentWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount OfferSentWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
-	Basis OfferSentWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
-	Type OfferSentWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
+	Amount       OfferSentWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
+	Basis        OfferSentWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
+	Type         OfferSentWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
 	VariableRate OfferSentWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON offerSentWebhookEventPayloadCompensationBasePayJSON `json:"-"`
+	JSON         offerSentWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationBasePayJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationBasePay]
 type offerSentWebhookEventPayloadCompensationBasePayJSON struct {
-	Amount apijson.Field
-	Basis apijson.Field
-	Type apijson.Field
+	Amount       apijson.Field
+	Basis        apijson.Field
+	Type         apijson.Field
 	VariableRate apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *OfferSentWebhookEventPayloadCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
@@ -3606,10 +3656,10 @@ func (r offerSentWebhookEventPayloadCompensationBasePayJSON) RawJSON() string {
 type OfferSentWebhookEventPayloadCompensationBasePayBasis string
 
 const (
-	OfferSentWebhookEventPayloadCompensationBasePayBasisYear OfferSentWebhookEventPayloadCompensationBasePayBasis = "year"
-	OfferSentWebhookEventPayloadCompensationBasePayBasisMonth OfferSentWebhookEventPayloadCompensationBasePayBasis = "month"
-	OfferSentWebhookEventPayloadCompensationBasePayBasisWeek OfferSentWebhookEventPayloadCompensationBasePayBasis = "week"
-	OfferSentWebhookEventPayloadCompensationBasePayBasisHour OfferSentWebhookEventPayloadCompensationBasePayBasis = "hour"
+	OfferSentWebhookEventPayloadCompensationBasePayBasisYear     OfferSentWebhookEventPayloadCompensationBasePayBasis = "year"
+	OfferSentWebhookEventPayloadCompensationBasePayBasisMonth    OfferSentWebhookEventPayloadCompensationBasePayBasis = "month"
+	OfferSentWebhookEventPayloadCompensationBasePayBasisWeek     OfferSentWebhookEventPayloadCompensationBasePayBasis = "week"
+	OfferSentWebhookEventPayloadCompensationBasePayBasisHour     OfferSentWebhookEventPayloadCompensationBasePayBasis = "hour"
 	OfferSentWebhookEventPayloadCompensationBasePayBasisVariable OfferSentWebhookEventPayloadCompensationBasePayBasis = "variable"
 )
 
@@ -3624,7 +3674,7 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayBasis) IsKnown() bool {
 type OfferSentWebhookEventPayloadCompensationBasePayType string
 
 const (
-	OfferSentWebhookEventPayloadCompensationBasePayTypeFixed OfferSentWebhookEventPayloadCompensationBasePayType = "fixed"
+	OfferSentWebhookEventPayloadCompensationBasePayTypeFixed      OfferSentWebhookEventPayloadCompensationBasePayType = "fixed"
 	OfferSentWebhookEventPayloadCompensationBasePayTypePayAsYouGo OfferSentWebhookEventPayloadCompensationBasePayType = "pay_as_you_go"
 )
 
@@ -3638,18 +3688,18 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 
 type OfferSentWebhookEventPayloadCompensationBasePayAmount struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                         `json:"amount" api:"required"`
 	Currency OfferSentWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerSentWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
+	Display string                                                    `json:"display" api:"required"`
+	JSON    offerSentWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationBasePayAmount]
 type offerSentWebhookEventPayloadCompensationBasePayAmountJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3738,18 +3788,18 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnown()
 
 type OfferSentWebhookEventPayloadCompensationBasePayVariableRate struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                               `json:"amount" api:"required"`
 	Currency OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
+	Display string                                                          `json:"display" api:"required"`
+	JSON    offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationBasePayVariableRate]
 type offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3838,18 +3888,18 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency) IsK
 
 type OfferSentWebhookEventPayloadCompensationSignOnBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                       `json:"amount" api:"required"`
 	Currency OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerSentWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
+	Display string                                                  `json:"display" api:"required"`
+	JSON    offerSentWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationSignOnBonus]
 type offerSentWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3938,18 +3988,18 @@ func (r OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown() b
 
 type OfferSentWebhookEventPayloadCompensationRelocationBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                           `json:"amount" api:"required"`
 	Currency OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerSentWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
+	Display string                                                      `json:"display" api:"required"`
+	JSON    offerSentWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationRelocationBonus]
 type offerSentWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4038,19 +4088,19 @@ func (r OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency) IsKnown
 
 type OfferSentWebhookEventPayloadCompensationStock struct {
 	// a non-negative number
-	Options int64 `json:"options" api:"required"`
-	VestingScheduleMonths int64 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths int64 `json:"cliffMonths" api:"required,nullable"`
-	JSON offerSentWebhookEventPayloadCompensationStockJSON `json:"-"`
+	Options               int64                                             `json:"options" api:"required"`
+	VestingScheduleMonths int64                                             `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                             `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerSentWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadCompensationStockJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationStock]
 type offerSentWebhookEventPayloadCompensationStockJSON struct {
-	Options apijson.Field
+	Options               apijson.Field
 	VestingScheduleMonths apijson.Field
-	CliffMonths apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	CliffMonths           apijson.Field
+	raw                   string
+	ExtraFields           map[string]apijson.Field
 }
 
 func (r *OfferSentWebhookEventPayloadCompensationStock) UnmarshalJSON(data []byte) (err error) {
@@ -4066,18 +4116,18 @@ type OfferViewedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType OfferViewedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload OfferViewedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   OfferViewedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON offerViewedWebhookEventJSON `json:"-"`
+	CreatedAt string                      `json:"created_at" api:"required"`
+	JSON      offerViewedWebhookEventJSON `json:"-"`
 }
 
 // offerViewedWebhookEventJSON contains the JSON metadata for the struct [OfferViewedWebhookEvent]
 type offerViewedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4106,43 +4156,45 @@ func (r OfferViewedWebhookEventEventType) IsKnown() bool {
 
 type OfferViewedWebhookEventPayload struct {
 	// The tag of the offer.
-	ID string `json:"id" api:"required"`
-	Status OfferViewedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID         string                                   `json:"id" api:"required"`
+	Status     OfferViewedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferViewedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
-	Candidate OfferViewedWebhookEventPayloadCandidate `json:"candidate" api:"required"`
-	Position OfferViewedWebhookEventPayloadPosition `json:"position" api:"required"`
+	Candidate  OfferViewedWebhookEventPayloadCandidate  `json:"candidate" api:"required"`
+	Position   OfferViewedWebhookEventPayloadPosition   `json:"position" api:"required"`
 	Department OfferViewedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	Manager OfferViewedWebhookEventPayloadManager `json:"manager" api:"required,nullable"`
+	Workplace  OfferViewedWebhookEventPayloadWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferViewedWebhookEventPayloadManager    `json:"manager" api:"required,nullable"`
 	// Display name of the person or company that sent the offer. Null for offers not
 	// yet sent.
-	SentBy string `json:"sentBy" api:"required,nullable"`
+	SentBy       string                                     `json:"sentBy" api:"required,nullable"`
 	Compensation OfferViewedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL string `json:"offerUrl" api:"required,nullable"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt string `json:"lastViewedAt" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON offerViewedWebhookEventPayloadJSON `json:"-"`
+	CreatedAt string                             `json:"createdAt" api:"required"`
+	JSON      offerViewedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayload]
 type offerViewedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Status apijson.Field
-	WorkerType apijson.Field
-	Candidate apijson.Field
-	Position apijson.Field
-	Department apijson.Field
-	Manager apijson.Field
-	SentBy apijson.Field
-	Compensation apijson.Field
-	OfferURL apijson.Field
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
 	ExpirationTime apijson.Field
-	LastViewedAt apijson.Field
-	CreatedAt apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
 func (r *OfferViewedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -4156,10 +4208,10 @@ func (r offerViewedWebhookEventPayloadJSON) RawJSON() string {
 type OfferViewedWebhookEventPayloadStatus string
 
 const (
-	OfferViewedWebhookEventPayloadStatusDraft OfferViewedWebhookEventPayloadStatus = "draft"
-	OfferViewedWebhookEventPayloadStatusSent OfferViewedWebhookEventPayloadStatus = "sent"
+	OfferViewedWebhookEventPayloadStatusDraft    OfferViewedWebhookEventPayloadStatus = "draft"
+	OfferViewedWebhookEventPayloadStatusSent     OfferViewedWebhookEventPayloadStatus = "sent"
 	OfferViewedWebhookEventPayloadStatusAccepted OfferViewedWebhookEventPayloadStatus = "accepted"
-	OfferViewedWebhookEventPayloadStatusVoid OfferViewedWebhookEventPayloadStatus = "void"
+	OfferViewedWebhookEventPayloadStatusVoid     OfferViewedWebhookEventPayloadStatus = "void"
 )
 
 func (r OfferViewedWebhookEventPayloadStatus) IsKnown() bool {
@@ -4173,8 +4225,8 @@ func (r OfferViewedWebhookEventPayloadStatus) IsKnown() bool {
 type OfferViewedWebhookEventPayloadWorkerType string
 
 const (
-	OfferViewedWebhookEventPayloadWorkerTypeEmployee OfferViewedWebhookEventPayloadWorkerType = "employee"
-	OfferViewedWebhookEventPayloadWorkerTypeUsContractor OfferViewedWebhookEventPayloadWorkerType = "us_contractor"
+	OfferViewedWebhookEventPayloadWorkerTypeEmployee         OfferViewedWebhookEventPayloadWorkerType = "employee"
+	OfferViewedWebhookEventPayloadWorkerTypeUsContractor     OfferViewedWebhookEventPayloadWorkerType = "us_contractor"
 	OfferViewedWebhookEventPayloadWorkerTypeGlobalContractor OfferViewedWebhookEventPayloadWorkerType = "global_contractor"
 )
 
@@ -4188,21 +4240,21 @@ func (r OfferViewedWebhookEventPayloadWorkerType) IsKnown() bool {
 
 type OfferViewedWebhookEventPayloadCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
+	Email             string                                                   `json:"email" api:"required"`
 	ContractorDetails OfferViewedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON offerViewedWebhookEventPayloadCandidateJSON `json:"-"`
+	JSON              offerViewedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCandidateJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCandidate]
 type offerViewedWebhookEventPayloadCandidateJSON struct {
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
 	ContractorDetails apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferViewedWebhookEventPayloadCandidate) UnmarshalJSON(data []byte) (err error) {
@@ -4214,17 +4266,17 @@ func (r offerViewedWebhookEventPayloadCandidateJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadCandidateContractorDetails struct {
-	IsBusiness bool `json:"isBusiness" api:"required"`
-	LegalBusinessName string `json:"legalBusinessName" api:"required,nullable"`
-	JSON offerViewedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
+	IsBusiness        bool                                                         `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                                       `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerViewedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCandidateContractorDetails]
 type offerViewedWebhookEventPayloadCandidateContractorDetailsJSON struct {
-	IsBusiness apijson.Field
+	IsBusiness        apijson.Field
 	LegalBusinessName apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferViewedWebhookEventPayloadCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
@@ -4238,17 +4290,17 @@ func (r offerViewedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON() 
 type OfferViewedWebhookEventPayloadPosition struct {
 	Title string `json:"title" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	Country OfferViewedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
-	ScopeOfWork string `json:"scopeOfWork" api:"required,nullable"`
-	JSON offerViewedWebhookEventPayloadPositionJSON `json:"-"`
+	StartDate   string                                        `json:"startDate" api:"required"`
+	Country     OfferViewedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                                        `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerViewedWebhookEventPayloadPositionJSON    `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadPositionJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadPosition]
 type offerViewedWebhookEventPayloadPositionJSON struct {
-	Title apijson.Field
-	StartDate apijson.Field
-	Country apijson.Field
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
 	ScopeOfWork apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -4527,15 +4579,15 @@ func (r OfferViewedWebhookEventPayloadPositionCountry) IsKnown() bool {
 
 type OfferViewedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                       `json:"id" api:"required"`
+	Name string                                       `json:"name" api:"required"`
 	JSON offerViewedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadDepartment]
 type offerViewedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4548,17 +4600,40 @@ func (r offerViewedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferViewedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
+	ID   string                                      `json:"id" api:"required"`
+	Name string                                      `json:"name" api:"required"`
+	JSON offerViewedWebhookEventPayloadWorkplaceJSON `json:"-"`
+}
+
+// offerViewedWebhookEventPayloadWorkplaceJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadWorkplace]
+type offerViewedWebhookEventPayloadWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferViewedWebhookEventPayloadWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerViewedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferViewedWebhookEventPayloadManager struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required,nullable"`
+	ID   string                                    `json:"id" api:"required"`
+	Name string                                    `json:"name" api:"required,nullable"`
 	JSON offerViewedWebhookEventPayloadManagerJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadManagerJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadManager]
 type offerViewedWebhookEventPayloadManagerJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4572,21 +4647,21 @@ func (r offerViewedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadCompensation struct {
-	BasePay OfferViewedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus OfferViewedWebhookEventPayloadCompensationSignOnBonus `json:"signOnBonus" api:"required,nullable"`
+	BasePay         OfferViewedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
+	SignOnBonus     OfferViewedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
 	RelocationBonus OfferViewedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock OfferViewedWebhookEventPayloadCompensationStock `json:"stock" api:"required,nullable"`
-	JSON offerViewedWebhookEventPayloadCompensationJSON `json:"-"`
+	Stock           OfferViewedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
+	JSON            offerViewedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensation]
 type offerViewedWebhookEventPayloadCompensationJSON struct {
-	BasePay apijson.Field
-	SignOnBonus apijson.Field
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
 	RelocationBonus apijson.Field
-	Stock apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *OfferViewedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
@@ -4599,21 +4674,21 @@ func (r offerViewedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferViewedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount OfferViewedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
-	Basis OfferViewedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
-	Type OfferViewedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
+	Amount       OfferViewedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
+	Basis        OfferViewedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
+	Type         OfferViewedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
 	VariableRate OfferViewedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON offerViewedWebhookEventPayloadCompensationBasePayJSON `json:"-"`
+	JSON         offerViewedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationBasePayJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationBasePay]
 type offerViewedWebhookEventPayloadCompensationBasePayJSON struct {
-	Amount apijson.Field
-	Basis apijson.Field
-	Type apijson.Field
+	Amount       apijson.Field
+	Basis        apijson.Field
+	Type         apijson.Field
 	VariableRate apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *OfferViewedWebhookEventPayloadCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
@@ -4627,10 +4702,10 @@ func (r offerViewedWebhookEventPayloadCompensationBasePayJSON) RawJSON() string 
 type OfferViewedWebhookEventPayloadCompensationBasePayBasis string
 
 const (
-	OfferViewedWebhookEventPayloadCompensationBasePayBasisYear OfferViewedWebhookEventPayloadCompensationBasePayBasis = "year"
-	OfferViewedWebhookEventPayloadCompensationBasePayBasisMonth OfferViewedWebhookEventPayloadCompensationBasePayBasis = "month"
-	OfferViewedWebhookEventPayloadCompensationBasePayBasisWeek OfferViewedWebhookEventPayloadCompensationBasePayBasis = "week"
-	OfferViewedWebhookEventPayloadCompensationBasePayBasisHour OfferViewedWebhookEventPayloadCompensationBasePayBasis = "hour"
+	OfferViewedWebhookEventPayloadCompensationBasePayBasisYear     OfferViewedWebhookEventPayloadCompensationBasePayBasis = "year"
+	OfferViewedWebhookEventPayloadCompensationBasePayBasisMonth    OfferViewedWebhookEventPayloadCompensationBasePayBasis = "month"
+	OfferViewedWebhookEventPayloadCompensationBasePayBasisWeek     OfferViewedWebhookEventPayloadCompensationBasePayBasis = "week"
+	OfferViewedWebhookEventPayloadCompensationBasePayBasisHour     OfferViewedWebhookEventPayloadCompensationBasePayBasis = "hour"
 	OfferViewedWebhookEventPayloadCompensationBasePayBasisVariable OfferViewedWebhookEventPayloadCompensationBasePayBasis = "variable"
 )
 
@@ -4645,7 +4720,7 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayBasis) IsKnown() bool {
 type OfferViewedWebhookEventPayloadCompensationBasePayType string
 
 const (
-	OfferViewedWebhookEventPayloadCompensationBasePayTypeFixed OfferViewedWebhookEventPayloadCompensationBasePayType = "fixed"
+	OfferViewedWebhookEventPayloadCompensationBasePayTypeFixed      OfferViewedWebhookEventPayloadCompensationBasePayType = "fixed"
 	OfferViewedWebhookEventPayloadCompensationBasePayTypePayAsYouGo OfferViewedWebhookEventPayloadCompensationBasePayType = "pay_as_you_go"
 )
 
@@ -4659,18 +4734,18 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 
 type OfferViewedWebhookEventPayloadCompensationBasePayAmount struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                           `json:"amount" api:"required"`
 	Currency OfferViewedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerViewedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
+	Display string                                                      `json:"display" api:"required"`
+	JSON    offerViewedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationBasePayAmount]
 type offerViewedWebhookEventPayloadCompensationBasePayAmountJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4759,18 +4834,18 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnown
 
 type OfferViewedWebhookEventPayloadCompensationBasePayVariableRate struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                                 `json:"amount" api:"required"`
 	Currency OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
+	Display string                                                            `json:"display" api:"required"`
+	JSON    offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationBasePayVariableRate]
 type offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4859,18 +4934,18 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency) I
 
 type OfferViewedWebhookEventPayloadCompensationSignOnBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                         `json:"amount" api:"required"`
 	Currency OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerViewedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
+	Display string                                                    `json:"display" api:"required"`
+	JSON    offerViewedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationSignOnBonus]
 type offerViewedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -4959,18 +5034,18 @@ func (r OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown()
 
 type OfferViewedWebhookEventPayloadCompensationRelocationBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                             `json:"amount" api:"required"`
 	Currency OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerViewedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
+	Display string                                                        `json:"display" api:"required"`
+	JSON    offerViewedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationRelocationBonus]
 type offerViewedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5059,19 +5134,19 @@ func (r OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKno
 
 type OfferViewedWebhookEventPayloadCompensationStock struct {
 	// a non-negative number
-	Options int64 `json:"options" api:"required"`
-	VestingScheduleMonths int64 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths int64 `json:"cliffMonths" api:"required,nullable"`
-	JSON offerViewedWebhookEventPayloadCompensationStockJSON `json:"-"`
+	Options               int64                                               `json:"options" api:"required"`
+	VestingScheduleMonths int64                                               `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                               `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerViewedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadCompensationStockJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationStock]
 type offerViewedWebhookEventPayloadCompensationStockJSON struct {
-	Options apijson.Field
+	Options               apijson.Field
 	VestingScheduleMonths apijson.Field
-	CliffMonths apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	CliffMonths           apijson.Field
+	raw                   string
+	ExtraFields           map[string]apijson.Field
 }
 
 func (r *OfferViewedWebhookEventPayloadCompensationStock) UnmarshalJSON(data []byte) (err error) {
@@ -5087,18 +5162,18 @@ type OfferAcceptedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType OfferAcceptedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload OfferAcceptedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   OfferAcceptedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON offerAcceptedWebhookEventJSON `json:"-"`
+	CreatedAt string                        `json:"created_at" api:"required"`
+	JSON      offerAcceptedWebhookEventJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEvent]
 type offerAcceptedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5127,43 +5202,45 @@ func (r OfferAcceptedWebhookEventEventType) IsKnown() bool {
 
 type OfferAcceptedWebhookEventPayload struct {
 	// The tag of the offer.
-	ID string `json:"id" api:"required"`
-	Status OfferAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID         string                                     `json:"id" api:"required"`
+	Status     OfferAcceptedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferAcceptedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
-	Candidate OfferAcceptedWebhookEventPayloadCandidate `json:"candidate" api:"required"`
-	Position OfferAcceptedWebhookEventPayloadPosition `json:"position" api:"required"`
+	Candidate  OfferAcceptedWebhookEventPayloadCandidate  `json:"candidate" api:"required"`
+	Position   OfferAcceptedWebhookEventPayloadPosition   `json:"position" api:"required"`
 	Department OfferAcceptedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	Manager OfferAcceptedWebhookEventPayloadManager `json:"manager" api:"required,nullable"`
+	Workplace  OfferAcceptedWebhookEventPayloadWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferAcceptedWebhookEventPayloadManager    `json:"manager" api:"required,nullable"`
 	// Display name of the person or company that sent the offer. Null for offers not
 	// yet sent.
-	SentBy string `json:"sentBy" api:"required,nullable"`
+	SentBy       string                                       `json:"sentBy" api:"required,nullable"`
 	Compensation OfferAcceptedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL string `json:"offerUrl" api:"required,nullable"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt string `json:"lastViewedAt" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON offerAcceptedWebhookEventPayloadJSON `json:"-"`
+	CreatedAt string                               `json:"createdAt" api:"required"`
+	JSON      offerAcceptedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayload]
 type offerAcceptedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Status apijson.Field
-	WorkerType apijson.Field
-	Candidate apijson.Field
-	Position apijson.Field
-	Department apijson.Field
-	Manager apijson.Field
-	SentBy apijson.Field
-	Compensation apijson.Field
-	OfferURL apijson.Field
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
 	ExpirationTime apijson.Field
-	LastViewedAt apijson.Field
-	CreatedAt apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
 func (r *OfferAcceptedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -5177,10 +5254,10 @@ func (r offerAcceptedWebhookEventPayloadJSON) RawJSON() string {
 type OfferAcceptedWebhookEventPayloadStatus string
 
 const (
-	OfferAcceptedWebhookEventPayloadStatusDraft OfferAcceptedWebhookEventPayloadStatus = "draft"
-	OfferAcceptedWebhookEventPayloadStatusSent OfferAcceptedWebhookEventPayloadStatus = "sent"
+	OfferAcceptedWebhookEventPayloadStatusDraft    OfferAcceptedWebhookEventPayloadStatus = "draft"
+	OfferAcceptedWebhookEventPayloadStatusSent     OfferAcceptedWebhookEventPayloadStatus = "sent"
 	OfferAcceptedWebhookEventPayloadStatusAccepted OfferAcceptedWebhookEventPayloadStatus = "accepted"
-	OfferAcceptedWebhookEventPayloadStatusVoid OfferAcceptedWebhookEventPayloadStatus = "void"
+	OfferAcceptedWebhookEventPayloadStatusVoid     OfferAcceptedWebhookEventPayloadStatus = "void"
 )
 
 func (r OfferAcceptedWebhookEventPayloadStatus) IsKnown() bool {
@@ -5194,8 +5271,8 @@ func (r OfferAcceptedWebhookEventPayloadStatus) IsKnown() bool {
 type OfferAcceptedWebhookEventPayloadWorkerType string
 
 const (
-	OfferAcceptedWebhookEventPayloadWorkerTypeEmployee OfferAcceptedWebhookEventPayloadWorkerType = "employee"
-	OfferAcceptedWebhookEventPayloadWorkerTypeUsContractor OfferAcceptedWebhookEventPayloadWorkerType = "us_contractor"
+	OfferAcceptedWebhookEventPayloadWorkerTypeEmployee         OfferAcceptedWebhookEventPayloadWorkerType = "employee"
+	OfferAcceptedWebhookEventPayloadWorkerTypeUsContractor     OfferAcceptedWebhookEventPayloadWorkerType = "us_contractor"
 	OfferAcceptedWebhookEventPayloadWorkerTypeGlobalContractor OfferAcceptedWebhookEventPayloadWorkerType = "global_contractor"
 )
 
@@ -5209,21 +5286,21 @@ func (r OfferAcceptedWebhookEventPayloadWorkerType) IsKnown() bool {
 
 type OfferAcceptedWebhookEventPayloadCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
+	Email             string                                                     `json:"email" api:"required"`
 	ContractorDetails OfferAcceptedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON offerAcceptedWebhookEventPayloadCandidateJSON `json:"-"`
+	JSON              offerAcceptedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCandidateJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCandidate]
 type offerAcceptedWebhookEventPayloadCandidateJSON struct {
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
 	ContractorDetails apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferAcceptedWebhookEventPayloadCandidate) UnmarshalJSON(data []byte) (err error) {
@@ -5235,17 +5312,17 @@ func (r offerAcceptedWebhookEventPayloadCandidateJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadCandidateContractorDetails struct {
-	IsBusiness bool `json:"isBusiness" api:"required"`
-	LegalBusinessName string `json:"legalBusinessName" api:"required,nullable"`
-	JSON offerAcceptedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
+	IsBusiness        bool                                                           `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                                         `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerAcceptedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCandidateContractorDetails]
 type offerAcceptedWebhookEventPayloadCandidateContractorDetailsJSON struct {
-	IsBusiness apijson.Field
+	IsBusiness        apijson.Field
 	LegalBusinessName apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferAcceptedWebhookEventPayloadCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
@@ -5259,17 +5336,17 @@ func (r offerAcceptedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON(
 type OfferAcceptedWebhookEventPayloadPosition struct {
 	Title string `json:"title" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	Country OfferAcceptedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
-	ScopeOfWork string `json:"scopeOfWork" api:"required,nullable"`
-	JSON offerAcceptedWebhookEventPayloadPositionJSON `json:"-"`
+	StartDate   string                                          `json:"startDate" api:"required"`
+	Country     OfferAcceptedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                                          `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerAcceptedWebhookEventPayloadPositionJSON    `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadPositionJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadPosition]
 type offerAcceptedWebhookEventPayloadPositionJSON struct {
-	Title apijson.Field
-	StartDate apijson.Field
-	Country apijson.Field
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
 	ScopeOfWork apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -5548,15 +5625,15 @@ func (r OfferAcceptedWebhookEventPayloadPositionCountry) IsKnown() bool {
 
 type OfferAcceptedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                         `json:"id" api:"required"`
+	Name string                                         `json:"name" api:"required"`
 	JSON offerAcceptedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadDepartment]
 type offerAcceptedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5569,17 +5646,40 @@ func (r offerAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferAcceptedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
+	ID   string                                        `json:"id" api:"required"`
+	Name string                                        `json:"name" api:"required"`
+	JSON offerAcceptedWebhookEventPayloadWorkplaceJSON `json:"-"`
+}
+
+// offerAcceptedWebhookEventPayloadWorkplaceJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadWorkplace]
+type offerAcceptedWebhookEventPayloadWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferAcceptedWebhookEventPayloadWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerAcceptedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferAcceptedWebhookEventPayloadManager struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required,nullable"`
+	ID   string                                      `json:"id" api:"required"`
+	Name string                                      `json:"name" api:"required,nullable"`
 	JSON offerAcceptedWebhookEventPayloadManagerJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadManagerJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadManager]
 type offerAcceptedWebhookEventPayloadManagerJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5593,21 +5693,21 @@ func (r offerAcceptedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadCompensation struct {
-	BasePay OfferAcceptedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus OfferAcceptedWebhookEventPayloadCompensationSignOnBonus `json:"signOnBonus" api:"required,nullable"`
+	BasePay         OfferAcceptedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
+	SignOnBonus     OfferAcceptedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
 	RelocationBonus OfferAcceptedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock OfferAcceptedWebhookEventPayloadCompensationStock `json:"stock" api:"required,nullable"`
-	JSON offerAcceptedWebhookEventPayloadCompensationJSON `json:"-"`
+	Stock           OfferAcceptedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
+	JSON            offerAcceptedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensation]
 type offerAcceptedWebhookEventPayloadCompensationJSON struct {
-	BasePay apijson.Field
-	SignOnBonus apijson.Field
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
 	RelocationBonus apijson.Field
-	Stock apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *OfferAcceptedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
@@ -5620,21 +5720,21 @@ func (r offerAcceptedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferAcceptedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount OfferAcceptedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
-	Basis OfferAcceptedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
-	Type OfferAcceptedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
+	Amount       OfferAcceptedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
+	Basis        OfferAcceptedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
+	Type         OfferAcceptedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
 	VariableRate OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON offerAcceptedWebhookEventPayloadCompensationBasePayJSON `json:"-"`
+	JSON         offerAcceptedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationBasePayJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationBasePay]
 type offerAcceptedWebhookEventPayloadCompensationBasePayJSON struct {
-	Amount apijson.Field
-	Basis apijson.Field
-	Type apijson.Field
+	Amount       apijson.Field
+	Basis        apijson.Field
+	Type         apijson.Field
 	VariableRate apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *OfferAcceptedWebhookEventPayloadCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
@@ -5648,10 +5748,10 @@ func (r offerAcceptedWebhookEventPayloadCompensationBasePayJSON) RawJSON() strin
 type OfferAcceptedWebhookEventPayloadCompensationBasePayBasis string
 
 const (
-	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisYear OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "year"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisMonth OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "month"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisWeek OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "week"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisHour OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "hour"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisYear     OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "year"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisMonth    OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "month"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisWeek     OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "week"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisHour     OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "hour"
 	OfferAcceptedWebhookEventPayloadCompensationBasePayBasisVariable OfferAcceptedWebhookEventPayloadCompensationBasePayBasis = "variable"
 )
 
@@ -5666,7 +5766,7 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayBasis) IsKnown() bool
 type OfferAcceptedWebhookEventPayloadCompensationBasePayType string
 
 const (
-	OfferAcceptedWebhookEventPayloadCompensationBasePayTypeFixed OfferAcceptedWebhookEventPayloadCompensationBasePayType = "fixed"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayTypeFixed      OfferAcceptedWebhookEventPayloadCompensationBasePayType = "fixed"
 	OfferAcceptedWebhookEventPayloadCompensationBasePayTypePayAsYouGo OfferAcceptedWebhookEventPayloadCompensationBasePayType = "pay_as_you_go"
 )
 
@@ -5680,18 +5780,18 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayType) IsKnown() bool 
 
 type OfferAcceptedWebhookEventPayloadCompensationBasePayAmount struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                             `json:"amount" api:"required"`
 	Currency OfferAcceptedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerAcceptedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
+	Display string                                                        `json:"display" api:"required"`
+	JSON    offerAcceptedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationBasePayAmount]
 type offerAcceptedWebhookEventPayloadCompensationBasePayAmountJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5780,18 +5880,18 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKno
 
 type OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                                   `json:"amount" api:"required"`
 	Currency OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
+	Display string                                                              `json:"display" api:"required"`
+	JSON    offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate]
 type offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5880,18 +5980,18 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency)
 
 type OfferAcceptedWebhookEventPayloadCompensationSignOnBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                           `json:"amount" api:"required"`
 	Currency OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
+	Display string                                                      `json:"display" api:"required"`
+	JSON    offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationSignOnBonus]
 type offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -5980,18 +6080,18 @@ func (r OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown
 
 type OfferAcceptedWebhookEventPayloadCompensationRelocationBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                               `json:"amount" api:"required"`
 	Currency OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
+	Display string                                                          `json:"display" api:"required"`
+	JSON    offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationRelocationBonus]
 type offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -6080,19 +6180,19 @@ func (r OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency) IsK
 
 type OfferAcceptedWebhookEventPayloadCompensationStock struct {
 	// a non-negative number
-	Options int64 `json:"options" api:"required"`
-	VestingScheduleMonths int64 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths int64 `json:"cliffMonths" api:"required,nullable"`
-	JSON offerAcceptedWebhookEventPayloadCompensationStockJSON `json:"-"`
+	Options               int64                                                 `json:"options" api:"required"`
+	VestingScheduleMonths int64                                                 `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                                 `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerAcceptedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadCompensationStockJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationStock]
 type offerAcceptedWebhookEventPayloadCompensationStockJSON struct {
-	Options apijson.Field
+	Options               apijson.Field
 	VestingScheduleMonths apijson.Field
-	CliffMonths apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	CliffMonths           apijson.Field
+	raw                   string
+	ExtraFields           map[string]apijson.Field
 }
 
 func (r *OfferAcceptedWebhookEventPayloadCompensationStock) UnmarshalJSON(data []byte) (err error) {
@@ -6108,18 +6208,18 @@ type OfferVoidedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType OfferVoidedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload OfferVoidedWebhookEventPayload `json:"payload" api:"required"`
+	Payload   OfferVoidedWebhookEventPayload   `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON offerVoidedWebhookEventJSON `json:"-"`
+	CreatedAt string                      `json:"created_at" api:"required"`
+	JSON      offerVoidedWebhookEventJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventJSON contains the JSON metadata for the struct [OfferVoidedWebhookEvent]
 type offerVoidedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -6148,43 +6248,45 @@ func (r OfferVoidedWebhookEventEventType) IsKnown() bool {
 
 type OfferVoidedWebhookEventPayload struct {
 	// The tag of the offer.
-	ID string `json:"id" api:"required"`
-	Status OfferVoidedWebhookEventPayloadStatus `json:"status" api:"required"`
+	ID         string                                   `json:"id" api:"required"`
+	Status     OfferVoidedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferVoidedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
-	Candidate OfferVoidedWebhookEventPayloadCandidate `json:"candidate" api:"required"`
-	Position OfferVoidedWebhookEventPayloadPosition `json:"position" api:"required"`
+	Candidate  OfferVoidedWebhookEventPayloadCandidate  `json:"candidate" api:"required"`
+	Position   OfferVoidedWebhookEventPayloadPosition   `json:"position" api:"required"`
 	Department OfferVoidedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	Manager OfferVoidedWebhookEventPayloadManager `json:"manager" api:"required,nullable"`
+	Workplace  OfferVoidedWebhookEventPayloadWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferVoidedWebhookEventPayloadManager    `json:"manager" api:"required,nullable"`
 	// Display name of the person or company that sent the offer. Null for offers not
 	// yet sent.
-	SentBy string `json:"sentBy" api:"required,nullable"`
+	SentBy       string                                     `json:"sentBy" api:"required,nullable"`
 	Compensation OfferVoidedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL string `json:"offerUrl" api:"required,nullable"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt string `json:"lastViewedAt" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON offerVoidedWebhookEventPayloadJSON `json:"-"`
+	CreatedAt string                             `json:"createdAt" api:"required"`
+	JSON      offerVoidedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayload]
 type offerVoidedWebhookEventPayloadJSON struct {
-	ID apijson.Field
-	Status apijson.Field
-	WorkerType apijson.Field
-	Candidate apijson.Field
-	Position apijson.Field
-	Department apijson.Field
-	Manager apijson.Field
-	SentBy apijson.Field
-	Compensation apijson.Field
-	OfferURL apijson.Field
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
 	ExpirationTime apijson.Field
-	LastViewedAt apijson.Field
-	CreatedAt apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
 func (r *OfferVoidedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
@@ -6198,10 +6300,10 @@ func (r offerVoidedWebhookEventPayloadJSON) RawJSON() string {
 type OfferVoidedWebhookEventPayloadStatus string
 
 const (
-	OfferVoidedWebhookEventPayloadStatusDraft OfferVoidedWebhookEventPayloadStatus = "draft"
-	OfferVoidedWebhookEventPayloadStatusSent OfferVoidedWebhookEventPayloadStatus = "sent"
+	OfferVoidedWebhookEventPayloadStatusDraft    OfferVoidedWebhookEventPayloadStatus = "draft"
+	OfferVoidedWebhookEventPayloadStatusSent     OfferVoidedWebhookEventPayloadStatus = "sent"
 	OfferVoidedWebhookEventPayloadStatusAccepted OfferVoidedWebhookEventPayloadStatus = "accepted"
-	OfferVoidedWebhookEventPayloadStatusVoid OfferVoidedWebhookEventPayloadStatus = "void"
+	OfferVoidedWebhookEventPayloadStatusVoid     OfferVoidedWebhookEventPayloadStatus = "void"
 )
 
 func (r OfferVoidedWebhookEventPayloadStatus) IsKnown() bool {
@@ -6215,8 +6317,8 @@ func (r OfferVoidedWebhookEventPayloadStatus) IsKnown() bool {
 type OfferVoidedWebhookEventPayloadWorkerType string
 
 const (
-	OfferVoidedWebhookEventPayloadWorkerTypeEmployee OfferVoidedWebhookEventPayloadWorkerType = "employee"
-	OfferVoidedWebhookEventPayloadWorkerTypeUsContractor OfferVoidedWebhookEventPayloadWorkerType = "us_contractor"
+	OfferVoidedWebhookEventPayloadWorkerTypeEmployee         OfferVoidedWebhookEventPayloadWorkerType = "employee"
+	OfferVoidedWebhookEventPayloadWorkerTypeUsContractor     OfferVoidedWebhookEventPayloadWorkerType = "us_contractor"
 	OfferVoidedWebhookEventPayloadWorkerTypeGlobalContractor OfferVoidedWebhookEventPayloadWorkerType = "global_contractor"
 )
 
@@ -6230,21 +6332,21 @@ func (r OfferVoidedWebhookEventPayloadWorkerType) IsKnown() bool {
 
 type OfferVoidedWebhookEventPayloadCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
-	LastName string `json:"lastName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email string `json:"email" api:"required"`
+	Email             string                                                   `json:"email" api:"required"`
 	ContractorDetails OfferVoidedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON offerVoidedWebhookEventPayloadCandidateJSON `json:"-"`
+	JSON              offerVoidedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCandidateJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCandidate]
 type offerVoidedWebhookEventPayloadCandidateJSON struct {
-	FirstName apijson.Field
-	LastName apijson.Field
-	Email apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
 	ContractorDetails apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferVoidedWebhookEventPayloadCandidate) UnmarshalJSON(data []byte) (err error) {
@@ -6256,17 +6358,17 @@ func (r offerVoidedWebhookEventPayloadCandidateJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadCandidateContractorDetails struct {
-	IsBusiness bool `json:"isBusiness" api:"required"`
-	LegalBusinessName string `json:"legalBusinessName" api:"required,nullable"`
-	JSON offerVoidedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
+	IsBusiness        bool                                                         `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                                       `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerVoidedWebhookEventPayloadCandidateContractorDetailsJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCandidateContractorDetails]
 type offerVoidedWebhookEventPayloadCandidateContractorDetailsJSON struct {
-	IsBusiness apijson.Field
+	IsBusiness        apijson.Field
 	LegalBusinessName apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *OfferVoidedWebhookEventPayloadCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
@@ -6280,17 +6382,17 @@ func (r offerVoidedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON() 
 type OfferVoidedWebhookEventPayloadPosition struct {
 	Title string `json:"title" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	StartDate string `json:"startDate" api:"required"`
-	Country OfferVoidedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
-	ScopeOfWork string `json:"scopeOfWork" api:"required,nullable"`
-	JSON offerVoidedWebhookEventPayloadPositionJSON `json:"-"`
+	StartDate   string                                        `json:"startDate" api:"required"`
+	Country     OfferVoidedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                                        `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerVoidedWebhookEventPayloadPositionJSON    `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadPositionJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadPosition]
 type offerVoidedWebhookEventPayloadPositionJSON struct {
-	Title apijson.Field
-	StartDate apijson.Field
-	Country apijson.Field
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
 	ScopeOfWork apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -6569,15 +6671,15 @@ func (r OfferVoidedWebhookEventPayloadPositionCountry) IsKnown() bool {
 
 type OfferVoidedWebhookEventPayloadDepartment struct {
 	// The unique public id of the department
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
+	ID   string                                       `json:"id" api:"required"`
+	Name string                                       `json:"name" api:"required"`
 	JSON offerVoidedWebhookEventPayloadDepartmentJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadDepartmentJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadDepartment]
 type offerVoidedWebhookEventPayloadDepartmentJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -6590,17 +6692,40 @@ func (r offerVoidedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferVoidedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
+	ID   string                                      `json:"id" api:"required"`
+	Name string                                      `json:"name" api:"required"`
+	JSON offerVoidedWebhookEventPayloadWorkplaceJSON `json:"-"`
+}
+
+// offerVoidedWebhookEventPayloadWorkplaceJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadWorkplace]
+type offerVoidedWebhookEventPayloadWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidedWebhookEventPayloadWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferVoidedWebhookEventPayloadManager struct {
 	// The id of the worker.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required,nullable"`
+	ID   string                                    `json:"id" api:"required"`
+	Name string                                    `json:"name" api:"required,nullable"`
 	JSON offerVoidedWebhookEventPayloadManagerJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadManagerJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadManager]
 type offerVoidedWebhookEventPayloadManagerJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -6614,21 +6739,21 @@ func (r offerVoidedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadCompensation struct {
-	BasePay OfferVoidedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus OfferVoidedWebhookEventPayloadCompensationSignOnBonus `json:"signOnBonus" api:"required,nullable"`
+	BasePay         OfferVoidedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
+	SignOnBonus     OfferVoidedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
 	RelocationBonus OfferVoidedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock OfferVoidedWebhookEventPayloadCompensationStock `json:"stock" api:"required,nullable"`
-	JSON offerVoidedWebhookEventPayloadCompensationJSON `json:"-"`
+	Stock           OfferVoidedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
+	JSON            offerVoidedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensation]
 type offerVoidedWebhookEventPayloadCompensationJSON struct {
-	BasePay apijson.Field
-	SignOnBonus apijson.Field
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
 	RelocationBonus apijson.Field
-	Stock apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *OfferVoidedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
@@ -6641,21 +6766,21 @@ func (r offerVoidedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferVoidedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount OfferVoidedWebhookEventPayloadCompensationBasePayAmount `json:"amount" api:"required"`
-	Basis OfferVoidedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
-	Type OfferVoidedWebhookEventPayloadCompensationBasePayType `json:"type" api:"required,nullable"`
+	Amount       OfferVoidedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
+	Basis        OfferVoidedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
+	Type         OfferVoidedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
 	VariableRate OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON offerVoidedWebhookEventPayloadCompensationBasePayJSON `json:"-"`
+	JSON         offerVoidedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationBasePayJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationBasePay]
 type offerVoidedWebhookEventPayloadCompensationBasePayJSON struct {
-	Amount apijson.Field
-	Basis apijson.Field
-	Type apijson.Field
+	Amount       apijson.Field
+	Basis        apijson.Field
+	Type         apijson.Field
 	VariableRate apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *OfferVoidedWebhookEventPayloadCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
@@ -6669,10 +6794,10 @@ func (r offerVoidedWebhookEventPayloadCompensationBasePayJSON) RawJSON() string 
 type OfferVoidedWebhookEventPayloadCompensationBasePayBasis string
 
 const (
-	OfferVoidedWebhookEventPayloadCompensationBasePayBasisYear OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "year"
-	OfferVoidedWebhookEventPayloadCompensationBasePayBasisMonth OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "month"
-	OfferVoidedWebhookEventPayloadCompensationBasePayBasisWeek OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "week"
-	OfferVoidedWebhookEventPayloadCompensationBasePayBasisHour OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "hour"
+	OfferVoidedWebhookEventPayloadCompensationBasePayBasisYear     OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "year"
+	OfferVoidedWebhookEventPayloadCompensationBasePayBasisMonth    OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "month"
+	OfferVoidedWebhookEventPayloadCompensationBasePayBasisWeek     OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "week"
+	OfferVoidedWebhookEventPayloadCompensationBasePayBasisHour     OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "hour"
 	OfferVoidedWebhookEventPayloadCompensationBasePayBasisVariable OfferVoidedWebhookEventPayloadCompensationBasePayBasis = "variable"
 )
 
@@ -6687,7 +6812,7 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayBasis) IsKnown() bool {
 type OfferVoidedWebhookEventPayloadCompensationBasePayType string
 
 const (
-	OfferVoidedWebhookEventPayloadCompensationBasePayTypeFixed OfferVoidedWebhookEventPayloadCompensationBasePayType = "fixed"
+	OfferVoidedWebhookEventPayloadCompensationBasePayTypeFixed      OfferVoidedWebhookEventPayloadCompensationBasePayType = "fixed"
 	OfferVoidedWebhookEventPayloadCompensationBasePayTypePayAsYouGo OfferVoidedWebhookEventPayloadCompensationBasePayType = "pay_as_you_go"
 )
 
@@ -6701,18 +6826,18 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 
 type OfferVoidedWebhookEventPayloadCompensationBasePayAmount struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                           `json:"amount" api:"required"`
 	Currency OfferVoidedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerVoidedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
+	Display string                                                      `json:"display" api:"required"`
+	JSON    offerVoidedWebhookEventPayloadCompensationBasePayAmountJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationBasePayAmount]
 type offerVoidedWebhookEventPayloadCompensationBasePayAmountJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -6801,18 +6926,18 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnown
 
 type OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                                 `json:"amount" api:"required"`
 	Currency OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
+	Display string                                                            `json:"display" api:"required"`
+	JSON    offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate]
 type offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -6901,18 +7026,18 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency) I
 
 type OfferVoidedWebhookEventPayloadCompensationSignOnBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                         `json:"amount" api:"required"`
 	Currency OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
+	Display string                                                    `json:"display" api:"required"`
+	JSON    offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationSignOnBonus]
 type offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -7001,18 +7126,18 @@ func (r OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown()
 
 type OfferVoidedWebhookEventPayloadCompensationRelocationBonus struct {
 	// Amount in the currency base unit, e.g. cents for USD.
-	Amount int64 `json:"amount" api:"required"`
+	Amount   int64                                                             `json:"amount" api:"required"`
 	Currency OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
-	Display string `json:"display" api:"required"`
-	JSON offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
+	Display string                                                        `json:"display" api:"required"`
+	JSON    offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationRelocationBonus]
 type offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount apijson.Field
-	Currency apijson.Field
-	Display apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -7101,19 +7226,19 @@ func (r OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKno
 
 type OfferVoidedWebhookEventPayloadCompensationStock struct {
 	// a non-negative number
-	Options int64 `json:"options" api:"required"`
-	VestingScheduleMonths int64 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths int64 `json:"cliffMonths" api:"required,nullable"`
-	JSON offerVoidedWebhookEventPayloadCompensationStockJSON `json:"-"`
+	Options               int64                                               `json:"options" api:"required"`
+	VestingScheduleMonths int64                                               `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                               `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerVoidedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadCompensationStockJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationStock]
 type offerVoidedWebhookEventPayloadCompensationStockJSON struct {
-	Options apijson.Field
+	Options               apijson.Field
 	VestingScheduleMonths apijson.Field
-	CliffMonths apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	CliffMonths           apijson.Field
+	raw                   string
+	ExtraFields           map[string]apijson.Field
 }
 
 func (r *OfferVoidedWebhookEventPayloadCompensationStock) UnmarshalJSON(data []byte) (err error) {
@@ -7125,20 +7250,20 @@ func (r offerVoidedWebhookEventPayloadCompensationStockJSON) RawJSON() string {
 }
 
 type ParsedWebhookEvent struct {
-	ID string `json:"id" api:"required"`
+	ID        string                      `json:"id" api:"required"`
 	EventType ParsedWebhookEventEventType `json:"event_type"`
-	Payload interface{} `json:"payload" api:"required"`
-	CreatedAt string `json:"created_at" api:"required"`
-	JSON parsedWebhookEventJSON `json:"-"`
-	union ParsedWebhookEventUnion
+	Payload   interface{}                 `json:"payload" api:"required"`
+	CreatedAt string                      `json:"created_at" api:"required"`
+	JSON      parsedWebhookEventJSON      `json:"-"`
+	union     ParsedWebhookEventUnion
 }
 
 // parsedWebhookEventJSON contains the JSON metadata for the struct [ParsedWebhookEvent]
 type parsedWebhookEventJSON struct {
-	ID apijson.Field
-	EventType apijson.Field
-	Payload apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	EventType   apijson.Field
+	Payload     apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -7282,24 +7407,24 @@ func (r OfferVoidedWebhookEvent) implementsParsedWebhookEvent() {}
 type ParsedWebhookEventEventType string
 
 const (
-	ParsedWebhookEventEventTypeTimeOffRequestCreated ParsedWebhookEventEventType = "time_off:request:created"
-	ParsedWebhookEventEventTypeTimeOffRequestReviewed ParsedWebhookEventEventType = "time_off:request:reviewed"
-	ParsedWebhookEventEventTypeTimeOffRequestDeleted ParsedWebhookEventEventType = "time_off:request:deleted"
-	ParsedWebhookEventEventTypeTimeOffBalanceAdjusted ParsedWebhookEventEventType = "time_off:balance:adjusted"
-	ParsedWebhookEventEventTypeWorkerCreated ParsedWebhookEventEventType = "worker:created"
-	ParsedWebhookEventEventTypeWorkerUpdated ParsedWebhookEventEventType = "worker:updated"
-	ParsedWebhookEventEventTypeWorkerDeleted ParsedWebhookEventEventType = "worker:deleted"
-	ParsedWebhookEventEventTypeWorkerInviteSent ParsedWebhookEventEventType = "worker:invite_sent"
-	ParsedWebhookEventEventTypeWorkerInviteAccepted ParsedWebhookEventEventType = "worker:invite_accepted"
+	ParsedWebhookEventEventTypeTimeOffRequestCreated     ParsedWebhookEventEventType = "time_off:request:created"
+	ParsedWebhookEventEventTypeTimeOffRequestReviewed    ParsedWebhookEventEventType = "time_off:request:reviewed"
+	ParsedWebhookEventEventTypeTimeOffRequestDeleted     ParsedWebhookEventEventType = "time_off:request:deleted"
+	ParsedWebhookEventEventTypeTimeOffBalanceAdjusted    ParsedWebhookEventEventType = "time_off:balance:adjusted"
+	ParsedWebhookEventEventTypeWorkerCreated             ParsedWebhookEventEventType = "worker:created"
+	ParsedWebhookEventEventTypeWorkerUpdated             ParsedWebhookEventEventType = "worker:updated"
+	ParsedWebhookEventEventTypeWorkerDeleted             ParsedWebhookEventEventType = "worker:deleted"
+	ParsedWebhookEventEventTypeWorkerInviteSent          ParsedWebhookEventEventType = "worker:invite_sent"
+	ParsedWebhookEventEventTypeWorkerInviteAccepted      ParsedWebhookEventEventType = "worker:invite_accepted"
 	ParsedWebhookEventEventTypeWorkerOnboardingCompleted ParsedWebhookEventEventType = "worker:onboarding_completed"
-	ParsedWebhookEventEventTypeWorkerOffboardingStarted ParsedWebhookEventEventType = "worker:offboarding_started"
-	ParsedWebhookEventEventTypeWorkerOffboarded ParsedWebhookEventEventType = "worker:offboarded"
-	ParsedWebhookEventEventTypeWorkerReactivated ParsedWebhookEventEventType = "worker:reactivated"
-	ParsedWebhookEventEventTypeOfferCreated ParsedWebhookEventEventType = "offer:created"
-	ParsedWebhookEventEventTypeOfferSent ParsedWebhookEventEventType = "offer:sent"
-	ParsedWebhookEventEventTypeOfferViewed ParsedWebhookEventEventType = "offer:viewed"
-	ParsedWebhookEventEventTypeOfferAccepted ParsedWebhookEventEventType = "offer:accepted"
-	ParsedWebhookEventEventTypeOfferVoided ParsedWebhookEventEventType = "offer:voided"
+	ParsedWebhookEventEventTypeWorkerOffboardingStarted  ParsedWebhookEventEventType = "worker:offboarding_started"
+	ParsedWebhookEventEventTypeWorkerOffboarded          ParsedWebhookEventEventType = "worker:offboarded"
+	ParsedWebhookEventEventTypeWorkerReactivated         ParsedWebhookEventEventType = "worker:reactivated"
+	ParsedWebhookEventEventTypeOfferCreated              ParsedWebhookEventEventType = "offer:created"
+	ParsedWebhookEventEventTypeOfferSent                 ParsedWebhookEventEventType = "offer:sent"
+	ParsedWebhookEventEventTypeOfferViewed               ParsedWebhookEventEventType = "offer:viewed"
+	ParsedWebhookEventEventTypeOfferAccepted             ParsedWebhookEventEventType = "offer:accepted"
+	ParsedWebhookEventEventTypeOfferVoided               ParsedWebhookEventEventType = "offer:voided"
 )
 
 func (r ParsedWebhookEventEventType) IsKnown() bool {

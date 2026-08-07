@@ -19,7 +19,7 @@ import (
 // with the API. You should not instantiate this service directly, and instead use
 // the [NewTimeOffService] method instead.
 type TimeOffService struct {
-	Options []option.RequestOption
+	Options  []option.RequestOption
 	Policies *TimeOffPolicyService
 }
 
@@ -36,21 +36,23 @@ func NewTimeOffService(opts ...option.RequestOption) (r *TimeOffService) {
 // Time off assignments are mappings between workers and time off policies. Useful for finding out which policies a worker is assigned to, or which workers are assigned to a given policy.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: TimeOffListAssignmentsParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: TimeOffListAssignmentsParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *TimeOffListAssignmentsResponse: Success
+//
+//	*TimeOffListAssignmentsResponse: Success
 //
 // Example:
 //
-//     timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(timeOff)
+//	fmt.Println(timeOff)
 func (r *TimeOffService) ListAssignments(ctx context.Context, query TimeOffListAssignmentsParams, opts ...option.RequestOption) (res *TimeOffListAssignmentsResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/time_off/assignments"
@@ -61,21 +63,23 @@ func (r *TimeOffService) ListAssignments(ctx context.Context, query TimeOffListA
 // Get worker remaining time-off balances.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: TimeOffListBalancesParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: TimeOffListBalancesParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *TimeOffListBalancesResponse: Success
+//
+//	*TimeOffListBalancesResponse: Success
 //
 // Example:
 //
-//     timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(timeOff)
+//	fmt.Println(timeOff)
 func (r *TimeOffService) ListBalances(ctx context.Context, query TimeOffListBalancesParams, opts ...option.RequestOption) (res *TimeOffListBalancesResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/time_off/balances"
@@ -86,21 +90,23 @@ func (r *TimeOffService) ListBalances(ctx context.Context, query TimeOffListBala
 // Get the time off requests that workers in your company have made.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: TimeOffListRequestsParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: TimeOffListRequestsParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *TimeOffListRequestsResponse: Success
+//
+//	*TimeOffListRequestsResponse: Success
 //
 // Example:
 //
-//     timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(timeOff)
+//	fmt.Println(timeOff)
 func (r *TimeOffService) ListRequests(ctx context.Context, query TimeOffListRequestsParams, opts ...option.RequestOption) (res *TimeOffListRequestsResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/time_off/requests"
@@ -109,10 +115,10 @@ func (r *TimeOffService) ListRequests(ctx context.Context, query TimeOffListRequ
 }
 
 type TimeOffListAssignmentsParams struct {
-	AfterID param.Field[string] `query:"afterId"`
+	AfterID  param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
 	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
+	Limit     param.Field[string]   `query:"limit"`
 	PolicyIDs param.Field[[]string] `query:"policyIds"`
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
@@ -126,15 +132,15 @@ func (r TimeOffListAssignmentsParams) URLQuery() (v url.Values) {
 }
 
 type TimeOffListBalancesParams struct {
-	AfterID param.Field[string] `query:"afterId"`
+	AfterID  param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
 	// a string to be decoded into a Date
 	EndDate param.Field[string] `query:"endDate"`
 	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
+	Limit     param.Field[string]   `query:"limit"`
 	PolicyIDs param.Field[[]string] `query:"policyIds"`
 	// a string to be decoded into a Date
-	StartDate param.Field[string] `query:"startDate"`
+	StartDate param.Field[string]   `query:"startDate"`
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
 
@@ -147,21 +153,21 @@ func (r TimeOffListBalancesParams) URLQuery() (v url.Values) {
 }
 
 type TimeOffListRequestsParams struct {
-	AfterID param.Field[string] `query:"afterId"`
+	AfterID  param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
 	// a string to be decoded into a Date
 	EndsBefore param.Field[string] `query:"endsBefore"`
 	// a string to be decoded into a Date
 	EndsOnOrAfter param.Field[string] `query:"endsOnOrAfter"`
 	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
+	Limit     param.Field[string]   `query:"limit"`
 	PolicyIDs param.Field[[]string] `query:"policyIds"`
 	// a string to be decoded into a Date
 	StartsBefore param.Field[string] `query:"startsBefore"`
 	// a string to be decoded into a Date
-	StartsOnOrAfter param.Field[string] `query:"startsOnOrAfter"`
-	Statuses param.Field[[]TimeOffListRequestsParamsStatus] `query:"statuses"`
-	WorkerIDs param.Field[[]string] `query:"workerIds"`
+	StartsOnOrAfter param.Field[string]                            `query:"startsOnOrAfter"`
+	Statuses        param.Field[[]TimeOffListRequestsParamsStatus] `query:"statuses"`
+	WorkerIDs       param.Field[[]string]                          `query:"workerIds"`
 }
 
 // URLQuery serializes [TimeOffListRequestsParams]'s query parameters as `url.Values`.
@@ -175,9 +181,9 @@ func (r TimeOffListRequestsParams) URLQuery() (v url.Values) {
 type TimeOffListRequestsParamsStatus string
 
 const (
-	TimeOffListRequestsParamsStatusPending TimeOffListRequestsParamsStatus = "pending"
+	TimeOffListRequestsParamsStatusPending  TimeOffListRequestsParamsStatus = "pending"
 	TimeOffListRequestsParamsStatusApproved TimeOffListRequestsParamsStatus = "approved"
-	TimeOffListRequestsParamsStatusDenied TimeOffListRequestsParamsStatus = "denied"
+	TimeOffListRequestsParamsStatusDenied   TimeOffListRequestsParamsStatus = "denied"
 )
 
 func (r TimeOffListRequestsParamsStatus) IsKnown() bool {
@@ -191,16 +197,16 @@ func (r TimeOffListRequestsParamsStatus) IsKnown() bool {
 type TimeOffListAssignmentsResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []TimeOffListAssignmentsResponseData `json:"data" api:"required"`
-	JSON timeOffListAssignmentsResponseJSON `json:"-"`
+	Count int64                                `json:"count" api:"required"`
+	Data  []TimeOffListAssignmentsResponseData `json:"data" api:"required"`
+	JSON  timeOffListAssignmentsResponseJSON   `json:"-"`
 }
 
 // timeOffListAssignmentsResponseJSON contains the JSON metadata for the struct [TimeOffListAssignmentsResponse]
 type timeOffListAssignmentsResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -216,16 +222,16 @@ func (r timeOffListAssignmentsResponseJSON) RawJSON() string {
 type TimeOffListBalancesResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []TimeOffListBalancesResponseData `json:"data" api:"required"`
-	JSON timeOffListBalancesResponseJSON `json:"-"`
+	Count int64                             `json:"count" api:"required"`
+	Data  []TimeOffListBalancesResponseData `json:"data" api:"required"`
+	JSON  timeOffListBalancesResponseJSON   `json:"-"`
 }
 
 // timeOffListBalancesResponseJSON contains the JSON metadata for the struct [TimeOffListBalancesResponse]
 type timeOffListBalancesResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -241,16 +247,16 @@ func (r timeOffListBalancesResponseJSON) RawJSON() string {
 type TimeOffListRequestsResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []TimeOffListRequestsResponseData `json:"data" api:"required"`
-	JSON timeOffListRequestsResponseJSON `json:"-"`
+	Count int64                             `json:"count" api:"required"`
+	Data  []TimeOffListRequestsResponseData `json:"data" api:"required"`
+	JSON  timeOffListRequestsResponseJSON   `json:"-"`
 }
 
 // timeOffListRequestsResponseJSON contains the JSON metadata for the struct [TimeOffListRequestsResponse]
 type timeOffListRequestsResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -270,16 +276,16 @@ type TimeOffListAssignmentsResponseData struct {
 	// The id of the worker.
 	WorkerID string `json:"workerId" api:"required"`
 	// a string to be decoded into a Date
-	AssignedAt string `json:"assignedAt" api:"required"`
-	JSON timeOffListAssignmentsResponseDataJSON `json:"-"`
+	AssignedAt string                                 `json:"assignedAt" api:"required"`
+	JSON       timeOffListAssignmentsResponseDataJSON `json:"-"`
 }
 
 // timeOffListAssignmentsResponseDataJSON contains the JSON metadata for the struct [TimeOffListAssignmentsResponseData]
 type timeOffListAssignmentsResponseDataJSON struct {
-	ID apijson.Field
-	PolicyID apijson.Field
-	WorkerID apijson.Field
-	AssignedAt apijson.Field
+	ID          apijson.Field
+	PolicyID    apijson.Field
+	WorkerID    apijson.Field
+	AssignedAt  apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -295,28 +301,28 @@ func (r timeOffListAssignmentsResponseDataJSON) RawJSON() string {
 type TimeOffListBalancesResponseData struct {
 	ID string `json:"id" api:"required"`
 	// a string starting with "top_"
-	PolicyID string `json:"policyId" api:"required"`
-	LegacyWorkerID string `json:"legacyWorkerId" api:"required"`
-	AccruedUnlocked float64 `json:"accruedUnlocked" api:"required"`
-	AccruedLocked float64 `json:"accruedLocked" api:"required"`
-	Used float64 `json:"used" api:"required"`
-	Holds float64 `json:"holds" api:"required"`
-	Available float64 `json:"available" api:"required"`
-	JSON timeOffListBalancesResponseDataJSON `json:"-"`
+	PolicyID        string                              `json:"policyId" api:"required"`
+	LegacyWorkerID  string                              `json:"legacyWorkerId" api:"required"`
+	AccruedUnlocked float64                             `json:"accruedUnlocked" api:"required"`
+	AccruedLocked   float64                             `json:"accruedLocked" api:"required"`
+	Used            float64                             `json:"used" api:"required"`
+	Holds           float64                             `json:"holds" api:"required"`
+	Available       float64                             `json:"available" api:"required"`
+	JSON            timeOffListBalancesResponseDataJSON `json:"-"`
 }
 
 // timeOffListBalancesResponseDataJSON contains the JSON metadata for the struct [TimeOffListBalancesResponseData]
 type timeOffListBalancesResponseDataJSON struct {
-	ID apijson.Field
-	PolicyID apijson.Field
-	LegacyWorkerID apijson.Field
+	ID              apijson.Field
+	PolicyID        apijson.Field
+	LegacyWorkerID  apijson.Field
 	AccruedUnlocked apijson.Field
-	AccruedLocked apijson.Field
-	Used apijson.Field
-	Holds apijson.Field
-	Available apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	AccruedLocked   apijson.Field
+	Used            apijson.Field
+	Holds           apijson.Field
+	Available       apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *TimeOffListBalancesResponseData) UnmarshalJSON(data []byte) (err error) {
@@ -332,39 +338,39 @@ type TimeOffListRequestsResponseData struct {
 	// a string starting with "top_"
 	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	Status TimeOffListRequestsResponseDataStatus `json:"status" api:"required"`
+	WorkerID string                                `json:"workerId" api:"required"`
+	Status   TimeOffListRequestsResponseDataStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	StartAt string `json:"startAt" api:"required"`
+	StartAt        string                                        `json:"startAt" api:"required"`
 	StartRangeType TimeOffListRequestsResponseDataStartRangeType `json:"startRangeType" api:"required"`
 	// a string to be decoded into a Date
-	EndAt string `json:"endAt" api:"required"`
+	EndAt        string                                      `json:"endAt" api:"required"`
 	EndRangeType TimeOffListRequestsResponseDataEndRangeType `json:"endRangeType" api:"required"`
-	Reason string `json:"reason" api:"required,nullable"`
+	Reason       string                                      `json:"reason" api:"required,nullable"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
+	CreatedAt        string  `json:"createdAt" api:"required"`
 	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	JSON timeOffListRequestsResponseDataJSON `json:"-"`
+	TimeZone string                              `json:"timeZone" api:"required,nullable"`
+	JSON     timeOffListRequestsResponseDataJSON `json:"-"`
 }
 
 // timeOffListRequestsResponseDataJSON contains the JSON metadata for the struct [TimeOffListRequestsResponseData]
 type timeOffListRequestsResponseDataJSON struct {
-	ID apijson.Field
-	TimeOffPolicyID apijson.Field
-	WorkerID apijson.Field
-	Status apijson.Field
-	StartAt apijson.Field
-	StartRangeType apijson.Field
-	EndAt apijson.Field
-	EndRangeType apijson.Field
-	Reason apijson.Field
-	CreatedAt apijson.Field
+	ID               apijson.Field
+	TimeOffPolicyID  apijson.Field
+	WorkerID         apijson.Field
+	Status           apijson.Field
+	StartAt          apijson.Field
+	StartRangeType   apijson.Field
+	EndAt            apijson.Field
+	EndRangeType     apijson.Field
+	Reason           apijson.Field
+	CreatedAt        apijson.Field
 	RequestedMinutes apijson.Field
-	TimeZone apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	TimeZone         apijson.Field
+	raw              string
+	ExtraFields      map[string]apijson.Field
 }
 
 func (r *TimeOffListRequestsResponseData) UnmarshalJSON(data []byte) (err error) {
@@ -378,9 +384,9 @@ func (r timeOffListRequestsResponseDataJSON) RawJSON() string {
 type TimeOffListRequestsResponseDataStatus string
 
 const (
-	TimeOffListRequestsResponseDataStatusPending TimeOffListRequestsResponseDataStatus = "pending"
+	TimeOffListRequestsResponseDataStatusPending  TimeOffListRequestsResponseDataStatus = "pending"
 	TimeOffListRequestsResponseDataStatusApproved TimeOffListRequestsResponseDataStatus = "approved"
-	TimeOffListRequestsResponseDataStatusDenied TimeOffListRequestsResponseDataStatus = "denied"
+	TimeOffListRequestsResponseDataStatusDenied   TimeOffListRequestsResponseDataStatus = "denied"
 )
 
 func (r TimeOffListRequestsResponseDataStatus) IsKnown() bool {
@@ -394,7 +400,7 @@ func (r TimeOffListRequestsResponseDataStatus) IsKnown() bool {
 type TimeOffListRequestsResponseDataStartRangeType string
 
 const (
-	TimeOffListRequestsResponseDataStartRangeTypeDate TimeOffListRequestsResponseDataStartRangeType = "date"
+	TimeOffListRequestsResponseDataStartRangeTypeDate     TimeOffListRequestsResponseDataStartRangeType = "date"
 	TimeOffListRequestsResponseDataStartRangeTypeDatetime TimeOffListRequestsResponseDataStartRangeType = "datetime"
 )
 
@@ -409,7 +415,7 @@ func (r TimeOffListRequestsResponseDataStartRangeType) IsKnown() bool {
 type TimeOffListRequestsResponseDataEndRangeType string
 
 const (
-	TimeOffListRequestsResponseDataEndRangeTypeDate TimeOffListRequestsResponseDataEndRangeType = "date"
+	TimeOffListRequestsResponseDataEndRangeTypeDate     TimeOffListRequestsResponseDataEndRangeType = "date"
 	TimeOffListRequestsResponseDataEndRangeTypeDatetime TimeOffListRequestsResponseDataEndRangeType = "datetime"
 )
 

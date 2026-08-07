@@ -39,20 +39,22 @@ func NewCustomFieldService(opts ...option.RequestOption) (r *CustomFieldService)
 // List the custom worker field definitions your API key can read. Each field belongs to a worker-data category; fields whose category your key cannot read are omitted unless the key holds workers:custom_fields.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *[]CustomFieldListResponse: Success
+//
+//	*[]CustomFieldListResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.List(context.Background())
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.List(context.Background())
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOption) (res *[]CustomFieldListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/custom_fields"
@@ -63,23 +65,25 @@ func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOpt
 // Create a custom worker field definition. The field type is immutable after creation. Select and multi_select fields can include their initial options. Access to values derives from the field category; requires the workers:custom_fields permission.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: CustomFieldNewParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: CustomFieldNewParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldNewResponse: Success
+//
+//	*CustomFieldNewResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
-//     	Name: sdk.F[string](""),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
+//		Name: sdk.F[string](""),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) New(ctx context.Context, body CustomFieldNewParams, opts ...option.RequestOption) (res *CustomFieldNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/custom_fields"
@@ -90,21 +94,23 @@ func (r *CustomFieldService) New(ctx context.Context, body CustomFieldNewParams,
 // Get a custom worker field definition, including its select options. Archived options may appear on existing worker values but cannot be newly selected.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldGetResponse: Success
+//
+//	*CustomFieldGetResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -119,22 +125,24 @@ func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.
 // Update a custom worker field definition. The field type cannot be changed; create a new field instead. Requires the workers:custom_fields permission; changing the category, access level, or input source requires the manage level.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field.
-//     body: CustomFieldUpdateParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field.
+//	body: CustomFieldUpdateParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldUpdateResponse: Success
+//
+//	*CustomFieldUpdateResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomFieldUpdateParams, opts ...option.RequestOption) (res *CustomFieldUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -149,21 +157,23 @@ func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomF
 // Archive a custom worker field. Archived fields keep their existing worker values but cannot receive new ones. Requires the workers:custom_fields permission at the manage level.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldArchiveResponse: Success
+//
+//	*CustomFieldArchiveResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldArchiveResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -178,25 +188,27 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 // Add an option to a select or multi_select custom worker field. The option value should be treated as stable; the label can change. Requires the workers:custom_fields permission.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field.
-//     body: CustomFieldNewOptionParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field.
+//	body: CustomFieldNewOptionParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldNewOptionResponse: Success
+//
+//	*CustomFieldNewOptionResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
-//     	Label: sdk.F[string]("x"),
-//     	Value: sdk.F[string]("x"),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
+//		Label: sdk.F[string]("x"),
+//		Value: sdk.F[string]("x"),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) NewOption(ctx context.Context, id string, body CustomFieldNewOptionParams, opts ...option.RequestOption) (res *CustomFieldNewOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -211,22 +223,24 @@ func (r *CustomFieldService) NewOption(ctx context.Context, id string, body Cust
 // Update the label or sort order of a custom worker field option. Options of archived fields cannot be edited. Requires the workers:custom_fields permission.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field option.
-//     body: CustomFieldUpdateOptionParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field option.
+//	body: CustomFieldUpdateOptionParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldUpdateOptionResponse: Success
+//
+//	*CustomFieldUpdateOptionResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body CustomFieldUpdateOptionParams, opts ...option.RequestOption) (res *CustomFieldUpdateOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -241,19 +255,21 @@ func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body C
 // Delete a custom worker field option that is not applied to any worker. Options in use must be archived instead. Requires the workers:custom_fields permission at the manage level.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field option.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field option.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     error: Success
+//
+//	error: Success
 //
 // Example:
 //
-//     err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -269,21 +285,23 @@ func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts .
 // Archive a custom worker field option. Archived options remain on existing worker values but cannot be newly selected. Requires the workers:custom_fields permission at the manage level.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: The tag of a company custom worker field option.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: The tag of a company custom worker field option.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldArchiveOptionResponse: Success
+//
+//	*CustomFieldArchiveOptionResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldArchiveOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -298,21 +316,23 @@ func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts 
 // List custom field values for workers, optionally filtered by worker or field. Values are returned only for fields whose category your API key can read.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: CustomFieldListValuesParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: CustomFieldListValuesParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *[]CustomFieldListValuesResponse: Success
+//
+//	*[]CustomFieldListValuesResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldListValuesParams, opts ...option.RequestOption) (res *[]CustomFieldListValuesResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/custom_field_values"
@@ -323,25 +343,27 @@ func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldLi
 // Create or replace a worker's value for a custom field. The value shape must match the field type, and your API key must hold write on the field's category.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: CustomFieldUpsertValueParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: CustomFieldUpsertValueParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *CustomFieldUpsertValueResponse: Success
+//
+//	*CustomFieldUpsertValueResponse: Success
 //
 // Example:
 //
-//     customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
-//     	FieldID: sdk.F[string]("cf_1234"),
-//     	Value: sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
-//     	WorkerID: sdk.F[string]("wrk_1234"),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
+//		FieldID:  sdk.F[string]("cf_1234"),
+//		Value:    sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
+//		WorkerID: sdk.F[string]("wrk_1234"),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(customField)
+//	fmt.Println(customField)
 func (r *CustomFieldService) UpsertValue(ctx context.Context, body CustomFieldUpsertValueParams, opts ...option.RequestOption) (res *CustomFieldUpsertValueResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/custom_field_values"
@@ -352,22 +374,24 @@ func (r *CustomFieldService) UpsertValue(ctx context.Context, body CustomFieldUp
 // Remove a worker's value for a custom field. Your API key must hold write on the field's category.
 //
 // Parameters:
-//     ctx: Context for the request.
-//     body: CustomFieldClearValueParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	body: CustomFieldClearValueParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     error: Success
+//
+//	error: Success
 //
 // Example:
 //
-//     err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
-//     	FieldID: sdk.F[string]("cf_1234"),
-//     	WorkerID: sdk.F[string]("wrk_1234"),
-//     })
-//     if err != nil {
-//     	panic(err)
-//     }
+//	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
+//		FieldID:  sdk.F[string]("cf_1234"),
+//		WorkerID: sdk.F[string]("wrk_1234"),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
 func (r *CustomFieldService) ClearValue(ctx context.Context, body CustomFieldClearValueParams, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
@@ -379,14 +403,14 @@ func (r *CustomFieldService) ClearValue(ctx context.Context, body CustomFieldCle
 type CustomFieldNewParams struct {
 	Category param.Field[CustomFieldNewParamsCategory] `json:"category" api:"required"`
 	// a non empty string
-	Name param.Field[string] `json:"name" api:"required"`
-	Type param.Field[CustomFieldNewParamsType] `json:"type" api:"required"`
+	Name        param.Field[string]                          `json:"name" api:"required"`
+	Type        param.Field[CustomFieldNewParamsType]        `json:"type" api:"required"`
 	AccessLevel param.Field[CustomFieldNewParamsAccessLevel] `json:"accessLevel"`
-	Config param.Field[map[string]interface{}] `json:"config"`
-	Description param.Field[string] `json:"description"`
-	InputBy param.Field[CustomFieldNewParamsInputBy] `json:"inputBy"`
-	Options param.Field[[]CustomFieldNewParamsOption] `json:"options"`
-	Required param.Field[bool] `json:"required"`
+	Config      param.Field[map[string]interface{}]          `json:"config"`
+	Description param.Field[string]                          `json:"description"`
+	InputBy     param.Field[CustomFieldNewParamsInputBy]     `json:"inputBy"`
+	Options     param.Field[[]CustomFieldNewParamsOption]    `json:"options"`
+	Required    param.Field[bool]                            `json:"required"`
 }
 
 func (r CustomFieldNewParams) MarshalJSON() (data []byte, err error) {
@@ -396,13 +420,13 @@ func (r CustomFieldNewParams) MarshalJSON() (data []byte, err error) {
 type CustomFieldNewParamsType string
 
 const (
-	CustomFieldNewParamsTypeText CustomFieldNewParamsType = "text"
-	CustomFieldNewParamsTypeNumber CustomFieldNewParamsType = "number"
-	CustomFieldNewParamsTypeDate CustomFieldNewParamsType = "date"
-	CustomFieldNewParamsTypeBoolean CustomFieldNewParamsType = "boolean"
-	CustomFieldNewParamsTypeCurrency CustomFieldNewParamsType = "currency"
-	CustomFieldNewParamsTypePercentage CustomFieldNewParamsType = "percentage"
-	CustomFieldNewParamsTypeSelect CustomFieldNewParamsType = "select"
+	CustomFieldNewParamsTypeText        CustomFieldNewParamsType = "text"
+	CustomFieldNewParamsTypeNumber      CustomFieldNewParamsType = "number"
+	CustomFieldNewParamsTypeDate        CustomFieldNewParamsType = "date"
+	CustomFieldNewParamsTypeBoolean     CustomFieldNewParamsType = "boolean"
+	CustomFieldNewParamsTypeCurrency    CustomFieldNewParamsType = "currency"
+	CustomFieldNewParamsTypePercentage  CustomFieldNewParamsType = "percentage"
+	CustomFieldNewParamsTypeSelect      CustomFieldNewParamsType = "select"
 	CustomFieldNewParamsTypeMultiSelect CustomFieldNewParamsType = "multi_select"
 )
 
@@ -417,12 +441,12 @@ func (r CustomFieldNewParamsType) IsKnown() bool {
 type CustomFieldNewParamsCategory string
 
 const (
-	CustomFieldNewParamsCategoryInfo CustomFieldNewParamsCategory = "info"
-	CustomFieldNewParamsCategoryPii CustomFieldNewParamsCategory = "pii"
+	CustomFieldNewParamsCategoryInfo         CustomFieldNewParamsCategory = "info"
+	CustomFieldNewParamsCategoryPii          CustomFieldNewParamsCategory = "pii"
 	CustomFieldNewParamsCategoryCompensation CustomFieldNewParamsCategory = "compensation"
-	CustomFieldNewParamsCategoryBanking CustomFieldNewParamsCategory = "banking"
-	CustomFieldNewParamsCategoryIt CustomFieldNewParamsCategory = "it"
-	CustomFieldNewParamsCategoryCompliance CustomFieldNewParamsCategory = "compliance"
+	CustomFieldNewParamsCategoryBanking      CustomFieldNewParamsCategory = "banking"
+	CustomFieldNewParamsCategoryIt           CustomFieldNewParamsCategory = "it"
+	CustomFieldNewParamsCategoryCompliance   CustomFieldNewParamsCategory = "compliance"
 )
 
 func (r CustomFieldNewParamsCategory) IsKnown() bool {
@@ -436,9 +460,9 @@ func (r CustomFieldNewParamsCategory) IsKnown() bool {
 type CustomFieldNewParamsAccessLevel string
 
 const (
-	CustomFieldNewParamsAccessLevelAdmins CustomFieldNewParamsAccessLevel = "admins"
+	CustomFieldNewParamsAccessLevelAdmins  CustomFieldNewParamsAccessLevel = "admins"
 	CustomFieldNewParamsAccessLevelManager CustomFieldNewParamsAccessLevel = "manager"
-	CustomFieldNewParamsAccessLevelWorker CustomFieldNewParamsAccessLevel = "worker"
+	CustomFieldNewParamsAccessLevelWorker  CustomFieldNewParamsAccessLevel = "worker"
 )
 
 func (r CustomFieldNewParamsAccessLevel) IsKnown() bool {
@@ -452,7 +476,7 @@ func (r CustomFieldNewParamsAccessLevel) IsKnown() bool {
 type CustomFieldNewParamsInputBy string
 
 const (
-	CustomFieldNewParamsInputByAdmin CustomFieldNewParamsInputBy = "admin"
+	CustomFieldNewParamsInputByAdmin  CustomFieldNewParamsInputBy = "admin"
 	CustomFieldNewParamsInputByWorker CustomFieldNewParamsInputBy = "worker"
 )
 
@@ -468,7 +492,7 @@ type CustomFieldNewParamsOption struct {
 	// a non empty string
 	Label param.Field[string] `json:"label" api:"required"`
 	// a non empty string
-	Value param.Field[string] `json:"value" api:"required"`
+	Value     param.Field[string]  `json:"value" api:"required"`
 	SortOrder param.Field[float64] `json:"sortOrder"`
 }
 
@@ -478,13 +502,13 @@ func (r CustomFieldNewParamsOption) MarshalJSON() (data []byte, err error) {
 
 type CustomFieldUpdateParams struct {
 	AccessLevel param.Field[CustomFieldUpdateParamsAccessLevel] `json:"accessLevel"`
-	Category param.Field[CustomFieldUpdateParamsCategory] `json:"category"`
-	Config param.Field[map[string]interface{}] `json:"config"`
-	Description param.Field[string] `json:"description"`
-	InputBy param.Field[CustomFieldUpdateParamsInputBy] `json:"inputBy"`
+	Category    param.Field[CustomFieldUpdateParamsCategory]    `json:"category"`
+	Config      param.Field[map[string]interface{}]             `json:"config"`
+	Description param.Field[string]                             `json:"description"`
+	InputBy     param.Field[CustomFieldUpdateParamsInputBy]     `json:"inputBy"`
 	// a non empty string
-	Name param.Field[string] `json:"name"`
-	Required param.Field[bool] `json:"required"`
+	Name     param.Field[string] `json:"name"`
+	Required param.Field[bool]   `json:"required"`
 }
 
 func (r CustomFieldUpdateParams) MarshalJSON() (data []byte, err error) {
@@ -494,12 +518,12 @@ func (r CustomFieldUpdateParams) MarshalJSON() (data []byte, err error) {
 type CustomFieldUpdateParamsCategory string
 
 const (
-	CustomFieldUpdateParamsCategoryInfo CustomFieldUpdateParamsCategory = "info"
-	CustomFieldUpdateParamsCategoryPii CustomFieldUpdateParamsCategory = "pii"
+	CustomFieldUpdateParamsCategoryInfo         CustomFieldUpdateParamsCategory = "info"
+	CustomFieldUpdateParamsCategoryPii          CustomFieldUpdateParamsCategory = "pii"
 	CustomFieldUpdateParamsCategoryCompensation CustomFieldUpdateParamsCategory = "compensation"
-	CustomFieldUpdateParamsCategoryBanking CustomFieldUpdateParamsCategory = "banking"
-	CustomFieldUpdateParamsCategoryIt CustomFieldUpdateParamsCategory = "it"
-	CustomFieldUpdateParamsCategoryCompliance CustomFieldUpdateParamsCategory = "compliance"
+	CustomFieldUpdateParamsCategoryBanking      CustomFieldUpdateParamsCategory = "banking"
+	CustomFieldUpdateParamsCategoryIt           CustomFieldUpdateParamsCategory = "it"
+	CustomFieldUpdateParamsCategoryCompliance   CustomFieldUpdateParamsCategory = "compliance"
 )
 
 func (r CustomFieldUpdateParamsCategory) IsKnown() bool {
@@ -513,9 +537,9 @@ func (r CustomFieldUpdateParamsCategory) IsKnown() bool {
 type CustomFieldUpdateParamsAccessLevel string
 
 const (
-	CustomFieldUpdateParamsAccessLevelAdmins CustomFieldUpdateParamsAccessLevel = "admins"
+	CustomFieldUpdateParamsAccessLevelAdmins  CustomFieldUpdateParamsAccessLevel = "admins"
 	CustomFieldUpdateParamsAccessLevelManager CustomFieldUpdateParamsAccessLevel = "manager"
-	CustomFieldUpdateParamsAccessLevelWorker CustomFieldUpdateParamsAccessLevel = "worker"
+	CustomFieldUpdateParamsAccessLevelWorker  CustomFieldUpdateParamsAccessLevel = "worker"
 )
 
 func (r CustomFieldUpdateParamsAccessLevel) IsKnown() bool {
@@ -529,7 +553,7 @@ func (r CustomFieldUpdateParamsAccessLevel) IsKnown() bool {
 type CustomFieldUpdateParamsInputBy string
 
 const (
-	CustomFieldUpdateParamsInputByAdmin CustomFieldUpdateParamsInputBy = "admin"
+	CustomFieldUpdateParamsInputByAdmin  CustomFieldUpdateParamsInputBy = "admin"
 	CustomFieldUpdateParamsInputByWorker CustomFieldUpdateParamsInputBy = "worker"
 )
 
@@ -545,7 +569,7 @@ type CustomFieldNewOptionParams struct {
 	// a non empty string
 	Label param.Field[string] `json:"label" api:"required"`
 	// a non empty string
-	Value param.Field[string] `json:"value" api:"required"`
+	Value     param.Field[string]  `json:"value" api:"required"`
 	SortOrder param.Field[float64] `json:"sortOrder"`
 }
 
@@ -555,7 +579,7 @@ func (r CustomFieldNewOptionParams) MarshalJSON() (data []byte, err error) {
 
 type CustomFieldUpdateOptionParams struct {
 	// a non empty string
-	Label param.Field[string] `json:"label"`
+	Label     param.Field[string]  `json:"label"`
 	SortOrder param.Field[float64] `json:"sortOrder"`
 }
 
@@ -564,7 +588,7 @@ func (r CustomFieldUpdateOptionParams) MarshalJSON() (data []byte, err error) {
 }
 
 type CustomFieldListValuesParams struct {
-	FieldIDs param.Field[[]string] `query:"fieldIds"`
+	FieldIDs  param.Field[[]string] `query:"fieldIds"`
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
 
@@ -578,8 +602,8 @@ func (r CustomFieldListValuesParams) URLQuery() (v url.Values) {
 
 type CustomFieldUpsertValueParams struct {
 	// The tag of a company custom worker field.
-	FieldID param.Field[string] `json:"fieldId" api:"required"`
-	Value param.Field[CustomFieldUpsertValueParamsValueUnion] `json:"value" api:"required"`
+	FieldID param.Field[string]                                 `json:"fieldId" api:"required"`
+	Value   param.Field[CustomFieldUpsertValueParamsValueUnion] `json:"value" api:"required"`
 	// The id of the worker.
 	WorkerID param.Field[string] `json:"workerId" api:"required"`
 }
@@ -608,8 +632,8 @@ func (u *CustomFieldUpsertValueParamsValueUnion) UnmarshalJSON(data []byte) erro
 }
 
 type CustomFieldUpsertValueParamsValueVariant0 struct {
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant0Type] `json:"type" api:"required"`
-	Value param.Field[string] `json:"value" api:"required"`
+	Type  param.Field[CustomFieldUpsertValueParamsValueVariant0Type] `json:"type" api:"required"`
+	Value param.Field[string]                                        `json:"value" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant0) MarshalJSON() (data []byte, err error) {
@@ -617,8 +641,8 @@ func (r CustomFieldUpsertValueParamsValueVariant0) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant1 struct {
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant1Type] `json:"type" api:"required"`
-	Value param.Field[float64] `json:"value" api:"required"`
+	Type  param.Field[CustomFieldUpsertValueParamsValueVariant1Type] `json:"type" api:"required"`
+	Value param.Field[float64]                                       `json:"value" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant1) MarshalJSON() (data []byte, err error) {
@@ -636,8 +660,8 @@ func (r CustomFieldUpsertValueParamsValueVariant2) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant3 struct {
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant3Type] `json:"type" api:"required"`
-	Value param.Field[bool] `json:"value" api:"required"`
+	Type  param.Field[CustomFieldUpsertValueParamsValueVariant3Type] `json:"type" api:"required"`
+	Value param.Field[bool]                                          `json:"value" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant3) MarshalJSON() (data []byte, err error) {
@@ -645,9 +669,9 @@ func (r CustomFieldUpsertValueParamsValueVariant3) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant4 struct {
-	Amount param.Field[float64] `json:"amount" api:"required"`
+	Amount       param.Field[float64]                                               `json:"amount" api:"required"`
 	CurrencyCode param.Field[CustomFieldUpsertValueParamsValueVariant4CurrencyCode] `json:"currencyCode" api:"required"`
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant4Type] `json:"type" api:"required"`
+	Type         param.Field[CustomFieldUpsertValueParamsValueVariant4Type]         `json:"type" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant4) MarshalJSON() (data []byte, err error) {
@@ -655,8 +679,8 @@ func (r CustomFieldUpsertValueParamsValueVariant4) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant5 struct {
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant5Type] `json:"type" api:"required"`
-	Value param.Field[float64] `json:"value" api:"required"`
+	Type  param.Field[CustomFieldUpsertValueParamsValueVariant5Type] `json:"type" api:"required"`
+	Value param.Field[float64]                                       `json:"value" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant5) MarshalJSON() (data []byte, err error) {
@@ -665,8 +689,8 @@ func (r CustomFieldUpsertValueParamsValueVariant5) MarshalJSON() (data []byte, e
 
 type CustomFieldUpsertValueParamsValueVariant6 struct {
 	// The tag of a company custom worker field option.
-	OptionID param.Field[string] `json:"optionId" api:"required"`
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant6Type] `json:"type" api:"required"`
+	OptionID param.Field[string]                                        `json:"optionId" api:"required"`
+	Type     param.Field[CustomFieldUpsertValueParamsValueVariant6Type] `json:"type" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant6) MarshalJSON() (data []byte, err error) {
@@ -674,8 +698,8 @@ func (r CustomFieldUpsertValueParamsValueVariant6) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant7 struct {
-	OptionIDs param.Field[[]string] `json:"optionIds" api:"required"`
-	Type param.Field[CustomFieldUpsertValueParamsValueVariant7Type] `json:"type" api:"required"`
+	OptionIDs param.Field[[]string]                                      `json:"optionIds" api:"required"`
+	Type      param.Field[CustomFieldUpsertValueParamsValueVariant7Type] `json:"type" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParamsValueVariant7) MarshalJSON() (data []byte, err error) {
@@ -885,36 +909,36 @@ func (r CustomFieldClearValueParams) URLQuery() (v url.Values) {
 
 type CustomFieldListResponse struct {
 	// The tag of a company custom worker field.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	Type CustomFieldListResponseType `json:"type" api:"required"`
-	Config map[string]interface{} `json:"config" api:"required"`
-	Status CustomFieldListResponseStatus `json:"status" api:"required"`
-	Category CustomFieldListResponseCategory `json:"category" api:"required"`
+	ID          string                             `json:"id" api:"required"`
+	Name        string                             `json:"name" api:"required"`
+	Description string                             `json:"description" api:"required,nullable"`
+	Type        CustomFieldListResponseType        `json:"type" api:"required"`
+	Config      map[string]interface{}             `json:"config" api:"required"`
+	Status      CustomFieldListResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldListResponseCategory    `json:"category" api:"required"`
 	AccessLevel CustomFieldListResponseAccessLevel `json:"accessLevel" api:"required"`
-	InputBy CustomFieldListResponseInputBy `json:"inputBy" api:"required"`
-	CanWrite bool `json:"canWrite" api:"required"`
+	InputBy     CustomFieldListResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                               `json:"canWrite" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	Required bool `json:"required"`
-	JSON customFieldListResponseJSON `json:"-"`
+	CreatedAt string                      `json:"createdAt" api:"required"`
+	Required  bool                        `json:"required"`
+	JSON      customFieldListResponseJSON `json:"-"`
 }
 
 // customFieldListResponseJSON contains the JSON metadata for the struct [CustomFieldListResponse]
 type customFieldListResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	Description apijson.Field
-	Type apijson.Field
-	Config apijson.Field
-	Status apijson.Field
-	Category apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
 	AccessLevel apijson.Field
-	InputBy apijson.Field
-	CanWrite apijson.Field
-	CreatedAt apijson.Field
-	Required apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -929,36 +953,36 @@ func (r customFieldListResponseJSON) RawJSON() string {
 
 type CustomFieldNewResponse struct {
 	// The tag of a company custom worker field.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	Type CustomFieldNewResponseType `json:"type" api:"required"`
-	Config map[string]interface{} `json:"config" api:"required"`
-	Status CustomFieldNewResponseStatus `json:"status" api:"required"`
-	Category CustomFieldNewResponseCategory `json:"category" api:"required"`
+	ID          string                            `json:"id" api:"required"`
+	Name        string                            `json:"name" api:"required"`
+	Description string                            `json:"description" api:"required,nullable"`
+	Type        CustomFieldNewResponseType        `json:"type" api:"required"`
+	Config      map[string]interface{}            `json:"config" api:"required"`
+	Status      CustomFieldNewResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldNewResponseCategory    `json:"category" api:"required"`
 	AccessLevel CustomFieldNewResponseAccessLevel `json:"accessLevel" api:"required"`
-	InputBy CustomFieldNewResponseInputBy `json:"inputBy" api:"required"`
-	CanWrite bool `json:"canWrite" api:"required"`
+	InputBy     CustomFieldNewResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                              `json:"canWrite" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	Required bool `json:"required"`
-	JSON customFieldNewResponseJSON `json:"-"`
+	CreatedAt string                     `json:"createdAt" api:"required"`
+	Required  bool                       `json:"required"`
+	JSON      customFieldNewResponseJSON `json:"-"`
 }
 
 // customFieldNewResponseJSON contains the JSON metadata for the struct [CustomFieldNewResponse]
 type customFieldNewResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	Description apijson.Field
-	Type apijson.Field
-	Config apijson.Field
-	Status apijson.Field
-	Category apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
 	AccessLevel apijson.Field
-	InputBy apijson.Field
-	CanWrite apijson.Field
-	CreatedAt apijson.Field
-	Required apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -973,38 +997,38 @@ func (r customFieldNewResponseJSON) RawJSON() string {
 
 type CustomFieldGetResponse struct {
 	// The tag of a company custom worker field.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	Type CustomFieldGetResponseType `json:"type" api:"required"`
-	Config map[string]interface{} `json:"config" api:"required"`
-	Status CustomFieldGetResponseStatus `json:"status" api:"required"`
-	Category CustomFieldGetResponseCategory `json:"category" api:"required"`
+	ID          string                            `json:"id" api:"required"`
+	Name        string                            `json:"name" api:"required"`
+	Description string                            `json:"description" api:"required,nullable"`
+	Type        CustomFieldGetResponseType        `json:"type" api:"required"`
+	Config      map[string]interface{}            `json:"config" api:"required"`
+	Status      CustomFieldGetResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldGetResponseCategory    `json:"category" api:"required"`
 	AccessLevel CustomFieldGetResponseAccessLevel `json:"accessLevel" api:"required"`
-	InputBy CustomFieldGetResponseInputBy `json:"inputBy" api:"required"`
-	CanWrite bool `json:"canWrite" api:"required"`
+	InputBy     CustomFieldGetResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                              `json:"canWrite" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	Options []CustomFieldGetResponseOption `json:"options" api:"required"`
-	Required bool `json:"required"`
-	JSON customFieldGetResponseJSON `json:"-"`
+	CreatedAt string                         `json:"createdAt" api:"required"`
+	Options   []CustomFieldGetResponseOption `json:"options" api:"required"`
+	Required  bool                           `json:"required"`
+	JSON      customFieldGetResponseJSON     `json:"-"`
 }
 
 // customFieldGetResponseJSON contains the JSON metadata for the struct [CustomFieldGetResponse]
 type customFieldGetResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	Description apijson.Field
-	Type apijson.Field
-	Config apijson.Field
-	Status apijson.Field
-	Category apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
 	AccessLevel apijson.Field
-	InputBy apijson.Field
-	CanWrite apijson.Field
-	CreatedAt apijson.Field
-	Options apijson.Field
-	Required apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Options     apijson.Field
+	Required    apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1019,36 +1043,36 @@ func (r customFieldGetResponseJSON) RawJSON() string {
 
 type CustomFieldUpdateResponse struct {
 	// The tag of a company custom worker field.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	Type CustomFieldUpdateResponseType `json:"type" api:"required"`
-	Config map[string]interface{} `json:"config" api:"required"`
-	Status CustomFieldUpdateResponseStatus `json:"status" api:"required"`
-	Category CustomFieldUpdateResponseCategory `json:"category" api:"required"`
+	ID          string                               `json:"id" api:"required"`
+	Name        string                               `json:"name" api:"required"`
+	Description string                               `json:"description" api:"required,nullable"`
+	Type        CustomFieldUpdateResponseType        `json:"type" api:"required"`
+	Config      map[string]interface{}               `json:"config" api:"required"`
+	Status      CustomFieldUpdateResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldUpdateResponseCategory    `json:"category" api:"required"`
 	AccessLevel CustomFieldUpdateResponseAccessLevel `json:"accessLevel" api:"required"`
-	InputBy CustomFieldUpdateResponseInputBy `json:"inputBy" api:"required"`
-	CanWrite bool `json:"canWrite" api:"required"`
+	InputBy     CustomFieldUpdateResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                                 `json:"canWrite" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	Required bool `json:"required"`
-	JSON customFieldUpdateResponseJSON `json:"-"`
+	CreatedAt string                        `json:"createdAt" api:"required"`
+	Required  bool                          `json:"required"`
+	JSON      customFieldUpdateResponseJSON `json:"-"`
 }
 
 // customFieldUpdateResponseJSON contains the JSON metadata for the struct [CustomFieldUpdateResponse]
 type customFieldUpdateResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	Description apijson.Field
-	Type apijson.Field
-	Config apijson.Field
-	Status apijson.Field
-	Category apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
 	AccessLevel apijson.Field
-	InputBy apijson.Field
-	CanWrite apijson.Field
-	CreatedAt apijson.Field
-	Required apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1063,36 +1087,36 @@ func (r customFieldUpdateResponseJSON) RawJSON() string {
 
 type CustomFieldArchiveResponse struct {
 	// The tag of a company custom worker field.
-	ID string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	Type CustomFieldArchiveResponseType `json:"type" api:"required"`
-	Config map[string]interface{} `json:"config" api:"required"`
-	Status CustomFieldArchiveResponseStatus `json:"status" api:"required"`
-	Category CustomFieldArchiveResponseCategory `json:"category" api:"required"`
+	ID          string                                `json:"id" api:"required"`
+	Name        string                                `json:"name" api:"required"`
+	Description string                                `json:"description" api:"required,nullable"`
+	Type        CustomFieldArchiveResponseType        `json:"type" api:"required"`
+	Config      map[string]interface{}                `json:"config" api:"required"`
+	Status      CustomFieldArchiveResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldArchiveResponseCategory    `json:"category" api:"required"`
 	AccessLevel CustomFieldArchiveResponseAccessLevel `json:"accessLevel" api:"required"`
-	InputBy CustomFieldArchiveResponseInputBy `json:"inputBy" api:"required"`
-	CanWrite bool `json:"canWrite" api:"required"`
+	InputBy     CustomFieldArchiveResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                                  `json:"canWrite" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	Required bool `json:"required"`
-	JSON customFieldArchiveResponseJSON `json:"-"`
+	CreatedAt string                         `json:"createdAt" api:"required"`
+	Required  bool                           `json:"required"`
+	JSON      customFieldArchiveResponseJSON `json:"-"`
 }
 
 // customFieldArchiveResponseJSON contains the JSON metadata for the struct [CustomFieldArchiveResponse]
 type customFieldArchiveResponseJSON struct {
-	ID apijson.Field
-	Name apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
 	Description apijson.Field
-	Type apijson.Field
-	Config apijson.Field
-	Status apijson.Field
-	Category apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
 	AccessLevel apijson.Field
-	InputBy apijson.Field
-	CanWrite apijson.Field
-	CreatedAt apijson.Field
-	Required apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1107,24 +1131,24 @@ func (r customFieldArchiveResponseJSON) RawJSON() string {
 
 type CustomFieldNewOptionResponse struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldNewOptionResponseStatus `json:"status" api:"required"`
+	ID        string                             `json:"id" api:"required"`
+	Label     string                             `json:"label" api:"required"`
+	Value     string                             `json:"value" api:"required"`
+	SortOrder float64                            `json:"sortOrder" api:"required"`
+	Status    CustomFieldNewOptionResponseStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldNewOptionResponseJSON `json:"-"`
+	CreatedAt string                           `json:"createdAt" api:"required"`
+	JSON      customFieldNewOptionResponseJSON `json:"-"`
 }
 
 // customFieldNewOptionResponseJSON contains the JSON metadata for the struct [CustomFieldNewOptionResponse]
 type customFieldNewOptionResponseJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1139,24 +1163,24 @@ func (r customFieldNewOptionResponseJSON) RawJSON() string {
 
 type CustomFieldUpdateOptionResponse struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldUpdateOptionResponseStatus `json:"status" api:"required"`
+	ID        string                                `json:"id" api:"required"`
+	Label     string                                `json:"label" api:"required"`
+	Value     string                                `json:"value" api:"required"`
+	SortOrder float64                               `json:"sortOrder" api:"required"`
+	Status    CustomFieldUpdateOptionResponseStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldUpdateOptionResponseJSON `json:"-"`
+	CreatedAt string                              `json:"createdAt" api:"required"`
+	JSON      customFieldUpdateOptionResponseJSON `json:"-"`
 }
 
 // customFieldUpdateOptionResponseJSON contains the JSON metadata for the struct [CustomFieldUpdateOptionResponse]
 type customFieldUpdateOptionResponseJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1171,24 +1195,24 @@ func (r customFieldUpdateOptionResponseJSON) RawJSON() string {
 
 type CustomFieldArchiveOptionResponse struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldArchiveOptionResponseStatus `json:"status" api:"required"`
+	ID        string                                 `json:"id" api:"required"`
+	Label     string                                 `json:"label" api:"required"`
+	Value     string                                 `json:"value" api:"required"`
+	SortOrder float64                                `json:"sortOrder" api:"required"`
+	Status    CustomFieldArchiveOptionResponseStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldArchiveOptionResponseJSON `json:"-"`
+	CreatedAt string                               `json:"createdAt" api:"required"`
+	JSON      customFieldArchiveOptionResponseJSON `json:"-"`
 }
 
 // customFieldArchiveOptionResponseJSON contains the JSON metadata for the struct [CustomFieldArchiveOptionResponse]
 type customFieldArchiveOptionResponseJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1207,20 +1231,20 @@ type CustomFieldListValuesResponse struct {
 	// The id of the worker.
 	WorkerID string `json:"workerId" api:"required"`
 	// The tag of a company custom worker field.
-	FieldID string `json:"fieldId" api:"required"`
-	Value CustomFieldListValuesResponseValue `json:"value" api:"required"`
+	FieldID string                             `json:"fieldId" api:"required"`
+	Value   CustomFieldListValuesResponseValue `json:"value" api:"required"`
 	// a string to be decoded into a Date
-	UpdatedAt string `json:"updatedAt" api:"required"`
-	JSON customFieldListValuesResponseJSON `json:"-"`
+	UpdatedAt string                            `json:"updatedAt" api:"required"`
+	JSON      customFieldListValuesResponseJSON `json:"-"`
 }
 
 // customFieldListValuesResponseJSON contains the JSON metadata for the struct [CustomFieldListValuesResponse]
 type customFieldListValuesResponseJSON struct {
-	ID apijson.Field
-	WorkerID apijson.Field
-	FieldID apijson.Field
-	Value apijson.Field
-	UpdatedAt apijson.Field
+	ID          apijson.Field
+	WorkerID    apijson.Field
+	FieldID     apijson.Field
+	Value       apijson.Field
+	UpdatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1286,20 +1310,20 @@ type CustomFieldUpsertValueResponse struct {
 	// The id of the worker.
 	WorkerID string `json:"workerId" api:"required"`
 	// The tag of a company custom worker field.
-	FieldID string `json:"fieldId" api:"required"`
-	Value CustomFieldUpsertValueResponseValue `json:"value" api:"required"`
+	FieldID string                              `json:"fieldId" api:"required"`
+	Value   CustomFieldUpsertValueResponseValue `json:"value" api:"required"`
 	// a string to be decoded into a Date
-	UpdatedAt string `json:"updatedAt" api:"required"`
-	JSON customFieldUpsertValueResponseJSON `json:"-"`
+	UpdatedAt string                             `json:"updatedAt" api:"required"`
+	JSON      customFieldUpsertValueResponseJSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponse]
 type customFieldUpsertValueResponseJSON struct {
-	ID apijson.Field
-	WorkerID apijson.Field
-	FieldID apijson.Field
-	Value apijson.Field
-	UpdatedAt apijson.Field
+	ID          apijson.Field
+	WorkerID    apijson.Field
+	FieldID     apijson.Field
+	Value       apijson.Field
+	UpdatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1362,13 +1386,13 @@ func init() {
 type CustomFieldListResponseType string
 
 const (
-	CustomFieldListResponseTypeText CustomFieldListResponseType = "text"
-	CustomFieldListResponseTypeNumber CustomFieldListResponseType = "number"
-	CustomFieldListResponseTypeDate CustomFieldListResponseType = "date"
-	CustomFieldListResponseTypeBoolean CustomFieldListResponseType = "boolean"
-	CustomFieldListResponseTypeCurrency CustomFieldListResponseType = "currency"
-	CustomFieldListResponseTypePercentage CustomFieldListResponseType = "percentage"
-	CustomFieldListResponseTypeSelect CustomFieldListResponseType = "select"
+	CustomFieldListResponseTypeText        CustomFieldListResponseType = "text"
+	CustomFieldListResponseTypeNumber      CustomFieldListResponseType = "number"
+	CustomFieldListResponseTypeDate        CustomFieldListResponseType = "date"
+	CustomFieldListResponseTypeBoolean     CustomFieldListResponseType = "boolean"
+	CustomFieldListResponseTypeCurrency    CustomFieldListResponseType = "currency"
+	CustomFieldListResponseTypePercentage  CustomFieldListResponseType = "percentage"
+	CustomFieldListResponseTypeSelect      CustomFieldListResponseType = "select"
 	CustomFieldListResponseTypeMultiSelect CustomFieldListResponseType = "multi_select"
 )
 
@@ -1383,7 +1407,7 @@ func (r CustomFieldListResponseType) IsKnown() bool {
 type CustomFieldListResponseStatus string
 
 const (
-	CustomFieldListResponseStatusActive CustomFieldListResponseStatus = "active"
+	CustomFieldListResponseStatusActive   CustomFieldListResponseStatus = "active"
 	CustomFieldListResponseStatusArchived CustomFieldListResponseStatus = "archived"
 )
 
@@ -1398,12 +1422,12 @@ func (r CustomFieldListResponseStatus) IsKnown() bool {
 type CustomFieldListResponseCategory string
 
 const (
-	CustomFieldListResponseCategoryInfo CustomFieldListResponseCategory = "info"
-	CustomFieldListResponseCategoryPii CustomFieldListResponseCategory = "pii"
+	CustomFieldListResponseCategoryInfo         CustomFieldListResponseCategory = "info"
+	CustomFieldListResponseCategoryPii          CustomFieldListResponseCategory = "pii"
 	CustomFieldListResponseCategoryCompensation CustomFieldListResponseCategory = "compensation"
-	CustomFieldListResponseCategoryBanking CustomFieldListResponseCategory = "banking"
-	CustomFieldListResponseCategoryIt CustomFieldListResponseCategory = "it"
-	CustomFieldListResponseCategoryCompliance CustomFieldListResponseCategory = "compliance"
+	CustomFieldListResponseCategoryBanking      CustomFieldListResponseCategory = "banking"
+	CustomFieldListResponseCategoryIt           CustomFieldListResponseCategory = "it"
+	CustomFieldListResponseCategoryCompliance   CustomFieldListResponseCategory = "compliance"
 )
 
 func (r CustomFieldListResponseCategory) IsKnown() bool {
@@ -1417,9 +1441,9 @@ func (r CustomFieldListResponseCategory) IsKnown() bool {
 type CustomFieldListResponseAccessLevel string
 
 const (
-	CustomFieldListResponseAccessLevelAdmins CustomFieldListResponseAccessLevel = "admins"
+	CustomFieldListResponseAccessLevelAdmins  CustomFieldListResponseAccessLevel = "admins"
 	CustomFieldListResponseAccessLevelManager CustomFieldListResponseAccessLevel = "manager"
-	CustomFieldListResponseAccessLevelWorker CustomFieldListResponseAccessLevel = "worker"
+	CustomFieldListResponseAccessLevelWorker  CustomFieldListResponseAccessLevel = "worker"
 )
 
 func (r CustomFieldListResponseAccessLevel) IsKnown() bool {
@@ -1433,7 +1457,7 @@ func (r CustomFieldListResponseAccessLevel) IsKnown() bool {
 type CustomFieldListResponseInputBy string
 
 const (
-	CustomFieldListResponseInputByAdmin CustomFieldListResponseInputBy = "admin"
+	CustomFieldListResponseInputByAdmin  CustomFieldListResponseInputBy = "admin"
 	CustomFieldListResponseInputByWorker CustomFieldListResponseInputBy = "worker"
 )
 
@@ -1448,13 +1472,13 @@ func (r CustomFieldListResponseInputBy) IsKnown() bool {
 type CustomFieldNewResponseType string
 
 const (
-	CustomFieldNewResponseTypeText CustomFieldNewResponseType = "text"
-	CustomFieldNewResponseTypeNumber CustomFieldNewResponseType = "number"
-	CustomFieldNewResponseTypeDate CustomFieldNewResponseType = "date"
-	CustomFieldNewResponseTypeBoolean CustomFieldNewResponseType = "boolean"
-	CustomFieldNewResponseTypeCurrency CustomFieldNewResponseType = "currency"
-	CustomFieldNewResponseTypePercentage CustomFieldNewResponseType = "percentage"
-	CustomFieldNewResponseTypeSelect CustomFieldNewResponseType = "select"
+	CustomFieldNewResponseTypeText        CustomFieldNewResponseType = "text"
+	CustomFieldNewResponseTypeNumber      CustomFieldNewResponseType = "number"
+	CustomFieldNewResponseTypeDate        CustomFieldNewResponseType = "date"
+	CustomFieldNewResponseTypeBoolean     CustomFieldNewResponseType = "boolean"
+	CustomFieldNewResponseTypeCurrency    CustomFieldNewResponseType = "currency"
+	CustomFieldNewResponseTypePercentage  CustomFieldNewResponseType = "percentage"
+	CustomFieldNewResponseTypeSelect      CustomFieldNewResponseType = "select"
 	CustomFieldNewResponseTypeMultiSelect CustomFieldNewResponseType = "multi_select"
 )
 
@@ -1469,7 +1493,7 @@ func (r CustomFieldNewResponseType) IsKnown() bool {
 type CustomFieldNewResponseStatus string
 
 const (
-	CustomFieldNewResponseStatusActive CustomFieldNewResponseStatus = "active"
+	CustomFieldNewResponseStatusActive   CustomFieldNewResponseStatus = "active"
 	CustomFieldNewResponseStatusArchived CustomFieldNewResponseStatus = "archived"
 )
 
@@ -1484,12 +1508,12 @@ func (r CustomFieldNewResponseStatus) IsKnown() bool {
 type CustomFieldNewResponseCategory string
 
 const (
-	CustomFieldNewResponseCategoryInfo CustomFieldNewResponseCategory = "info"
-	CustomFieldNewResponseCategoryPii CustomFieldNewResponseCategory = "pii"
+	CustomFieldNewResponseCategoryInfo         CustomFieldNewResponseCategory = "info"
+	CustomFieldNewResponseCategoryPii          CustomFieldNewResponseCategory = "pii"
 	CustomFieldNewResponseCategoryCompensation CustomFieldNewResponseCategory = "compensation"
-	CustomFieldNewResponseCategoryBanking CustomFieldNewResponseCategory = "banking"
-	CustomFieldNewResponseCategoryIt CustomFieldNewResponseCategory = "it"
-	CustomFieldNewResponseCategoryCompliance CustomFieldNewResponseCategory = "compliance"
+	CustomFieldNewResponseCategoryBanking      CustomFieldNewResponseCategory = "banking"
+	CustomFieldNewResponseCategoryIt           CustomFieldNewResponseCategory = "it"
+	CustomFieldNewResponseCategoryCompliance   CustomFieldNewResponseCategory = "compliance"
 )
 
 func (r CustomFieldNewResponseCategory) IsKnown() bool {
@@ -1503,9 +1527,9 @@ func (r CustomFieldNewResponseCategory) IsKnown() bool {
 type CustomFieldNewResponseAccessLevel string
 
 const (
-	CustomFieldNewResponseAccessLevelAdmins CustomFieldNewResponseAccessLevel = "admins"
+	CustomFieldNewResponseAccessLevelAdmins  CustomFieldNewResponseAccessLevel = "admins"
 	CustomFieldNewResponseAccessLevelManager CustomFieldNewResponseAccessLevel = "manager"
-	CustomFieldNewResponseAccessLevelWorker CustomFieldNewResponseAccessLevel = "worker"
+	CustomFieldNewResponseAccessLevelWorker  CustomFieldNewResponseAccessLevel = "worker"
 )
 
 func (r CustomFieldNewResponseAccessLevel) IsKnown() bool {
@@ -1519,7 +1543,7 @@ func (r CustomFieldNewResponseAccessLevel) IsKnown() bool {
 type CustomFieldNewResponseInputBy string
 
 const (
-	CustomFieldNewResponseInputByAdmin CustomFieldNewResponseInputBy = "admin"
+	CustomFieldNewResponseInputByAdmin  CustomFieldNewResponseInputBy = "admin"
 	CustomFieldNewResponseInputByWorker CustomFieldNewResponseInputBy = "worker"
 )
 
@@ -1534,13 +1558,13 @@ func (r CustomFieldNewResponseInputBy) IsKnown() bool {
 type CustomFieldGetResponseType string
 
 const (
-	CustomFieldGetResponseTypeText CustomFieldGetResponseType = "text"
-	CustomFieldGetResponseTypeNumber CustomFieldGetResponseType = "number"
-	CustomFieldGetResponseTypeDate CustomFieldGetResponseType = "date"
-	CustomFieldGetResponseTypeBoolean CustomFieldGetResponseType = "boolean"
-	CustomFieldGetResponseTypeCurrency CustomFieldGetResponseType = "currency"
-	CustomFieldGetResponseTypePercentage CustomFieldGetResponseType = "percentage"
-	CustomFieldGetResponseTypeSelect CustomFieldGetResponseType = "select"
+	CustomFieldGetResponseTypeText        CustomFieldGetResponseType = "text"
+	CustomFieldGetResponseTypeNumber      CustomFieldGetResponseType = "number"
+	CustomFieldGetResponseTypeDate        CustomFieldGetResponseType = "date"
+	CustomFieldGetResponseTypeBoolean     CustomFieldGetResponseType = "boolean"
+	CustomFieldGetResponseTypeCurrency    CustomFieldGetResponseType = "currency"
+	CustomFieldGetResponseTypePercentage  CustomFieldGetResponseType = "percentage"
+	CustomFieldGetResponseTypeSelect      CustomFieldGetResponseType = "select"
 	CustomFieldGetResponseTypeMultiSelect CustomFieldGetResponseType = "multi_select"
 )
 
@@ -1555,7 +1579,7 @@ func (r CustomFieldGetResponseType) IsKnown() bool {
 type CustomFieldGetResponseStatus string
 
 const (
-	CustomFieldGetResponseStatusActive CustomFieldGetResponseStatus = "active"
+	CustomFieldGetResponseStatusActive   CustomFieldGetResponseStatus = "active"
 	CustomFieldGetResponseStatusArchived CustomFieldGetResponseStatus = "archived"
 )
 
@@ -1570,12 +1594,12 @@ func (r CustomFieldGetResponseStatus) IsKnown() bool {
 type CustomFieldGetResponseCategory string
 
 const (
-	CustomFieldGetResponseCategoryInfo CustomFieldGetResponseCategory = "info"
-	CustomFieldGetResponseCategoryPii CustomFieldGetResponseCategory = "pii"
+	CustomFieldGetResponseCategoryInfo         CustomFieldGetResponseCategory = "info"
+	CustomFieldGetResponseCategoryPii          CustomFieldGetResponseCategory = "pii"
 	CustomFieldGetResponseCategoryCompensation CustomFieldGetResponseCategory = "compensation"
-	CustomFieldGetResponseCategoryBanking CustomFieldGetResponseCategory = "banking"
-	CustomFieldGetResponseCategoryIt CustomFieldGetResponseCategory = "it"
-	CustomFieldGetResponseCategoryCompliance CustomFieldGetResponseCategory = "compliance"
+	CustomFieldGetResponseCategoryBanking      CustomFieldGetResponseCategory = "banking"
+	CustomFieldGetResponseCategoryIt           CustomFieldGetResponseCategory = "it"
+	CustomFieldGetResponseCategoryCompliance   CustomFieldGetResponseCategory = "compliance"
 )
 
 func (r CustomFieldGetResponseCategory) IsKnown() bool {
@@ -1589,9 +1613,9 @@ func (r CustomFieldGetResponseCategory) IsKnown() bool {
 type CustomFieldGetResponseAccessLevel string
 
 const (
-	CustomFieldGetResponseAccessLevelAdmins CustomFieldGetResponseAccessLevel = "admins"
+	CustomFieldGetResponseAccessLevelAdmins  CustomFieldGetResponseAccessLevel = "admins"
 	CustomFieldGetResponseAccessLevelManager CustomFieldGetResponseAccessLevel = "manager"
-	CustomFieldGetResponseAccessLevelWorker CustomFieldGetResponseAccessLevel = "worker"
+	CustomFieldGetResponseAccessLevelWorker  CustomFieldGetResponseAccessLevel = "worker"
 )
 
 func (r CustomFieldGetResponseAccessLevel) IsKnown() bool {
@@ -1605,7 +1629,7 @@ func (r CustomFieldGetResponseAccessLevel) IsKnown() bool {
 type CustomFieldGetResponseInputBy string
 
 const (
-	CustomFieldGetResponseInputByAdmin CustomFieldGetResponseInputBy = "admin"
+	CustomFieldGetResponseInputByAdmin  CustomFieldGetResponseInputBy = "admin"
 	CustomFieldGetResponseInputByWorker CustomFieldGetResponseInputBy = "worker"
 )
 
@@ -1619,24 +1643,24 @@ func (r CustomFieldGetResponseInputBy) IsKnown() bool {
 
 type CustomFieldGetResponseOption struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldGetResponseOptionsStatus `json:"status" api:"required"`
+	ID        string                              `json:"id" api:"required"`
+	Label     string                              `json:"label" api:"required"`
+	Value     string                              `json:"value" api:"required"`
+	SortOrder float64                             `json:"sortOrder" api:"required"`
+	Status    CustomFieldGetResponseOptionsStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldGetResponseOptionJSON `json:"-"`
+	CreatedAt string                           `json:"createdAt" api:"required"`
+	JSON      customFieldGetResponseOptionJSON `json:"-"`
 }
 
 // customFieldGetResponseOptionJSON contains the JSON metadata for the struct [CustomFieldGetResponseOption]
 type customFieldGetResponseOptionJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1652,13 +1676,13 @@ func (r customFieldGetResponseOptionJSON) RawJSON() string {
 type CustomFieldUpdateResponseType string
 
 const (
-	CustomFieldUpdateResponseTypeText CustomFieldUpdateResponseType = "text"
-	CustomFieldUpdateResponseTypeNumber CustomFieldUpdateResponseType = "number"
-	CustomFieldUpdateResponseTypeDate CustomFieldUpdateResponseType = "date"
-	CustomFieldUpdateResponseTypeBoolean CustomFieldUpdateResponseType = "boolean"
-	CustomFieldUpdateResponseTypeCurrency CustomFieldUpdateResponseType = "currency"
-	CustomFieldUpdateResponseTypePercentage CustomFieldUpdateResponseType = "percentage"
-	CustomFieldUpdateResponseTypeSelect CustomFieldUpdateResponseType = "select"
+	CustomFieldUpdateResponseTypeText        CustomFieldUpdateResponseType = "text"
+	CustomFieldUpdateResponseTypeNumber      CustomFieldUpdateResponseType = "number"
+	CustomFieldUpdateResponseTypeDate        CustomFieldUpdateResponseType = "date"
+	CustomFieldUpdateResponseTypeBoolean     CustomFieldUpdateResponseType = "boolean"
+	CustomFieldUpdateResponseTypeCurrency    CustomFieldUpdateResponseType = "currency"
+	CustomFieldUpdateResponseTypePercentage  CustomFieldUpdateResponseType = "percentage"
+	CustomFieldUpdateResponseTypeSelect      CustomFieldUpdateResponseType = "select"
 	CustomFieldUpdateResponseTypeMultiSelect CustomFieldUpdateResponseType = "multi_select"
 )
 
@@ -1673,7 +1697,7 @@ func (r CustomFieldUpdateResponseType) IsKnown() bool {
 type CustomFieldUpdateResponseStatus string
 
 const (
-	CustomFieldUpdateResponseStatusActive CustomFieldUpdateResponseStatus = "active"
+	CustomFieldUpdateResponseStatusActive   CustomFieldUpdateResponseStatus = "active"
 	CustomFieldUpdateResponseStatusArchived CustomFieldUpdateResponseStatus = "archived"
 )
 
@@ -1688,12 +1712,12 @@ func (r CustomFieldUpdateResponseStatus) IsKnown() bool {
 type CustomFieldUpdateResponseCategory string
 
 const (
-	CustomFieldUpdateResponseCategoryInfo CustomFieldUpdateResponseCategory = "info"
-	CustomFieldUpdateResponseCategoryPii CustomFieldUpdateResponseCategory = "pii"
+	CustomFieldUpdateResponseCategoryInfo         CustomFieldUpdateResponseCategory = "info"
+	CustomFieldUpdateResponseCategoryPii          CustomFieldUpdateResponseCategory = "pii"
 	CustomFieldUpdateResponseCategoryCompensation CustomFieldUpdateResponseCategory = "compensation"
-	CustomFieldUpdateResponseCategoryBanking CustomFieldUpdateResponseCategory = "banking"
-	CustomFieldUpdateResponseCategoryIt CustomFieldUpdateResponseCategory = "it"
-	CustomFieldUpdateResponseCategoryCompliance CustomFieldUpdateResponseCategory = "compliance"
+	CustomFieldUpdateResponseCategoryBanking      CustomFieldUpdateResponseCategory = "banking"
+	CustomFieldUpdateResponseCategoryIt           CustomFieldUpdateResponseCategory = "it"
+	CustomFieldUpdateResponseCategoryCompliance   CustomFieldUpdateResponseCategory = "compliance"
 )
 
 func (r CustomFieldUpdateResponseCategory) IsKnown() bool {
@@ -1707,9 +1731,9 @@ func (r CustomFieldUpdateResponseCategory) IsKnown() bool {
 type CustomFieldUpdateResponseAccessLevel string
 
 const (
-	CustomFieldUpdateResponseAccessLevelAdmins CustomFieldUpdateResponseAccessLevel = "admins"
+	CustomFieldUpdateResponseAccessLevelAdmins  CustomFieldUpdateResponseAccessLevel = "admins"
 	CustomFieldUpdateResponseAccessLevelManager CustomFieldUpdateResponseAccessLevel = "manager"
-	CustomFieldUpdateResponseAccessLevelWorker CustomFieldUpdateResponseAccessLevel = "worker"
+	CustomFieldUpdateResponseAccessLevelWorker  CustomFieldUpdateResponseAccessLevel = "worker"
 )
 
 func (r CustomFieldUpdateResponseAccessLevel) IsKnown() bool {
@@ -1723,7 +1747,7 @@ func (r CustomFieldUpdateResponseAccessLevel) IsKnown() bool {
 type CustomFieldUpdateResponseInputBy string
 
 const (
-	CustomFieldUpdateResponseInputByAdmin CustomFieldUpdateResponseInputBy = "admin"
+	CustomFieldUpdateResponseInputByAdmin  CustomFieldUpdateResponseInputBy = "admin"
 	CustomFieldUpdateResponseInputByWorker CustomFieldUpdateResponseInputBy = "worker"
 )
 
@@ -1738,13 +1762,13 @@ func (r CustomFieldUpdateResponseInputBy) IsKnown() bool {
 type CustomFieldArchiveResponseType string
 
 const (
-	CustomFieldArchiveResponseTypeText CustomFieldArchiveResponseType = "text"
-	CustomFieldArchiveResponseTypeNumber CustomFieldArchiveResponseType = "number"
-	CustomFieldArchiveResponseTypeDate CustomFieldArchiveResponseType = "date"
-	CustomFieldArchiveResponseTypeBoolean CustomFieldArchiveResponseType = "boolean"
-	CustomFieldArchiveResponseTypeCurrency CustomFieldArchiveResponseType = "currency"
-	CustomFieldArchiveResponseTypePercentage CustomFieldArchiveResponseType = "percentage"
-	CustomFieldArchiveResponseTypeSelect CustomFieldArchiveResponseType = "select"
+	CustomFieldArchiveResponseTypeText        CustomFieldArchiveResponseType = "text"
+	CustomFieldArchiveResponseTypeNumber      CustomFieldArchiveResponseType = "number"
+	CustomFieldArchiveResponseTypeDate        CustomFieldArchiveResponseType = "date"
+	CustomFieldArchiveResponseTypeBoolean     CustomFieldArchiveResponseType = "boolean"
+	CustomFieldArchiveResponseTypeCurrency    CustomFieldArchiveResponseType = "currency"
+	CustomFieldArchiveResponseTypePercentage  CustomFieldArchiveResponseType = "percentage"
+	CustomFieldArchiveResponseTypeSelect      CustomFieldArchiveResponseType = "select"
 	CustomFieldArchiveResponseTypeMultiSelect CustomFieldArchiveResponseType = "multi_select"
 )
 
@@ -1759,7 +1783,7 @@ func (r CustomFieldArchiveResponseType) IsKnown() bool {
 type CustomFieldArchiveResponseStatus string
 
 const (
-	CustomFieldArchiveResponseStatusActive CustomFieldArchiveResponseStatus = "active"
+	CustomFieldArchiveResponseStatusActive   CustomFieldArchiveResponseStatus = "active"
 	CustomFieldArchiveResponseStatusArchived CustomFieldArchiveResponseStatus = "archived"
 )
 
@@ -1774,12 +1798,12 @@ func (r CustomFieldArchiveResponseStatus) IsKnown() bool {
 type CustomFieldArchiveResponseCategory string
 
 const (
-	CustomFieldArchiveResponseCategoryInfo CustomFieldArchiveResponseCategory = "info"
-	CustomFieldArchiveResponseCategoryPii CustomFieldArchiveResponseCategory = "pii"
+	CustomFieldArchiveResponseCategoryInfo         CustomFieldArchiveResponseCategory = "info"
+	CustomFieldArchiveResponseCategoryPii          CustomFieldArchiveResponseCategory = "pii"
 	CustomFieldArchiveResponseCategoryCompensation CustomFieldArchiveResponseCategory = "compensation"
-	CustomFieldArchiveResponseCategoryBanking CustomFieldArchiveResponseCategory = "banking"
-	CustomFieldArchiveResponseCategoryIt CustomFieldArchiveResponseCategory = "it"
-	CustomFieldArchiveResponseCategoryCompliance CustomFieldArchiveResponseCategory = "compliance"
+	CustomFieldArchiveResponseCategoryBanking      CustomFieldArchiveResponseCategory = "banking"
+	CustomFieldArchiveResponseCategoryIt           CustomFieldArchiveResponseCategory = "it"
+	CustomFieldArchiveResponseCategoryCompliance   CustomFieldArchiveResponseCategory = "compliance"
 )
 
 func (r CustomFieldArchiveResponseCategory) IsKnown() bool {
@@ -1793,9 +1817,9 @@ func (r CustomFieldArchiveResponseCategory) IsKnown() bool {
 type CustomFieldArchiveResponseAccessLevel string
 
 const (
-	CustomFieldArchiveResponseAccessLevelAdmins CustomFieldArchiveResponseAccessLevel = "admins"
+	CustomFieldArchiveResponseAccessLevelAdmins  CustomFieldArchiveResponseAccessLevel = "admins"
 	CustomFieldArchiveResponseAccessLevelManager CustomFieldArchiveResponseAccessLevel = "manager"
-	CustomFieldArchiveResponseAccessLevelWorker CustomFieldArchiveResponseAccessLevel = "worker"
+	CustomFieldArchiveResponseAccessLevelWorker  CustomFieldArchiveResponseAccessLevel = "worker"
 )
 
 func (r CustomFieldArchiveResponseAccessLevel) IsKnown() bool {
@@ -1809,7 +1833,7 @@ func (r CustomFieldArchiveResponseAccessLevel) IsKnown() bool {
 type CustomFieldArchiveResponseInputBy string
 
 const (
-	CustomFieldArchiveResponseInputByAdmin CustomFieldArchiveResponseInputBy = "admin"
+	CustomFieldArchiveResponseInputByAdmin  CustomFieldArchiveResponseInputBy = "admin"
 	CustomFieldArchiveResponseInputByWorker CustomFieldArchiveResponseInputBy = "worker"
 )
 
@@ -1824,7 +1848,7 @@ func (r CustomFieldArchiveResponseInputBy) IsKnown() bool {
 type CustomFieldNewOptionResponseStatus string
 
 const (
-	CustomFieldNewOptionResponseStatusActive CustomFieldNewOptionResponseStatus = "active"
+	CustomFieldNewOptionResponseStatusActive   CustomFieldNewOptionResponseStatus = "active"
 	CustomFieldNewOptionResponseStatusArchived CustomFieldNewOptionResponseStatus = "archived"
 )
 
@@ -1839,7 +1863,7 @@ func (r CustomFieldNewOptionResponseStatus) IsKnown() bool {
 type CustomFieldUpdateOptionResponseStatus string
 
 const (
-	CustomFieldUpdateOptionResponseStatusActive CustomFieldUpdateOptionResponseStatus = "active"
+	CustomFieldUpdateOptionResponseStatusActive   CustomFieldUpdateOptionResponseStatus = "active"
 	CustomFieldUpdateOptionResponseStatusArchived CustomFieldUpdateOptionResponseStatus = "archived"
 )
 
@@ -1854,7 +1878,7 @@ func (r CustomFieldUpdateOptionResponseStatus) IsKnown() bool {
 type CustomFieldArchiveOptionResponseStatus string
 
 const (
-	CustomFieldArchiveOptionResponseStatusActive CustomFieldArchiveOptionResponseStatus = "active"
+	CustomFieldArchiveOptionResponseStatusActive   CustomFieldArchiveOptionResponseStatus = "active"
 	CustomFieldArchiveOptionResponseStatusArchived CustomFieldArchiveOptionResponseStatus = "archived"
 )
 
@@ -1867,26 +1891,26 @@ func (r CustomFieldArchiveOptionResponseStatus) IsKnown() bool {
 }
 
 type CustomFieldListValuesResponseValue struct {
-	Type CustomFieldListValuesResponseValueType `json:"type" api:"required"`
-	Value string `json:"value"`
-	Amount float64 `json:"amount"`
+	Type         CustomFieldListValuesResponseValueType         `json:"type" api:"required"`
+	Value        string                                         `json:"value"`
+	Amount       float64                                        `json:"amount"`
 	CurrencyCode CustomFieldListValuesResponseValueCurrencyCode `json:"currencyCode"`
-	Option interface{} `json:"option"`
-	Options interface{} `json:"options"`
-	JSON customFieldListValuesResponseValueJSON `json:"-"`
-	union CustomFieldListValuesResponseValueUnion
+	Option       interface{}                                    `json:"option"`
+	Options      interface{}                                    `json:"options"`
+	JSON         customFieldListValuesResponseValueJSON         `json:"-"`
+	union        CustomFieldListValuesResponseValueUnion
 }
 
 // customFieldListValuesResponseValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValue]
 type customFieldListValuesResponseValueJSON struct {
-	Type apijson.Field
-	Value apijson.Field
-	Amount apijson.Field
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
 	CurrencyCode apijson.Field
-	Option apijson.Field
-	Options apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r customFieldListValuesResponseValueJSON) RawJSON() string {
@@ -1911,15 +1935,15 @@ type CustomFieldListValuesResponseValueUnion interface {
 }
 
 type CustomFieldListValuesResponseValueVariant0 struct {
-	Type CustomFieldListValuesResponseValueVariant0Type `json:"type" api:"required"`
-	Value string `json:"value" api:"required"`
-	JSON customFieldListValuesResponseValueVariant0JSON `json:"-"`
+	Type  CustomFieldListValuesResponseValueVariant0Type `json:"type" api:"required"`
+	Value string                                         `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueVariant0JSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant0JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant0]
 type customFieldListValuesResponseValueVariant0JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1935,15 +1959,15 @@ func (r customFieldListValuesResponseValueVariant0JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant0) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldListValuesResponseValueVariant1 struct {
-	Type CustomFieldListValuesResponseValueVariant1Type `json:"type" api:"required"`
-	Value float64 `json:"value" api:"required"`
-	JSON customFieldListValuesResponseValueVariant1JSON `json:"-"`
+	Type  CustomFieldListValuesResponseValueVariant1Type `json:"type" api:"required"`
+	Value float64                                        `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueVariant1JSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant1JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant1]
 type customFieldListValuesResponseValueVariant1JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1961,14 +1985,14 @@ func (r CustomFieldListValuesResponseValueVariant1) implementsCustomFieldListVal
 type CustomFieldListValuesResponseValueVariant2 struct {
 	Type CustomFieldListValuesResponseValueVariant2Type `json:"type" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	Value string `json:"value" api:"required"`
-	JSON customFieldListValuesResponseValueVariant2JSON `json:"-"`
+	Value string                                         `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueVariant2JSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant2JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant2]
 type customFieldListValuesResponseValueVariant2JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -1984,15 +2008,15 @@ func (r customFieldListValuesResponseValueVariant2JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant2) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldListValuesResponseValueVariant3 struct {
-	Type CustomFieldListValuesResponseValueVariant3Type `json:"type" api:"required"`
-	Value bool `json:"value" api:"required"`
-	JSON customFieldListValuesResponseValueVariant3JSON `json:"-"`
+	Type  CustomFieldListValuesResponseValueVariant3Type `json:"type" api:"required"`
+	Value bool                                           `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueVariant3JSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant3JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant3]
 type customFieldListValuesResponseValueVariant3JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2008,19 +2032,19 @@ func (r customFieldListValuesResponseValueVariant3JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant3) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldListValuesResponseValueVariant4 struct {
-	Type CustomFieldListValuesResponseValueVariant4Type `json:"type" api:"required"`
-	Amount float64 `json:"amount" api:"required"`
+	Type         CustomFieldListValuesResponseValueVariant4Type         `json:"type" api:"required"`
+	Amount       float64                                                `json:"amount" api:"required"`
 	CurrencyCode CustomFieldListValuesResponseValueVariant4CurrencyCode `json:"currencyCode" api:"required"`
-	JSON customFieldListValuesResponseValueVariant4JSON `json:"-"`
+	JSON         customFieldListValuesResponseValueVariant4JSON         `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant4JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant4]
 type customFieldListValuesResponseValueVariant4JSON struct {
-	Type apijson.Field
-	Amount apijson.Field
+	Type         apijson.Field
+	Amount       apijson.Field
 	CurrencyCode apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *CustomFieldListValuesResponseValueVariant4) UnmarshalJSON(data []byte) (err error) {
@@ -2034,15 +2058,15 @@ func (r customFieldListValuesResponseValueVariant4JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant4) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldListValuesResponseValueVariant5 struct {
-	Type CustomFieldListValuesResponseValueVariant5Type `json:"type" api:"required"`
-	Value float64 `json:"value" api:"required"`
-	JSON customFieldListValuesResponseValueVariant5JSON `json:"-"`
+	Type  CustomFieldListValuesResponseValueVariant5Type `json:"type" api:"required"`
+	Value float64                                        `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueVariant5JSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant5JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant5]
 type customFieldListValuesResponseValueVariant5JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2058,15 +2082,15 @@ func (r customFieldListValuesResponseValueVariant5JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant5) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldListValuesResponseValueVariant6 struct {
-	Type CustomFieldListValuesResponseValueVariant6Type `json:"type" api:"required"`
+	Type   CustomFieldListValuesResponseValueVariant6Type   `json:"type" api:"required"`
 	Option CustomFieldListValuesResponseValueVariant6Option `json:"option" api:"required"`
-	JSON customFieldListValuesResponseValueVariant6JSON `json:"-"`
+	JSON   customFieldListValuesResponseValueVariant6JSON   `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant6JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant6]
 type customFieldListValuesResponseValueVariant6JSON struct {
-	Type apijson.Field
-	Option apijson.Field
+	Type        apijson.Field
+	Option      apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2082,15 +2106,15 @@ func (r customFieldListValuesResponseValueVariant6JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant6) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldListValuesResponseValueVariant7 struct {
-	Type CustomFieldListValuesResponseValueVariant7Type `json:"type" api:"required"`
+	Type    CustomFieldListValuesResponseValueVariant7Type     `json:"type" api:"required"`
 	Options []CustomFieldListValuesResponseValueVariant7Option `json:"options" api:"required"`
-	JSON customFieldListValuesResponseValueVariant7JSON `json:"-"`
+	JSON    customFieldListValuesResponseValueVariant7JSON     `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant7JSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant7]
 type customFieldListValuesResponseValueVariant7JSON struct {
-	Type apijson.Field
-	Options apijson.Field
+	Type        apijson.Field
+	Options     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2106,26 +2130,26 @@ func (r customFieldListValuesResponseValueVariant7JSON) RawJSON() string {
 func (r CustomFieldListValuesResponseValueVariant7) implementsCustomFieldListValuesResponseValue() {}
 
 type CustomFieldUpsertValueResponseValue struct {
-	Type CustomFieldUpsertValueResponseValueType `json:"type" api:"required"`
-	Value string `json:"value"`
-	Amount float64 `json:"amount"`
+	Type         CustomFieldUpsertValueResponseValueType         `json:"type" api:"required"`
+	Value        string                                          `json:"value"`
+	Amount       float64                                         `json:"amount"`
 	CurrencyCode CustomFieldUpsertValueResponseValueCurrencyCode `json:"currencyCode"`
-	Option interface{} `json:"option"`
-	Options interface{} `json:"options"`
-	JSON customFieldUpsertValueResponseValueJSON `json:"-"`
-	union CustomFieldUpsertValueResponseValueUnion
+	Option       interface{}                                     `json:"option"`
+	Options      interface{}                                     `json:"options"`
+	JSON         customFieldUpsertValueResponseValueJSON         `json:"-"`
+	union        CustomFieldUpsertValueResponseValueUnion
 }
 
 // customFieldUpsertValueResponseValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValue]
 type customFieldUpsertValueResponseValueJSON struct {
-	Type apijson.Field
-	Value apijson.Field
-	Amount apijson.Field
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
 	CurrencyCode apijson.Field
-	Option apijson.Field
-	Options apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r customFieldUpsertValueResponseValueJSON) RawJSON() string {
@@ -2150,15 +2174,15 @@ type CustomFieldUpsertValueResponseValueUnion interface {
 }
 
 type CustomFieldUpsertValueResponseValueVariant0 struct {
-	Type CustomFieldUpsertValueResponseValueVariant0Type `json:"type" api:"required"`
-	Value string `json:"value" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant0JSON `json:"-"`
+	Type  CustomFieldUpsertValueResponseValueVariant0Type `json:"type" api:"required"`
+	Value string                                          `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueVariant0JSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant0JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant0]
 type customFieldUpsertValueResponseValueVariant0JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2171,18 +2195,19 @@ func (r customFieldUpsertValueResponseValueVariant0JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant0) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant0) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant1 struct {
-	Type CustomFieldUpsertValueResponseValueVariant1Type `json:"type" api:"required"`
-	Value float64 `json:"value" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant1JSON `json:"-"`
+	Type  CustomFieldUpsertValueResponseValueVariant1Type `json:"type" api:"required"`
+	Value float64                                         `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueVariant1JSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant1JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant1]
 type customFieldUpsertValueResponseValueVariant1JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2195,19 +2220,20 @@ func (r customFieldUpsertValueResponseValueVariant1JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant1) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant1) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant2 struct {
 	Type CustomFieldUpsertValueResponseValueVariant2Type `json:"type" api:"required"`
 	// A date string in the form YYYY-MM-DD
-	Value string `json:"value" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant2JSON `json:"-"`
+	Value string                                          `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueVariant2JSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant2JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant2]
 type customFieldUpsertValueResponseValueVariant2JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2220,18 +2246,19 @@ func (r customFieldUpsertValueResponseValueVariant2JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant2) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant2) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant3 struct {
-	Type CustomFieldUpsertValueResponseValueVariant3Type `json:"type" api:"required"`
-	Value bool `json:"value" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant3JSON `json:"-"`
+	Type  CustomFieldUpsertValueResponseValueVariant3Type `json:"type" api:"required"`
+	Value bool                                            `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueVariant3JSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant3JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant3]
 type customFieldUpsertValueResponseValueVariant3JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2244,22 +2271,23 @@ func (r customFieldUpsertValueResponseValueVariant3JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant3) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant3) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant4 struct {
-	Type CustomFieldUpsertValueResponseValueVariant4Type `json:"type" api:"required"`
-	Amount float64 `json:"amount" api:"required"`
+	Type         CustomFieldUpsertValueResponseValueVariant4Type         `json:"type" api:"required"`
+	Amount       float64                                                 `json:"amount" api:"required"`
 	CurrencyCode CustomFieldUpsertValueResponseValueVariant4CurrencyCode `json:"currencyCode" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant4JSON `json:"-"`
+	JSON         customFieldUpsertValueResponseValueVariant4JSON         `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant4JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant4]
 type customFieldUpsertValueResponseValueVariant4JSON struct {
-	Type apijson.Field
-	Amount apijson.Field
+	Type         apijson.Field
+	Amount       apijson.Field
 	CurrencyCode apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
 }
 
 func (r *CustomFieldUpsertValueResponseValueVariant4) UnmarshalJSON(data []byte) (err error) {
@@ -2270,18 +2298,19 @@ func (r customFieldUpsertValueResponseValueVariant4JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant4) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant4) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant5 struct {
-	Type CustomFieldUpsertValueResponseValueVariant5Type `json:"type" api:"required"`
-	Value float64 `json:"value" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant5JSON `json:"-"`
+	Type  CustomFieldUpsertValueResponseValueVariant5Type `json:"type" api:"required"`
+	Value float64                                         `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueVariant5JSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant5JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant5]
 type customFieldUpsertValueResponseValueVariant5JSON struct {
-	Type apijson.Field
-	Value apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2294,18 +2323,19 @@ func (r customFieldUpsertValueResponseValueVariant5JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant5) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant5) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant6 struct {
-	Type CustomFieldUpsertValueResponseValueVariant6Type `json:"type" api:"required"`
+	Type   CustomFieldUpsertValueResponseValueVariant6Type   `json:"type" api:"required"`
 	Option CustomFieldUpsertValueResponseValueVariant6Option `json:"option" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant6JSON `json:"-"`
+	JSON   customFieldUpsertValueResponseValueVariant6JSON   `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant6JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant6]
 type customFieldUpsertValueResponseValueVariant6JSON struct {
-	Type apijson.Field
-	Option apijson.Field
+	Type        apijson.Field
+	Option      apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2318,18 +2348,19 @@ func (r customFieldUpsertValueResponseValueVariant6JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant6) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant6) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldUpsertValueResponseValueVariant7 struct {
-	Type CustomFieldUpsertValueResponseValueVariant7Type `json:"type" api:"required"`
+	Type    CustomFieldUpsertValueResponseValueVariant7Type     `json:"type" api:"required"`
 	Options []CustomFieldUpsertValueResponseValueVariant7Option `json:"options" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant7JSON `json:"-"`
+	JSON    customFieldUpsertValueResponseValueVariant7JSON     `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant7JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant7]
 type customFieldUpsertValueResponseValueVariant7JSON struct {
-	Type apijson.Field
-	Options apijson.Field
+	Type        apijson.Field
+	Options     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2342,12 +2373,13 @@ func (r customFieldUpsertValueResponseValueVariant7JSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant7) implementsCustomFieldUpsertValueResponseValue() {}
+func (r CustomFieldUpsertValueResponseValueVariant7) implementsCustomFieldUpsertValueResponseValue() {
+}
 
 type CustomFieldGetResponseOptionsStatus string
 
 const (
-	CustomFieldGetResponseOptionsStatusActive CustomFieldGetResponseOptionsStatus = "active"
+	CustomFieldGetResponseOptionsStatusActive   CustomFieldGetResponseOptionsStatus = "active"
 	CustomFieldGetResponseOptionsStatusArchived CustomFieldGetResponseOptionsStatus = "archived"
 )
 
@@ -2548,13 +2580,13 @@ func (r CustomFieldListValuesResponseValueVariant7Type) IsKnown() bool {
 type CustomFieldListValuesResponseValueType string
 
 const (
-	CustomFieldListValuesResponseValueTypeText CustomFieldListValuesResponseValueType = "text"
-	CustomFieldListValuesResponseValueTypeNumber CustomFieldListValuesResponseValueType = "number"
-	CustomFieldListValuesResponseValueTypeDate CustomFieldListValuesResponseValueType = "date"
-	CustomFieldListValuesResponseValueTypeBoolean CustomFieldListValuesResponseValueType = "boolean"
-	CustomFieldListValuesResponseValueTypeCurrency CustomFieldListValuesResponseValueType = "currency"
-	CustomFieldListValuesResponseValueTypePercentage CustomFieldListValuesResponseValueType = "percentage"
-	CustomFieldListValuesResponseValueTypeSelect CustomFieldListValuesResponseValueType = "select"
+	CustomFieldListValuesResponseValueTypeText        CustomFieldListValuesResponseValueType = "text"
+	CustomFieldListValuesResponseValueTypeNumber      CustomFieldListValuesResponseValueType = "number"
+	CustomFieldListValuesResponseValueTypeDate        CustomFieldListValuesResponseValueType = "date"
+	CustomFieldListValuesResponseValueTypeBoolean     CustomFieldListValuesResponseValueType = "boolean"
+	CustomFieldListValuesResponseValueTypeCurrency    CustomFieldListValuesResponseValueType = "currency"
+	CustomFieldListValuesResponseValueTypePercentage  CustomFieldListValuesResponseValueType = "percentage"
+	CustomFieldListValuesResponseValueTypeSelect      CustomFieldListValuesResponseValueType = "select"
 	CustomFieldListValuesResponseValueTypeMultiSelect CustomFieldListValuesResponseValueType = "multi_select"
 )
 
@@ -2642,24 +2674,24 @@ func (r CustomFieldListValuesResponseValueCurrencyCode) IsKnown() bool {
 
 type CustomFieldListValuesResponseValueVariant6Option struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldListValuesResponseValueVariant6OptionStatus `json:"status" api:"required"`
+	ID        string                                                 `json:"id" api:"required"`
+	Label     string                                                 `json:"label" api:"required"`
+	Value     string                                                 `json:"value" api:"required"`
+	SortOrder float64                                                `json:"sortOrder" api:"required"`
+	Status    CustomFieldListValuesResponseValueVariant6OptionStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldListValuesResponseValueVariant6OptionJSON `json:"-"`
+	CreatedAt string                                               `json:"createdAt" api:"required"`
+	JSON      customFieldListValuesResponseValueVariant6OptionJSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant6OptionJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant6Option]
 type customFieldListValuesResponseValueVariant6OptionJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2674,24 +2706,24 @@ func (r customFieldListValuesResponseValueVariant6OptionJSON) RawJSON() string {
 
 type CustomFieldListValuesResponseValueVariant7Option struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldListValuesResponseValueVariant7OptionsStatus `json:"status" api:"required"`
+	ID        string                                                  `json:"id" api:"required"`
+	Label     string                                                  `json:"label" api:"required"`
+	Value     string                                                  `json:"value" api:"required"`
+	SortOrder float64                                                 `json:"sortOrder" api:"required"`
+	Status    CustomFieldListValuesResponseValueVariant7OptionsStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldListValuesResponseValueVariant7OptionJSON `json:"-"`
+	CreatedAt string                                               `json:"createdAt" api:"required"`
+	JSON      customFieldListValuesResponseValueVariant7OptionJSON `json:"-"`
 }
 
 // customFieldListValuesResponseValueVariant7OptionJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueVariant7Option]
 type customFieldListValuesResponseValueVariant7OptionJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -2893,13 +2925,13 @@ func (r CustomFieldUpsertValueResponseValueVariant7Type) IsKnown() bool {
 type CustomFieldUpsertValueResponseValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueTypeText CustomFieldUpsertValueResponseValueType = "text"
-	CustomFieldUpsertValueResponseValueTypeNumber CustomFieldUpsertValueResponseValueType = "number"
-	CustomFieldUpsertValueResponseValueTypeDate CustomFieldUpsertValueResponseValueType = "date"
-	CustomFieldUpsertValueResponseValueTypeBoolean CustomFieldUpsertValueResponseValueType = "boolean"
-	CustomFieldUpsertValueResponseValueTypeCurrency CustomFieldUpsertValueResponseValueType = "currency"
-	CustomFieldUpsertValueResponseValueTypePercentage CustomFieldUpsertValueResponseValueType = "percentage"
-	CustomFieldUpsertValueResponseValueTypeSelect CustomFieldUpsertValueResponseValueType = "select"
+	CustomFieldUpsertValueResponseValueTypeText        CustomFieldUpsertValueResponseValueType = "text"
+	CustomFieldUpsertValueResponseValueTypeNumber      CustomFieldUpsertValueResponseValueType = "number"
+	CustomFieldUpsertValueResponseValueTypeDate        CustomFieldUpsertValueResponseValueType = "date"
+	CustomFieldUpsertValueResponseValueTypeBoolean     CustomFieldUpsertValueResponseValueType = "boolean"
+	CustomFieldUpsertValueResponseValueTypeCurrency    CustomFieldUpsertValueResponseValueType = "currency"
+	CustomFieldUpsertValueResponseValueTypePercentage  CustomFieldUpsertValueResponseValueType = "percentage"
+	CustomFieldUpsertValueResponseValueTypeSelect      CustomFieldUpsertValueResponseValueType = "select"
 	CustomFieldUpsertValueResponseValueTypeMultiSelect CustomFieldUpsertValueResponseValueType = "multi_select"
 )
 
@@ -2987,24 +3019,24 @@ func (r CustomFieldUpsertValueResponseValueCurrencyCode) IsKnown() bool {
 
 type CustomFieldUpsertValueResponseValueVariant6Option struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldUpsertValueResponseValueVariant6OptionStatus `json:"status" api:"required"`
+	ID        string                                                  `json:"id" api:"required"`
+	Label     string                                                  `json:"label" api:"required"`
+	Value     string                                                  `json:"value" api:"required"`
+	SortOrder float64                                                 `json:"sortOrder" api:"required"`
+	Status    CustomFieldUpsertValueResponseValueVariant6OptionStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant6OptionJSON `json:"-"`
+	CreatedAt string                                                `json:"createdAt" api:"required"`
+	JSON      customFieldUpsertValueResponseValueVariant6OptionJSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant6OptionJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant6Option]
 type customFieldUpsertValueResponseValueVariant6OptionJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3019,24 +3051,24 @@ func (r customFieldUpsertValueResponseValueVariant6OptionJSON) RawJSON() string 
 
 type CustomFieldUpsertValueResponseValueVariant7Option struct {
 	// The tag of a company custom worker field option.
-	ID string `json:"id" api:"required"`
-	Label string `json:"label" api:"required"`
-	Value string `json:"value" api:"required"`
-	SortOrder float64 `json:"sortOrder" api:"required"`
-	Status CustomFieldUpsertValueResponseValueVariant7OptionsStatus `json:"status" api:"required"`
+	ID        string                                                   `json:"id" api:"required"`
+	Label     string                                                   `json:"label" api:"required"`
+	Value     string                                                   `json:"value" api:"required"`
+	SortOrder float64                                                  `json:"sortOrder" api:"required"`
+	Status    CustomFieldUpsertValueResponseValueVariant7OptionsStatus `json:"status" api:"required"`
 	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	JSON customFieldUpsertValueResponseValueVariant7OptionJSON `json:"-"`
+	CreatedAt string                                                `json:"createdAt" api:"required"`
+	JSON      customFieldUpsertValueResponseValueVariant7OptionJSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueVariant7OptionJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant7Option]
 type customFieldUpsertValueResponseValueVariant7OptionJSON struct {
-	ID apijson.Field
-	Label apijson.Field
-	Value apijson.Field
-	SortOrder apijson.Field
-	Status apijson.Field
-	CreatedAt apijson.Field
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -3052,7 +3084,7 @@ func (r customFieldUpsertValueResponseValueVariant7OptionJSON) RawJSON() string 
 type CustomFieldListValuesResponseValueVariant6OptionStatus string
 
 const (
-	CustomFieldListValuesResponseValueVariant6OptionStatusActive CustomFieldListValuesResponseValueVariant6OptionStatus = "active"
+	CustomFieldListValuesResponseValueVariant6OptionStatusActive   CustomFieldListValuesResponseValueVariant6OptionStatus = "active"
 	CustomFieldListValuesResponseValueVariant6OptionStatusArchived CustomFieldListValuesResponseValueVariant6OptionStatus = "archived"
 )
 
@@ -3067,7 +3099,7 @@ func (r CustomFieldListValuesResponseValueVariant6OptionStatus) IsKnown() bool {
 type CustomFieldListValuesResponseValueVariant7OptionsStatus string
 
 const (
-	CustomFieldListValuesResponseValueVariant7OptionsStatusActive CustomFieldListValuesResponseValueVariant7OptionsStatus = "active"
+	CustomFieldListValuesResponseValueVariant7OptionsStatusActive   CustomFieldListValuesResponseValueVariant7OptionsStatus = "active"
 	CustomFieldListValuesResponseValueVariant7OptionsStatusArchived CustomFieldListValuesResponseValueVariant7OptionsStatus = "archived"
 )
 
@@ -3082,7 +3114,7 @@ func (r CustomFieldListValuesResponseValueVariant7OptionsStatus) IsKnown() bool 
 type CustomFieldUpsertValueResponseValueVariant6OptionStatus string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant6OptionStatusActive CustomFieldUpsertValueResponseValueVariant6OptionStatus = "active"
+	CustomFieldUpsertValueResponseValueVariant6OptionStatusActive   CustomFieldUpsertValueResponseValueVariant6OptionStatus = "active"
 	CustomFieldUpsertValueResponseValueVariant6OptionStatusArchived CustomFieldUpsertValueResponseValueVariant6OptionStatus = "archived"
 )
 
@@ -3097,7 +3129,7 @@ func (r CustomFieldUpsertValueResponseValueVariant6OptionStatus) IsKnown() bool 
 type CustomFieldUpsertValueResponseValueVariant7OptionsStatus string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant7OptionsStatusActive CustomFieldUpsertValueResponseValueVariant7OptionsStatus = "active"
+	CustomFieldUpsertValueResponseValueVariant7OptionsStatusActive   CustomFieldUpsertValueResponseValueVariant7OptionsStatus = "active"
 	CustomFieldUpsertValueResponseValueVariant7OptionsStatusArchived CustomFieldUpsertValueResponseValueVariant7OptionsStatus = "archived"
 )
 

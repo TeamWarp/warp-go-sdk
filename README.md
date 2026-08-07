@@ -49,8 +49,8 @@ func main() {
 		option.WithAPIKey(os.Getenv("WARP_API_KEY")),
 	)
 
-	healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
-		Statuses: sdk.F[[]sdk.BenefitHealthPlanBenefitsListParamsStatus]([]sdk.BenefitHealthPlanBenefitsListParamsStatus{"active"}),
+	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -85,7 +85,7 @@ Declared schemes:
 Non-success responses return generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```go
-healthPlan, err := client.Benefits.HealthPlans.BenefitsList(context.Background(), sdk.BenefitHealthPlanBenefitsListParams{
+healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
