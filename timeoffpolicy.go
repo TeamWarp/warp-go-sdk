@@ -36,21 +36,23 @@ func NewTimeOffPolicyService(opts ...option.RequestOption) (r *TimeOffPolicyServ
 // Get the time off policies for your company
 //
 // Parameters:
-//     ctx: Context for the request.
-//     query: TimeOffPolicyTimeOffGetParams request parameters.
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	query: TimeOffPolicyTimeOffGetParams request parameters.
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *TimeOffPolicyTimeOffGetResponse: Success
+//
+//	*TimeOffPolicyTimeOffGetResponse: Success
 //
 // Example:
 //
-//     policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
-//     if err != nil {
-//     	panic(err)
-//     }
+//	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(policy)
+//	fmt.Println(policy)
 func (r *TimeOffPolicyService) TimeOffGet(ctx context.Context, query TimeOffPolicyTimeOffGetParams, opts ...option.RequestOption) (res *TimeOffPolicyTimeOffGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/time_off/policies"
@@ -61,21 +63,23 @@ func (r *TimeOffPolicyService) TimeOffGet(ctx context.Context, query TimeOffPoli
 // Get a specific time off policy by id
 //
 // Parameters:
-//     ctx: Context for the request.
-//     id: a string starting with "top_"
-//     opts: Options to apply to this request.
+//
+//	ctx: Context for the request.
+//	id: a string starting with "top_"
+//	opts: Options to apply to this request.
 //
 // Returns:
-//     *TimeOffPolicyTimeOffGet2Response: Success
+//
+//	*TimeOffPolicyTimeOffGet2Response: Success
 //
 // Example:
 //
-//     policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
-//     if err != nil {
-//     	panic(err)
-//     }
+//	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
+//	if err != nil {
+//		panic(err)
+//	}
 //
-//     fmt.Println(policy)
+//	fmt.Println(policy)
 func (r *TimeOffPolicyService) TimeOffGet2(ctx context.Context, id string, opts ...option.RequestOption) (res *TimeOffPolicyTimeOffGet2Response, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -107,16 +111,16 @@ func (r TimeOffPolicyTimeOffGetParams) URLQuery() (v url.Values) {
 type TimeOffPolicyTimeOffGetResponse struct {
 	HasMore bool `json:"hasMore" api:"required"`
 	// an integer
-	Count int64 `json:"count" api:"required"`
-	Data []TimeOffPolicyTimeOffGetResponseData `json:"data" api:"required"`
-	JSON timeOffPolicyTimeOffGetResponseJSON `json:"-"`
+	Count int64                                 `json:"count" api:"required"`
+	Data  []TimeOffPolicyTimeOffGetResponseData `json:"data" api:"required"`
+	JSON  timeOffPolicyTimeOffGetResponseJSON   `json:"-"`
 }
 
 // timeOffPolicyTimeOffGetResponseJSON contains the JSON metadata for the struct [TimeOffPolicyTimeOffGetResponse]
 type timeOffPolicyTimeOffGetResponseJSON struct {
-	HasMore apijson.Field
-	Count apijson.Field
-	Data apijson.Field
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -133,36 +137,36 @@ type TimeOffPolicyTimeOffGet2Response struct {
 	// a string starting with "top_"
 	ID string `json:"id" api:"required"`
 	// a string starting with "tot_"
-	TimeOffTypeID string `json:"timeOffTypeId" api:"required"`
-	TimeOffTypeName string `json:"timeOffTypeName" api:"required"`
-	Paid bool `json:"paid" api:"required"`
-	IsUnlimited bool `json:"isUnlimited" api:"required"`
-	Schedule TimeOffPolicyTimeOffGet2ResponseSchedule `json:"schedule" api:"required"`
-	Unit TimeOffPolicyTimeOffGet2ResponseUnit `json:"unit" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	HoursWorkedPerChunk float64 `json:"hoursWorkedPerChunk" api:"required,nullable"`
-	MinutesPerChunk float64 `json:"minutesPerChunk" api:"required,nullable"`
-	MinutesPerPeriod float64 `json:"minutesPerPeriod" api:"required,nullable"`
-	JSON timeOffPolicyTimeOffGet2ResponseJSON `json:"-"`
+	TimeOffTypeID       string                                   `json:"timeOffTypeId" api:"required"`
+	TimeOffTypeName     string                                   `json:"timeOffTypeName" api:"required"`
+	Paid                bool                                     `json:"paid" api:"required"`
+	IsUnlimited         bool                                     `json:"isUnlimited" api:"required"`
+	Schedule            TimeOffPolicyTimeOffGet2ResponseSchedule `json:"schedule" api:"required"`
+	Unit                TimeOffPolicyTimeOffGet2ResponseUnit     `json:"unit" api:"required"`
+	Name                string                                   `json:"name" api:"required"`
+	Description         string                                   `json:"description" api:"required,nullable"`
+	HoursWorkedPerChunk float64                                  `json:"hoursWorkedPerChunk" api:"required,nullable"`
+	MinutesPerChunk     float64                                  `json:"minutesPerChunk" api:"required,nullable"`
+	MinutesPerPeriod    float64                                  `json:"minutesPerPeriod" api:"required,nullable"`
+	JSON                timeOffPolicyTimeOffGet2ResponseJSON     `json:"-"`
 }
 
 // timeOffPolicyTimeOffGet2ResponseJSON contains the JSON metadata for the struct [TimeOffPolicyTimeOffGet2Response]
 type timeOffPolicyTimeOffGet2ResponseJSON struct {
-	ID apijson.Field
-	TimeOffTypeID apijson.Field
-	TimeOffTypeName apijson.Field
-	Paid apijson.Field
-	IsUnlimited apijson.Field
-	Schedule apijson.Field
-	Unit apijson.Field
-	Name apijson.Field
-	Description apijson.Field
+	ID                  apijson.Field
+	TimeOffTypeID       apijson.Field
+	TimeOffTypeName     apijson.Field
+	Paid                apijson.Field
+	IsUnlimited         apijson.Field
+	Schedule            apijson.Field
+	Unit                apijson.Field
+	Name                apijson.Field
+	Description         apijson.Field
 	HoursWorkedPerChunk apijson.Field
-	MinutesPerChunk apijson.Field
-	MinutesPerPeriod apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	MinutesPerChunk     apijson.Field
+	MinutesPerPeriod    apijson.Field
+	raw                 string
+	ExtraFields         map[string]apijson.Field
 }
 
 func (r *TimeOffPolicyTimeOffGet2Response) UnmarshalJSON(data []byte) (err error) {
@@ -177,36 +181,36 @@ type TimeOffPolicyTimeOffGetResponseData struct {
 	// a string starting with "top_"
 	ID string `json:"id" api:"required"`
 	// a string starting with "tot_"
-	TimeOffTypeID string `json:"timeOffTypeId" api:"required"`
-	TimeOffTypeName string `json:"timeOffTypeName" api:"required"`
-	Paid bool `json:"paid" api:"required"`
-	IsUnlimited bool `json:"isUnlimited" api:"required"`
-	Schedule TimeOffPolicyTimeOffGetResponseDataSchedule `json:"schedule" api:"required"`
-	Unit TimeOffPolicyTimeOffGetResponseDataUnit `json:"unit" api:"required"`
-	Name string `json:"name" api:"required"`
-	Description string `json:"description" api:"required,nullable"`
-	HoursWorkedPerChunk float64 `json:"hoursWorkedPerChunk" api:"required,nullable"`
-	MinutesPerChunk float64 `json:"minutesPerChunk" api:"required,nullable"`
-	MinutesPerPeriod float64 `json:"minutesPerPeriod" api:"required,nullable"`
-	JSON timeOffPolicyTimeOffGetResponseDataJSON `json:"-"`
+	TimeOffTypeID       string                                      `json:"timeOffTypeId" api:"required"`
+	TimeOffTypeName     string                                      `json:"timeOffTypeName" api:"required"`
+	Paid                bool                                        `json:"paid" api:"required"`
+	IsUnlimited         bool                                        `json:"isUnlimited" api:"required"`
+	Schedule            TimeOffPolicyTimeOffGetResponseDataSchedule `json:"schedule" api:"required"`
+	Unit                TimeOffPolicyTimeOffGetResponseDataUnit     `json:"unit" api:"required"`
+	Name                string                                      `json:"name" api:"required"`
+	Description         string                                      `json:"description" api:"required,nullable"`
+	HoursWorkedPerChunk float64                                     `json:"hoursWorkedPerChunk" api:"required,nullable"`
+	MinutesPerChunk     float64                                     `json:"minutesPerChunk" api:"required,nullable"`
+	MinutesPerPeriod    float64                                     `json:"minutesPerPeriod" api:"required,nullable"`
+	JSON                timeOffPolicyTimeOffGetResponseDataJSON     `json:"-"`
 }
 
 // timeOffPolicyTimeOffGetResponseDataJSON contains the JSON metadata for the struct [TimeOffPolicyTimeOffGetResponseData]
 type timeOffPolicyTimeOffGetResponseDataJSON struct {
-	ID apijson.Field
-	TimeOffTypeID apijson.Field
-	TimeOffTypeName apijson.Field
-	Paid apijson.Field
-	IsUnlimited apijson.Field
-	Schedule apijson.Field
-	Unit apijson.Field
-	Name apijson.Field
-	Description apijson.Field
+	ID                  apijson.Field
+	TimeOffTypeID       apijson.Field
+	TimeOffTypeName     apijson.Field
+	Paid                apijson.Field
+	IsUnlimited         apijson.Field
+	Schedule            apijson.Field
+	Unit                apijson.Field
+	Name                apijson.Field
+	Description         apijson.Field
 	HoursWorkedPerChunk apijson.Field
-	MinutesPerChunk apijson.Field
-	MinutesPerPeriod apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	MinutesPerChunk     apijson.Field
+	MinutesPerPeriod    apijson.Field
+	raw                 string
+	ExtraFields         map[string]apijson.Field
 }
 
 func (r *TimeOffPolicyTimeOffGetResponseData) UnmarshalJSON(data []byte) (err error) {
@@ -221,9 +225,9 @@ type TimeOffPolicyTimeOffGet2ResponseSchedule string
 
 const (
 	TimeOffPolicyTimeOffGet2ResponseSchedulePerHourWorked TimeOffPolicyTimeOffGet2ResponseSchedule = "per_hour_worked"
-	TimeOffPolicyTimeOffGet2ResponseScheduleMonthly TimeOffPolicyTimeOffGet2ResponseSchedule = "monthly"
-	TimeOffPolicyTimeOffGet2ResponseScheduleYearly TimeOffPolicyTimeOffGet2ResponseSchedule = "yearly"
-	TimeOffPolicyTimeOffGet2ResponseScheduleUnlimited TimeOffPolicyTimeOffGet2ResponseSchedule = "unlimited"
+	TimeOffPolicyTimeOffGet2ResponseScheduleMonthly       TimeOffPolicyTimeOffGet2ResponseSchedule = "monthly"
+	TimeOffPolicyTimeOffGet2ResponseScheduleYearly        TimeOffPolicyTimeOffGet2ResponseSchedule = "yearly"
+	TimeOffPolicyTimeOffGet2ResponseScheduleUnlimited     TimeOffPolicyTimeOffGet2ResponseSchedule = "unlimited"
 )
 
 func (r TimeOffPolicyTimeOffGet2ResponseSchedule) IsKnown() bool {
@@ -238,7 +242,7 @@ type TimeOffPolicyTimeOffGet2ResponseUnit string
 
 const (
 	TimeOffPolicyTimeOffGet2ResponseUnitHour TimeOffPolicyTimeOffGet2ResponseUnit = "hour"
-	TimeOffPolicyTimeOffGet2ResponseUnitDay TimeOffPolicyTimeOffGet2ResponseUnit = "day"
+	TimeOffPolicyTimeOffGet2ResponseUnitDay  TimeOffPolicyTimeOffGet2ResponseUnit = "day"
 )
 
 func (r TimeOffPolicyTimeOffGet2ResponseUnit) IsKnown() bool {
@@ -253,9 +257,9 @@ type TimeOffPolicyTimeOffGetResponseDataSchedule string
 
 const (
 	TimeOffPolicyTimeOffGetResponseDataSchedulePerHourWorked TimeOffPolicyTimeOffGetResponseDataSchedule = "per_hour_worked"
-	TimeOffPolicyTimeOffGetResponseDataScheduleMonthly TimeOffPolicyTimeOffGetResponseDataSchedule = "monthly"
-	TimeOffPolicyTimeOffGetResponseDataScheduleYearly TimeOffPolicyTimeOffGetResponseDataSchedule = "yearly"
-	TimeOffPolicyTimeOffGetResponseDataScheduleUnlimited TimeOffPolicyTimeOffGetResponseDataSchedule = "unlimited"
+	TimeOffPolicyTimeOffGetResponseDataScheduleMonthly       TimeOffPolicyTimeOffGetResponseDataSchedule = "monthly"
+	TimeOffPolicyTimeOffGetResponseDataScheduleYearly        TimeOffPolicyTimeOffGetResponseDataSchedule = "yearly"
+	TimeOffPolicyTimeOffGetResponseDataScheduleUnlimited     TimeOffPolicyTimeOffGetResponseDataSchedule = "unlimited"
 )
 
 func (r TimeOffPolicyTimeOffGetResponseDataSchedule) IsKnown() bool {
@@ -270,7 +274,7 @@ type TimeOffPolicyTimeOffGetResponseDataUnit string
 
 const (
 	TimeOffPolicyTimeOffGetResponseDataUnitHour TimeOffPolicyTimeOffGetResponseDataUnit = "hour"
-	TimeOffPolicyTimeOffGetResponseDataUnitDay TimeOffPolicyTimeOffGetResponseDataUnit = "day"
+	TimeOffPolicyTimeOffGetResponseDataUnitDay  TimeOffPolicyTimeOffGetResponseDataUnit = "day"
 )
 
 func (r TimeOffPolicyTimeOffGetResponseDataUnit) IsKnown() bool {

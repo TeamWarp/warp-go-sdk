@@ -1,10 +1,17 @@
 # Changelog
 
-## [0.3.0](https://github.com/TeamWarp/warp-sdk-go/compare/v0.2.0...v0.3.0) (2026-08-05)
+## [0.5.0](https://github.com/TeamWarp/warp-sdk-go/compare/v0.2.0...v0.5.0) (2026-08-10)
 
 
 ### ⚠ BREAKING CHANGES
 
+* **api:** 6 breaking changes to the SDK surface.
+    - Removed operation `benefits.healthPlans.benefitsList` (`GET /v1/benefits/health_plans`).
+    - Removed operation `benefits.healthPlans.benefitsGet` (`GET /v1/benefits/health_plans/{id}`).
+    - Removed operation `benefits.retirementPlans.benefitsList` (`GET /v1/benefits/retirement_plans`).
+    - Removed operation `benefits.retirementPlans.benefitsGet` (`GET /v1/benefits/retirement_plans/{id}`).
+    - Removed operation `benefits.deductions.benefitsList` (`GET /v1/benefits/deductions`).
+    - Removed operation `benefits.deductions.benefitsGet` (`GET /v1/benefits/deductions/{id}`).
 * **api:** Renamed SDK from `WarpApi` to `Warp`.
 * **api:** 20 breaking changes to the SDK surface.
     - Removed operation `customWorkerFields.list` (`GET /v1/custom-worker-fields`).
@@ -125,6 +132,7 @@
 * **api:** update import names to warp ([87831bc](https://github.com/TeamWarp/warp-sdk-go/commit/87831bc83f412d1069ef9435c1ae7dd00823391f))
 * **api:** update SDK name (+145 more changes) ([6ac93ee](https://github.com/TeamWarp/warp-sdk-go/commit/6ac93ee5b2ffb457a3c6a21bc75eaeeb2ca5f5fc))
 * **api:** update SDK name (+27 more changes) ([1f0c2a5](https://github.com/TeamWarp/warp-sdk-go/commit/1f0c2a57eb0d071d907deef400eeddd839f3ae49))
+* **api:** update SDK surface (14 changes) ([7e88858](https://github.com/TeamWarp/warp-sdk-go/commit/7e888580c1b460dd1349b53f8048dc642a243e68))
 * **api:** update SDK surface (2 changes) ([ea40d6f](https://github.com/TeamWarp/warp-sdk-go/commit/ea40d6faf17e53ddcdb7b83d1d305602b82897d0))
 
 
@@ -135,6 +143,7 @@
 * **api:** regenerate SDK ([ac04211](https://github.com/TeamWarp/warp-sdk-go/commit/ac042115bb63da525c083edb0ceb0b6fd6acc527))
 * **api:** update generated SDK content ([c30a172](https://github.com/TeamWarp/warp-sdk-go/commit/c30a172959b057054fa6e84320a98cc887889551))
 * **api:** update generated SDK content ([e02c75c](https://github.com/TeamWarp/warp-sdk-go/commit/e02c75c417391e38cfbf130f1ee9ba2a6594d10a))
+* release 0.5.0 ([3469d0b](https://github.com/TeamWarp/warp-sdk-go/commit/3469d0bc025a5446700fa23c7e925b1a7f959d33))
 
 ## [0.2.0](https://github.com/TeamWarp/warp-sdk-go/compare/v0.1.0...v0.2.0) (2026-07-29)
 

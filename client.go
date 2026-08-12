@@ -17,15 +17,15 @@ import (
 // interacting with the Warp API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options []option.RequestOption
-	Benefits *BenefitService
+	Options      []option.RequestOption
+	Benefits     *BenefitService
 	CustomFields *CustomFieldService
-	Departments *DepartmentService
-	Offers *OfferService
-	TimeOff *TimeOffService
-	Workers *WorkerService
-	Workplaces *WorkplaceService
-	Webhooks *WebhookService
+	Departments  *DepartmentService
+	Offers       *OfferService
+	TimeOff      *TimeOffService
+	Workers      *WorkerService
+	Workplaces   *WorkplaceService
+	Webhooks     *WebhookService
 }
 
 // DefaultClientOptions read from the environment. This should be used to initialize
@@ -72,7 +72,6 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 
 	return
 }
-
 
 // Execute makes a request with the given context, method, URL, request params,
 // response, and request options.
