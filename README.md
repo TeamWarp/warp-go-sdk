@@ -1,5 +1,7 @@
 # Warp API
 
+## Published under an incorrect module path; use github.com/TeamWarp/warp-go-sdk instead
+
 This library provides convenient access to the Warp API from Go.
 
 The full API of this library can be found in [api.md](./api.md).
