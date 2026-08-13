@@ -86,7 +86,7 @@ func (r *TimeOffPolicyService) TimeOffGet2(ctx context.Context, id string, opts 
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/time_off/policies/%s", id)
+	path := fmt.Sprintf("v1/time_off/policies/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }

@@ -121,7 +121,7 @@ func (r *WorkplaceService) Update(ctx context.Context, id string, body Workplace
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/workplaces/%s", id)
+	path := fmt.Sprintf("v1/workplaces/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, body, &res, opts...)
 	return res, err
 }

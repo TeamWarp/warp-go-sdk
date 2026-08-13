@@ -126,7 +126,7 @@ func (r *OfferService) Void(ctx context.Context, id string, opts ...option.Reque
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/offers/%s/void", id)
+	path := fmt.Sprintf("v1/offers/%s/void", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }
@@ -160,7 +160,7 @@ func (r *OfferService) ExtendDeadline(ctx context.Context, id string, body Offer
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/offers/%s/extend-deadline", id)
+	path := fmt.Sprintf("v1/offers/%s/extend-deadline", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
 }
@@ -191,7 +191,7 @@ func (r *OfferService) Resend(ctx context.Context, id string, opts ...option.Req
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/offers/%s/resend", id)
+	path := fmt.Sprintf("v1/offers/%s/resend", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }

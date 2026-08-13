@@ -117,7 +117,7 @@ func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/custom_fields/%s", id)
+	path := fmt.Sprintf("v1/custom_fields/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
@@ -149,7 +149,7 @@ func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomF
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/custom_fields/%s", id)
+	path := fmt.Sprintf("v1/custom_fields/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, body, &res, opts...)
 	return res, err
 }
@@ -180,7 +180,7 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/custom_fields/%s/archive", id)
+	path := fmt.Sprintf("v1/custom_fields/%s/archive", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }
@@ -215,7 +215,7 @@ func (r *CustomFieldService) NewOption(ctx context.Context, id string, body Cust
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/custom_fields/%s/options", id)
+	path := fmt.Sprintf("v1/custom_fields/%s/options", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
 }
@@ -247,7 +247,7 @@ func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body C
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/custom_field_options/%s", id)
+	path := fmt.Sprintf("v1/custom_field_options/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, body, &res, opts...)
 	return res, err
 }
@@ -277,7 +277,7 @@ func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts .
 		err = errors.New("missing required id parameter")
 		return err
 	}
-	path := fmt.Sprintf("v1/custom_field_options/%s", id)
+	path := fmt.Sprintf("v1/custom_field_options/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return err
 }
@@ -308,7 +308,7 @@ func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts 
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/custom_field_options/%s/archive", id)
+	path := fmt.Sprintf("v1/custom_field_options/%s/archive", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }

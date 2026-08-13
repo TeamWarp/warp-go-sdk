@@ -91,7 +91,7 @@ func (r *BenefitDeductionService) Get(ctx context.Context, id string, opts ...op
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/benefits/deductions/%s", id)
+	path := fmt.Sprintf("v1/benefits/deductions/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }

@@ -116,7 +116,7 @@ func (r *DepartmentService) Update(ctx context.Context, id string, body Departme
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/departments/%s", id)
+	path := fmt.Sprintf("v1/departments/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, body, &res, opts...)
 	return res, err
 }

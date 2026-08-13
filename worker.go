@@ -86,7 +86,7 @@ func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.Reque
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/workers/%s", id)
+	path := fmt.Sprintf("v1/workers/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
@@ -116,7 +116,7 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 		err = errors.New("missing required id parameter")
 		return err
 	}
-	path := fmt.Sprintf("v1/workers/%s", id)
+	path := fmt.Sprintf("v1/workers/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return err
 }
@@ -223,7 +223,7 @@ func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.Re
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/workers/%s/invite", id)
+	path := fmt.Sprintf("v1/workers/%s/invite", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }

@@ -88,7 +88,7 @@ func (r *BenefitHealthPlanService) Get(ctx context.Context, id string, opts ...o
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/benefits/health_plans/%s", id)
+	path := fmt.Sprintf("v1/benefits/health_plans/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
