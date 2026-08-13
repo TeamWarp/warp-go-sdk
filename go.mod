@@ -11,3 +11,5 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 )
+
+retract [v0.4.0, v0.4.2] // Published under an incorrect module path; use github.com/TeamWarp/warp-go-sdk instead.
