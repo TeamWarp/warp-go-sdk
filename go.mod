@@ -13,3 +13,5 @@ require (
 )
 
 retract [v0.4.0, v0.4.2] // Published under an incorrect module path; use github.com/TeamWarp/warp-go-sdk instead.
+
+retract [v0.4.0, v0.5.1] // Published under an incorrect module path; use github.com/TeamWarp/warp-go-sdk instead.
