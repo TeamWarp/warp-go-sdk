@@ -38,6 +38,7 @@ type smokeCase struct {
 
 func _smokeCase0() {
 	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+		Limit:    sdk.F[string]("limit"),
 		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
 	})
 	if err != nil {
@@ -48,7 +49,7 @@ func _smokeCase0() {
 }
 
 func _smokeCase1() {
-	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
+	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -58,6 +59,7 @@ func _smokeCase1() {
 
 func _smokeCase2() {
 	retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
+		Limit:    sdk.F[string]("limit"),
 		Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
 	})
 	if err != nil {
@@ -68,7 +70,7 @@ func _smokeCase2() {
 }
 
 func _smokeCase3() {
-	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
+	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -78,6 +80,7 @@ func _smokeCase3() {
 
 func _smokeCase4() {
 	deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
+		Limit:    sdk.F[string]("limit"),
 		Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
 	})
 	if err != nil {
@@ -88,7 +91,7 @@ func _smokeCase4() {
 }
 
 func _smokeCase5() {
-	deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
+	deduction, err := client.Benefits.Deductions.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -107,7 +110,7 @@ func _smokeCase6() {
 
 func _smokeCase7() {
 	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
-		Name: sdk.F[string](""),
+		Name: sdk.F[interface{}](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -117,7 +120,7 @@ func _smokeCase7() {
 }
 
 func _smokeCase8() {
-	customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
+	customField, err := client.CustomFields.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -126,7 +129,7 @@ func _smokeCase8() {
 }
 
 func _smokeCase9() {
-	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
+	customField, err := client.CustomFields.Update(context.Background(), "id", sdk.CustomFieldUpdateParams{})
 	if err != nil {
 		panic(err)
 	}
@@ -135,7 +138,7 @@ func _smokeCase9() {
 }
 
 func _smokeCase10() {
-	customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
+	customField, err := client.CustomFields.Archive(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -144,9 +147,9 @@ func _smokeCase10() {
 }
 
 func _smokeCase11() {
-	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
-		Label: sdk.F[string]("x"),
-		Value: sdk.F[string]("x"),
+	customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
+		Label: sdk.F[interface{}](map[string]interface{}{}),
+		Value: sdk.F[interface{}](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -156,7 +159,7 @@ func _smokeCase11() {
 }
 
 func _smokeCase12() {
-	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
+	customField, err := client.CustomFields.UpdateOption(context.Background(), "id", sdk.CustomFieldUpdateOptionParams{})
 	if err != nil {
 		panic(err)
 	}
@@ -165,14 +168,14 @@ func _smokeCase12() {
 }
 
 func _smokeCase13() {
-	err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
+	err := client.CustomFields.DeleteOption(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
 }
 
 func _smokeCase14() {
-	customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
+	customField, err := client.CustomFields.ArchiveOption(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -191,9 +194,9 @@ func _smokeCase15() {
 
 func _smokeCase16() {
 	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
-		FieldID:  sdk.F[string]("cf_1234"),
+		FieldID:  sdk.F[string](map[string]interface{}{}),
 		Value:    sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
-		WorkerID: sdk.F[string]("wrk_1234"),
+		WorkerID: sdk.F[string](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -204,8 +207,8 @@ func _smokeCase16() {
 
 func _smokeCase17() {
 	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
-		FieldID:  sdk.F[string]("cf_1234"),
-		WorkerID: sdk.F[string]("wrk_1234"),
+		FieldID:  sdk.F[string](map[string]interface{}{}),
+		WorkerID: sdk.F[string](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -213,7 +216,9 @@ func _smokeCase17() {
 }
 
 func _smokeCase18() {
-	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
+	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -223,7 +228,7 @@ func _smokeCase18() {
 
 func _smokeCase19() {
 	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-		Name: sdk.F[string](""),
+		Name: sdk.F[interface{}](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -233,7 +238,7 @@ func _smokeCase19() {
 }
 
 func _smokeCase20() {
-	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
+	department, err := client.Departments.Update(context.Background(), "id", sdk.DepartmentUpdateParams{})
 	if err != nil {
 		panic(err)
 	}
@@ -242,7 +247,9 @@ func _smokeCase20() {
 }
 
 func _smokeCase21() {
-	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
+	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -253,16 +260,16 @@ func _smokeCase21() {
 func _smokeCase22() {
 	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
-			FirstName: sdk.F[string]("x"),
-			LastName:  sdk.F[string]("x"),
-			Email:     sdk.F[string]("john@joinwarp.com"),
+			FirstName: sdk.F[interface{}](map[string]interface{}{}),
+			LastName:  sdk.F[interface{}](map[string]interface{}{}),
+			Email:     sdk.F[interface{}](map[string]interface{}{}),
 		}),
 		Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
-			PayRate: sdk.F[float64](0),
+			PayRate: sdk.F[interface{}](map[string]interface{}{}),
 		}),
 		Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
-			Title:     sdk.F[string]("x"),
-			StartDate: sdk.F[string]("2000-01-01"),
+			Title:     sdk.F[interface{}](map[string]interface{}{}),
+			StartDate: sdk.F[interface{}](map[string]interface{}{}),
 		}),
 	})
 	if err != nil {
@@ -273,7 +280,7 @@ func _smokeCase22() {
 }
 
 func _smokeCase23() {
-	offer, err := client.Offers.Void(context.Background(), "offr_1234")
+	offer, err := client.Offers.Void(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -282,7 +289,7 @@ func _smokeCase23() {
 }
 
 func _smokeCase24() {
-	offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
+	offer, err := client.Offers.ExtendDeadline(context.Background(), "id", sdk.OfferExtendDeadlineParams{
 		ExpirationTime: sdk.F[string](""),
 	})
 	if err != nil {
@@ -293,7 +300,7 @@ func _smokeCase24() {
 }
 
 func _smokeCase25() {
-	offer, err := client.Offers.Resend(context.Background(), "offr_1234")
+	offer, err := client.Offers.Resend(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -302,7 +309,9 @@ func _smokeCase25() {
 }
 
 func _smokeCase26() {
-	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -311,7 +320,9 @@ func _smokeCase26() {
 }
 
 func _smokeCase27() {
-	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
+	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -320,7 +331,9 @@ func _smokeCase27() {
 }
 
 func _smokeCase28() {
-	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
+	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -329,7 +342,9 @@ func _smokeCase28() {
 }
 
 func _smokeCase29() {
-	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
+	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -338,7 +353,7 @@ func _smokeCase29() {
 }
 
 func _smokeCase30() {
-	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
+	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -347,7 +362,9 @@ func _smokeCase30() {
 }
 
 func _smokeCase31() {
-	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
+	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -356,7 +373,7 @@ func _smokeCase31() {
 }
 
 func _smokeCase32() {
-	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
+	worker, err := client.Workers.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -365,7 +382,7 @@ func _smokeCase32() {
 }
 
 func _smokeCase33() {
-	err := client.Workers.Delete(context.Background(), "wrk_1234")
+	err := client.Workers.Delete(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -374,17 +391,17 @@ func _smokeCase33() {
 func _smokeCase34() {
 	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
-			Amount: sdk.F[float64](0),
+			Amount: sdk.F[interface{}](map[string]interface{}{}),
 		}),
-		DepartmentID: sdk.F[string]("dpt_1234"),
-		Email:        sdk.F[string]("john@joinwarp.com"),
-		FirstName:    sdk.F[string](""),
-		LastName:     sdk.F[string](""),
-		ManagerID:    sdk.F[string]("wrk_1234"),
-		Position:     sdk.F[string](""),
-		StartDate:    sdk.F[string]("2000-01-01"),
+		DepartmentID: sdk.F[string](map[string]interface{}{}),
+		Email:        sdk.F[string](map[string]interface{}{}),
+		FirstName:    sdk.F[interface{}](map[string]interface{}{}),
+		LastName:     sdk.F[interface{}](map[string]interface{}{}),
+		ManagerID:    sdk.F[string](map[string]interface{}{}),
+		Position:     sdk.F[interface{}](map[string]interface{}{}),
+		StartDate:    sdk.F[string](map[string]interface{}{}),
 		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
-			WorkplaceID: sdk.F[string]("wkp_1234"),
+			WorkplaceID: sdk.F[interface{}](map[string]interface{}{}),
 		}),
 	})
 	if err != nil {
@@ -396,13 +413,13 @@ func _smokeCase34() {
 
 func _smokeCase35() {
 	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
-		DepartmentID: sdk.F[string]("dpt_1234"),
-		Email:        sdk.F[string]("john@joinwarp.com"),
-		FirstName:    sdk.F[string](""),
-		LastName:     sdk.F[string](""),
-		ManagerID:    sdk.F[string]("wrk_1234"),
-		Position:     sdk.F[string](""),
-		StartDate:    sdk.F[string]("2000-01-01"),
+		DepartmentID: sdk.F[string](map[string]interface{}{}),
+		Email:        sdk.F[string](map[string]interface{}{}),
+		FirstName:    sdk.F[interface{}](map[string]interface{}{}),
+		LastName:     sdk.F[interface{}](map[string]interface{}{}),
+		ManagerID:    sdk.F[string](map[string]interface{}{}),
+		Position:     sdk.F[interface{}](map[string]interface{}{}),
+		StartDate:    sdk.F[string](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -412,7 +429,7 @@ func _smokeCase35() {
 }
 
 func _smokeCase36() {
-	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
+	worker, err := client.Workers.Invite(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -421,7 +438,9 @@ func _smokeCase36() {
 }
 
 func _smokeCase37() {
-	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
+	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{
+		Limit: sdk.F[string]("limit"),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -432,11 +451,11 @@ func _smokeCase37() {
 func _smokeCase38() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
-			Line1:      sdk.F[string]("x"),
+			Line1:      sdk.F[interface{}](map[string]interface{}{}),
 			City:       sdk.F[string](""),
 			PostalCode: sdk.F[string](""),
 		}),
-		Name: sdk.F[string](""),
+		Name: sdk.F[interface{}](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -446,7 +465,7 @@ func _smokeCase38() {
 }
 
 func _smokeCase39() {
-	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
+	workplace, err := client.Workplaces.Update(context.Background(), "id", sdk.WorkplaceUpdateParams{})
 	if err != nil {
 		panic(err)
 	}

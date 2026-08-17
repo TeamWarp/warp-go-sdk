@@ -47,7 +47,9 @@ func NewWorkerService(opts ...option.RequestOption) (r *WorkerService) {
 //
 // Example:
 //
-//	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
+//	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -65,7 +67,7 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The id of the worker.
+//	id: Path parameter.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -74,7 +76,7 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 //
 // Example:
 //
-//	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
+//	worker, err := client.Workers.Get(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -96,16 +98,16 @@ func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.Reque
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The id of the worker.
+//	id: Path parameter.
 //	opts: Options to apply to this request.
 //
 // Returns:
 //
-//	error: Success
+//	error: <No Content>
 //
 // Example:
 //
-//	err := client.Workers.Delete(context.Background(), "wrk_1234")
+//	err := client.Workers.Delete(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -137,17 +139,17 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 //
 //	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 //		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
-//			Amount: sdk.F[float64](0),
+//			Amount: sdk.F[interface{}](map[string]interface{}{}),
 //		}),
-//		DepartmentID: sdk.F[string]("dpt_1234"),
-//		Email:        sdk.F[string]("john@joinwarp.com"),
-//		FirstName:    sdk.F[string](""),
-//		LastName:     sdk.F[string](""),
-//		ManagerID:    sdk.F[string]("wrk_1234"),
-//		Position:     sdk.F[string](""),
-//		StartDate:    sdk.F[string]("2000-01-01"),
+//		DepartmentID: sdk.F[string](map[string]interface{}{}),
+//		Email:        sdk.F[string](map[string]interface{}{}),
+//		FirstName:    sdk.F[interface{}](map[string]interface{}{}),
+//		LastName:     sdk.F[interface{}](map[string]interface{}{}),
+//		ManagerID:    sdk.F[string](map[string]interface{}{}),
+//		Position:     sdk.F[interface{}](map[string]interface{}{}),
+//		StartDate:    sdk.F[string](map[string]interface{}{}),
 //		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
-//			WorkplaceID: sdk.F[string]("wkp_1234"),
+//			WorkplaceID: sdk.F[interface{}](map[string]interface{}{}),
 //		}),
 //	})
 //	if err != nil {
@@ -177,13 +179,13 @@ func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeP
 // Example:
 //
 //	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
-//		DepartmentID: sdk.F[string]("dpt_1234"),
-//		Email:        sdk.F[string]("john@joinwarp.com"),
-//		FirstName:    sdk.F[string](""),
-//		LastName:     sdk.F[string](""),
-//		ManagerID:    sdk.F[string]("wrk_1234"),
-//		Position:     sdk.F[string](""),
-//		StartDate:    sdk.F[string]("2000-01-01"),
+//		DepartmentID: sdk.F[string](map[string]interface{}{}),
+//		Email:        sdk.F[string](map[string]interface{}{}),
+//		FirstName:    sdk.F[interface{}](map[string]interface{}{}),
+//		LastName:     sdk.F[interface{}](map[string]interface{}{}),
+//		ManagerID:    sdk.F[string](map[string]interface{}{}),
+//		Position:     sdk.F[interface{}](map[string]interface{}{}),
+//		StartDate:    sdk.F[string](map[string]interface{}{}),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -202,7 +204,7 @@ func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContrac
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The id of the worker.
+//	id: Path parameter.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -211,7 +213,7 @@ func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContrac
 //
 // Example:
 //
-//	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
+//	worker, err := client.Workers.Invite(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -229,9 +231,8 @@ func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.Re
 }
 
 type OfficeWorkLocationParam struct {
-	Type param.Field[OfficeWorkLocationType] `json:"type" api:"required"`
-	// Public workplace identifier
-	WorkplaceID param.Field[string] `json:"workplaceId" api:"required"`
+	Type        param.Field[OfficeWorkLocationType] `json:"type" api:"required"`
+	WorkplaceID param.Field[string]                 `json:"workplaceId" api:"required"`
 }
 
 func (r OfficeWorkLocationParam) MarshalJSON() (data []byte, err error) {
@@ -340,13 +341,186 @@ func (r RemoteWorkLocationState) IsKnown() bool {
 	return false
 }
 
+type Objects10 struct {
+	ID            string          `json:"id" api:"required"`
+	Position      string          `json:"position" api:"required"`
+	Type          Objects10Type   `json:"type" api:"required"`
+	Status        Objects10Status `json:"status" api:"required"`
+	StartDate     string          `json:"startDate" api:"required"`
+	EndDate       string          `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool            `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string          `json:"businessName" api:"required,nullable"`
+	FirstName     string          `json:"firstName" api:"required"`
+	LastName      string          `json:"lastName" api:"required"`
+	Email         string          `json:"email" api:"required"`
+	WorkEmail     string          `json:"workEmail" api:"required,nullable"`
+	PreferredName string          `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	JSON       objects10JSON               `json:"-"`
+}
+
+// objects10JSON contains the JSON metadata for the struct [Objects10]
+type objects10JSON struct {
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
+	PreferredName apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *Objects10) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects10JSON) RawJSON() string {
+	return r.raw
+}
+
+type Objects10Type string
+
+const (
+	Objects10TypeEmployee   Objects10Type = "employee"
+	Objects10TypeContractor Objects10Type = "contractor"
+)
+
+func (r Objects10Type) IsKnown() bool {
+	switch r {
+	case Objects10TypeEmployee, Objects10TypeContractor:
+		return true
+	}
+	return false
+}
+
+type Objects10Status string
+
+const (
+	Objects10StatusDraft       Objects10Status = "draft"
+	Objects10StatusInvited     Objects10Status = "invited"
+	Objects10StatusOnboarding  Objects10Status = "onboarding"
+	Objects10StatusActive      Objects10Status = "active"
+	Objects10StatusOffboarding Objects10Status = "offboarding"
+	Objects10StatusInactive    Objects10Status = "inactive"
+)
+
+func (r Objects10Status) IsKnown() bool {
+	switch r {
+	case Objects10StatusDraft, Objects10StatusInvited, Objects10StatusOnboarding, Objects10StatusActive, Objects10StatusOffboarding, Objects10StatusInactive:
+		return true
+	}
+	return false
+}
+
+type WorkerGetResponse struct {
+	ID            string                  `json:"id" api:"required"`
+	Position      string                  `json:"position" api:"required"`
+	Type          WorkerGetResponseType   `json:"type" api:"required"`
+	Status        WorkerGetResponseStatus `json:"status" api:"required"`
+	StartDate     string                  `json:"startDate" api:"required"`
+	EndDate       string                  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                  `json:"businessName" api:"required,nullable"`
+	FirstName     string                  `json:"firstName" api:"required"`
+	LastName      string                  `json:"lastName" api:"required"`
+	Email         string                  `json:"email" api:"required"`
+	WorkEmail     string                  `json:"workEmail" api:"required,nullable"`
+	PreferredName string                  `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	JSON       workerGetResponseJSON       `json:"-"`
+}
+
+// workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
+type workerGetResponseJSON struct {
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
+	PreferredName apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
+}
+
+func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerGetResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerGetResponseType string
+
+const (
+	WorkerGetResponseTypeEmployee   WorkerGetResponseType = "employee"
+	WorkerGetResponseTypeContractor WorkerGetResponseType = "contractor"
+)
+
+func (r WorkerGetResponseType) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseTypeEmployee, WorkerGetResponseTypeContractor:
+		return true
+	}
+	return false
+}
+
+type WorkerGetResponseStatus string
+
+const (
+	WorkerGetResponseStatusDraft       WorkerGetResponseStatus = "draft"
+	WorkerGetResponseStatusInvited     WorkerGetResponseStatus = "invited"
+	WorkerGetResponseStatusOnboarding  WorkerGetResponseStatus = "onboarding"
+	WorkerGetResponseStatusActive      WorkerGetResponseStatus = "active"
+	WorkerGetResponseStatusOffboarding WorkerGetResponseStatus = "offboarding"
+	WorkerGetResponseStatusInactive    WorkerGetResponseStatus = "inactive"
+)
+
+func (r WorkerGetResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseStatusDraft, WorkerGetResponseStatusInvited, WorkerGetResponseStatusOnboarding, WorkerGetResponseStatusActive, WorkerGetResponseStatusOffboarding, WorkerGetResponseStatusInactive:
+		return true
+	}
+	return false
+}
+
 type WorkerListParams struct {
-	// The id of the worker.
-	AfterID param.Field[string] `query:"afterId"`
-	// The id of the worker.
-	BeforeID param.Field[string] `query:"beforeId"`
-	// a number less than or equal to 100
-	Limit     param.Field[string]                   `query:"limit"`
+	Limit     param.Field[string]                   `query:"limit" api:"required"`
+	AfterID   param.Field[string]                   `query:"afterId"`
+	BeforeID  param.Field[string]                   `query:"beforeId"`
 	Statuses  param.Field[[]WorkerListParamsStatus] `query:"statuses"`
 	Types     param.Field[[]WorkerListParamsType]   `query:"types"`
 	WorkEmail param.Field[string]                   `query:"workEmail"`
@@ -397,38 +571,21 @@ func (r WorkerListParamsType) IsKnown() bool {
 type WorkerNewEmployeeParams struct {
 	// The employee's base compensation.
 	Compensation param.Field[WorkerNewEmployeeParamsCompensation] `json:"compensation" api:"required"`
-	// The department to assign this employee to.
-	DepartmentID param.Field[string] `json:"departmentId" api:"required"`
-	// Personal email address. The invite will be sent here.
-	Email param.Field[string] `json:"email" api:"required"`
-	// a non empty string
-	FirstName param.Field[string] `json:"firstName" api:"required"`
-	// a non empty string
-	LastName param.Field[string] `json:"lastName" api:"required"`
-	// The worker id of this employee's direct manager.
-	ManagerID param.Field[string] `json:"managerId" api:"required"`
-	// The employee's job title.
-	Position param.Field[string] `json:"position" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate param.Field[string] `json:"startDate" api:"required"`
+	DepartmentID param.Field[string]                              `json:"departmentId" api:"required"`
+	Email        param.Field[string]                              `json:"email" api:"required"`
+	FirstName    param.Field[interface{}]                         `json:"firstName" api:"required"`
+	LastName     param.Field[interface{}]                         `json:"lastName" api:"required"`
+	ManagerID    param.Field[string]                              `json:"managerId" api:"required"`
+	Position     param.Field[interface{}]                         `json:"position" api:"required"`
+	StartDate    param.Field[string]                              `json:"startDate" api:"required"`
 	// Where the employee will work. Either an existing company workplace or a remote
 	// US state.
-	WorkLocation param.Field[WorkerNewEmployeeParamsWorkLocationUnion] `json:"workLocation" api:"required"`
-	// The employee's pay schedule. Must be a pay schedule that the company has
-	// configured.
-	PaySchedule param.Field[WorkerNewEmployeeParamsPaySchedule] `json:"paySchedule"`
-	// Whether the employee is required to complete I-9 work authorization. Set to
-	// false if the employee has already been verified off-platform. Defaults to true.
-	RequireI9 param.Field[bool] `json:"requireI9"`
-	// How state tax registration is handled for this employee's work state. Required
-	// when hiring in a state where your company doesn't have an existing registration.
-	// Use 'self_managed' if you've already registered in this state, or 'warp_managed'
-	// for Warp to handle registration on your behalf.
+	WorkLocation      param.Field[WorkerNewEmployeeParamsWorkLocationUnion] `json:"workLocation" api:"required"`
+	PaySchedule       param.Field[WorkerNewEmployeeParamsPaySchedule]       `json:"paySchedule"`
+	RequireI9         param.Field[bool]                                     `json:"requireI9"`
 	StateRegistration param.Field[WorkerNewEmployeeParamsStateRegistration] `json:"stateRegistration"`
-	// Number of stock options granted to this employee.
-	StockOptions param.Field[float64] `json:"stockOptions"`
-	// Company-issued email address, if applicable.
-	WorkEmail param.Field[string] `json:"workEmail"`
+	StockOptions      param.Field[interface{}]                              `json:"stockOptions"`
+	WorkEmail         param.Field[string]                                   `json:"workEmail"`
 }
 
 func (r WorkerNewEmployeeParams) MarshalJSON() (data []byte, err error) {
@@ -462,9 +619,8 @@ func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocation) implementsWorkerN
 }
 
 type WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation struct {
-	Type param.Field[WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType] `json:"type" api:"required"`
-	// Public workplace identifier
-	WorkplaceID param.Field[string] `json:"workplaceId" api:"required"`
+	Type        param.Field[WorkerNewEmployeeParamsWorkLocationOfficeWorkLocationType] `json:"type" api:"required"`
+	WorkplaceID param.Field[string]                                                    `json:"workplaceId" api:"required"`
 }
 
 func (r WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation) MarshalJSON() (data []byte, err error) {
@@ -574,8 +730,7 @@ func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState) IsKnown() bo
 }
 
 type WorkerNewEmployeeParamsCompensation struct {
-	// a positive number
-	Amount param.Field[float64] `json:"amount" api:"required"`
+	Amount param.Field[interface{}] `json:"amount" api:"required"`
 	// Whether the amount is per hour or per year.
 	Per param.Field[WorkerNewEmployeeParamsCompensationPer] `json:"per" api:"required"`
 }
@@ -619,35 +774,21 @@ func (r WorkerNewEmployeeParamsPaySchedule) IsKnown() bool {
 }
 
 type WorkerNewContractorParams struct {
-	// The department to assign this contractor to.
 	DepartmentID param.Field[string] `json:"departmentId" api:"required"`
-	// Personal email address. The invite will be sent here.
-	Email param.Field[string] `json:"email" api:"required"`
+	Email        param.Field[string] `json:"email" api:"required"`
 	// Whether the contractor is an individual person or a business entity.
-	EntityType param.Field[WorkerNewContractorParamsEntityType] `json:"entityType" api:"required"`
-	// a non empty string
-	FirstName param.Field[string] `json:"firstName" api:"required"`
-	// a non empty string
-	LastName param.Field[string] `json:"lastName" api:"required"`
-	// The worker id of this contractor's direct manager.
-	ManagerID param.Field[string] `json:"managerId" api:"required"`
-	// The contractor's role or job title.
-	Position param.Field[string] `json:"position" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate   param.Field[string]                               `json:"startDate" api:"required"`
-	WorkCountry param.Field[WorkerNewContractorParamsWorkCountry] `json:"workCountry" api:"required"`
-	// Required when entityType is "business". The legal name of the contractor's
-	// business.
-	BusinessName param.Field[string] `json:"businessName"`
-	// The contractor's pay rate. Omit if you'd like to pay on-demand or via invoicing.
+	EntityType   param.Field[WorkerNewContractorParamsEntityType]   `json:"entityType" api:"required"`
+	FirstName    param.Field[interface{}]                           `json:"firstName" api:"required"`
+	LastName     param.Field[interface{}]                           `json:"lastName" api:"required"`
+	ManagerID    param.Field[string]                                `json:"managerId" api:"required"`
+	Position     param.Field[interface{}]                           `json:"position" api:"required"`
+	StartDate    param.Field[string]                                `json:"startDate" api:"required"`
+	WorkCountry  param.Field[WorkerNewContractorParamsWorkCountry]  `json:"workCountry" api:"required"`
+	BusinessName param.Field[interface{}]                           `json:"businessName"`
 	Compensation param.Field[WorkerNewContractorParamsCompensation] `json:"compensation"`
-	// The contractor's pay schedule. Must be a pay schedule that the company has
-	// configured.
-	PaySchedule param.Field[WorkerNewContractorParamsPaySchedule] `json:"paySchedule"`
-	// A description of the work the contractor will perform.
-	ScopeOfWork param.Field[string] `json:"scopeOfWork"`
-	// Company-issued email address, if applicable.
-	WorkEmail param.Field[string] `json:"workEmail"`
+	PaySchedule  param.Field[WorkerNewContractorParamsPaySchedule]  `json:"paySchedule"`
+	ScopeOfWork  param.Field[string]                                `json:"scopeOfWork"`
+	WorkEmail    param.Field[string]                                `json:"workEmail"`
 }
 
 func (r WorkerNewContractorParams) MarshalJSON() (data []byte, err error) {
@@ -933,8 +1074,7 @@ func (r WorkerNewContractorParamsWorkCountry) IsKnown() bool {
 }
 
 type WorkerNewContractorParamsCompensation struct {
-	// a positive number
-	Amount   param.Field[float64]                                       `json:"amount" api:"required"`
+	Amount   param.Field[interface{}]                                   `json:"amount" api:"required"`
 	Currency param.Field[WorkerNewContractorParamsCompensationCurrency] `json:"currency" api:"required"`
 	// The pay period for the compensation amount.
 	Per param.Field[WorkerNewContractorParamsCompensationPer] `json:"per" api:"required"`
@@ -1055,11 +1195,10 @@ func (r WorkerNewContractorParamsPaySchedule) IsKnown() bool {
 }
 
 type WorkerListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                    `json:"count" api:"required"`
-	Data  []WorkerListResponseData `json:"data" api:"required"`
-	JSON  workerListResponseJSON   `json:"-"`
+	HasMore bool                   `json:"hasMore" api:"required"`
+	Count   int64                  `json:"count" api:"required"`
+	Data    []Objects10            `json:"data" api:"required"`
+	JSON    workerListResponseJSON `json:"-"`
 }
 
 // workerListResponseJSON contains the JSON metadata for the struct [WorkerListResponse]
@@ -1079,88 +1218,50 @@ func (r workerListResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerGetResponse struct {
-	// The id of the worker.
-	ID       string                  `json:"id" api:"required"`
-	Position string                  `json:"position" api:"required"`
-	Type     WorkerGetResponseType   `json:"type" api:"required"`
-	Status   WorkerGetResponseStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
-	// The "ui" name of a worker. If it's a business contractor business name is used.
-	// Otherwise we default to preferred name, then first-last.
-	DisplayName string `json:"displayName" api:"required"`
-	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
-	JSON       workerGetResponseJSON       `json:"-"`
+type WorkerGetResponseDepartment struct {
+	ID   string                          `json:"id" api:"required"`
+	Name string                          `json:"name" api:"required"`
+	JSON workerGetResponseDepartmentJSON `json:"-"`
 }
 
-// workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
-type workerGetResponseJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+// workerGetResponseDepartmentJSON contains the JSON metadata for the struct [WorkerGetResponseDepartment]
+type workerGetResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
-func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *WorkerGetResponseDepartment) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r workerGetResponseJSON) RawJSON() string {
+func (r workerGetResponseDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
 type WorkerNewEmployeeResponse struct {
-	// The id of the worker.
-	ID       string                          `json:"id" api:"required"`
-	Position string                          `json:"position" api:"required"`
-	Type     WorkerNewEmployeeResponseType   `json:"type" api:"required"`
-	Status   WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                          `json:"id" api:"required"`
+	Position      string                          `json:"position" api:"required"`
+	Type          WorkerNewEmployeeResponseType   `json:"type" api:"required"`
+	Status        WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
+	StartDate     string                          `json:"startDate" api:"required"`
+	EndDate       string                          `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                            `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                          `json:"businessName" api:"required,nullable"`
+	FirstName     string                          `json:"firstName" api:"required"`
+	LastName      string                          `json:"lastName" api:"required"`
+	Email         string                          `json:"email" api:"required"`
+	WorkEmail     string                          `json:"workEmail" api:"required,nullable"`
+	PreferredName string                          `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
-	JSON       workerNewEmployeeResponseJSON       `json:"-"`
+	Department WorkerGetResponseDepartment   `json:"department" api:"required,nullable"`
+	JSON       workerNewEmployeeResponseJSON `json:"-"`
 }
 
 // workerNewEmployeeResponseJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponse]
@@ -1194,30 +1295,27 @@ func (r workerNewEmployeeResponseJSON) RawJSON() string {
 }
 
 type WorkerNewContractorResponse struct {
-	// The id of the worker.
-	ID       string                            `json:"id" api:"required"`
-	Position string                            `json:"position" api:"required"`
-	Type     WorkerNewContractorResponseType   `json:"type" api:"required"`
-	Status   WorkerNewContractorResponseStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                            `json:"id" api:"required"`
+	Position      string                            `json:"position" api:"required"`
+	Type          WorkerNewContractorResponseType   `json:"type" api:"required"`
+	Status        WorkerNewContractorResponseStatus `json:"status" api:"required"`
+	StartDate     string                            `json:"startDate" api:"required"`
+	EndDate       string                            `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                              `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                            `json:"businessName" api:"required,nullable"`
+	FirstName     string                            `json:"firstName" api:"required"`
+	LastName      string                            `json:"lastName" api:"required"`
+	Email         string                            `json:"email" api:"required"`
+	WorkEmail     string                            `json:"workEmail" api:"required,nullable"`
+	PreferredName string                            `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerNewContractorResponseDepartment `json:"department" api:"required,nullable"`
-	JSON       workerNewContractorResponseJSON       `json:"-"`
+	Department WorkerGetResponseDepartment     `json:"department" api:"required,nullable"`
+	JSON       workerNewContractorResponseJSON `json:"-"`
 }
 
 // workerNewContractorResponseJSON contains the JSON metadata for the struct [WorkerNewContractorResponse]
@@ -1251,30 +1349,27 @@ func (r workerNewContractorResponseJSON) RawJSON() string {
 }
 
 type WorkerInviteResponse struct {
-	// The id of the worker.
-	ID       string                     `json:"id" api:"required"`
-	Position string                     `json:"position" api:"required"`
-	Type     WorkerInviteResponseType   `json:"type" api:"required"`
-	Status   WorkerInviteResponseStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                     `json:"id" api:"required"`
+	Position      string                     `json:"position" api:"required"`
+	Type          WorkerInviteResponseType   `json:"type" api:"required"`
+	Status        WorkerInviteResponseStatus `json:"status" api:"required"`
+	StartDate     string                     `json:"startDate" api:"required"`
+	EndDate       string                     `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                       `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                     `json:"businessName" api:"required,nullable"`
+	FirstName     string                     `json:"firstName" api:"required"`
+	LastName      string                     `json:"lastName" api:"required"`
+	Email         string                     `json:"email" api:"required"`
+	WorkEmail     string                     `json:"workEmail" api:"required,nullable"`
+	PreferredName string                     `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerInviteResponseDepartment `json:"department" api:"required,nullable"`
-	JSON       workerInviteResponseJSON       `json:"-"`
+	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	JSON       workerInviteResponseJSON    `json:"-"`
 }
 
 // workerInviteResponseJSON contains the JSON metadata for the struct [WorkerInviteResponse]
@@ -1304,120 +1399,6 @@ func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r workerInviteResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerListResponseData struct {
-	// The id of the worker.
-	ID       string                       `json:"id" api:"required"`
-	Position string                       `json:"position" api:"required"`
-	Type     WorkerListResponseDataType   `json:"type" api:"required"`
-	Status   WorkerListResponseDataStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
-	// The "ui" name of a worker. If it's a business contractor business name is used.
-	// Otherwise we default to preferred name, then first-last.
-	DisplayName string `json:"displayName" api:"required"`
-	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	// The department the worker belongs to, or null if unassigned.
-	Department WorkerListResponseDataDepartment `json:"department" api:"required,nullable"`
-	JSON       workerListResponseDataJSON       `json:"-"`
-}
-
-// workerListResponseDataJSON contains the JSON metadata for the struct [WorkerListResponseData]
-type workerListResponseDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
-}
-
-func (r *WorkerListResponseData) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseType string
-
-const (
-	WorkerGetResponseTypeEmployee   WorkerGetResponseType = "employee"
-	WorkerGetResponseTypeContractor WorkerGetResponseType = "contractor"
-)
-
-func (r WorkerGetResponseType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseTypeEmployee, WorkerGetResponseTypeContractor:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseStatus string
-
-const (
-	WorkerGetResponseStatusDraft       WorkerGetResponseStatus = "draft"
-	WorkerGetResponseStatusInvited     WorkerGetResponseStatus = "invited"
-	WorkerGetResponseStatusOnboarding  WorkerGetResponseStatus = "onboarding"
-	WorkerGetResponseStatusActive      WorkerGetResponseStatus = "active"
-	WorkerGetResponseStatusOffboarding WorkerGetResponseStatus = "offboarding"
-	WorkerGetResponseStatusInactive    WorkerGetResponseStatus = "inactive"
-)
-
-func (r WorkerGetResponseStatus) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseStatusDraft, WorkerGetResponseStatusInvited, WorkerGetResponseStatusOnboarding, WorkerGetResponseStatusActive, WorkerGetResponseStatusOffboarding, WorkerGetResponseStatusInactive:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseDepartment struct {
-	// The unique public id of the department
-	ID   string                          `json:"id" api:"required"`
-	Name string                          `json:"name" api:"required"`
-	JSON workerGetResponseDepartmentJSON `json:"-"`
-}
-
-// workerGetResponseDepartmentJSON contains the JSON metadata for the struct [WorkerGetResponseDepartment]
-type workerGetResponseDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseDepartment) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
@@ -1455,29 +1436,6 @@ func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
 	return false
 }
 
-type WorkerNewEmployeeResponseDepartment struct {
-	// The unique public id of the department
-	ID   string                                  `json:"id" api:"required"`
-	Name string                                  `json:"name" api:"required"`
-	JSON workerNewEmployeeResponseDepartmentJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseDepartment]
-type workerNewEmployeeResponseDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseDepartment) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseDepartmentJSON) RawJSON() string {
-	return r.raw
-}
-
 type WorkerNewContractorResponseType string
 
 const (
@@ -1512,29 +1470,6 @@ func (r WorkerNewContractorResponseStatus) IsKnown() bool {
 	return false
 }
 
-type WorkerNewContractorResponseDepartment struct {
-	// The unique public id of the department
-	ID   string                                    `json:"id" api:"required"`
-	Name string                                    `json:"name" api:"required"`
-	JSON workerNewContractorResponseDepartmentJSON `json:"-"`
-}
-
-// workerNewContractorResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewContractorResponseDepartment]
-type workerNewContractorResponseDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseDepartment) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseDepartmentJSON) RawJSON() string {
-	return r.raw
-}
-
 type WorkerInviteResponseType string
 
 const (
@@ -1567,84 +1502,4 @@ func (r WorkerInviteResponseStatus) IsKnown() bool {
 		return true
 	}
 	return false
-}
-
-type WorkerInviteResponseDepartment struct {
-	// The unique public id of the department
-	ID   string                             `json:"id" api:"required"`
-	Name string                             `json:"name" api:"required"`
-	JSON workerInviteResponseDepartmentJSON `json:"-"`
-}
-
-// workerInviteResponseDepartmentJSON contains the JSON metadata for the struct [WorkerInviteResponseDepartment]
-type workerInviteResponseDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseDepartment) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseDepartmentJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerListResponseDataType string
-
-const (
-	WorkerListResponseDataTypeEmployee   WorkerListResponseDataType = "employee"
-	WorkerListResponseDataTypeContractor WorkerListResponseDataType = "contractor"
-)
-
-func (r WorkerListResponseDataType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataTypeEmployee, WorkerListResponseDataTypeContractor:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataStatus string
-
-const (
-	WorkerListResponseDataStatusDraft       WorkerListResponseDataStatus = "draft"
-	WorkerListResponseDataStatusInvited     WorkerListResponseDataStatus = "invited"
-	WorkerListResponseDataStatusOnboarding  WorkerListResponseDataStatus = "onboarding"
-	WorkerListResponseDataStatusActive      WorkerListResponseDataStatus = "active"
-	WorkerListResponseDataStatusOffboarding WorkerListResponseDataStatus = "offboarding"
-	WorkerListResponseDataStatusInactive    WorkerListResponseDataStatus = "inactive"
-)
-
-func (r WorkerListResponseDataStatus) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataStatusDraft, WorkerListResponseDataStatusInvited, WorkerListResponseDataStatusOnboarding, WorkerListResponseDataStatusActive, WorkerListResponseDataStatusOffboarding, WorkerListResponseDataStatusInactive:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataDepartment struct {
-	// The unique public id of the department
-	ID   string                               `json:"id" api:"required"`
-	Name string                               `json:"name" api:"required"`
-	JSON workerListResponseDataDepartmentJSON `json:"-"`
-}
-
-// workerListResponseDataDepartmentJSON contains the JSON metadata for the struct [WorkerListResponseDataDepartment]
-type workerListResponseDataDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataDepartment) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataDepartmentJSON) RawJSON() string {
-	return r.raw
 }

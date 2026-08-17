@@ -104,22 +104,17 @@ func (r TimeOffRequestCreatedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffRequestCreatedWebhookEventPayload struct {
-	ID string `json:"id" api:"required"`
-	// a string starting with "top_"
-	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
-	// The id of the worker.
-	WorkerID string                                         `json:"workerId" api:"required"`
-	Status   TimeOffRequestCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	StartAt        string                                                 `json:"startAt" api:"required"`
-	StartRangeType TimeOffRequestCreatedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
-	// a string to be decoded into a Date
-	EndAt        string                                               `json:"endAt" api:"required"`
-	EndRangeType TimeOffRequestCreatedWebhookEventPayloadEndRangeType `json:"endRangeType" api:"required"`
-	Reason       string                                               `json:"reason" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt        string  `json:"createdAt" api:"required"`
-	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
+	ID               string                                                 `json:"id" api:"required"`
+	TimeOffPolicyID  string                                                 `json:"timeOffPolicyId" api:"required"`
+	WorkerID         string                                                 `json:"workerId" api:"required"`
+	Status           TimeOffRequestCreatedWebhookEventPayloadStatus         `json:"status" api:"required"`
+	StartAt          string                                                 `json:"startAt" api:"required"`
+	StartRangeType   TimeOffRequestCreatedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
+	EndAt            string                                                 `json:"endAt" api:"required"`
+	EndRangeType     TimeOffRequestCreatedWebhookEventPayloadEndRangeType   `json:"endRangeType" api:"required"`
+	Reason           string                                                 `json:"reason" api:"required,nullable"`
+	CreatedAt        string                                                 `json:"createdAt" api:"required"`
+	RequestedMinutes interface{}                                            `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
 	TimeZone string                                       `json:"timeZone" api:"required,nullable"`
 	JSON     timeOffRequestCreatedWebhookEventPayloadJSON `json:"-"`
@@ -241,22 +236,17 @@ func (r TimeOffRequestReviewedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffRequestReviewedWebhookEventPayload struct {
-	ID string `json:"id" api:"required"`
-	// a string starting with "top_"
-	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
-	// The id of the worker.
-	WorkerID string                                          `json:"workerId" api:"required"`
-	Status   TimeOffRequestReviewedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	StartAt        string                                                  `json:"startAt" api:"required"`
-	StartRangeType TimeOffRequestReviewedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
-	// a string to be decoded into a Date
-	EndAt        string                                                `json:"endAt" api:"required"`
-	EndRangeType TimeOffRequestReviewedWebhookEventPayloadEndRangeType `json:"endRangeType" api:"required"`
-	Reason       string                                                `json:"reason" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt        string  `json:"createdAt" api:"required"`
-	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
+	ID               string                                                  `json:"id" api:"required"`
+	TimeOffPolicyID  string                                                  `json:"timeOffPolicyId" api:"required"`
+	WorkerID         string                                                  `json:"workerId" api:"required"`
+	Status           TimeOffRequestReviewedWebhookEventPayloadStatus         `json:"status" api:"required"`
+	StartAt          string                                                  `json:"startAt" api:"required"`
+	StartRangeType   TimeOffRequestReviewedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
+	EndAt            string                                                  `json:"endAt" api:"required"`
+	EndRangeType     TimeOffRequestReviewedWebhookEventPayloadEndRangeType   `json:"endRangeType" api:"required"`
+	Reason           string                                                  `json:"reason" api:"required,nullable"`
+	CreatedAt        string                                                  `json:"createdAt" api:"required"`
+	RequestedMinutes interface{}                                             `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
 	TimeZone string                                        `json:"timeZone" api:"required,nullable"`
 	JSON     timeOffRequestReviewedWebhookEventPayloadJSON `json:"-"`
@@ -378,22 +368,17 @@ func (r TimeOffRequestDeletedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffRequestDeletedWebhookEventPayload struct {
-	ID string `json:"id" api:"required"`
-	// a string starting with "top_"
-	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
-	// The id of the worker.
-	WorkerID string                                         `json:"workerId" api:"required"`
-	Status   TimeOffRequestDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	StartAt        string                                                 `json:"startAt" api:"required"`
-	StartRangeType TimeOffRequestDeletedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
-	// a string to be decoded into a Date
-	EndAt        string                                               `json:"endAt" api:"required"`
-	EndRangeType TimeOffRequestDeletedWebhookEventPayloadEndRangeType `json:"endRangeType" api:"required"`
-	Reason       string                                               `json:"reason" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt        string  `json:"createdAt" api:"required"`
-	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
+	ID               string                                                 `json:"id" api:"required"`
+	TimeOffPolicyID  string                                                 `json:"timeOffPolicyId" api:"required"`
+	WorkerID         string                                                 `json:"workerId" api:"required"`
+	Status           TimeOffRequestDeletedWebhookEventPayloadStatus         `json:"status" api:"required"`
+	StartAt          string                                                 `json:"startAt" api:"required"`
+	StartRangeType   TimeOffRequestDeletedWebhookEventPayloadStartRangeType `json:"startRangeType" api:"required"`
+	EndAt            string                                                 `json:"endAt" api:"required"`
+	EndRangeType     TimeOffRequestDeletedWebhookEventPayloadEndRangeType   `json:"endRangeType" api:"required"`
+	Reason           string                                                 `json:"reason" api:"required,nullable"`
+	CreatedAt        string                                                 `json:"createdAt" api:"required"`
+	RequestedMinutes interface{}                                            `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
 	TimeZone string                                       `json:"timeZone" api:"required,nullable"`
 	JSON     timeOffRequestDeletedWebhookEventPayloadJSON `json:"-"`
@@ -515,16 +500,14 @@ func (r TimeOffBalanceAdjustedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffBalanceAdjustedWebhookEventPayload struct {
-	// The id of the worker.
 	WorkerID string `json:"workerId" api:"required"`
-	// a string starting with "top_"
 	PolicyID string `json:"policyId" api:"required"`
 	// Signed adjustment applied to the balance, in minutes. Omitted when no balance
 	// snapshot was captured.
-	AdjustmentMinutes float64 `json:"adjustmentMinutes"`
+	AdjustmentMinutes TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes `json:"adjustmentMinutes" api:"nullable"`
 	// The date the adjustment takes effect. Omitted when no balance snapshot was
 	// captured.
-	EffectiveDate   string                                                   `json:"effectiveDate"`
+	EffectiveDate   string                                                   `json:"effectiveDate" api:"nullable"`
 	PreviousBalance TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance `json:"previousBalance"`
 	NewBalance      TimeOffBalanceAdjustedWebhookEventPayloadNewBalance      `json:"newBalance"`
 	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON            `json:"-"`
@@ -550,60 +533,110 @@ func (r timeOffBalanceAdjustedWebhookEventPayloadJSON) RawJSON() string {
 	return r.raw
 }
 
-type TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance struct {
-	AccruedUnlocked float64                                                      `json:"accruedUnlocked" api:"required"`
-	AccruedLocked   float64                                                      `json:"accruedLocked" api:"required"`
-	Used            float64                                                      `json:"used" api:"required"`
-	Holds           float64                                                      `json:"holds" api:"required"`
-	Available       float64                                                      `json:"available" api:"required"`
-	JSON            timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON `json:"-"`
+type TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes string
+
+const (
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUsd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "USD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesAud TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "AUD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBgn TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "BGN"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBrl TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "BRL"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCad TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "CAD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesChf TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "CHF"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCzk TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "CZK"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesDkk TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "DKK"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesEur TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "EUR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGbp TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "GBP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHkd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "HKD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHuf TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "HUF"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesIdr TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "IDR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesInr TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "INR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesJpy TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "JPY"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMyr TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "MYR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNok TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "NOK"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNzd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "NZD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCny TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "CNY"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPln TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "PLN"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesRon TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "RON"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTry TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "TRY"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSek TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "SEK"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSgd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "SGD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesAed TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "AED"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesArs TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "ARS"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBdt TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "BDT"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBwp TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "BWP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesClp TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "CLP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCop TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "COP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCrc TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "CRC"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesEgp TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "EGP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesFjd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "FJD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGel TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "GEL"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGhs TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "GHS"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesIls TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "ILS"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesKes TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "KES"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesKrw TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "KRW"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesLkr TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "LKR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMad TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "MAD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMxn TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "MXN"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNpr TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "NPR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPhp TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "PHP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPkr TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "PKR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesThb TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "THB"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUah TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "UAH"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUgx TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "UGX"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUyu TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "UYU"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesVnd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "VND"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesZar TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "ZAR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesZmw TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "ZMW"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTnd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "TND"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNgn TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "NGN"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesRsd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "RSD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTwd TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "TWD"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGtq TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "GTQ"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHnl TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "HNL"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesDop TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "DOP"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSar TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "SAR"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesXaf TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "XAF"
+	TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPen TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes = "PEN"
+)
+
+func (r TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes) IsKnown() bool {
+	switch r {
+	case TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUsd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesAud, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBgn, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBrl, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCad, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesChf, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCzk, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesDkk, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesEur, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGbp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHkd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHuf, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesIdr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesInr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesJpy, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMyr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNok, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNzd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCny, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPln, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesRon, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTry, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSek, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSgd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesAed, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesArs, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBdt, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBwp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesClp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCop, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCrc, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesEgp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesFjd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGel, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGhs, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesIls, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesKes, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesKrw, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesLkr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMad, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMxn, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNpr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPhp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPkr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesThb, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUah, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUgx, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUyu, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesVnd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesZar, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesZmw, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTnd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNgn, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesRsd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTwd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGtq, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHnl, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesDop, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSar, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesXaf, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPen:
+		return true
+	}
+	return false
 }
 
-// timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance]
-type timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON struct {
-	AccruedUnlocked apijson.Field
-	AccruedLocked   apijson.Field
-	Used            apijson.Field
-	Holds           apijson.Field
-	Available       apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
+type TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance string
+
+const (
+	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity  TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity2 TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "-Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceNaN       TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "NaN"
+)
+
+func (r TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance) IsKnown() bool {
+	switch r {
+	case TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity, TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity2, TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceNaN:
+		return true
+	}
+	return false
 }
 
-func (r *TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
+type TimeOffBalanceAdjustedWebhookEventPayloadNewBalance string
 
-func (r timeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceJSON) RawJSON() string {
-	return r.raw
-}
+const (
+	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity  TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity2 TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "-Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceNaN       TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "NaN"
+)
 
-type TimeOffBalanceAdjustedWebhookEventPayloadNewBalance struct {
-	AccruedUnlocked float64                                                 `json:"accruedUnlocked" api:"required"`
-	AccruedLocked   float64                                                 `json:"accruedLocked" api:"required"`
-	Used            float64                                                 `json:"used" api:"required"`
-	Holds           float64                                                 `json:"holds" api:"required"`
-	Available       float64                                                 `json:"available" api:"required"`
-	JSON            timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON `json:"-"`
-}
-
-// timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayloadNewBalance]
-type timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON struct {
-	AccruedUnlocked apijson.Field
-	AccruedLocked   apijson.Field
-	Used            apijson.Field
-	Holds           apijson.Field
-	Available       apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *TimeOffBalanceAdjustedWebhookEventPayloadNewBalance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r timeOffBalanceAdjustedWebhookEventPayloadNewBalanceJSON) RawJSON() string {
-	return r.raw
+func (r TimeOffBalanceAdjustedWebhookEventPayloadNewBalance) IsKnown() bool {
+	switch r {
+	case TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity, TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity2, TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceNaN:
+		return true
+	}
+	return false
 }
 
 type WorkerCreatedWebhookEvent struct {
@@ -650,22 +683,19 @@ func (r WorkerCreatedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerCreatedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                 `json:"id" api:"required"`
-	Position string                                 `json:"position" api:"required"`
-	Type     WorkerCreatedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                 `json:"id" api:"required"`
+	Position      string                                 `json:"position" api:"required"`
+	Type          WorkerCreatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                 `json:"startDate" api:"required"`
+	EndDate       string                                 `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                   `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
+	FirstName     string                                 `json:"firstName" api:"required"`
+	LastName      string                                 `json:"lastName" api:"required"`
+	Email         string                                 `json:"email" api:"required"`
+	WorkEmail     string                                 `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -741,7 +771,6 @@ func (r WorkerCreatedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerCreatedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON workerCreatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -807,22 +836,19 @@ func (r WorkerUpdatedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerUpdatedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                 `json:"id" api:"required"`
-	Position string                                 `json:"position" api:"required"`
-	Type     WorkerUpdatedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerUpdatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                 `json:"id" api:"required"`
+	Position      string                                 `json:"position" api:"required"`
+	Type          WorkerUpdatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerUpdatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                 `json:"startDate" api:"required"`
+	EndDate       string                                 `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                   `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
+	FirstName     string                                 `json:"firstName" api:"required"`
+	LastName      string                                 `json:"lastName" api:"required"`
+	Email         string                                 `json:"email" api:"required"`
+	WorkEmail     string                                 `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -898,7 +924,6 @@ func (r WorkerUpdatedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerUpdatedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON workerUpdatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -964,22 +989,19 @@ func (r WorkerDeletedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerDeletedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                 `json:"id" api:"required"`
-	Position string                                 `json:"position" api:"required"`
-	Type     WorkerDeletedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                 `json:"id" api:"required"`
+	Position      string                                 `json:"position" api:"required"`
+	Type          WorkerDeletedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                 `json:"startDate" api:"required"`
+	EndDate       string                                 `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                   `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
+	FirstName     string                                 `json:"firstName" api:"required"`
+	LastName      string                                 `json:"lastName" api:"required"`
+	Email         string                                 `json:"email" api:"required"`
+	WorkEmail     string                                 `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1055,7 +1077,6 @@ func (r WorkerDeletedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerDeletedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON workerDeletedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1121,22 +1142,19 @@ func (r WorkerInviteSentWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerInviteSentWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                    `json:"id" api:"required"`
-	Position string                                    `json:"position" api:"required"`
-	Type     WorkerInviteSentWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerInviteSentWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                    `json:"id" api:"required"`
+	Position      string                                    `json:"position" api:"required"`
+	Type          WorkerInviteSentWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerInviteSentWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                    `json:"startDate" api:"required"`
+	EndDate       string                                    `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                      `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                    `json:"businessName" api:"required,nullable"`
+	FirstName     string                                    `json:"firstName" api:"required"`
+	LastName      string                                    `json:"lastName" api:"required"`
+	Email         string                                    `json:"email" api:"required"`
+	WorkEmail     string                                    `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                    `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1212,7 +1230,6 @@ func (r WorkerInviteSentWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerInviteSentWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                            `json:"id" api:"required"`
 	Name string                                            `json:"name" api:"required"`
 	JSON workerInviteSentWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1278,22 +1295,19 @@ func (r WorkerInviteAcceptedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerInviteAcceptedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                        `json:"id" api:"required"`
-	Position string                                        `json:"position" api:"required"`
-	Type     WorkerInviteAcceptedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerInviteAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                        `json:"id" api:"required"`
+	Position      string                                        `json:"position" api:"required"`
+	Type          WorkerInviteAcceptedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerInviteAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                        `json:"startDate" api:"required"`
+	EndDate       string                                        `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                          `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                        `json:"businessName" api:"required,nullable"`
+	FirstName     string                                        `json:"firstName" api:"required"`
+	LastName      string                                        `json:"lastName" api:"required"`
+	Email         string                                        `json:"email" api:"required"`
+	WorkEmail     string                                        `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                        `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1369,7 +1383,6 @@ func (r WorkerInviteAcceptedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerInviteAcceptedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                                `json:"id" api:"required"`
 	Name string                                                `json:"name" api:"required"`
 	JSON workerInviteAcceptedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1435,22 +1448,19 @@ func (r WorkerOnboardingCompletedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerOnboardingCompletedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                             `json:"id" api:"required"`
-	Position string                                             `json:"position" api:"required"`
-	Type     WorkerOnboardingCompletedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerOnboardingCompletedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                             `json:"id" api:"required"`
+	Position      string                                             `json:"position" api:"required"`
+	Type          WorkerOnboardingCompletedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerOnboardingCompletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                             `json:"startDate" api:"required"`
+	EndDate       string                                             `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                               `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                             `json:"businessName" api:"required,nullable"`
+	FirstName     string                                             `json:"firstName" api:"required"`
+	LastName      string                                             `json:"lastName" api:"required"`
+	Email         string                                             `json:"email" api:"required"`
+	WorkEmail     string                                             `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                             `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1526,7 +1536,6 @@ func (r WorkerOnboardingCompletedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerOnboardingCompletedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                                     `json:"id" api:"required"`
 	Name string                                                     `json:"name" api:"required"`
 	JSON workerOnboardingCompletedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1592,22 +1601,19 @@ func (r WorkerOffboardingStartedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerOffboardingStartedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                            `json:"id" api:"required"`
-	Position string                                            `json:"position" api:"required"`
-	Type     WorkerOffboardingStartedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerOffboardingStartedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                            `json:"id" api:"required"`
+	Position      string                                            `json:"position" api:"required"`
+	Type          WorkerOffboardingStartedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerOffboardingStartedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                            `json:"startDate" api:"required"`
+	EndDate       string                                            `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                              `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                            `json:"businessName" api:"required,nullable"`
+	FirstName     string                                            `json:"firstName" api:"required"`
+	LastName      string                                            `json:"lastName" api:"required"`
+	Email         string                                            `json:"email" api:"required"`
+	WorkEmail     string                                            `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                            `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1683,7 +1689,6 @@ func (r WorkerOffboardingStartedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerOffboardingStartedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                                    `json:"id" api:"required"`
 	Name string                                                    `json:"name" api:"required"`
 	JSON workerOffboardingStartedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1749,22 +1754,19 @@ func (r WorkerOffboardedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerOffboardedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                    `json:"id" api:"required"`
-	Position string                                    `json:"position" api:"required"`
-	Type     WorkerOffboardedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerOffboardedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                    `json:"id" api:"required"`
+	Position      string                                    `json:"position" api:"required"`
+	Type          WorkerOffboardedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerOffboardedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                    `json:"startDate" api:"required"`
+	EndDate       string                                    `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                      `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                    `json:"businessName" api:"required,nullable"`
+	FirstName     string                                    `json:"firstName" api:"required"`
+	LastName      string                                    `json:"lastName" api:"required"`
+	Email         string                                    `json:"email" api:"required"`
+	WorkEmail     string                                    `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                    `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1840,7 +1842,6 @@ func (r WorkerOffboardedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerOffboardedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                            `json:"id" api:"required"`
 	Name string                                            `json:"name" api:"required"`
 	JSON workerOffboardedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1906,22 +1907,19 @@ func (r WorkerReactivatedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerReactivatedWebhookEventPayload struct {
-	// The id of the worker.
-	ID       string                                     `json:"id" api:"required"`
-	Position string                                     `json:"position" api:"required"`
-	Type     WorkerReactivatedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status   WorkerReactivatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	StartDate    string `json:"startDate" api:"required"`
-	EndDate      string `json:"endDate" api:"required,nullable"`
-	IsBusiness   bool   `json:"isBusiness" api:"required,nullable"`
-	BusinessName string `json:"businessName" api:"required,nullable"`
-	FirstName    string `json:"firstName" api:"required"`
-	LastName     string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email         string `json:"email" api:"required"`
-	WorkEmail     string `json:"workEmail" api:"required,nullable"`
-	PreferredName string `json:"preferredName" api:"required,nullable"`
+	ID            string                                     `json:"id" api:"required"`
+	Position      string                                     `json:"position" api:"required"`
+	Type          WorkerReactivatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status        WorkerReactivatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate     string                                     `json:"startDate" api:"required"`
+	EndDate       string                                     `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool                                       `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string                                     `json:"businessName" api:"required,nullable"`
+	FirstName     string                                     `json:"firstName" api:"required"`
+	LastName      string                                     `json:"lastName" api:"required"`
+	Email         string                                     `json:"email" api:"required"`
+	WorkEmail     string                                     `json:"workEmail" api:"required,nullable"`
+	PreferredName string                                     `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1997,7 +1995,6 @@ func (r WorkerReactivatedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerReactivatedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                             `json:"id" api:"required"`
 	Name string                                             `json:"name" api:"required"`
 	JSON workerReactivatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2063,7 +2060,6 @@ func (r OfferCreatedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayload struct {
-	// The tag of the offer.
 	ID         string                                    `json:"id" api:"required"`
 	Status     OfferCreatedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferCreatedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -2077,12 +2073,11 @@ type OfferCreatedWebhookEventPayload struct {
 	SentBy       string                                      `json:"sentBy" api:"required,nullable"`
 	Compensation OfferCreatedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                              `json:"createdAt" api:"required"`
-	JSON      offerCreatedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string                              `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string                              `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string                              `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string                              `json:"createdAt" api:"required"`
+	JSON           offerCreatedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayload]
@@ -2147,9 +2142,8 @@ func (r OfferCreatedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayloadCandidate struct {
-	FirstName string `json:"firstName" api:"required"`
-	LastName  string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	FirstName         string                                                    `json:"firstName" api:"required"`
+	LastName          string                                                    `json:"lastName" api:"required"`
 	Email             string                                                    `json:"email" api:"required"`
 	ContractorDetails OfferCreatedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerCreatedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -2196,8 +2190,7 @@ func (r offerCreatedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON()
 }
 
 type OfferCreatedWebhookEventPayloadPosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                                         `json:"title" api:"required"`
 	StartDate   string                                         `json:"startDate" api:"required"`
 	Country     OfferCreatedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                                         `json:"scopeOfWork" api:"required,nullable"`
@@ -2486,7 +2479,6 @@ func (r OfferCreatedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                        `json:"id" api:"required"`
 	Name string                                        `json:"name" api:"required"`
 	JSON offerCreatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2509,7 +2501,6 @@ func (r offerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadWorkplace struct {
-	// Public workplace identifier
 	ID   string                                       `json:"id" api:"required"`
 	Name string                                       `json:"name" api:"required"`
 	JSON offerCreatedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -2532,7 +2523,6 @@ func (r offerCreatedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadManager struct {
-	// The id of the worker.
 	ID   string                                     `json:"id" api:"required"`
 	Name string                                     `json:"name" api:"required,nullable"`
 	JSON offerCreatedWebhookEventPayloadManagerJSON `json:"-"`
@@ -2556,8 +2546,8 @@ func (r offerCreatedWebhookEventPayloadManagerJSON) RawJSON() string {
 
 type OfferCreatedWebhookEventPayloadCompensation struct {
 	BasePay         OfferCreatedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferCreatedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferCreatedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     OfferCreatedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required"`
+	RelocationBonus OfferCreatedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required"`
 	Stock           OfferCreatedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
 	JSON            offerCreatedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
@@ -2580,12 +2570,160 @@ func (r offerCreatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferCreatedWebhookEventPayloadCompensationSignOnBonus string
+
+const (
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusUsd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "USD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusAud OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "AUD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusBgn OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "BGN"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusBrl OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "BRL"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCad OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "CAD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusChf OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "CHF"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCzk OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "CZK"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusDkk OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "DKK"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusEur OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "EUR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusGbp OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "GBP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusHkd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "HKD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusHuf OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "HUF"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusIdr OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "IDR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusInr OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "INR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusJpy OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "JPY"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusMyr OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "MYR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusNok OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "NOK"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusNzd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "NZD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCny OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "CNY"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusPln OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "PLN"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusRon OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "RON"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusTry OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "TRY"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusSek OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "SEK"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusSgd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "SGD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusAed OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "AED"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusArs OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "ARS"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusBdt OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "BDT"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusBwp OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "BWP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusClp OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "CLP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCop OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "COP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCrc OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "CRC"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusEgp OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "EGP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusFjd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "FJD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusGel OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "GEL"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusGhs OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "GHS"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusIls OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "ILS"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusKes OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "KES"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusKrw OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "KRW"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusLkr OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "LKR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusMad OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "MAD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusMxn OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "MXN"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusNpr OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "NPR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusPhp OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "PHP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusPkr OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "PKR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusThb OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "THB"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusUah OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "UAH"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusUgx OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "UGX"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusUyu OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "UYU"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusVnd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "VND"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusZar OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "ZAR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusZmw OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "ZMW"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusTnd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "TND"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusNgn OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "NGN"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusRsd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "RSD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusTwd OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "TWD"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusGtq OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "GTQ"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusHnl OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "HNL"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusDop OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "DOP"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusSar OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "SAR"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusXaf OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "XAF"
+	OfferCreatedWebhookEventPayloadCompensationSignOnBonusPen OfferCreatedWebhookEventPayloadCompensationSignOnBonus = "PEN"
+)
+
+func (r OfferCreatedWebhookEventPayloadCompensationSignOnBonus) IsKnown() bool {
+	switch r {
+	case OfferCreatedWebhookEventPayloadCompensationSignOnBonusUsd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusAud, OfferCreatedWebhookEventPayloadCompensationSignOnBonusBgn, OfferCreatedWebhookEventPayloadCompensationSignOnBonusBrl, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCad, OfferCreatedWebhookEventPayloadCompensationSignOnBonusChf, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCzk, OfferCreatedWebhookEventPayloadCompensationSignOnBonusDkk, OfferCreatedWebhookEventPayloadCompensationSignOnBonusEur, OfferCreatedWebhookEventPayloadCompensationSignOnBonusGbp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusHkd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusHuf, OfferCreatedWebhookEventPayloadCompensationSignOnBonusIdr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusInr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusJpy, OfferCreatedWebhookEventPayloadCompensationSignOnBonusMyr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusNok, OfferCreatedWebhookEventPayloadCompensationSignOnBonusNzd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCny, OfferCreatedWebhookEventPayloadCompensationSignOnBonusPln, OfferCreatedWebhookEventPayloadCompensationSignOnBonusRon, OfferCreatedWebhookEventPayloadCompensationSignOnBonusTry, OfferCreatedWebhookEventPayloadCompensationSignOnBonusSek, OfferCreatedWebhookEventPayloadCompensationSignOnBonusSgd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusAed, OfferCreatedWebhookEventPayloadCompensationSignOnBonusArs, OfferCreatedWebhookEventPayloadCompensationSignOnBonusBdt, OfferCreatedWebhookEventPayloadCompensationSignOnBonusBwp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusClp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCop, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCrc, OfferCreatedWebhookEventPayloadCompensationSignOnBonusEgp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusFjd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusGel, OfferCreatedWebhookEventPayloadCompensationSignOnBonusGhs, OfferCreatedWebhookEventPayloadCompensationSignOnBonusIls, OfferCreatedWebhookEventPayloadCompensationSignOnBonusKes, OfferCreatedWebhookEventPayloadCompensationSignOnBonusKrw, OfferCreatedWebhookEventPayloadCompensationSignOnBonusLkr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusMad, OfferCreatedWebhookEventPayloadCompensationSignOnBonusMxn, OfferCreatedWebhookEventPayloadCompensationSignOnBonusNpr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusPhp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusPkr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusThb, OfferCreatedWebhookEventPayloadCompensationSignOnBonusUah, OfferCreatedWebhookEventPayloadCompensationSignOnBonusUgx, OfferCreatedWebhookEventPayloadCompensationSignOnBonusUyu, OfferCreatedWebhookEventPayloadCompensationSignOnBonusVnd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusZar, OfferCreatedWebhookEventPayloadCompensationSignOnBonusZmw, OfferCreatedWebhookEventPayloadCompensationSignOnBonusTnd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusNgn, OfferCreatedWebhookEventPayloadCompensationSignOnBonusRsd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusTwd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusGtq, OfferCreatedWebhookEventPayloadCompensationSignOnBonusHnl, OfferCreatedWebhookEventPayloadCompensationSignOnBonusDop, OfferCreatedWebhookEventPayloadCompensationSignOnBonusSar, OfferCreatedWebhookEventPayloadCompensationSignOnBonusXaf, OfferCreatedWebhookEventPayloadCompensationSignOnBonusPen:
+		return true
+	}
+	return false
+}
+
+type OfferCreatedWebhookEventPayloadCompensationRelocationBonus string
+
+const (
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusUsd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "USD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusAud OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "AUD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusBgn OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "BGN"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusBrl OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "BRL"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCad OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "CAD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusChf OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "CHF"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCzk OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "CZK"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusDkk OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "DKK"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusEur OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "EUR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusGbp OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "GBP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusHkd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "HKD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusHuf OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "HUF"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusIdr OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "IDR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusInr OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "INR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusJpy OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "JPY"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusMyr OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "MYR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusNok OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "NOK"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusNzd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "NZD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCny OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "CNY"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusPln OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "PLN"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusRon OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "RON"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusTry OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "TRY"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusSek OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "SEK"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusSgd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "SGD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusAed OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "AED"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusArs OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "ARS"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusBdt OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "BDT"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusBwp OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "BWP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusClp OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "CLP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCop OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "COP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCrc OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "CRC"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusEgp OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "EGP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusFjd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "FJD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusGel OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "GEL"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusGhs OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "GHS"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusIls OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "ILS"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusKes OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "KES"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusKrw OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "KRW"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusLkr OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "LKR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusMad OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "MAD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusMxn OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "MXN"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusNpr OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "NPR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusPhp OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "PHP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusPkr OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "PKR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusThb OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "THB"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusUah OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "UAH"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusUgx OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "UGX"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusUyu OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "UYU"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusVnd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "VND"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusZar OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "ZAR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusZmw OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "ZMW"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusTnd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "TND"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusNgn OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "NGN"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusRsd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "RSD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusTwd OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "TWD"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusGtq OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "GTQ"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusHnl OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "HNL"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusDop OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "DOP"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusSar OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "SAR"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusXaf OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "XAF"
+	OfferCreatedWebhookEventPayloadCompensationRelocationBonusPen OfferCreatedWebhookEventPayloadCompensationRelocationBonus = "PEN"
+)
+
+func (r OfferCreatedWebhookEventPayloadCompensationRelocationBonus) IsKnown() bool {
+	switch r {
+	case OfferCreatedWebhookEventPayloadCompensationRelocationBonusUsd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusAud, OfferCreatedWebhookEventPayloadCompensationRelocationBonusBgn, OfferCreatedWebhookEventPayloadCompensationRelocationBonusBrl, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCad, OfferCreatedWebhookEventPayloadCompensationRelocationBonusChf, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCzk, OfferCreatedWebhookEventPayloadCompensationRelocationBonusDkk, OfferCreatedWebhookEventPayloadCompensationRelocationBonusEur, OfferCreatedWebhookEventPayloadCompensationRelocationBonusGbp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusHkd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusHuf, OfferCreatedWebhookEventPayloadCompensationRelocationBonusIdr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusInr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusJpy, OfferCreatedWebhookEventPayloadCompensationRelocationBonusMyr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusNok, OfferCreatedWebhookEventPayloadCompensationRelocationBonusNzd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCny, OfferCreatedWebhookEventPayloadCompensationRelocationBonusPln, OfferCreatedWebhookEventPayloadCompensationRelocationBonusRon, OfferCreatedWebhookEventPayloadCompensationRelocationBonusTry, OfferCreatedWebhookEventPayloadCompensationRelocationBonusSek, OfferCreatedWebhookEventPayloadCompensationRelocationBonusSgd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusAed, OfferCreatedWebhookEventPayloadCompensationRelocationBonusArs, OfferCreatedWebhookEventPayloadCompensationRelocationBonusBdt, OfferCreatedWebhookEventPayloadCompensationRelocationBonusBwp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusClp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCop, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCrc, OfferCreatedWebhookEventPayloadCompensationRelocationBonusEgp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusFjd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusGel, OfferCreatedWebhookEventPayloadCompensationRelocationBonusGhs, OfferCreatedWebhookEventPayloadCompensationRelocationBonusIls, OfferCreatedWebhookEventPayloadCompensationRelocationBonusKes, OfferCreatedWebhookEventPayloadCompensationRelocationBonusKrw, OfferCreatedWebhookEventPayloadCompensationRelocationBonusLkr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusMad, OfferCreatedWebhookEventPayloadCompensationRelocationBonusMxn, OfferCreatedWebhookEventPayloadCompensationRelocationBonusNpr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusPhp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusPkr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusThb, OfferCreatedWebhookEventPayloadCompensationRelocationBonusUah, OfferCreatedWebhookEventPayloadCompensationRelocationBonusUgx, OfferCreatedWebhookEventPayloadCompensationRelocationBonusUyu, OfferCreatedWebhookEventPayloadCompensationRelocationBonusVnd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusZar, OfferCreatedWebhookEventPayloadCompensationRelocationBonusZmw, OfferCreatedWebhookEventPayloadCompensationRelocationBonusTnd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusNgn, OfferCreatedWebhookEventPayloadCompensationRelocationBonusRsd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusTwd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusGtq, OfferCreatedWebhookEventPayloadCompensationRelocationBonusHnl, OfferCreatedWebhookEventPayloadCompensationRelocationBonusDop, OfferCreatedWebhookEventPayloadCompensationRelocationBonusSar, OfferCreatedWebhookEventPayloadCompensationRelocationBonusXaf, OfferCreatedWebhookEventPayloadCompensationRelocationBonusPen:
+		return true
+	}
+	return false
+}
+
 type OfferCreatedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       OfferCreatedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
 	Basis        OfferCreatedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
 	Type         OfferCreatedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
+	VariableRate OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required"`
 	JSON         offerCreatedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
@@ -2640,9 +2778,82 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
+type OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate string
+
+const (
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUsd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "USD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateAud OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "AUD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBgn OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "BGN"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBrl OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "BRL"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCad OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "CAD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateChf OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "CHF"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCzk OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "CZK"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateDkk OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "DKK"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateEur OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "EUR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGbp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "GBP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateHkd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "HKD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateHuf OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "HUF"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateIdr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "IDR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateInr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "INR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateJpy OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "JPY"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateMyr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "MYR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNok OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "NOK"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNzd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "NZD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCny OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "CNY"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePln OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "PLN"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateRon OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "RON"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateTry OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "TRY"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateSek OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "SEK"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateSgd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "SGD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateAed OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "AED"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateArs OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "ARS"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBdt OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "BDT"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBwp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "BWP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateClp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "CLP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCop OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "COP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCrc OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "CRC"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateEgp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "EGP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateFjd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "FJD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGel OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "GEL"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGhs OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "GHS"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateIls OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "ILS"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateKes OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "KES"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateKrw OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "KRW"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateLkr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "LKR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateMad OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "MAD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateMxn OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "MXN"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNpr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "NPR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePhp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "PHP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePkr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "PKR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateThb OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "THB"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUah OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "UAH"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUgx OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "UGX"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUyu OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "UYU"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateVnd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "VND"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateZar OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "ZAR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateZmw OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "ZMW"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateTnd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "TND"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNgn OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "NGN"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateRsd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "RSD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateTwd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "TWD"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGtq OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "GTQ"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateHnl OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "HNL"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateDop OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "DOP"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateSar OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "SAR"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateXaf OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "XAF"
+	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePen OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate = "PEN"
+)
+
+func (r OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate) IsKnown() bool {
+	switch r {
+	case OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUsd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateAud, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBgn, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBrl, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCad, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateChf, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCzk, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateDkk, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateEur, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGbp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateHkd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateHuf, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateIdr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateInr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateJpy, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateMyr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNok, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNzd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCny, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePln, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateRon, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateTry, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateSek, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateSgd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateAed, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateArs, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBdt, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateBwp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateClp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCop, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCrc, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateEgp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateFjd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGel, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGhs, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateIls, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateKes, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateKrw, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateLkr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateMad, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateMxn, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNpr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePhp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePkr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateThb, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUah, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUgx, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateUyu, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateVnd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateZar, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateZmw, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateTnd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateNgn, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateRsd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateTwd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateGtq, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateHnl, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateDop, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateSar, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateXaf, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRatePen:
+		return true
+	}
+	return false
+}
+
 type OfferCreatedWebhookEventPayloadCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                            `json:"amount" api:"required"`
+	Amount   string                                                           `json:"amount" api:"required"`
 	Currency OfferCreatedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                       `json:"display" api:"required"`
@@ -2740,311 +2951,10 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnow
 	return false
 }
 
-type OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                  `json:"amount" api:"required"`
-	Currency OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                             `json:"display" api:"required"`
-	JSON    offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate]
-type offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferCreatedWebhookEventPayloadCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerCreatedWebhookEventPayloadCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "USD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AUD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BGN"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BRL"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CAD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CHF"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CZK"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DKK"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EUR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GBP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HKD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HUF"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "IDR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "INR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "JPY"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MYR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NOK"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NZD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CNY"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PLN"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RON"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TRY"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SEK"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SGD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AED"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ARS"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BDT"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BWP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CLP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "COP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CRC"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EGP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "FJD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GEL"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GHS"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ILS"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KES"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KRW"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "LKR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MAD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MXN"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NPR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PHP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PKR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "THB"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UAH"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UGX"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UYU"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "VND"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TND"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NGN"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RSD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TWD"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HNL"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DOP"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SAR"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "XAF"
-	OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf, OfferCreatedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferCreatedWebhookEventPayloadCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                          `json:"amount" api:"required"`
-	Currency OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                     `json:"display" api:"required"`
-	JSON    offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationSignOnBonus]
-type offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferCreatedWebhookEventPayloadCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerCreatedWebhookEventPayloadCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency string
-
-const (
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "USD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyAud OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "AUD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "BGN"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "BRL"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCad OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "CAD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyChf OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "CHF"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "CZK"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "DKK"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyEur OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "EUR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "GBP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "HKD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "HUF"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "IDR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyInr OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "INR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "JPY"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "MYR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNok OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "NOK"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "NZD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCny OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "CNY"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPln OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "PLN"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyRon OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "RON"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyTry OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "TRY"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencySek OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "SEK"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencySgd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "SGD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyAed OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "AED"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyArs OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "ARS"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "BDT"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "BWP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyClp OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "CLP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCop OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "COP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "CRC"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "EGP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "FJD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGel OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "GEL"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "GHS"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyIls OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "ILS"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyKes OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "KES"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "KRW"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "LKR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyMad OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "MAD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "MXN"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "NPR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "PHP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "PKR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyThb OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "THB"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUah OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "UAH"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "UGX"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "UYU"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "VND"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyZar OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZAR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZMW"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "TND"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "NGN"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "RSD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "TWD"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "GTQ"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "HNL"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyDop OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "DOP"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencySar OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "SAR"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "XAF"
-	OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPen OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyAud, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCad, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyChf, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyEur, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyInr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNok, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCny, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPln, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyRon, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyTry, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencySek, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencySgd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyAed, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyArs, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyClp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCop, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGel, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyIls, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyKes, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyMad, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyThb, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUah, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyZar, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyDop, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencySar, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf, OfferCreatedWebhookEventPayloadCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferCreatedWebhookEventPayloadCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                              `json:"amount" api:"required"`
-	Currency OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                         `json:"display" api:"required"`
-	JSON    offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadCompensationRelocationBonus]
-type offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferCreatedWebhookEventPayloadCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerCreatedWebhookEventPayloadCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency string
-
-const (
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "USD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyAud OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "AUD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "BGN"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "BRL"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCad OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "CAD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyChf OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "CHF"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "CZK"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "DKK"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyEur OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "EUR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "GBP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "HKD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "HUF"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "IDR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyInr OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "INR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "JPY"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "MYR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNok OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "NOK"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "NZD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCny OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "CNY"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPln OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "PLN"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyRon OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "RON"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyTry OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "TRY"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencySek OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "SEK"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencySgd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "SGD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyAed OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "AED"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyArs OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "ARS"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "BDT"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "BWP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyClp OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "CLP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCop OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "COP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "CRC"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "EGP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "FJD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGel OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "GEL"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "GHS"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyIls OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "ILS"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyKes OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "KES"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "KRW"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "LKR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyMad OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "MAD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "MXN"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "NPR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "PHP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "PKR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyThb OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "THB"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUah OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "UAH"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "UGX"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "UYU"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "VND"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyZar OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZAR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZMW"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "TND"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "NGN"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "RSD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "TWD"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "GTQ"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "HNL"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyDop OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "DOP"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencySar OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "SAR"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "XAF"
-	OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPen OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyAud, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCad, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyChf, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyEur, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyInr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNok, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCny, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPln, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyRon, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyTry, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencySek, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencySgd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyAed, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyArs, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyClp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCop, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGel, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyIls, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyKes, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyMad, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyThb, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUah, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyZar, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyDop, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencySar, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf, OfferCreatedWebhookEventPayloadCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferCreatedWebhookEventPayloadCompensationStock struct {
-	// a non-negative number
-	Options               int64                                                `json:"options" api:"required"`
-	VestingScheduleMonths int64                                                `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                                                `json:"cliffMonths" api:"required,nullable"`
+	Options               string                                               `json:"options" api:"required"`
+	VestingScheduleMonths string                                               `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           string                                               `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerCreatedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -3109,7 +3019,6 @@ func (r OfferSentWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayload struct {
-	// The tag of the offer.
 	ID         string                                 `json:"id" api:"required"`
 	Status     OfferSentWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferSentWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -3123,12 +3032,11 @@ type OfferSentWebhookEventPayload struct {
 	SentBy       string                                   `json:"sentBy" api:"required,nullable"`
 	Compensation OfferSentWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                           `json:"createdAt" api:"required"`
-	JSON      offerSentWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string                           `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string                           `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string                           `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string                           `json:"createdAt" api:"required"`
+	JSON           offerSentWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerSentWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayload]
@@ -3193,9 +3101,8 @@ func (r OfferSentWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayloadCandidate struct {
-	FirstName string `json:"firstName" api:"required"`
-	LastName  string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	FirstName         string                                                 `json:"firstName" api:"required"`
+	LastName          string                                                 `json:"lastName" api:"required"`
 	Email             string                                                 `json:"email" api:"required"`
 	ContractorDetails OfferSentWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerSentWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -3242,8 +3149,7 @@ func (r offerSentWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON() st
 }
 
 type OfferSentWebhookEventPayloadPosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                                      `json:"title" api:"required"`
 	StartDate   string                                      `json:"startDate" api:"required"`
 	Country     OfferSentWebhookEventPayloadPositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                                      `json:"scopeOfWork" api:"required,nullable"`
@@ -3532,7 +3438,6 @@ func (r OfferSentWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                     `json:"id" api:"required"`
 	Name string                                     `json:"name" api:"required"`
 	JSON offerSentWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -3555,7 +3460,6 @@ func (r offerSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadWorkplace struct {
-	// Public workplace identifier
 	ID   string                                    `json:"id" api:"required"`
 	Name string                                    `json:"name" api:"required"`
 	JSON offerSentWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -3578,7 +3482,6 @@ func (r offerSentWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadManager struct {
-	// The id of the worker.
 	ID   string                                  `json:"id" api:"required"`
 	Name string                                  `json:"name" api:"required,nullable"`
 	JSON offerSentWebhookEventPayloadManagerJSON `json:"-"`
@@ -3602,8 +3505,8 @@ func (r offerSentWebhookEventPayloadManagerJSON) RawJSON() string {
 
 type OfferSentWebhookEventPayloadCompensation struct {
 	BasePay         OfferSentWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferSentWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferSentWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     OfferSentWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required"`
+	RelocationBonus OfferSentWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required"`
 	Stock           OfferSentWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
 	JSON            offerSentWebhookEventPayloadCompensationJSON            `json:"-"`
 }
@@ -3626,12 +3529,160 @@ func (r offerSentWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferSentWebhookEventPayloadCompensationSignOnBonus string
+
+const (
+	OfferSentWebhookEventPayloadCompensationSignOnBonusUsd OfferSentWebhookEventPayloadCompensationSignOnBonus = "USD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusAud OfferSentWebhookEventPayloadCompensationSignOnBonus = "AUD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusBgn OfferSentWebhookEventPayloadCompensationSignOnBonus = "BGN"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusBrl OfferSentWebhookEventPayloadCompensationSignOnBonus = "BRL"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusCad OfferSentWebhookEventPayloadCompensationSignOnBonus = "CAD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusChf OfferSentWebhookEventPayloadCompensationSignOnBonus = "CHF"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusCzk OfferSentWebhookEventPayloadCompensationSignOnBonus = "CZK"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusDkk OfferSentWebhookEventPayloadCompensationSignOnBonus = "DKK"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusEur OfferSentWebhookEventPayloadCompensationSignOnBonus = "EUR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusGbp OfferSentWebhookEventPayloadCompensationSignOnBonus = "GBP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusHkd OfferSentWebhookEventPayloadCompensationSignOnBonus = "HKD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusHuf OfferSentWebhookEventPayloadCompensationSignOnBonus = "HUF"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusIdr OfferSentWebhookEventPayloadCompensationSignOnBonus = "IDR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusInr OfferSentWebhookEventPayloadCompensationSignOnBonus = "INR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusJpy OfferSentWebhookEventPayloadCompensationSignOnBonus = "JPY"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusMyr OfferSentWebhookEventPayloadCompensationSignOnBonus = "MYR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusNok OfferSentWebhookEventPayloadCompensationSignOnBonus = "NOK"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusNzd OfferSentWebhookEventPayloadCompensationSignOnBonus = "NZD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusCny OfferSentWebhookEventPayloadCompensationSignOnBonus = "CNY"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusPln OfferSentWebhookEventPayloadCompensationSignOnBonus = "PLN"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusRon OfferSentWebhookEventPayloadCompensationSignOnBonus = "RON"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusTry OfferSentWebhookEventPayloadCompensationSignOnBonus = "TRY"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusSek OfferSentWebhookEventPayloadCompensationSignOnBonus = "SEK"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusSgd OfferSentWebhookEventPayloadCompensationSignOnBonus = "SGD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusAed OfferSentWebhookEventPayloadCompensationSignOnBonus = "AED"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusArs OfferSentWebhookEventPayloadCompensationSignOnBonus = "ARS"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusBdt OfferSentWebhookEventPayloadCompensationSignOnBonus = "BDT"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusBwp OfferSentWebhookEventPayloadCompensationSignOnBonus = "BWP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusClp OfferSentWebhookEventPayloadCompensationSignOnBonus = "CLP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusCop OfferSentWebhookEventPayloadCompensationSignOnBonus = "COP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusCrc OfferSentWebhookEventPayloadCompensationSignOnBonus = "CRC"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusEgp OfferSentWebhookEventPayloadCompensationSignOnBonus = "EGP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusFjd OfferSentWebhookEventPayloadCompensationSignOnBonus = "FJD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusGel OfferSentWebhookEventPayloadCompensationSignOnBonus = "GEL"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusGhs OfferSentWebhookEventPayloadCompensationSignOnBonus = "GHS"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusIls OfferSentWebhookEventPayloadCompensationSignOnBonus = "ILS"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusKes OfferSentWebhookEventPayloadCompensationSignOnBonus = "KES"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusKrw OfferSentWebhookEventPayloadCompensationSignOnBonus = "KRW"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusLkr OfferSentWebhookEventPayloadCompensationSignOnBonus = "LKR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusMad OfferSentWebhookEventPayloadCompensationSignOnBonus = "MAD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusMxn OfferSentWebhookEventPayloadCompensationSignOnBonus = "MXN"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusNpr OfferSentWebhookEventPayloadCompensationSignOnBonus = "NPR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusPhp OfferSentWebhookEventPayloadCompensationSignOnBonus = "PHP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusPkr OfferSentWebhookEventPayloadCompensationSignOnBonus = "PKR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusThb OfferSentWebhookEventPayloadCompensationSignOnBonus = "THB"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusUah OfferSentWebhookEventPayloadCompensationSignOnBonus = "UAH"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusUgx OfferSentWebhookEventPayloadCompensationSignOnBonus = "UGX"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusUyu OfferSentWebhookEventPayloadCompensationSignOnBonus = "UYU"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusVnd OfferSentWebhookEventPayloadCompensationSignOnBonus = "VND"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusZar OfferSentWebhookEventPayloadCompensationSignOnBonus = "ZAR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusZmw OfferSentWebhookEventPayloadCompensationSignOnBonus = "ZMW"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusTnd OfferSentWebhookEventPayloadCompensationSignOnBonus = "TND"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusNgn OfferSentWebhookEventPayloadCompensationSignOnBonus = "NGN"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusRsd OfferSentWebhookEventPayloadCompensationSignOnBonus = "RSD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusTwd OfferSentWebhookEventPayloadCompensationSignOnBonus = "TWD"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusGtq OfferSentWebhookEventPayloadCompensationSignOnBonus = "GTQ"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusHnl OfferSentWebhookEventPayloadCompensationSignOnBonus = "HNL"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusDop OfferSentWebhookEventPayloadCompensationSignOnBonus = "DOP"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusSar OfferSentWebhookEventPayloadCompensationSignOnBonus = "SAR"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusXaf OfferSentWebhookEventPayloadCompensationSignOnBonus = "XAF"
+	OfferSentWebhookEventPayloadCompensationSignOnBonusPen OfferSentWebhookEventPayloadCompensationSignOnBonus = "PEN"
+)
+
+func (r OfferSentWebhookEventPayloadCompensationSignOnBonus) IsKnown() bool {
+	switch r {
+	case OfferSentWebhookEventPayloadCompensationSignOnBonusUsd, OfferSentWebhookEventPayloadCompensationSignOnBonusAud, OfferSentWebhookEventPayloadCompensationSignOnBonusBgn, OfferSentWebhookEventPayloadCompensationSignOnBonusBrl, OfferSentWebhookEventPayloadCompensationSignOnBonusCad, OfferSentWebhookEventPayloadCompensationSignOnBonusChf, OfferSentWebhookEventPayloadCompensationSignOnBonusCzk, OfferSentWebhookEventPayloadCompensationSignOnBonusDkk, OfferSentWebhookEventPayloadCompensationSignOnBonusEur, OfferSentWebhookEventPayloadCompensationSignOnBonusGbp, OfferSentWebhookEventPayloadCompensationSignOnBonusHkd, OfferSentWebhookEventPayloadCompensationSignOnBonusHuf, OfferSentWebhookEventPayloadCompensationSignOnBonusIdr, OfferSentWebhookEventPayloadCompensationSignOnBonusInr, OfferSentWebhookEventPayloadCompensationSignOnBonusJpy, OfferSentWebhookEventPayloadCompensationSignOnBonusMyr, OfferSentWebhookEventPayloadCompensationSignOnBonusNok, OfferSentWebhookEventPayloadCompensationSignOnBonusNzd, OfferSentWebhookEventPayloadCompensationSignOnBonusCny, OfferSentWebhookEventPayloadCompensationSignOnBonusPln, OfferSentWebhookEventPayloadCompensationSignOnBonusRon, OfferSentWebhookEventPayloadCompensationSignOnBonusTry, OfferSentWebhookEventPayloadCompensationSignOnBonusSek, OfferSentWebhookEventPayloadCompensationSignOnBonusSgd, OfferSentWebhookEventPayloadCompensationSignOnBonusAed, OfferSentWebhookEventPayloadCompensationSignOnBonusArs, OfferSentWebhookEventPayloadCompensationSignOnBonusBdt, OfferSentWebhookEventPayloadCompensationSignOnBonusBwp, OfferSentWebhookEventPayloadCompensationSignOnBonusClp, OfferSentWebhookEventPayloadCompensationSignOnBonusCop, OfferSentWebhookEventPayloadCompensationSignOnBonusCrc, OfferSentWebhookEventPayloadCompensationSignOnBonusEgp, OfferSentWebhookEventPayloadCompensationSignOnBonusFjd, OfferSentWebhookEventPayloadCompensationSignOnBonusGel, OfferSentWebhookEventPayloadCompensationSignOnBonusGhs, OfferSentWebhookEventPayloadCompensationSignOnBonusIls, OfferSentWebhookEventPayloadCompensationSignOnBonusKes, OfferSentWebhookEventPayloadCompensationSignOnBonusKrw, OfferSentWebhookEventPayloadCompensationSignOnBonusLkr, OfferSentWebhookEventPayloadCompensationSignOnBonusMad, OfferSentWebhookEventPayloadCompensationSignOnBonusMxn, OfferSentWebhookEventPayloadCompensationSignOnBonusNpr, OfferSentWebhookEventPayloadCompensationSignOnBonusPhp, OfferSentWebhookEventPayloadCompensationSignOnBonusPkr, OfferSentWebhookEventPayloadCompensationSignOnBonusThb, OfferSentWebhookEventPayloadCompensationSignOnBonusUah, OfferSentWebhookEventPayloadCompensationSignOnBonusUgx, OfferSentWebhookEventPayloadCompensationSignOnBonusUyu, OfferSentWebhookEventPayloadCompensationSignOnBonusVnd, OfferSentWebhookEventPayloadCompensationSignOnBonusZar, OfferSentWebhookEventPayloadCompensationSignOnBonusZmw, OfferSentWebhookEventPayloadCompensationSignOnBonusTnd, OfferSentWebhookEventPayloadCompensationSignOnBonusNgn, OfferSentWebhookEventPayloadCompensationSignOnBonusRsd, OfferSentWebhookEventPayloadCompensationSignOnBonusTwd, OfferSentWebhookEventPayloadCompensationSignOnBonusGtq, OfferSentWebhookEventPayloadCompensationSignOnBonusHnl, OfferSentWebhookEventPayloadCompensationSignOnBonusDop, OfferSentWebhookEventPayloadCompensationSignOnBonusSar, OfferSentWebhookEventPayloadCompensationSignOnBonusXaf, OfferSentWebhookEventPayloadCompensationSignOnBonusPen:
+		return true
+	}
+	return false
+}
+
+type OfferSentWebhookEventPayloadCompensationRelocationBonus string
+
+const (
+	OfferSentWebhookEventPayloadCompensationRelocationBonusUsd OfferSentWebhookEventPayloadCompensationRelocationBonus = "USD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusAud OfferSentWebhookEventPayloadCompensationRelocationBonus = "AUD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusBgn OfferSentWebhookEventPayloadCompensationRelocationBonus = "BGN"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusBrl OfferSentWebhookEventPayloadCompensationRelocationBonus = "BRL"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusCad OfferSentWebhookEventPayloadCompensationRelocationBonus = "CAD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusChf OfferSentWebhookEventPayloadCompensationRelocationBonus = "CHF"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusCzk OfferSentWebhookEventPayloadCompensationRelocationBonus = "CZK"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusDkk OfferSentWebhookEventPayloadCompensationRelocationBonus = "DKK"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusEur OfferSentWebhookEventPayloadCompensationRelocationBonus = "EUR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusGbp OfferSentWebhookEventPayloadCompensationRelocationBonus = "GBP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusHkd OfferSentWebhookEventPayloadCompensationRelocationBonus = "HKD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusHuf OfferSentWebhookEventPayloadCompensationRelocationBonus = "HUF"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusIdr OfferSentWebhookEventPayloadCompensationRelocationBonus = "IDR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusInr OfferSentWebhookEventPayloadCompensationRelocationBonus = "INR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusJpy OfferSentWebhookEventPayloadCompensationRelocationBonus = "JPY"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusMyr OfferSentWebhookEventPayloadCompensationRelocationBonus = "MYR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusNok OfferSentWebhookEventPayloadCompensationRelocationBonus = "NOK"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusNzd OfferSentWebhookEventPayloadCompensationRelocationBonus = "NZD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusCny OfferSentWebhookEventPayloadCompensationRelocationBonus = "CNY"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusPln OfferSentWebhookEventPayloadCompensationRelocationBonus = "PLN"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusRon OfferSentWebhookEventPayloadCompensationRelocationBonus = "RON"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusTry OfferSentWebhookEventPayloadCompensationRelocationBonus = "TRY"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusSek OfferSentWebhookEventPayloadCompensationRelocationBonus = "SEK"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusSgd OfferSentWebhookEventPayloadCompensationRelocationBonus = "SGD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusAed OfferSentWebhookEventPayloadCompensationRelocationBonus = "AED"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusArs OfferSentWebhookEventPayloadCompensationRelocationBonus = "ARS"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusBdt OfferSentWebhookEventPayloadCompensationRelocationBonus = "BDT"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusBwp OfferSentWebhookEventPayloadCompensationRelocationBonus = "BWP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusClp OfferSentWebhookEventPayloadCompensationRelocationBonus = "CLP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusCop OfferSentWebhookEventPayloadCompensationRelocationBonus = "COP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusCrc OfferSentWebhookEventPayloadCompensationRelocationBonus = "CRC"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusEgp OfferSentWebhookEventPayloadCompensationRelocationBonus = "EGP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusFjd OfferSentWebhookEventPayloadCompensationRelocationBonus = "FJD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusGel OfferSentWebhookEventPayloadCompensationRelocationBonus = "GEL"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusGhs OfferSentWebhookEventPayloadCompensationRelocationBonus = "GHS"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusIls OfferSentWebhookEventPayloadCompensationRelocationBonus = "ILS"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusKes OfferSentWebhookEventPayloadCompensationRelocationBonus = "KES"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusKrw OfferSentWebhookEventPayloadCompensationRelocationBonus = "KRW"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusLkr OfferSentWebhookEventPayloadCompensationRelocationBonus = "LKR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusMad OfferSentWebhookEventPayloadCompensationRelocationBonus = "MAD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusMxn OfferSentWebhookEventPayloadCompensationRelocationBonus = "MXN"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusNpr OfferSentWebhookEventPayloadCompensationRelocationBonus = "NPR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusPhp OfferSentWebhookEventPayloadCompensationRelocationBonus = "PHP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusPkr OfferSentWebhookEventPayloadCompensationRelocationBonus = "PKR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusThb OfferSentWebhookEventPayloadCompensationRelocationBonus = "THB"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusUah OfferSentWebhookEventPayloadCompensationRelocationBonus = "UAH"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusUgx OfferSentWebhookEventPayloadCompensationRelocationBonus = "UGX"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusUyu OfferSentWebhookEventPayloadCompensationRelocationBonus = "UYU"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusVnd OfferSentWebhookEventPayloadCompensationRelocationBonus = "VND"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusZar OfferSentWebhookEventPayloadCompensationRelocationBonus = "ZAR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusZmw OfferSentWebhookEventPayloadCompensationRelocationBonus = "ZMW"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusTnd OfferSentWebhookEventPayloadCompensationRelocationBonus = "TND"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusNgn OfferSentWebhookEventPayloadCompensationRelocationBonus = "NGN"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusRsd OfferSentWebhookEventPayloadCompensationRelocationBonus = "RSD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusTwd OfferSentWebhookEventPayloadCompensationRelocationBonus = "TWD"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusGtq OfferSentWebhookEventPayloadCompensationRelocationBonus = "GTQ"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusHnl OfferSentWebhookEventPayloadCompensationRelocationBonus = "HNL"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusDop OfferSentWebhookEventPayloadCompensationRelocationBonus = "DOP"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusSar OfferSentWebhookEventPayloadCompensationRelocationBonus = "SAR"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusXaf OfferSentWebhookEventPayloadCompensationRelocationBonus = "XAF"
+	OfferSentWebhookEventPayloadCompensationRelocationBonusPen OfferSentWebhookEventPayloadCompensationRelocationBonus = "PEN"
+)
+
+func (r OfferSentWebhookEventPayloadCompensationRelocationBonus) IsKnown() bool {
+	switch r {
+	case OfferSentWebhookEventPayloadCompensationRelocationBonusUsd, OfferSentWebhookEventPayloadCompensationRelocationBonusAud, OfferSentWebhookEventPayloadCompensationRelocationBonusBgn, OfferSentWebhookEventPayloadCompensationRelocationBonusBrl, OfferSentWebhookEventPayloadCompensationRelocationBonusCad, OfferSentWebhookEventPayloadCompensationRelocationBonusChf, OfferSentWebhookEventPayloadCompensationRelocationBonusCzk, OfferSentWebhookEventPayloadCompensationRelocationBonusDkk, OfferSentWebhookEventPayloadCompensationRelocationBonusEur, OfferSentWebhookEventPayloadCompensationRelocationBonusGbp, OfferSentWebhookEventPayloadCompensationRelocationBonusHkd, OfferSentWebhookEventPayloadCompensationRelocationBonusHuf, OfferSentWebhookEventPayloadCompensationRelocationBonusIdr, OfferSentWebhookEventPayloadCompensationRelocationBonusInr, OfferSentWebhookEventPayloadCompensationRelocationBonusJpy, OfferSentWebhookEventPayloadCompensationRelocationBonusMyr, OfferSentWebhookEventPayloadCompensationRelocationBonusNok, OfferSentWebhookEventPayloadCompensationRelocationBonusNzd, OfferSentWebhookEventPayloadCompensationRelocationBonusCny, OfferSentWebhookEventPayloadCompensationRelocationBonusPln, OfferSentWebhookEventPayloadCompensationRelocationBonusRon, OfferSentWebhookEventPayloadCompensationRelocationBonusTry, OfferSentWebhookEventPayloadCompensationRelocationBonusSek, OfferSentWebhookEventPayloadCompensationRelocationBonusSgd, OfferSentWebhookEventPayloadCompensationRelocationBonusAed, OfferSentWebhookEventPayloadCompensationRelocationBonusArs, OfferSentWebhookEventPayloadCompensationRelocationBonusBdt, OfferSentWebhookEventPayloadCompensationRelocationBonusBwp, OfferSentWebhookEventPayloadCompensationRelocationBonusClp, OfferSentWebhookEventPayloadCompensationRelocationBonusCop, OfferSentWebhookEventPayloadCompensationRelocationBonusCrc, OfferSentWebhookEventPayloadCompensationRelocationBonusEgp, OfferSentWebhookEventPayloadCompensationRelocationBonusFjd, OfferSentWebhookEventPayloadCompensationRelocationBonusGel, OfferSentWebhookEventPayloadCompensationRelocationBonusGhs, OfferSentWebhookEventPayloadCompensationRelocationBonusIls, OfferSentWebhookEventPayloadCompensationRelocationBonusKes, OfferSentWebhookEventPayloadCompensationRelocationBonusKrw, OfferSentWebhookEventPayloadCompensationRelocationBonusLkr, OfferSentWebhookEventPayloadCompensationRelocationBonusMad, OfferSentWebhookEventPayloadCompensationRelocationBonusMxn, OfferSentWebhookEventPayloadCompensationRelocationBonusNpr, OfferSentWebhookEventPayloadCompensationRelocationBonusPhp, OfferSentWebhookEventPayloadCompensationRelocationBonusPkr, OfferSentWebhookEventPayloadCompensationRelocationBonusThb, OfferSentWebhookEventPayloadCompensationRelocationBonusUah, OfferSentWebhookEventPayloadCompensationRelocationBonusUgx, OfferSentWebhookEventPayloadCompensationRelocationBonusUyu, OfferSentWebhookEventPayloadCompensationRelocationBonusVnd, OfferSentWebhookEventPayloadCompensationRelocationBonusZar, OfferSentWebhookEventPayloadCompensationRelocationBonusZmw, OfferSentWebhookEventPayloadCompensationRelocationBonusTnd, OfferSentWebhookEventPayloadCompensationRelocationBonusNgn, OfferSentWebhookEventPayloadCompensationRelocationBonusRsd, OfferSentWebhookEventPayloadCompensationRelocationBonusTwd, OfferSentWebhookEventPayloadCompensationRelocationBonusGtq, OfferSentWebhookEventPayloadCompensationRelocationBonusHnl, OfferSentWebhookEventPayloadCompensationRelocationBonusDop, OfferSentWebhookEventPayloadCompensationRelocationBonusSar, OfferSentWebhookEventPayloadCompensationRelocationBonusXaf, OfferSentWebhookEventPayloadCompensationRelocationBonusPen:
+		return true
+	}
+	return false
+}
+
 type OfferSentWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       OfferSentWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
 	Basis        OfferSentWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
 	Type         OfferSentWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferSentWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
+	VariableRate OfferSentWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required"`
 	JSON         offerSentWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
@@ -3686,9 +3737,82 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
+type OfferSentWebhookEventPayloadCompensationBasePayVariableRate string
+
+const (
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateUsd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "USD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateAud OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "AUD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateBgn OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "BGN"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateBrl OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "BRL"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCad OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "CAD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateChf OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "CHF"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCzk OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "CZK"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateDkk OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "DKK"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateEur OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "EUR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateGbp OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "GBP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateHkd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "HKD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateHuf OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "HUF"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateIdr OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "IDR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateInr OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "INR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateJpy OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "JPY"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateMyr OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "MYR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateNok OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "NOK"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateNzd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "NZD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCny OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "CNY"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRatePln OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "PLN"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateRon OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "RON"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateTry OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "TRY"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateSek OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "SEK"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateSgd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "SGD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateAed OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "AED"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateArs OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "ARS"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateBdt OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "BDT"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateBwp OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "BWP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateClp OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "CLP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCop OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "COP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCrc OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "CRC"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateEgp OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "EGP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateFjd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "FJD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateGel OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "GEL"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateGhs OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "GHS"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateIls OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "ILS"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateKes OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "KES"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateKrw OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "KRW"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateLkr OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "LKR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateMad OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "MAD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateMxn OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "MXN"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateNpr OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "NPR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRatePhp OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "PHP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRatePkr OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "PKR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateThb OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "THB"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateUah OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "UAH"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateUgx OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "UGX"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateUyu OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "UYU"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateVnd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "VND"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateZar OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "ZAR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateZmw OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "ZMW"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateTnd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "TND"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateNgn OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "NGN"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateRsd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "RSD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateTwd OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "TWD"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateGtq OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "GTQ"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateHnl OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "HNL"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateDop OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "DOP"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateSar OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "SAR"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRateXaf OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "XAF"
+	OfferSentWebhookEventPayloadCompensationBasePayVariableRatePen OfferSentWebhookEventPayloadCompensationBasePayVariableRate = "PEN"
+)
+
+func (r OfferSentWebhookEventPayloadCompensationBasePayVariableRate) IsKnown() bool {
+	switch r {
+	case OfferSentWebhookEventPayloadCompensationBasePayVariableRateUsd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateAud, OfferSentWebhookEventPayloadCompensationBasePayVariableRateBgn, OfferSentWebhookEventPayloadCompensationBasePayVariableRateBrl, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCad, OfferSentWebhookEventPayloadCompensationBasePayVariableRateChf, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCzk, OfferSentWebhookEventPayloadCompensationBasePayVariableRateDkk, OfferSentWebhookEventPayloadCompensationBasePayVariableRateEur, OfferSentWebhookEventPayloadCompensationBasePayVariableRateGbp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateHkd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateHuf, OfferSentWebhookEventPayloadCompensationBasePayVariableRateIdr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateInr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateJpy, OfferSentWebhookEventPayloadCompensationBasePayVariableRateMyr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateNok, OfferSentWebhookEventPayloadCompensationBasePayVariableRateNzd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCny, OfferSentWebhookEventPayloadCompensationBasePayVariableRatePln, OfferSentWebhookEventPayloadCompensationBasePayVariableRateRon, OfferSentWebhookEventPayloadCompensationBasePayVariableRateTry, OfferSentWebhookEventPayloadCompensationBasePayVariableRateSek, OfferSentWebhookEventPayloadCompensationBasePayVariableRateSgd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateAed, OfferSentWebhookEventPayloadCompensationBasePayVariableRateArs, OfferSentWebhookEventPayloadCompensationBasePayVariableRateBdt, OfferSentWebhookEventPayloadCompensationBasePayVariableRateBwp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateClp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCop, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCrc, OfferSentWebhookEventPayloadCompensationBasePayVariableRateEgp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateFjd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateGel, OfferSentWebhookEventPayloadCompensationBasePayVariableRateGhs, OfferSentWebhookEventPayloadCompensationBasePayVariableRateIls, OfferSentWebhookEventPayloadCompensationBasePayVariableRateKes, OfferSentWebhookEventPayloadCompensationBasePayVariableRateKrw, OfferSentWebhookEventPayloadCompensationBasePayVariableRateLkr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateMad, OfferSentWebhookEventPayloadCompensationBasePayVariableRateMxn, OfferSentWebhookEventPayloadCompensationBasePayVariableRateNpr, OfferSentWebhookEventPayloadCompensationBasePayVariableRatePhp, OfferSentWebhookEventPayloadCompensationBasePayVariableRatePkr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateThb, OfferSentWebhookEventPayloadCompensationBasePayVariableRateUah, OfferSentWebhookEventPayloadCompensationBasePayVariableRateUgx, OfferSentWebhookEventPayloadCompensationBasePayVariableRateUyu, OfferSentWebhookEventPayloadCompensationBasePayVariableRateVnd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateZar, OfferSentWebhookEventPayloadCompensationBasePayVariableRateZmw, OfferSentWebhookEventPayloadCompensationBasePayVariableRateTnd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateNgn, OfferSentWebhookEventPayloadCompensationBasePayVariableRateRsd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateTwd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateGtq, OfferSentWebhookEventPayloadCompensationBasePayVariableRateHnl, OfferSentWebhookEventPayloadCompensationBasePayVariableRateDop, OfferSentWebhookEventPayloadCompensationBasePayVariableRateSar, OfferSentWebhookEventPayloadCompensationBasePayVariableRateXaf, OfferSentWebhookEventPayloadCompensationBasePayVariableRatePen:
+		return true
+	}
+	return false
+}
+
 type OfferSentWebhookEventPayloadCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                         `json:"amount" api:"required"`
+	Amount   string                                                        `json:"amount" api:"required"`
 	Currency OfferSentWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                    `json:"display" api:"required"`
@@ -3786,311 +3910,10 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnown()
 	return false
 }
 
-type OfferSentWebhookEventPayloadCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                               `json:"amount" api:"required"`
-	Currency OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                          `json:"display" api:"required"`
-	JSON    offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationBasePayVariableRate]
-type offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferSentWebhookEventPayloadCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerSentWebhookEventPayloadCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "USD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AUD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BGN"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BRL"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CAD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CHF"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CZK"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DKK"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EUR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GBP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HKD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HUF"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "IDR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "INR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "JPY"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MYR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NOK"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NZD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CNY"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PLN"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RON"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TRY"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencySek OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SEK"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SGD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AED"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ARS"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BDT"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BWP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CLP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "COP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CRC"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EGP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "FJD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GEL"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GHS"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ILS"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KES"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KRW"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "LKR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MAD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MXN"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NPR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PHP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PKR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "THB"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UAH"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UGX"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UYU"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "VND"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TND"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NGN"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RSD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TWD"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HNL"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DOP"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencySar OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SAR"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "XAF"
-	OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencySek, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencySar, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf, OfferSentWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferSentWebhookEventPayloadCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                       `json:"amount" api:"required"`
-	Currency OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                  `json:"display" api:"required"`
-	JSON    offerSentWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerSentWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationSignOnBonus]
-type offerSentWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferSentWebhookEventPayloadCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerSentWebhookEventPayloadCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency string
-
-const (
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUsd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "USD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyAud OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "AUD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBgn OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "BGN"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBrl OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "BRL"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCad OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "CAD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyChf OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "CHF"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCzk OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "CZK"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyDkk OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "DKK"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyEur OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "EUR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGbp OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "GBP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyHkd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "HKD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyHuf OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "HUF"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyIdr OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "IDR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyInr OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "INR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyJpy OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "JPY"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyMyr OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "MYR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNok OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "NOK"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNzd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "NZD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCny OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "CNY"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPln OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "PLN"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyRon OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "RON"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyTry OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "TRY"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencySek OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "SEK"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencySgd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "SGD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyAed OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "AED"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyArs OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "ARS"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBdt OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "BDT"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBwp OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "BWP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyClp OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "CLP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCop OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "COP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCrc OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "CRC"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyEgp OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "EGP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyFjd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "FJD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGel OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "GEL"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGhs OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "GHS"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyIls OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "ILS"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyKes OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "KES"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyKrw OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "KRW"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyLkr OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "LKR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyMad OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "MAD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyMxn OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "MXN"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNpr OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "NPR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPhp OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "PHP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPkr OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "PKR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyThb OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "THB"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUah OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "UAH"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUgx OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "UGX"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUyu OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "UYU"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyVnd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "VND"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyZar OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "ZAR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyZmw OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "ZMW"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyTnd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "TND"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNgn OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "NGN"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyRsd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "RSD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyTwd OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "TWD"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGtq OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "GTQ"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyHnl OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "HNL"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyDop OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "DOP"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencySar OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "SAR"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyXaf OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "XAF"
-	OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPen OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferSentWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUsd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyAud, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBgn, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBrl, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCad, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyChf, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCzk, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyDkk, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyEur, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGbp, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyHkd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyHuf, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyIdr, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyInr, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyJpy, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyMyr, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNok, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNzd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCny, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPln, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyRon, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyTry, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencySek, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencySgd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyAed, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyArs, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBdt, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyBwp, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyClp, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCop, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyCrc, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyEgp, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyFjd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGel, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGhs, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyIls, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyKes, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyKrw, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyLkr, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyMad, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyMxn, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNpr, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPhp, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPkr, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyThb, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUah, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUgx, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyUyu, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyVnd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyZar, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyZmw, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyTnd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyNgn, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyRsd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyTwd, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyGtq, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyHnl, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyDop, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencySar, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyXaf, OfferSentWebhookEventPayloadCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferSentWebhookEventPayloadCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                           `json:"amount" api:"required"`
-	Currency OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                      `json:"display" api:"required"`
-	JSON    offerSentWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerSentWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadCompensationRelocationBonus]
-type offerSentWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferSentWebhookEventPayloadCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerSentWebhookEventPayloadCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency string
-
-const (
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUsd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "USD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyAud OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "AUD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBgn OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "BGN"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBrl OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "BRL"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCad OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "CAD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyChf OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "CHF"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCzk OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "CZK"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyDkk OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "DKK"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyEur OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "EUR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGbp OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "GBP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyHkd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "HKD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyHuf OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "HUF"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyIdr OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "IDR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyInr OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "INR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyJpy OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "JPY"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyMyr OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "MYR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNok OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "NOK"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNzd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "NZD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCny OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "CNY"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPln OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "PLN"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyRon OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "RON"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyTry OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "TRY"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencySek OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "SEK"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencySgd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "SGD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyAed OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "AED"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyArs OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "ARS"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBdt OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "BDT"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBwp OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "BWP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyClp OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "CLP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCop OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "COP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCrc OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "CRC"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyEgp OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "EGP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyFjd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "FJD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGel OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "GEL"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGhs OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "GHS"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyIls OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "ILS"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyKes OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "KES"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyKrw OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "KRW"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyLkr OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "LKR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyMad OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "MAD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyMxn OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "MXN"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNpr OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "NPR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPhp OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "PHP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPkr OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "PKR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyThb OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "THB"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUah OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "UAH"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUgx OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "UGX"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUyu OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "UYU"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyVnd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "VND"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyZar OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "ZAR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyZmw OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "ZMW"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyTnd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "TND"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNgn OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "NGN"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyRsd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "RSD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyTwd OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "TWD"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGtq OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "GTQ"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyHnl OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "HNL"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyDop OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "DOP"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencySar OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "SAR"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyXaf OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "XAF"
-	OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPen OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferSentWebhookEventPayloadCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUsd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyAud, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBgn, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBrl, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCad, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyChf, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCzk, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyDkk, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyEur, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGbp, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyHkd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyHuf, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyIdr, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyInr, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyJpy, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyMyr, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNok, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNzd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCny, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPln, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyRon, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyTry, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencySek, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencySgd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyAed, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyArs, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBdt, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyBwp, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyClp, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCop, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyCrc, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyEgp, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyFjd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGel, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGhs, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyIls, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyKes, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyKrw, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyLkr, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyMad, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyMxn, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNpr, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPhp, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPkr, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyThb, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUah, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUgx, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyUyu, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyVnd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyZar, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyZmw, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyTnd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyNgn, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyRsd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyTwd, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyGtq, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyHnl, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyDop, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencySar, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyXaf, OfferSentWebhookEventPayloadCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferSentWebhookEventPayloadCompensationStock struct {
-	// a non-negative number
-	Options               int64                                             `json:"options" api:"required"`
-	VestingScheduleMonths int64                                             `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                                             `json:"cliffMonths" api:"required,nullable"`
+	Options               string                                            `json:"options" api:"required"`
+	VestingScheduleMonths string                                            `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           string                                            `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerSentWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -4155,7 +3978,6 @@ func (r OfferViewedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayload struct {
-	// The tag of the offer.
 	ID         string                                   `json:"id" api:"required"`
 	Status     OfferViewedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferViewedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -4169,12 +3991,11 @@ type OfferViewedWebhookEventPayload struct {
 	SentBy       string                                     `json:"sentBy" api:"required,nullable"`
 	Compensation OfferViewedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                             `json:"createdAt" api:"required"`
-	JSON      offerViewedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string                             `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string                             `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string                             `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string                             `json:"createdAt" api:"required"`
+	JSON           offerViewedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayload]
@@ -4239,9 +4060,8 @@ func (r OfferViewedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayloadCandidate struct {
-	FirstName string `json:"firstName" api:"required"`
-	LastName  string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	FirstName         string                                                   `json:"firstName" api:"required"`
+	LastName          string                                                   `json:"lastName" api:"required"`
 	Email             string                                                   `json:"email" api:"required"`
 	ContractorDetails OfferViewedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerViewedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -4288,8 +4108,7 @@ func (r offerViewedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON() 
 }
 
 type OfferViewedWebhookEventPayloadPosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                                        `json:"title" api:"required"`
 	StartDate   string                                        `json:"startDate" api:"required"`
 	Country     OfferViewedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                                        `json:"scopeOfWork" api:"required,nullable"`
@@ -4578,7 +4397,6 @@ func (r OfferViewedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                       `json:"id" api:"required"`
 	Name string                                       `json:"name" api:"required"`
 	JSON offerViewedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -4601,7 +4419,6 @@ func (r offerViewedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadWorkplace struct {
-	// Public workplace identifier
 	ID   string                                      `json:"id" api:"required"`
 	Name string                                      `json:"name" api:"required"`
 	JSON offerViewedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -4624,7 +4441,6 @@ func (r offerViewedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadManager struct {
-	// The id of the worker.
 	ID   string                                    `json:"id" api:"required"`
 	Name string                                    `json:"name" api:"required,nullable"`
 	JSON offerViewedWebhookEventPayloadManagerJSON `json:"-"`
@@ -4648,8 +4464,8 @@ func (r offerViewedWebhookEventPayloadManagerJSON) RawJSON() string {
 
 type OfferViewedWebhookEventPayloadCompensation struct {
 	BasePay         OfferViewedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferViewedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferViewedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     OfferViewedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required"`
+	RelocationBonus OfferViewedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required"`
 	Stock           OfferViewedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
 	JSON            offerViewedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
@@ -4672,12 +4488,160 @@ func (r offerViewedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferViewedWebhookEventPayloadCompensationSignOnBonus string
+
+const (
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusUsd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "USD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusAud OfferViewedWebhookEventPayloadCompensationSignOnBonus = "AUD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusBgn OfferViewedWebhookEventPayloadCompensationSignOnBonus = "BGN"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusBrl OfferViewedWebhookEventPayloadCompensationSignOnBonus = "BRL"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusCad OfferViewedWebhookEventPayloadCompensationSignOnBonus = "CAD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusChf OfferViewedWebhookEventPayloadCompensationSignOnBonus = "CHF"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusCzk OfferViewedWebhookEventPayloadCompensationSignOnBonus = "CZK"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusDkk OfferViewedWebhookEventPayloadCompensationSignOnBonus = "DKK"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusEur OfferViewedWebhookEventPayloadCompensationSignOnBonus = "EUR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusGbp OfferViewedWebhookEventPayloadCompensationSignOnBonus = "GBP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusHkd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "HKD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusHuf OfferViewedWebhookEventPayloadCompensationSignOnBonus = "HUF"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusIdr OfferViewedWebhookEventPayloadCompensationSignOnBonus = "IDR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusInr OfferViewedWebhookEventPayloadCompensationSignOnBonus = "INR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusJpy OfferViewedWebhookEventPayloadCompensationSignOnBonus = "JPY"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusMyr OfferViewedWebhookEventPayloadCompensationSignOnBonus = "MYR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusNok OfferViewedWebhookEventPayloadCompensationSignOnBonus = "NOK"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusNzd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "NZD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusCny OfferViewedWebhookEventPayloadCompensationSignOnBonus = "CNY"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusPln OfferViewedWebhookEventPayloadCompensationSignOnBonus = "PLN"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusRon OfferViewedWebhookEventPayloadCompensationSignOnBonus = "RON"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusTry OfferViewedWebhookEventPayloadCompensationSignOnBonus = "TRY"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusSek OfferViewedWebhookEventPayloadCompensationSignOnBonus = "SEK"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusSgd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "SGD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusAed OfferViewedWebhookEventPayloadCompensationSignOnBonus = "AED"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusArs OfferViewedWebhookEventPayloadCompensationSignOnBonus = "ARS"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusBdt OfferViewedWebhookEventPayloadCompensationSignOnBonus = "BDT"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusBwp OfferViewedWebhookEventPayloadCompensationSignOnBonus = "BWP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusClp OfferViewedWebhookEventPayloadCompensationSignOnBonus = "CLP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusCop OfferViewedWebhookEventPayloadCompensationSignOnBonus = "COP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusCrc OfferViewedWebhookEventPayloadCompensationSignOnBonus = "CRC"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusEgp OfferViewedWebhookEventPayloadCompensationSignOnBonus = "EGP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusFjd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "FJD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusGel OfferViewedWebhookEventPayloadCompensationSignOnBonus = "GEL"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusGhs OfferViewedWebhookEventPayloadCompensationSignOnBonus = "GHS"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusIls OfferViewedWebhookEventPayloadCompensationSignOnBonus = "ILS"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusKes OfferViewedWebhookEventPayloadCompensationSignOnBonus = "KES"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusKrw OfferViewedWebhookEventPayloadCompensationSignOnBonus = "KRW"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusLkr OfferViewedWebhookEventPayloadCompensationSignOnBonus = "LKR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusMad OfferViewedWebhookEventPayloadCompensationSignOnBonus = "MAD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusMxn OfferViewedWebhookEventPayloadCompensationSignOnBonus = "MXN"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusNpr OfferViewedWebhookEventPayloadCompensationSignOnBonus = "NPR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusPhp OfferViewedWebhookEventPayloadCompensationSignOnBonus = "PHP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusPkr OfferViewedWebhookEventPayloadCompensationSignOnBonus = "PKR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusThb OfferViewedWebhookEventPayloadCompensationSignOnBonus = "THB"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusUah OfferViewedWebhookEventPayloadCompensationSignOnBonus = "UAH"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusUgx OfferViewedWebhookEventPayloadCompensationSignOnBonus = "UGX"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusUyu OfferViewedWebhookEventPayloadCompensationSignOnBonus = "UYU"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusVnd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "VND"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusZar OfferViewedWebhookEventPayloadCompensationSignOnBonus = "ZAR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusZmw OfferViewedWebhookEventPayloadCompensationSignOnBonus = "ZMW"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusTnd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "TND"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusNgn OfferViewedWebhookEventPayloadCompensationSignOnBonus = "NGN"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusRsd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "RSD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusTwd OfferViewedWebhookEventPayloadCompensationSignOnBonus = "TWD"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusGtq OfferViewedWebhookEventPayloadCompensationSignOnBonus = "GTQ"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusHnl OfferViewedWebhookEventPayloadCompensationSignOnBonus = "HNL"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusDop OfferViewedWebhookEventPayloadCompensationSignOnBonus = "DOP"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusSar OfferViewedWebhookEventPayloadCompensationSignOnBonus = "SAR"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusXaf OfferViewedWebhookEventPayloadCompensationSignOnBonus = "XAF"
+	OfferViewedWebhookEventPayloadCompensationSignOnBonusPen OfferViewedWebhookEventPayloadCompensationSignOnBonus = "PEN"
+)
+
+func (r OfferViewedWebhookEventPayloadCompensationSignOnBonus) IsKnown() bool {
+	switch r {
+	case OfferViewedWebhookEventPayloadCompensationSignOnBonusUsd, OfferViewedWebhookEventPayloadCompensationSignOnBonusAud, OfferViewedWebhookEventPayloadCompensationSignOnBonusBgn, OfferViewedWebhookEventPayloadCompensationSignOnBonusBrl, OfferViewedWebhookEventPayloadCompensationSignOnBonusCad, OfferViewedWebhookEventPayloadCompensationSignOnBonusChf, OfferViewedWebhookEventPayloadCompensationSignOnBonusCzk, OfferViewedWebhookEventPayloadCompensationSignOnBonusDkk, OfferViewedWebhookEventPayloadCompensationSignOnBonusEur, OfferViewedWebhookEventPayloadCompensationSignOnBonusGbp, OfferViewedWebhookEventPayloadCompensationSignOnBonusHkd, OfferViewedWebhookEventPayloadCompensationSignOnBonusHuf, OfferViewedWebhookEventPayloadCompensationSignOnBonusIdr, OfferViewedWebhookEventPayloadCompensationSignOnBonusInr, OfferViewedWebhookEventPayloadCompensationSignOnBonusJpy, OfferViewedWebhookEventPayloadCompensationSignOnBonusMyr, OfferViewedWebhookEventPayloadCompensationSignOnBonusNok, OfferViewedWebhookEventPayloadCompensationSignOnBonusNzd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCny, OfferViewedWebhookEventPayloadCompensationSignOnBonusPln, OfferViewedWebhookEventPayloadCompensationSignOnBonusRon, OfferViewedWebhookEventPayloadCompensationSignOnBonusTry, OfferViewedWebhookEventPayloadCompensationSignOnBonusSek, OfferViewedWebhookEventPayloadCompensationSignOnBonusSgd, OfferViewedWebhookEventPayloadCompensationSignOnBonusAed, OfferViewedWebhookEventPayloadCompensationSignOnBonusArs, OfferViewedWebhookEventPayloadCompensationSignOnBonusBdt, OfferViewedWebhookEventPayloadCompensationSignOnBonusBwp, OfferViewedWebhookEventPayloadCompensationSignOnBonusClp, OfferViewedWebhookEventPayloadCompensationSignOnBonusCop, OfferViewedWebhookEventPayloadCompensationSignOnBonusCrc, OfferViewedWebhookEventPayloadCompensationSignOnBonusEgp, OfferViewedWebhookEventPayloadCompensationSignOnBonusFjd, OfferViewedWebhookEventPayloadCompensationSignOnBonusGel, OfferViewedWebhookEventPayloadCompensationSignOnBonusGhs, OfferViewedWebhookEventPayloadCompensationSignOnBonusIls, OfferViewedWebhookEventPayloadCompensationSignOnBonusKes, OfferViewedWebhookEventPayloadCompensationSignOnBonusKrw, OfferViewedWebhookEventPayloadCompensationSignOnBonusLkr, OfferViewedWebhookEventPayloadCompensationSignOnBonusMad, OfferViewedWebhookEventPayloadCompensationSignOnBonusMxn, OfferViewedWebhookEventPayloadCompensationSignOnBonusNpr, OfferViewedWebhookEventPayloadCompensationSignOnBonusPhp, OfferViewedWebhookEventPayloadCompensationSignOnBonusPkr, OfferViewedWebhookEventPayloadCompensationSignOnBonusThb, OfferViewedWebhookEventPayloadCompensationSignOnBonusUah, OfferViewedWebhookEventPayloadCompensationSignOnBonusUgx, OfferViewedWebhookEventPayloadCompensationSignOnBonusUyu, OfferViewedWebhookEventPayloadCompensationSignOnBonusVnd, OfferViewedWebhookEventPayloadCompensationSignOnBonusZar, OfferViewedWebhookEventPayloadCompensationSignOnBonusZmw, OfferViewedWebhookEventPayloadCompensationSignOnBonusTnd, OfferViewedWebhookEventPayloadCompensationSignOnBonusNgn, OfferViewedWebhookEventPayloadCompensationSignOnBonusRsd, OfferViewedWebhookEventPayloadCompensationSignOnBonusTwd, OfferViewedWebhookEventPayloadCompensationSignOnBonusGtq, OfferViewedWebhookEventPayloadCompensationSignOnBonusHnl, OfferViewedWebhookEventPayloadCompensationSignOnBonusDop, OfferViewedWebhookEventPayloadCompensationSignOnBonusSar, OfferViewedWebhookEventPayloadCompensationSignOnBonusXaf, OfferViewedWebhookEventPayloadCompensationSignOnBonusPen:
+		return true
+	}
+	return false
+}
+
+type OfferViewedWebhookEventPayloadCompensationRelocationBonus string
+
+const (
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusUsd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "USD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusAud OfferViewedWebhookEventPayloadCompensationRelocationBonus = "AUD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusBgn OfferViewedWebhookEventPayloadCompensationRelocationBonus = "BGN"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusBrl OfferViewedWebhookEventPayloadCompensationRelocationBonus = "BRL"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusCad OfferViewedWebhookEventPayloadCompensationRelocationBonus = "CAD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusChf OfferViewedWebhookEventPayloadCompensationRelocationBonus = "CHF"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusCzk OfferViewedWebhookEventPayloadCompensationRelocationBonus = "CZK"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusDkk OfferViewedWebhookEventPayloadCompensationRelocationBonus = "DKK"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusEur OfferViewedWebhookEventPayloadCompensationRelocationBonus = "EUR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusGbp OfferViewedWebhookEventPayloadCompensationRelocationBonus = "GBP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusHkd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "HKD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusHuf OfferViewedWebhookEventPayloadCompensationRelocationBonus = "HUF"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusIdr OfferViewedWebhookEventPayloadCompensationRelocationBonus = "IDR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusInr OfferViewedWebhookEventPayloadCompensationRelocationBonus = "INR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusJpy OfferViewedWebhookEventPayloadCompensationRelocationBonus = "JPY"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusMyr OfferViewedWebhookEventPayloadCompensationRelocationBonus = "MYR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusNok OfferViewedWebhookEventPayloadCompensationRelocationBonus = "NOK"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusNzd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "NZD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusCny OfferViewedWebhookEventPayloadCompensationRelocationBonus = "CNY"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusPln OfferViewedWebhookEventPayloadCompensationRelocationBonus = "PLN"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusRon OfferViewedWebhookEventPayloadCompensationRelocationBonus = "RON"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusTry OfferViewedWebhookEventPayloadCompensationRelocationBonus = "TRY"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusSek OfferViewedWebhookEventPayloadCompensationRelocationBonus = "SEK"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusSgd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "SGD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusAed OfferViewedWebhookEventPayloadCompensationRelocationBonus = "AED"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusArs OfferViewedWebhookEventPayloadCompensationRelocationBonus = "ARS"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusBdt OfferViewedWebhookEventPayloadCompensationRelocationBonus = "BDT"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusBwp OfferViewedWebhookEventPayloadCompensationRelocationBonus = "BWP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusClp OfferViewedWebhookEventPayloadCompensationRelocationBonus = "CLP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusCop OfferViewedWebhookEventPayloadCompensationRelocationBonus = "COP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusCrc OfferViewedWebhookEventPayloadCompensationRelocationBonus = "CRC"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusEgp OfferViewedWebhookEventPayloadCompensationRelocationBonus = "EGP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusFjd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "FJD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusGel OfferViewedWebhookEventPayloadCompensationRelocationBonus = "GEL"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusGhs OfferViewedWebhookEventPayloadCompensationRelocationBonus = "GHS"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusIls OfferViewedWebhookEventPayloadCompensationRelocationBonus = "ILS"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusKes OfferViewedWebhookEventPayloadCompensationRelocationBonus = "KES"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusKrw OfferViewedWebhookEventPayloadCompensationRelocationBonus = "KRW"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusLkr OfferViewedWebhookEventPayloadCompensationRelocationBonus = "LKR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusMad OfferViewedWebhookEventPayloadCompensationRelocationBonus = "MAD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusMxn OfferViewedWebhookEventPayloadCompensationRelocationBonus = "MXN"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusNpr OfferViewedWebhookEventPayloadCompensationRelocationBonus = "NPR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusPhp OfferViewedWebhookEventPayloadCompensationRelocationBonus = "PHP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusPkr OfferViewedWebhookEventPayloadCompensationRelocationBonus = "PKR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusThb OfferViewedWebhookEventPayloadCompensationRelocationBonus = "THB"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusUah OfferViewedWebhookEventPayloadCompensationRelocationBonus = "UAH"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusUgx OfferViewedWebhookEventPayloadCompensationRelocationBonus = "UGX"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusUyu OfferViewedWebhookEventPayloadCompensationRelocationBonus = "UYU"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusVnd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "VND"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusZar OfferViewedWebhookEventPayloadCompensationRelocationBonus = "ZAR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusZmw OfferViewedWebhookEventPayloadCompensationRelocationBonus = "ZMW"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusTnd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "TND"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusNgn OfferViewedWebhookEventPayloadCompensationRelocationBonus = "NGN"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusRsd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "RSD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusTwd OfferViewedWebhookEventPayloadCompensationRelocationBonus = "TWD"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusGtq OfferViewedWebhookEventPayloadCompensationRelocationBonus = "GTQ"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusHnl OfferViewedWebhookEventPayloadCompensationRelocationBonus = "HNL"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusDop OfferViewedWebhookEventPayloadCompensationRelocationBonus = "DOP"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusSar OfferViewedWebhookEventPayloadCompensationRelocationBonus = "SAR"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusXaf OfferViewedWebhookEventPayloadCompensationRelocationBonus = "XAF"
+	OfferViewedWebhookEventPayloadCompensationRelocationBonusPen OfferViewedWebhookEventPayloadCompensationRelocationBonus = "PEN"
+)
+
+func (r OfferViewedWebhookEventPayloadCompensationRelocationBonus) IsKnown() bool {
+	switch r {
+	case OfferViewedWebhookEventPayloadCompensationRelocationBonusUsd, OfferViewedWebhookEventPayloadCompensationRelocationBonusAud, OfferViewedWebhookEventPayloadCompensationRelocationBonusBgn, OfferViewedWebhookEventPayloadCompensationRelocationBonusBrl, OfferViewedWebhookEventPayloadCompensationRelocationBonusCad, OfferViewedWebhookEventPayloadCompensationRelocationBonusChf, OfferViewedWebhookEventPayloadCompensationRelocationBonusCzk, OfferViewedWebhookEventPayloadCompensationRelocationBonusDkk, OfferViewedWebhookEventPayloadCompensationRelocationBonusEur, OfferViewedWebhookEventPayloadCompensationRelocationBonusGbp, OfferViewedWebhookEventPayloadCompensationRelocationBonusHkd, OfferViewedWebhookEventPayloadCompensationRelocationBonusHuf, OfferViewedWebhookEventPayloadCompensationRelocationBonusIdr, OfferViewedWebhookEventPayloadCompensationRelocationBonusInr, OfferViewedWebhookEventPayloadCompensationRelocationBonusJpy, OfferViewedWebhookEventPayloadCompensationRelocationBonusMyr, OfferViewedWebhookEventPayloadCompensationRelocationBonusNok, OfferViewedWebhookEventPayloadCompensationRelocationBonusNzd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCny, OfferViewedWebhookEventPayloadCompensationRelocationBonusPln, OfferViewedWebhookEventPayloadCompensationRelocationBonusRon, OfferViewedWebhookEventPayloadCompensationRelocationBonusTry, OfferViewedWebhookEventPayloadCompensationRelocationBonusSek, OfferViewedWebhookEventPayloadCompensationRelocationBonusSgd, OfferViewedWebhookEventPayloadCompensationRelocationBonusAed, OfferViewedWebhookEventPayloadCompensationRelocationBonusArs, OfferViewedWebhookEventPayloadCompensationRelocationBonusBdt, OfferViewedWebhookEventPayloadCompensationRelocationBonusBwp, OfferViewedWebhookEventPayloadCompensationRelocationBonusClp, OfferViewedWebhookEventPayloadCompensationRelocationBonusCop, OfferViewedWebhookEventPayloadCompensationRelocationBonusCrc, OfferViewedWebhookEventPayloadCompensationRelocationBonusEgp, OfferViewedWebhookEventPayloadCompensationRelocationBonusFjd, OfferViewedWebhookEventPayloadCompensationRelocationBonusGel, OfferViewedWebhookEventPayloadCompensationRelocationBonusGhs, OfferViewedWebhookEventPayloadCompensationRelocationBonusIls, OfferViewedWebhookEventPayloadCompensationRelocationBonusKes, OfferViewedWebhookEventPayloadCompensationRelocationBonusKrw, OfferViewedWebhookEventPayloadCompensationRelocationBonusLkr, OfferViewedWebhookEventPayloadCompensationRelocationBonusMad, OfferViewedWebhookEventPayloadCompensationRelocationBonusMxn, OfferViewedWebhookEventPayloadCompensationRelocationBonusNpr, OfferViewedWebhookEventPayloadCompensationRelocationBonusPhp, OfferViewedWebhookEventPayloadCompensationRelocationBonusPkr, OfferViewedWebhookEventPayloadCompensationRelocationBonusThb, OfferViewedWebhookEventPayloadCompensationRelocationBonusUah, OfferViewedWebhookEventPayloadCompensationRelocationBonusUgx, OfferViewedWebhookEventPayloadCompensationRelocationBonusUyu, OfferViewedWebhookEventPayloadCompensationRelocationBonusVnd, OfferViewedWebhookEventPayloadCompensationRelocationBonusZar, OfferViewedWebhookEventPayloadCompensationRelocationBonusZmw, OfferViewedWebhookEventPayloadCompensationRelocationBonusTnd, OfferViewedWebhookEventPayloadCompensationRelocationBonusNgn, OfferViewedWebhookEventPayloadCompensationRelocationBonusRsd, OfferViewedWebhookEventPayloadCompensationRelocationBonusTwd, OfferViewedWebhookEventPayloadCompensationRelocationBonusGtq, OfferViewedWebhookEventPayloadCompensationRelocationBonusHnl, OfferViewedWebhookEventPayloadCompensationRelocationBonusDop, OfferViewedWebhookEventPayloadCompensationRelocationBonusSar, OfferViewedWebhookEventPayloadCompensationRelocationBonusXaf, OfferViewedWebhookEventPayloadCompensationRelocationBonusPen:
+		return true
+	}
+	return false
+}
+
 type OfferViewedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       OfferViewedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
 	Basis        OfferViewedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
 	Type         OfferViewedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferViewedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
+	VariableRate OfferViewedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required"`
 	JSON         offerViewedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
@@ -4732,9 +4696,82 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
+type OfferViewedWebhookEventPayloadCompensationBasePayVariableRate string
+
+const (
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUsd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "USD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateAud OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "AUD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBgn OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "BGN"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBrl OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "BRL"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCad OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "CAD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateChf OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "CHF"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCzk OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "CZK"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateDkk OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "DKK"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateEur OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "EUR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGbp OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "GBP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateHkd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "HKD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateHuf OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "HUF"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateIdr OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "IDR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateInr OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "INR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateJpy OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "JPY"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateMyr OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "MYR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNok OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "NOK"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNzd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "NZD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCny OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "CNY"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePln OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "PLN"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateRon OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "RON"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateTry OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "TRY"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateSek OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "SEK"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateSgd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "SGD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateAed OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "AED"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateArs OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "ARS"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBdt OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "BDT"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBwp OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "BWP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateClp OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "CLP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCop OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "COP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCrc OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "CRC"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateEgp OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "EGP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateFjd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "FJD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGel OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "GEL"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGhs OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "GHS"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateIls OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "ILS"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateKes OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "KES"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateKrw OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "KRW"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateLkr OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "LKR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateMad OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "MAD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateMxn OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "MXN"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNpr OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "NPR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePhp OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "PHP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePkr OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "PKR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateThb OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "THB"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUah OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "UAH"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUgx OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "UGX"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUyu OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "UYU"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateVnd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "VND"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateZar OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "ZAR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateZmw OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "ZMW"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateTnd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "TND"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNgn OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "NGN"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateRsd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "RSD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateTwd OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "TWD"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGtq OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "GTQ"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateHnl OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "HNL"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateDop OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "DOP"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateSar OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "SAR"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateXaf OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "XAF"
+	OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePen OfferViewedWebhookEventPayloadCompensationBasePayVariableRate = "PEN"
+)
+
+func (r OfferViewedWebhookEventPayloadCompensationBasePayVariableRate) IsKnown() bool {
+	switch r {
+	case OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUsd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateAud, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBgn, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBrl, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCad, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateChf, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCzk, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateDkk, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateEur, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGbp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateHkd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateHuf, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateIdr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateInr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateJpy, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateMyr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNok, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNzd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCny, OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePln, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateRon, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateTry, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateSek, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateSgd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateAed, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateArs, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBdt, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateBwp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateClp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCop, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCrc, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateEgp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateFjd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGel, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGhs, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateIls, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateKes, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateKrw, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateLkr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateMad, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateMxn, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNpr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePhp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePkr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateThb, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUah, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUgx, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateUyu, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateVnd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateZar, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateZmw, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateTnd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateNgn, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateRsd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateTwd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateGtq, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateHnl, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateDop, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateSar, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateXaf, OfferViewedWebhookEventPayloadCompensationBasePayVariableRatePen:
+		return true
+	}
+	return false
+}
+
 type OfferViewedWebhookEventPayloadCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                           `json:"amount" api:"required"`
+	Amount   string                                                          `json:"amount" api:"required"`
 	Currency OfferViewedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                      `json:"display" api:"required"`
@@ -4832,311 +4869,10 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnown
 	return false
 }
 
-type OfferViewedWebhookEventPayloadCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                 `json:"amount" api:"required"`
-	Currency OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                            `json:"display" api:"required"`
-	JSON    offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationBasePayVariableRate]
-type offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferViewedWebhookEventPayloadCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerViewedWebhookEventPayloadCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "USD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AUD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BGN"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BRL"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CAD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CHF"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CZK"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DKK"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EUR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GBP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HKD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HUF"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "IDR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "INR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "JPY"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MYR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NOK"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NZD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CNY"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PLN"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RON"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TRY"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SEK"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SGD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AED"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ARS"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BDT"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BWP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CLP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "COP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CRC"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EGP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "FJD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GEL"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GHS"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ILS"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KES"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KRW"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "LKR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MAD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MXN"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NPR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PHP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PKR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "THB"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UAH"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UGX"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UYU"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "VND"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TND"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NGN"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RSD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TWD"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HNL"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DOP"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SAR"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "XAF"
-	OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf, OfferViewedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferViewedWebhookEventPayloadCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                         `json:"amount" api:"required"`
-	Currency OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                    `json:"display" api:"required"`
-	JSON    offerViewedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerViewedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationSignOnBonus]
-type offerViewedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferViewedWebhookEventPayloadCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerViewedWebhookEventPayloadCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency string
-
-const (
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "USD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyAud OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "AUD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "BGN"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "BRL"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCad OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "CAD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyChf OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "CHF"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "CZK"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "DKK"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyEur OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "EUR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "GBP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "HKD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "HUF"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "IDR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyInr OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "INR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "JPY"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "MYR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNok OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "NOK"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "NZD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCny OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "CNY"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPln OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "PLN"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyRon OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "RON"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyTry OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "TRY"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencySek OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "SEK"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencySgd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "SGD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyAed OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "AED"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyArs OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "ARS"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "BDT"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "BWP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyClp OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "CLP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCop OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "COP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "CRC"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "EGP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "FJD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGel OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "GEL"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "GHS"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyIls OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "ILS"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyKes OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "KES"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "KRW"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "LKR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyMad OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "MAD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "MXN"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "NPR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "PHP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "PKR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyThb OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "THB"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUah OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "UAH"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "UGX"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "UYU"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "VND"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyZar OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZAR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZMW"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "TND"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "NGN"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "RSD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "TWD"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "GTQ"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "HNL"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyDop OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "DOP"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencySar OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "SAR"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "XAF"
-	OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPen OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyAud, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCad, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyChf, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyEur, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyInr, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNok, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCny, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPln, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyRon, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyTry, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencySek, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencySgd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyAed, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyArs, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyClp, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCop, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGel, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyIls, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyKes, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyMad, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyThb, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUah, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyZar, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyDop, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencySar, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf, OfferViewedWebhookEventPayloadCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferViewedWebhookEventPayloadCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                             `json:"amount" api:"required"`
-	Currency OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                        `json:"display" api:"required"`
-	JSON    offerViewedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerViewedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadCompensationRelocationBonus]
-type offerViewedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferViewedWebhookEventPayloadCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerViewedWebhookEventPayloadCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency string
-
-const (
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "USD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyAud OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "AUD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "BGN"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "BRL"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCad OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "CAD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyChf OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "CHF"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "CZK"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "DKK"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyEur OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "EUR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "GBP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "HKD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "HUF"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "IDR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyInr OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "INR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "JPY"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "MYR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNok OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "NOK"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "NZD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCny OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "CNY"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPln OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "PLN"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyRon OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "RON"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyTry OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "TRY"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencySek OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "SEK"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencySgd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "SGD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyAed OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "AED"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyArs OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "ARS"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "BDT"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "BWP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyClp OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "CLP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCop OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "COP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "CRC"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "EGP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "FJD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGel OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "GEL"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "GHS"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyIls OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "ILS"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyKes OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "KES"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "KRW"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "LKR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyMad OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "MAD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "MXN"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "NPR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "PHP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "PKR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyThb OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "THB"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUah OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "UAH"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "UGX"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "UYU"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "VND"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyZar OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZAR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZMW"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "TND"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "NGN"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "RSD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "TWD"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "GTQ"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "HNL"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyDop OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "DOP"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencySar OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "SAR"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "XAF"
-	OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPen OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyAud, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCad, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyChf, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyEur, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyInr, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNok, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCny, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPln, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyRon, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyTry, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencySek, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencySgd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyAed, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyArs, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyClp, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCop, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGel, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyIls, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyKes, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyMad, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyThb, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUah, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyZar, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyDop, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencySar, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf, OfferViewedWebhookEventPayloadCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferViewedWebhookEventPayloadCompensationStock struct {
-	// a non-negative number
-	Options               int64                                               `json:"options" api:"required"`
-	VestingScheduleMonths int64                                               `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                                               `json:"cliffMonths" api:"required,nullable"`
+	Options               string                                              `json:"options" api:"required"`
+	VestingScheduleMonths string                                              `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           string                                              `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerViewedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -5201,7 +4937,6 @@ func (r OfferAcceptedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferAcceptedWebhookEventPayload struct {
-	// The tag of the offer.
 	ID         string                                     `json:"id" api:"required"`
 	Status     OfferAcceptedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferAcceptedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -5215,12 +4950,11 @@ type OfferAcceptedWebhookEventPayload struct {
 	SentBy       string                                       `json:"sentBy" api:"required,nullable"`
 	Compensation OfferAcceptedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                               `json:"createdAt" api:"required"`
-	JSON      offerAcceptedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string                               `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string                               `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string                               `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string                               `json:"createdAt" api:"required"`
+	JSON           offerAcceptedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayload]
@@ -5285,9 +5019,8 @@ func (r OfferAcceptedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferAcceptedWebhookEventPayloadCandidate struct {
-	FirstName string `json:"firstName" api:"required"`
-	LastName  string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	FirstName         string                                                     `json:"firstName" api:"required"`
+	LastName          string                                                     `json:"lastName" api:"required"`
 	Email             string                                                     `json:"email" api:"required"`
 	ContractorDetails OfferAcceptedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerAcceptedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -5334,8 +5067,7 @@ func (r offerAcceptedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON(
 }
 
 type OfferAcceptedWebhookEventPayloadPosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                                          `json:"title" api:"required"`
 	StartDate   string                                          `json:"startDate" api:"required"`
 	Country     OfferAcceptedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                                          `json:"scopeOfWork" api:"required,nullable"`
@@ -5624,7 +5356,6 @@ func (r OfferAcceptedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferAcceptedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON offerAcceptedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -5647,7 +5378,6 @@ func (r offerAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadWorkplace struct {
-	// Public workplace identifier
 	ID   string                                        `json:"id" api:"required"`
 	Name string                                        `json:"name" api:"required"`
 	JSON offerAcceptedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -5670,7 +5400,6 @@ func (r offerAcceptedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadManager struct {
-	// The id of the worker.
 	ID   string                                      `json:"id" api:"required"`
 	Name string                                      `json:"name" api:"required,nullable"`
 	JSON offerAcceptedWebhookEventPayloadManagerJSON `json:"-"`
@@ -5694,8 +5423,8 @@ func (r offerAcceptedWebhookEventPayloadManagerJSON) RawJSON() string {
 
 type OfferAcceptedWebhookEventPayloadCompensation struct {
 	BasePay         OfferAcceptedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferAcceptedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferAcceptedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     OfferAcceptedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required"`
+	RelocationBonus OfferAcceptedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required"`
 	Stock           OfferAcceptedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
 	JSON            offerAcceptedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
@@ -5718,12 +5447,160 @@ func (r offerAcceptedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferAcceptedWebhookEventPayloadCompensationSignOnBonus string
+
+const (
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUsd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "USD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusAud OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "AUD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBgn OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "BGN"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBrl OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "BRL"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCad OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "CAD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusChf OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "CHF"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCzk OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "CZK"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusDkk OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "DKK"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusEur OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "EUR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGbp OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "GBP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusHkd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "HKD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusHuf OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "HUF"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusIdr OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "IDR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusInr OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "INR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusJpy OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "JPY"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusMyr OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "MYR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNok OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "NOK"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNzd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "NZD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCny OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "CNY"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPln OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "PLN"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusRon OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "RON"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusTry OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "TRY"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusSek OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "SEK"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusSgd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "SGD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusAed OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "AED"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusArs OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "ARS"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBdt OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "BDT"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBwp OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "BWP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusClp OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "CLP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCop OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "COP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCrc OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "CRC"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusEgp OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "EGP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusFjd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "FJD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGel OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "GEL"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGhs OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "GHS"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusIls OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "ILS"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusKes OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "KES"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusKrw OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "KRW"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusLkr OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "LKR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusMad OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "MAD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusMxn OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "MXN"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNpr OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "NPR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPhp OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "PHP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPkr OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "PKR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusThb OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "THB"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUah OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "UAH"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUgx OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "UGX"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUyu OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "UYU"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusVnd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "VND"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusZar OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "ZAR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusZmw OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "ZMW"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusTnd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "TND"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNgn OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "NGN"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusRsd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "RSD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusTwd OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "TWD"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGtq OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "GTQ"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusHnl OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "HNL"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusDop OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "DOP"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusSar OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "SAR"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusXaf OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "XAF"
+	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPen OfferAcceptedWebhookEventPayloadCompensationSignOnBonus = "PEN"
+)
+
+func (r OfferAcceptedWebhookEventPayloadCompensationSignOnBonus) IsKnown() bool {
+	switch r {
+	case OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUsd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusAud, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBgn, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBrl, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCad, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusChf, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCzk, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusDkk, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusEur, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGbp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusHkd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusHuf, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusIdr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusInr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusJpy, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusMyr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNok, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNzd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCny, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPln, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusRon, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusTry, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusSek, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusSgd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusAed, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusArs, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBdt, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusBwp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusClp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCop, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCrc, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusEgp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusFjd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGel, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGhs, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusIls, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusKes, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusKrw, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusLkr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusMad, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusMxn, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNpr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPhp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPkr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusThb, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUah, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUgx, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusUyu, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusVnd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusZar, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusZmw, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusTnd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusNgn, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusRsd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusTwd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusGtq, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusHnl, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusDop, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusSar, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusXaf, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusPen:
+		return true
+	}
+	return false
+}
+
+type OfferAcceptedWebhookEventPayloadCompensationRelocationBonus string
+
+const (
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUsd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "USD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusAud OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "AUD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBgn OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "BGN"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBrl OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "BRL"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCad OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "CAD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusChf OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "CHF"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCzk OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "CZK"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusDkk OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "DKK"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusEur OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "EUR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGbp OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "GBP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusHkd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "HKD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusHuf OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "HUF"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusIdr OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "IDR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusInr OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "INR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusJpy OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "JPY"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusMyr OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "MYR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNok OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "NOK"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNzd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "NZD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCny OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "CNY"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPln OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "PLN"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusRon OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "RON"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusTry OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "TRY"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusSek OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "SEK"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusSgd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "SGD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusAed OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "AED"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusArs OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "ARS"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBdt OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "BDT"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBwp OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "BWP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusClp OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "CLP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCop OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "COP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCrc OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "CRC"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusEgp OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "EGP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusFjd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "FJD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGel OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "GEL"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGhs OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "GHS"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusIls OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "ILS"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusKes OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "KES"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusKrw OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "KRW"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusLkr OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "LKR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusMad OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "MAD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusMxn OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "MXN"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNpr OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "NPR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPhp OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "PHP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPkr OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "PKR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusThb OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "THB"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUah OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "UAH"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUgx OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "UGX"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUyu OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "UYU"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusVnd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "VND"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusZar OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "ZAR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusZmw OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "ZMW"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusTnd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "TND"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNgn OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "NGN"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusRsd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "RSD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusTwd OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "TWD"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGtq OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "GTQ"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusHnl OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "HNL"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusDop OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "DOP"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusSar OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "SAR"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusXaf OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "XAF"
+	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPen OfferAcceptedWebhookEventPayloadCompensationRelocationBonus = "PEN"
+)
+
+func (r OfferAcceptedWebhookEventPayloadCompensationRelocationBonus) IsKnown() bool {
+	switch r {
+	case OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUsd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusAud, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBgn, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBrl, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCad, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusChf, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCzk, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusDkk, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusEur, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGbp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusHkd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusHuf, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusIdr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusInr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusJpy, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusMyr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNok, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNzd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCny, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPln, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusRon, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusTry, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusSek, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusSgd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusAed, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusArs, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBdt, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusBwp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusClp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCop, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCrc, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusEgp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusFjd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGel, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGhs, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusIls, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusKes, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusKrw, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusLkr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusMad, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusMxn, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNpr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPhp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPkr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusThb, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUah, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUgx, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusUyu, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusVnd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusZar, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusZmw, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusTnd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusNgn, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusRsd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusTwd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusGtq, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusHnl, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusDop, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusSar, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusXaf, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusPen:
+		return true
+	}
+	return false
+}
+
 type OfferAcceptedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       OfferAcceptedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
 	Basis        OfferAcceptedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
 	Type         OfferAcceptedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
+	VariableRate OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required"`
 	JSON         offerAcceptedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
@@ -5778,9 +5655,82 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayType) IsKnown() bool 
 	return false
 }
 
+type OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate string
+
+const (
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUsd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "USD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateAud OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "AUD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBgn OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "BGN"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBrl OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "BRL"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCad OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "CAD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateChf OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "CHF"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCzk OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "CZK"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateDkk OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "DKK"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateEur OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "EUR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGbp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "GBP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateHkd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "HKD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateHuf OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "HUF"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateIdr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "IDR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateInr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "INR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateJpy OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "JPY"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateMyr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "MYR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNok OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "NOK"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNzd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "NZD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCny OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "CNY"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePln OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "PLN"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateRon OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "RON"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateTry OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "TRY"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateSek OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "SEK"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateSgd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "SGD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateAed OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "AED"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateArs OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "ARS"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBdt OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "BDT"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBwp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "BWP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateClp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "CLP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCop OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "COP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCrc OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "CRC"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateEgp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "EGP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateFjd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "FJD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGel OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "GEL"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGhs OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "GHS"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateIls OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "ILS"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateKes OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "KES"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateKrw OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "KRW"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateLkr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "LKR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateMad OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "MAD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateMxn OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "MXN"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNpr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "NPR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePhp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "PHP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePkr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "PKR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateThb OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "THB"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUah OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "UAH"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUgx OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "UGX"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUyu OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "UYU"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateVnd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "VND"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateZar OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "ZAR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateZmw OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "ZMW"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateTnd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "TND"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNgn OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "NGN"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateRsd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "RSD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateTwd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "TWD"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGtq OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "GTQ"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateHnl OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "HNL"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateDop OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "DOP"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateSar OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "SAR"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateXaf OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "XAF"
+	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePen OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate = "PEN"
+)
+
+func (r OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate) IsKnown() bool {
+	switch r {
+	case OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUsd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateAud, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBgn, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBrl, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCad, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateChf, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCzk, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateDkk, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateEur, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGbp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateHkd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateHuf, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateIdr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateInr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateJpy, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateMyr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNok, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNzd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCny, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePln, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateRon, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateTry, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateSek, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateSgd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateAed, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateArs, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBdt, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateBwp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateClp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCop, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCrc, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateEgp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateFjd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGel, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGhs, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateIls, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateKes, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateKrw, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateLkr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateMad, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateMxn, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNpr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePhp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePkr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateThb, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUah, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUgx, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateUyu, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateVnd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateZar, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateZmw, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateTnd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateNgn, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateRsd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateTwd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateGtq, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateHnl, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateDop, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateSar, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateXaf, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRatePen:
+		return true
+	}
+	return false
+}
+
 type OfferAcceptedWebhookEventPayloadCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                             `json:"amount" api:"required"`
+	Amount   string                                                            `json:"amount" api:"required"`
 	Currency OfferAcceptedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                        `json:"display" api:"required"`
@@ -5878,311 +5828,10 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKno
 	return false
 }
 
-type OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                   `json:"amount" api:"required"`
-	Currency OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                              `json:"display" api:"required"`
-	JSON    offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate]
-type offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerAcceptedWebhookEventPayloadCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "USD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AUD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BGN"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BRL"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CAD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CHF"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CZK"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DKK"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EUR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GBP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HKD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HUF"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "IDR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "INR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "JPY"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MYR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NOK"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NZD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CNY"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PLN"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RON"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TRY"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SEK"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SGD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AED"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ARS"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BDT"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BWP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CLP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "COP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CRC"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EGP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "FJD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GEL"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GHS"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ILS"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KES"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KRW"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "LKR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MAD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MXN"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NPR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PHP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PKR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "THB"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UAH"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UGX"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UYU"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "VND"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TND"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NGN"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RSD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TWD"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HNL"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DOP"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SAR"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "XAF"
-	OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf, OfferAcceptedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferAcceptedWebhookEventPayloadCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                           `json:"amount" api:"required"`
-	Currency OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                      `json:"display" api:"required"`
-	JSON    offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationSignOnBonus]
-type offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferAcceptedWebhookEventPayloadCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerAcceptedWebhookEventPayloadCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency string
-
-const (
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "USD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyAud OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "AUD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "BGN"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "BRL"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCad OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "CAD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyChf OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "CHF"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "CZK"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "DKK"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyEur OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "EUR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "GBP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "HKD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "HUF"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "IDR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyInr OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "INR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "JPY"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "MYR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNok OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "NOK"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "NZD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCny OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "CNY"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPln OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "PLN"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyRon OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "RON"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyTry OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "TRY"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencySek OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "SEK"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencySgd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "SGD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyAed OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "AED"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyArs OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "ARS"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "BDT"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "BWP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyClp OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "CLP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCop OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "COP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "CRC"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "EGP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "FJD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGel OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "GEL"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "GHS"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyIls OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "ILS"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyKes OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "KES"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "KRW"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "LKR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyMad OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "MAD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "MXN"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "NPR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "PHP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "PKR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyThb OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "THB"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUah OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "UAH"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "UGX"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "UYU"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "VND"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyZar OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZAR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZMW"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "TND"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "NGN"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "RSD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "TWD"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "GTQ"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "HNL"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyDop OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "DOP"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencySar OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "SAR"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "XAF"
-	OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPen OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyAud, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCad, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyChf, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyEur, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyInr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNok, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCny, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPln, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyRon, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyTry, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencySek, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencySgd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyAed, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyArs, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyClp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCop, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGel, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyIls, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyKes, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyMad, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyThb, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUah, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyZar, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyDop, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencySar, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf, OfferAcceptedWebhookEventPayloadCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferAcceptedWebhookEventPayloadCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                               `json:"amount" api:"required"`
-	Currency OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                          `json:"display" api:"required"`
-	JSON    offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadCompensationRelocationBonus]
-type offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferAcceptedWebhookEventPayloadCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerAcceptedWebhookEventPayloadCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency string
-
-const (
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "USD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyAud OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "AUD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "BGN"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "BRL"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCad OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "CAD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyChf OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "CHF"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "CZK"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "DKK"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyEur OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "EUR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "GBP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "HKD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "HUF"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "IDR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyInr OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "INR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "JPY"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "MYR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNok OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "NOK"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "NZD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCny OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "CNY"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPln OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "PLN"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyRon OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "RON"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyTry OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "TRY"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencySek OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "SEK"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencySgd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "SGD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyAed OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "AED"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyArs OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "ARS"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "BDT"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "BWP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyClp OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "CLP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCop OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "COP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "CRC"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "EGP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "FJD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGel OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "GEL"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "GHS"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyIls OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "ILS"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyKes OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "KES"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "KRW"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "LKR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyMad OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "MAD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "MXN"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "NPR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "PHP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "PKR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyThb OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "THB"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUah OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "UAH"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "UGX"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "UYU"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "VND"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyZar OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZAR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZMW"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "TND"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "NGN"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "RSD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "TWD"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "GTQ"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "HNL"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyDop OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "DOP"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencySar OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "SAR"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "XAF"
-	OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPen OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyAud, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCad, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyChf, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyEur, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyInr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNok, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCny, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPln, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyRon, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyTry, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencySek, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencySgd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyAed, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyArs, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyClp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCop, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGel, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyIls, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyKes, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyMad, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyThb, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUah, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyZar, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyDop, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencySar, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf, OfferAcceptedWebhookEventPayloadCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferAcceptedWebhookEventPayloadCompensationStock struct {
-	// a non-negative number
-	Options               int64                                                 `json:"options" api:"required"`
-	VestingScheduleMonths int64                                                 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                                                 `json:"cliffMonths" api:"required,nullable"`
+	Options               string                                                `json:"options" api:"required"`
+	VestingScheduleMonths string                                                `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           string                                                `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerAcceptedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -6247,7 +5896,6 @@ func (r OfferVoidedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayload struct {
-	// The tag of the offer.
 	ID         string                                   `json:"id" api:"required"`
 	Status     OfferVoidedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferVoidedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -6261,12 +5909,11 @@ type OfferVoidedWebhookEventPayload struct {
 	SentBy       string                                     `json:"sentBy" api:"required,nullable"`
 	Compensation OfferVoidedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                             `json:"createdAt" api:"required"`
-	JSON      offerVoidedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string                             `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string                             `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string                             `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string                             `json:"createdAt" api:"required"`
+	JSON           offerVoidedWebhookEventPayloadJSON `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayload]
@@ -6331,9 +5978,8 @@ func (r OfferVoidedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayloadCandidate struct {
-	FirstName string `json:"firstName" api:"required"`
-	LastName  string `json:"lastName" api:"required"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	FirstName         string                                                   `json:"firstName" api:"required"`
+	LastName          string                                                   `json:"lastName" api:"required"`
 	Email             string                                                   `json:"email" api:"required"`
 	ContractorDetails OfferVoidedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerVoidedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -6380,8 +6026,7 @@ func (r offerVoidedWebhookEventPayloadCandidateContractorDetailsJSON) RawJSON() 
 }
 
 type OfferVoidedWebhookEventPayloadPosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                                        `json:"title" api:"required"`
 	StartDate   string                                        `json:"startDate" api:"required"`
 	Country     OfferVoidedWebhookEventPayloadPositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                                        `json:"scopeOfWork" api:"required,nullable"`
@@ -6670,7 +6315,6 @@ func (r OfferVoidedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayloadDepartment struct {
-	// The unique public id of the department
 	ID   string                                       `json:"id" api:"required"`
 	Name string                                       `json:"name" api:"required"`
 	JSON offerVoidedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -6693,7 +6337,6 @@ func (r offerVoidedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadWorkplace struct {
-	// Public workplace identifier
 	ID   string                                      `json:"id" api:"required"`
 	Name string                                      `json:"name" api:"required"`
 	JSON offerVoidedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -6716,7 +6359,6 @@ func (r offerVoidedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadManager struct {
-	// The id of the worker.
 	ID   string                                    `json:"id" api:"required"`
 	Name string                                    `json:"name" api:"required,nullable"`
 	JSON offerVoidedWebhookEventPayloadManagerJSON `json:"-"`
@@ -6740,8 +6382,8 @@ func (r offerVoidedWebhookEventPayloadManagerJSON) RawJSON() string {
 
 type OfferVoidedWebhookEventPayloadCompensation struct {
 	BasePay         OfferVoidedWebhookEventPayloadCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferVoidedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferVoidedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     OfferVoidedWebhookEventPayloadCompensationSignOnBonus     `json:"signOnBonus" api:"required"`
+	RelocationBonus OfferVoidedWebhookEventPayloadCompensationRelocationBonus `json:"relocationBonus" api:"required"`
 	Stock           OfferVoidedWebhookEventPayloadCompensationStock           `json:"stock" api:"required,nullable"`
 	JSON            offerVoidedWebhookEventPayloadCompensationJSON            `json:"-"`
 }
@@ -6764,12 +6406,160 @@ func (r offerVoidedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferVoidedWebhookEventPayloadCompensationSignOnBonus string
+
+const (
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusUsd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "USD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusAud OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "AUD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusBgn OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "BGN"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusBrl OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "BRL"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCad OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "CAD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusChf OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "CHF"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCzk OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "CZK"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusDkk OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "DKK"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusEur OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "EUR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusGbp OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "GBP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusHkd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "HKD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusHuf OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "HUF"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusIdr OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "IDR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusInr OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "INR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusJpy OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "JPY"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusMyr OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "MYR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusNok OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "NOK"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusNzd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "NZD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCny OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "CNY"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusPln OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "PLN"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusRon OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "RON"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusTry OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "TRY"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusSek OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "SEK"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusSgd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "SGD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusAed OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "AED"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusArs OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "ARS"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusBdt OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "BDT"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusBwp OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "BWP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusClp OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "CLP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCop OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "COP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCrc OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "CRC"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusEgp OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "EGP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusFjd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "FJD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusGel OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "GEL"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusGhs OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "GHS"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusIls OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "ILS"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusKes OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "KES"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusKrw OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "KRW"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusLkr OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "LKR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusMad OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "MAD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusMxn OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "MXN"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusNpr OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "NPR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusPhp OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "PHP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusPkr OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "PKR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusThb OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "THB"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusUah OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "UAH"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusUgx OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "UGX"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusUyu OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "UYU"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusVnd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "VND"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusZar OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "ZAR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusZmw OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "ZMW"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusTnd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "TND"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusNgn OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "NGN"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusRsd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "RSD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusTwd OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "TWD"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusGtq OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "GTQ"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusHnl OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "HNL"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusDop OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "DOP"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusSar OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "SAR"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusXaf OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "XAF"
+	OfferVoidedWebhookEventPayloadCompensationSignOnBonusPen OfferVoidedWebhookEventPayloadCompensationSignOnBonus = "PEN"
+)
+
+func (r OfferVoidedWebhookEventPayloadCompensationSignOnBonus) IsKnown() bool {
+	switch r {
+	case OfferVoidedWebhookEventPayloadCompensationSignOnBonusUsd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusAud, OfferVoidedWebhookEventPayloadCompensationSignOnBonusBgn, OfferVoidedWebhookEventPayloadCompensationSignOnBonusBrl, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCad, OfferVoidedWebhookEventPayloadCompensationSignOnBonusChf, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCzk, OfferVoidedWebhookEventPayloadCompensationSignOnBonusDkk, OfferVoidedWebhookEventPayloadCompensationSignOnBonusEur, OfferVoidedWebhookEventPayloadCompensationSignOnBonusGbp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusHkd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusHuf, OfferVoidedWebhookEventPayloadCompensationSignOnBonusIdr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusInr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusJpy, OfferVoidedWebhookEventPayloadCompensationSignOnBonusMyr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusNok, OfferVoidedWebhookEventPayloadCompensationSignOnBonusNzd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCny, OfferVoidedWebhookEventPayloadCompensationSignOnBonusPln, OfferVoidedWebhookEventPayloadCompensationSignOnBonusRon, OfferVoidedWebhookEventPayloadCompensationSignOnBonusTry, OfferVoidedWebhookEventPayloadCompensationSignOnBonusSek, OfferVoidedWebhookEventPayloadCompensationSignOnBonusSgd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusAed, OfferVoidedWebhookEventPayloadCompensationSignOnBonusArs, OfferVoidedWebhookEventPayloadCompensationSignOnBonusBdt, OfferVoidedWebhookEventPayloadCompensationSignOnBonusBwp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusClp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCop, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCrc, OfferVoidedWebhookEventPayloadCompensationSignOnBonusEgp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusFjd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusGel, OfferVoidedWebhookEventPayloadCompensationSignOnBonusGhs, OfferVoidedWebhookEventPayloadCompensationSignOnBonusIls, OfferVoidedWebhookEventPayloadCompensationSignOnBonusKes, OfferVoidedWebhookEventPayloadCompensationSignOnBonusKrw, OfferVoidedWebhookEventPayloadCompensationSignOnBonusLkr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusMad, OfferVoidedWebhookEventPayloadCompensationSignOnBonusMxn, OfferVoidedWebhookEventPayloadCompensationSignOnBonusNpr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusPhp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusPkr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusThb, OfferVoidedWebhookEventPayloadCompensationSignOnBonusUah, OfferVoidedWebhookEventPayloadCompensationSignOnBonusUgx, OfferVoidedWebhookEventPayloadCompensationSignOnBonusUyu, OfferVoidedWebhookEventPayloadCompensationSignOnBonusVnd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusZar, OfferVoidedWebhookEventPayloadCompensationSignOnBonusZmw, OfferVoidedWebhookEventPayloadCompensationSignOnBonusTnd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusNgn, OfferVoidedWebhookEventPayloadCompensationSignOnBonusRsd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusTwd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusGtq, OfferVoidedWebhookEventPayloadCompensationSignOnBonusHnl, OfferVoidedWebhookEventPayloadCompensationSignOnBonusDop, OfferVoidedWebhookEventPayloadCompensationSignOnBonusSar, OfferVoidedWebhookEventPayloadCompensationSignOnBonusXaf, OfferVoidedWebhookEventPayloadCompensationSignOnBonusPen:
+		return true
+	}
+	return false
+}
+
+type OfferVoidedWebhookEventPayloadCompensationRelocationBonus string
+
+const (
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusUsd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "USD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusAud OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "AUD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusBgn OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "BGN"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusBrl OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "BRL"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCad OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "CAD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusChf OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "CHF"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCzk OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "CZK"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusDkk OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "DKK"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusEur OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "EUR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusGbp OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "GBP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusHkd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "HKD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusHuf OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "HUF"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusIdr OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "IDR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusInr OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "INR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusJpy OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "JPY"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusMyr OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "MYR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusNok OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "NOK"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusNzd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "NZD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCny OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "CNY"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusPln OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "PLN"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusRon OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "RON"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusTry OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "TRY"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusSek OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "SEK"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusSgd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "SGD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusAed OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "AED"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusArs OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "ARS"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusBdt OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "BDT"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusBwp OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "BWP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusClp OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "CLP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCop OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "COP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCrc OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "CRC"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusEgp OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "EGP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusFjd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "FJD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusGel OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "GEL"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusGhs OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "GHS"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusIls OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "ILS"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusKes OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "KES"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusKrw OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "KRW"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusLkr OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "LKR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusMad OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "MAD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusMxn OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "MXN"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusNpr OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "NPR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusPhp OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "PHP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusPkr OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "PKR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusThb OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "THB"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusUah OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "UAH"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusUgx OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "UGX"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusUyu OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "UYU"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusVnd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "VND"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusZar OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "ZAR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusZmw OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "ZMW"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusTnd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "TND"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusNgn OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "NGN"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusRsd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "RSD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusTwd OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "TWD"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusGtq OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "GTQ"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusHnl OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "HNL"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusDop OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "DOP"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusSar OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "SAR"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusXaf OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "XAF"
+	OfferVoidedWebhookEventPayloadCompensationRelocationBonusPen OfferVoidedWebhookEventPayloadCompensationRelocationBonus = "PEN"
+)
+
+func (r OfferVoidedWebhookEventPayloadCompensationRelocationBonus) IsKnown() bool {
+	switch r {
+	case OfferVoidedWebhookEventPayloadCompensationRelocationBonusUsd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusAud, OfferVoidedWebhookEventPayloadCompensationRelocationBonusBgn, OfferVoidedWebhookEventPayloadCompensationRelocationBonusBrl, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCad, OfferVoidedWebhookEventPayloadCompensationRelocationBonusChf, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCzk, OfferVoidedWebhookEventPayloadCompensationRelocationBonusDkk, OfferVoidedWebhookEventPayloadCompensationRelocationBonusEur, OfferVoidedWebhookEventPayloadCompensationRelocationBonusGbp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusHkd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusHuf, OfferVoidedWebhookEventPayloadCompensationRelocationBonusIdr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusInr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusJpy, OfferVoidedWebhookEventPayloadCompensationRelocationBonusMyr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusNok, OfferVoidedWebhookEventPayloadCompensationRelocationBonusNzd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCny, OfferVoidedWebhookEventPayloadCompensationRelocationBonusPln, OfferVoidedWebhookEventPayloadCompensationRelocationBonusRon, OfferVoidedWebhookEventPayloadCompensationRelocationBonusTry, OfferVoidedWebhookEventPayloadCompensationRelocationBonusSek, OfferVoidedWebhookEventPayloadCompensationRelocationBonusSgd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusAed, OfferVoidedWebhookEventPayloadCompensationRelocationBonusArs, OfferVoidedWebhookEventPayloadCompensationRelocationBonusBdt, OfferVoidedWebhookEventPayloadCompensationRelocationBonusBwp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusClp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCop, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCrc, OfferVoidedWebhookEventPayloadCompensationRelocationBonusEgp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusFjd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusGel, OfferVoidedWebhookEventPayloadCompensationRelocationBonusGhs, OfferVoidedWebhookEventPayloadCompensationRelocationBonusIls, OfferVoidedWebhookEventPayloadCompensationRelocationBonusKes, OfferVoidedWebhookEventPayloadCompensationRelocationBonusKrw, OfferVoidedWebhookEventPayloadCompensationRelocationBonusLkr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusMad, OfferVoidedWebhookEventPayloadCompensationRelocationBonusMxn, OfferVoidedWebhookEventPayloadCompensationRelocationBonusNpr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusPhp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusPkr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusThb, OfferVoidedWebhookEventPayloadCompensationRelocationBonusUah, OfferVoidedWebhookEventPayloadCompensationRelocationBonusUgx, OfferVoidedWebhookEventPayloadCompensationRelocationBonusUyu, OfferVoidedWebhookEventPayloadCompensationRelocationBonusVnd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusZar, OfferVoidedWebhookEventPayloadCompensationRelocationBonusZmw, OfferVoidedWebhookEventPayloadCompensationRelocationBonusTnd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusNgn, OfferVoidedWebhookEventPayloadCompensationRelocationBonusRsd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusTwd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusGtq, OfferVoidedWebhookEventPayloadCompensationRelocationBonusHnl, OfferVoidedWebhookEventPayloadCompensationRelocationBonusDop, OfferVoidedWebhookEventPayloadCompensationRelocationBonusSar, OfferVoidedWebhookEventPayloadCompensationRelocationBonusXaf, OfferVoidedWebhookEventPayloadCompensationRelocationBonusPen:
+		return true
+	}
+	return false
+}
+
 type OfferVoidedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       OfferVoidedWebhookEventPayloadCompensationBasePayAmount       `json:"amount" api:"required"`
 	Basis        OfferVoidedWebhookEventPayloadCompensationBasePayBasis        `json:"basis" api:"required"`
 	Type         OfferVoidedWebhookEventPayloadCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
+	VariableRate OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate `json:"variableRate" api:"required"`
 	JSON         offerVoidedWebhookEventPayloadCompensationBasePayJSON         `json:"-"`
 }
 
@@ -6824,9 +6614,82 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
+type OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate string
+
+const (
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUsd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "USD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateAud OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "AUD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBgn OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "BGN"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBrl OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "BRL"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCad OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "CAD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateChf OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "CHF"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCzk OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "CZK"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateDkk OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "DKK"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateEur OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "EUR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGbp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "GBP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateHkd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "HKD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateHuf OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "HUF"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateIdr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "IDR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateInr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "INR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateJpy OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "JPY"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateMyr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "MYR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNok OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "NOK"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNzd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "NZD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCny OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "CNY"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePln OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "PLN"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateRon OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "RON"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateTry OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "TRY"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateSek OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "SEK"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateSgd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "SGD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateAed OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "AED"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateArs OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "ARS"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBdt OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "BDT"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBwp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "BWP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateClp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "CLP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCop OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "COP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCrc OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "CRC"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateEgp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "EGP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateFjd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "FJD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGel OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "GEL"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGhs OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "GHS"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateIls OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "ILS"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateKes OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "KES"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateKrw OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "KRW"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateLkr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "LKR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateMad OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "MAD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateMxn OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "MXN"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNpr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "NPR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePhp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "PHP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePkr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "PKR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateThb OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "THB"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUah OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "UAH"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUgx OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "UGX"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUyu OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "UYU"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateVnd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "VND"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateZar OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "ZAR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateZmw OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "ZMW"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateTnd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "TND"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNgn OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "NGN"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateRsd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "RSD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateTwd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "TWD"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGtq OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "GTQ"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateHnl OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "HNL"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateDop OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "DOP"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateSar OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "SAR"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateXaf OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "XAF"
+	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePen OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate = "PEN"
+)
+
+func (r OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate) IsKnown() bool {
+	switch r {
+	case OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUsd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateAud, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBgn, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBrl, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCad, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateChf, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCzk, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateDkk, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateEur, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGbp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateHkd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateHuf, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateIdr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateInr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateJpy, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateMyr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNok, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNzd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCny, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePln, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateRon, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateTry, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateSek, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateSgd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateAed, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateArs, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBdt, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateBwp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateClp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCop, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCrc, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateEgp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateFjd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGel, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGhs, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateIls, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateKes, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateKrw, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateLkr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateMad, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateMxn, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNpr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePhp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePkr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateThb, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUah, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUgx, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateUyu, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateVnd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateZar, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateZmw, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateTnd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateNgn, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateRsd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateTwd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateGtq, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateHnl, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateDop, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateSar, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateXaf, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRatePen:
+		return true
+	}
+	return false
+}
+
 type OfferVoidedWebhookEventPayloadCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                           `json:"amount" api:"required"`
+	Amount   string                                                          `json:"amount" api:"required"`
 	Currency OfferVoidedWebhookEventPayloadCompensationBasePayAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                      `json:"display" api:"required"`
@@ -6924,311 +6787,10 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayAmountCurrency) IsKnown
 	return false
 }
 
-type OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                 `json:"amount" api:"required"`
-	Currency OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                            `json:"display" api:"required"`
-	JSON    offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate]
-type offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidedWebhookEventPayloadCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidedWebhookEventPayloadCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "USD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AUD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BGN"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BRL"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CAD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CHF"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CZK"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DKK"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EUR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GBP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HKD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HUF"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "IDR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "INR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "JPY"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MYR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NOK"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NZD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CNY"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PLN"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RON"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TRY"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SEK"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SGD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "AED"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ARS"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BDT"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "BWP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CLP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "COP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "CRC"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "EGP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "FJD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GEL"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GHS"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ILS"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KES"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "KRW"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "LKR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MAD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "MXN"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NPR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PHP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PKR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "THB"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UAH"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UGX"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "UYU"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "VND"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TND"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "NGN"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "RSD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "TWD"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "HNL"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "DOP"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "SAR"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "XAF"
-	OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUsd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAud, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBgn, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBrl, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCad, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyChf, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCzk, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDkk, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEur, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGbp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHkd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHuf, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIdr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyInr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyJpy, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMyr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNok, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNzd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCny, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPln, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRon, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTry, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencySek, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencySgd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyAed, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyArs, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBdt, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyBwp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyClp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCop, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyCrc, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyEgp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyFjd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGel, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGhs, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyIls, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKes, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyKrw, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyLkr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMad, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyMxn, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNpr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPhp, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPkr, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyThb, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUah, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUgx, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyUyu, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyVnd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZar, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyZmw, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTnd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyNgn, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyRsd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyTwd, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyGtq, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyHnl, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyDop, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencySar, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyXaf, OfferVoidedWebhookEventPayloadCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferVoidedWebhookEventPayloadCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                         `json:"amount" api:"required"`
-	Currency OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                    `json:"display" api:"required"`
-	JSON    offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationSignOnBonus]
-type offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidedWebhookEventPayloadCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidedWebhookEventPayloadCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency string
-
-const (
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "USD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyAud OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "AUD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "BGN"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "BRL"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCad OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "CAD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyChf OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "CHF"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "CZK"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "DKK"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyEur OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "EUR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "GBP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "HKD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "HUF"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "IDR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyInr OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "INR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "JPY"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "MYR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNok OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "NOK"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "NZD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCny OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "CNY"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPln OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "PLN"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyRon OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "RON"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyTry OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "TRY"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencySek OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "SEK"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencySgd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "SGD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyAed OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "AED"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyArs OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "ARS"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "BDT"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "BWP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyClp OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "CLP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCop OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "COP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "CRC"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "EGP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "FJD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGel OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "GEL"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "GHS"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyIls OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "ILS"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyKes OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "KES"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "KRW"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "LKR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyMad OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "MAD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "MXN"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "NPR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "PHP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "PKR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyThb OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "THB"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUah OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "UAH"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "UGX"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "UYU"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "VND"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyZar OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZAR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "ZMW"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "TND"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "NGN"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "RSD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "TWD"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "GTQ"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "HNL"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyDop OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "DOP"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencySar OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "SAR"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "XAF"
-	OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPen OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUsd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyAud, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBgn, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBrl, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCad, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyChf, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCzk, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyDkk, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyEur, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGbp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyHkd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyHuf, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyIdr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyInr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyJpy, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyMyr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNok, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNzd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCny, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPln, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyRon, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyTry, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencySek, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencySgd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyAed, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyArs, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBdt, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyBwp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyClp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCop, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyCrc, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyEgp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyFjd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGel, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGhs, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyIls, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyKes, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyKrw, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyLkr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyMad, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyMxn, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNpr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPhp, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPkr, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyThb, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUah, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUgx, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyUyu, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyVnd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyZar, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyZmw, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyTnd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyNgn, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyRsd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyTwd, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyGtq, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyHnl, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyDop, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencySar, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyXaf, OfferVoidedWebhookEventPayloadCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferVoidedWebhookEventPayloadCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                             `json:"amount" api:"required"`
-	Currency OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                        `json:"display" api:"required"`
-	JSON    offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadCompensationRelocationBonus]
-type offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidedWebhookEventPayloadCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidedWebhookEventPayloadCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency string
-
-const (
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "USD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyAud OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "AUD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "BGN"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "BRL"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCad OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "CAD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyChf OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "CHF"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "CZK"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "DKK"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyEur OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "EUR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "GBP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "HKD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "HUF"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "IDR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyInr OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "INR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "JPY"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "MYR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNok OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "NOK"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "NZD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCny OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "CNY"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPln OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "PLN"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyRon OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "RON"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyTry OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "TRY"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencySek OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "SEK"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencySgd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "SGD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyAed OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "AED"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyArs OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "ARS"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "BDT"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "BWP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyClp OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "CLP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCop OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "COP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "CRC"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "EGP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "FJD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGel OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "GEL"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "GHS"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyIls OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "ILS"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyKes OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "KES"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "KRW"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "LKR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyMad OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "MAD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "MXN"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "NPR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "PHP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "PKR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyThb OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "THB"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUah OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "UAH"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "UGX"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "UYU"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "VND"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyZar OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZAR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "ZMW"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "TND"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "NGN"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "RSD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "TWD"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "GTQ"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "HNL"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyDop OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "DOP"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencySar OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "SAR"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "XAF"
-	OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPen OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUsd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyAud, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBgn, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBrl, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCad, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyChf, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCzk, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyDkk, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyEur, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGbp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyHkd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyHuf, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyIdr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyInr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyJpy, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyMyr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNok, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNzd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCny, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPln, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyRon, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyTry, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencySek, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencySgd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyAed, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyArs, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBdt, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyBwp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyClp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCop, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyCrc, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyEgp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyFjd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGel, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGhs, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyIls, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyKes, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyKrw, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyLkr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyMad, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyMxn, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNpr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPhp, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPkr, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyThb, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUah, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUgx, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyUyu, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyVnd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyZar, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyZmw, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyTnd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyNgn, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyRsd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyTwd, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyGtq, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyHnl, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyDop, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencySar, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyXaf, OfferVoidedWebhookEventPayloadCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferVoidedWebhookEventPayloadCompensationStock struct {
-	// a non-negative number
-	Options               int64                                               `json:"options" api:"required"`
-	VestingScheduleMonths int64                                               `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                                               `json:"cliffMonths" api:"required,nullable"`
+	Options               string                                              `json:"options" api:"required"`
+	VestingScheduleMonths string                                              `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           string                                              `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerVoidedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
