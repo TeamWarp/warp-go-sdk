@@ -50,6 +50,7 @@ func main() {
 	)
 
 	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+		Limit:    sdk.F[string]("limit"),
 		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
 	})
 	if err != nil {

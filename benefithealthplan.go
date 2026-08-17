@@ -48,6 +48,7 @@ func NewBenefitHealthPlanService(opts ...option.RequestOption) (r *BenefitHealth
 // Example:
 //
 //	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+//		Limit:    sdk.F[string]("limit"),
 //		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
 //	})
 //	if err != nil {
@@ -67,7 +68,7 @@ func (r *BenefitHealthPlanService) List(ctx context.Context, query BenefitHealth
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The tag of a company health plan.
+//	id: Path parameter.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -76,7 +77,7 @@ func (r *BenefitHealthPlanService) List(ctx context.Context, query BenefitHealth
 //
 // Example:
 //
-//	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
+//	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -94,7 +95,6 @@ func (r *BenefitHealthPlanService) Get(ctx context.Context, id string, opts ...o
 }
 
 type PublicHealthPlan struct {
-	// The tag of a company health plan.
 	ID string `json:"id" api:"required"`
 	// The insurance carrier underwriting the health plan.
 	Carrier PublicHealthPlanCarrier `json:"carrier" api:"required"`
@@ -105,17 +105,14 @@ type PublicHealthPlan struct {
 	// The carrier-assigned group number.
 	GroupNumber string `json:"groupNumber" api:"required,nullable"`
 	// The plan network structure.
-	NetworkType PublicHealthPlanNetworkType `json:"networkType" api:"required,nullable"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	NetworkType        PublicHealthPlanNetworkType `json:"networkType" api:"required,nullable"`
+	EffectiveStartDate string                      `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                      `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of a health plan.
-	Status PublicHealthPlanStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string               `json:"updatedAt" api:"required"`
-	JSON      publicHealthPlanJSON `json:"-"`
+	Status    PublicHealthPlanStatus `json:"status" api:"required"`
+	CreatedAt string                 `json:"createdAt" api:"required"`
+	UpdatedAt string                 `json:"updatedAt" api:"required"`
+	JSON      publicHealthPlanJSON   `json:"-"`
 }
 
 // publicHealthPlanJSON contains the JSON metadata for the struct [PublicHealthPlan]
@@ -197,7 +194,6 @@ func (r PublicHealthPlanStatus) IsKnown() bool {
 }
 
 type PublicHealthPlanCarrier struct {
-	// The tag of a carrier.
 	ID string `json:"id" api:"required"`
 	// The carrier name.
 	Name string                      `json:"name" api:"required"`
@@ -221,7 +217,6 @@ func (r publicHealthPlanCarrierJSON) RawJSON() string {
 }
 
 type BenefitHealthPlanGetResponse struct {
-	// The tag of a company health plan.
 	ID string `json:"id" api:"required"`
 	// The insurance carrier underwriting the health plan.
 	Carrier PublicHealthPlanCarrier `json:"carrier" api:"required"`
@@ -232,17 +227,14 @@ type BenefitHealthPlanGetResponse struct {
 	// The carrier-assigned group number.
 	GroupNumber string `json:"groupNumber" api:"required,nullable"`
 	// The plan network structure.
-	NetworkType BenefitHealthPlanGetResponseNetworkType `json:"networkType" api:"required,nullable"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	NetworkType        BenefitHealthPlanGetResponseNetworkType `json:"networkType" api:"required,nullable"`
+	EffectiveStartDate string                                  `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                                  `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of a health plan.
-	Status BenefitHealthPlanGetResponseStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string                           `json:"updatedAt" api:"required"`
-	JSON      benefitHealthPlanGetResponseJSON `json:"-"`
+	Status    BenefitHealthPlanGetResponseStatus `json:"status" api:"required"`
+	CreatedAt string                             `json:"createdAt" api:"required"`
+	UpdatedAt string                             `json:"updatedAt" api:"required"`
+	JSON      benefitHealthPlanGetResponseJSON   `json:"-"`
 }
 
 // benefitHealthPlanGetResponseJSON contains the JSON metadata for the struct [BenefitHealthPlanGetResponse]
@@ -324,17 +316,12 @@ func (r BenefitHealthPlanGetResponseStatus) IsKnown() bool {
 }
 
 type BenefitHealthPlanListParams struct {
-	// The tag of a company health plan.
-	AfterID param.Field[string] `query:"afterId"`
-	// The tag of a company health plan.
-	BeforeID   param.Field[string]   `query:"beforeId"`
-	CarrierIDs param.Field[[]string] `query:"carrierIds"`
-	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
-	// Statuses to include. Defaults to ["active"]. An elapsed effectiveEndDate is
-	// reported and filtered as "terminated".
-	Statuses param.Field[[]BenefitHealthPlanListParamsStatus] `query:"statuses"`
-	Types    param.Field[[]BenefitHealthPlanListParamsType]   `query:"types"`
+	Limit      param.Field[string]                              `query:"limit" api:"required"`
+	Statuses   param.Field[[]BenefitHealthPlanListParamsStatus] `query:"statuses" api:"required"`
+	AfterID    param.Field[string]                              `query:"afterId"`
+	BeforeID   param.Field[string]                              `query:"beforeId"`
+	CarrierIDs param.Field[[]string]                            `query:"carrierIds"`
+	Types      param.Field[[]BenefitHealthPlanListParamsType]   `query:"types"`
 }
 
 // URLQuery serializes [BenefitHealthPlanListParams]'s query parameters as `url.Values`.
@@ -380,11 +367,10 @@ func (r BenefitHealthPlanListParamsStatus) IsKnown() bool {
 }
 
 type BenefitHealthPlanListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                             `json:"count" api:"required"`
-	Data  []PublicHealthPlan                `json:"data" api:"required"`
-	JSON  benefitHealthPlanListResponseJSON `json:"-"`
+	HasMore bool                              `json:"hasMore" api:"required"`
+	Count   int64                             `json:"count" api:"required"`
+	Data    []PublicHealthPlan                `json:"data" api:"required"`
+	JSON    benefitHealthPlanListResponseJSON `json:"-"`
 }
 
 // benefitHealthPlanListResponseJSON contains the JSON metadata for the struct [BenefitHealthPlanListResponse]

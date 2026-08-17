@@ -51,6 +51,7 @@ func NewBenefitDeductionService(opts ...option.RequestOption) (r *BenefitDeducti
 // Example:
 //
 //	deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
+//		Limit:    sdk.F[string]("limit"),
 //		Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
 //	})
 //	if err != nil {
@@ -70,7 +71,7 @@ func (r *BenefitDeductionService) List(ctx context.Context, query BenefitDeducti
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The version-group tag of a payroll benefit deduction. Stable across edits.
+//	id: Path parameter.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -79,7 +80,7 @@ func (r *BenefitDeductionService) List(ctx context.Context, query BenefitDeducti
 //
 // Example:
 //
-//	deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
+//	deduction, err := client.Benefits.Deductions.Get(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -97,7 +98,6 @@ func (r *BenefitDeductionService) Get(ctx context.Context, id string, opts ...op
 }
 
 type PublicBenefitDeduction struct {
-	// Stable identifier shared by every internal version of this deduction.
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
 	Worker PublicBenefitDeductionWorker `json:"worker" api:"required"`
@@ -113,17 +113,14 @@ type PublicBenefitDeduction struct {
 	// The associated benefit plan, or null for a planless payroll deduction.
 	Plan BenefitDeductionGetResponsePlan `json:"plan" api:"required,nullable"`
 	// How the employee and employer contributions are calculated.
-	Calculation PublicBenefitDeductionCalculation `json:"calculation" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	Calculation        PublicBenefitDeductionCalculation `json:"calculation" api:"required"`
+	EffectiveStartDate string                            `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                            `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of the current deduction version.
-	Status PublicBenefitDeductionStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string                     `json:"updatedAt" api:"required"`
-	JSON      publicBenefitDeductionJSON `json:"-"`
+	Status    PublicBenefitDeductionStatus `json:"status" api:"required"`
+	CreatedAt string                       `json:"createdAt" api:"required"`
+	UpdatedAt string                       `json:"updatedAt" api:"required"`
+	JSON      publicBenefitDeductionJSON   `json:"-"`
 }
 
 // publicBenefitDeductionJSON contains the JSON metadata for the struct [PublicBenefitDeduction]
@@ -249,7 +246,6 @@ func (r PublicBenefitDeductionStatus) IsKnown() bool {
 }
 
 type BenefitDeductionGetResponse struct {
-	// Stable identifier shared by every internal version of this deduction.
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
 	Worker BenefitDeductionGetResponseWorker `json:"worker" api:"required"`
@@ -265,17 +261,14 @@ type BenefitDeductionGetResponse struct {
 	// The associated benefit plan, or null for a planless payroll deduction.
 	Plan BenefitDeductionGetResponsePlan `json:"plan" api:"required,nullable"`
 	// How the employee and employer contributions are calculated.
-	Calculation BenefitDeductionGetResponseCalculation `json:"calculation" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	Calculation        BenefitDeductionGetResponseCalculation `json:"calculation" api:"required"`
+	EffectiveStartDate string                                 `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                                 `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of the current deduction version.
-	Status BenefitDeductionGetResponseStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string                          `json:"updatedAt" api:"required"`
-	JSON      benefitDeductionGetResponseJSON `json:"-"`
+	Status    BenefitDeductionGetResponseStatus `json:"status" api:"required"`
+	CreatedAt string                            `json:"createdAt" api:"required"`
+	UpdatedAt string                            `json:"updatedAt" api:"required"`
+	JSON      benefitDeductionGetResponseJSON   `json:"-"`
 }
 
 // benefitDeductionGetResponseJSON contains the JSON metadata for the struct [BenefitDeductionGetResponse]
@@ -401,20 +394,15 @@ func (r BenefitDeductionGetResponseStatus) IsKnown() bool {
 }
 
 type BenefitDeductionListParams struct {
-	// The version-group tag of a payroll benefit deduction. Stable across edits.
-	AfterID param.Field[string] `query:"afterId"`
-	// The version-group tag of a payroll benefit deduction. Stable across edits.
-	BeforeID      param.Field[string]                               `query:"beforeId"`
-	Categories    param.Field[[]BenefitDeductionListParamsCategory] `query:"categories"`
-	HealthPlanIDs param.Field[[]string]                             `query:"healthPlanIds"`
-	// a number less than or equal to 100
-	Limit             param.Field[string]   `query:"limit"`
-	RetirementPlanIDs param.Field[[]string] `query:"retirementPlanIds"`
-	// Statuses to include. Defaults to ["active"]. An elapsed effectiveEndDate is
-	// reported and filtered as "terminated".
-	Statuses  param.Field[[]BenefitDeductionListParamsStatus] `query:"statuses"`
-	Types     param.Field[[]BenefitDeductionListParamsType]   `query:"types"`
-	WorkerIDs param.Field[[]string]                           `query:"workerIds"`
+	Limit             param.Field[string]                               `query:"limit" api:"required"`
+	Statuses          param.Field[[]BenefitDeductionListParamsStatus]   `query:"statuses" api:"required"`
+	AfterID           param.Field[string]                               `query:"afterId"`
+	BeforeID          param.Field[string]                               `query:"beforeId"`
+	Categories        param.Field[[]BenefitDeductionListParamsCategory] `query:"categories"`
+	HealthPlanIDs     param.Field[[]string]                             `query:"healthPlanIds"`
+	RetirementPlanIDs param.Field[[]string]                             `query:"retirementPlanIds"`
+	Types             param.Field[[]BenefitDeductionListParamsType]     `query:"types"`
+	WorkerIDs         param.Field[[]string]                             `query:"workerIds"`
 }
 
 // URLQuery serializes [BenefitDeductionListParams]'s query parameters as `url.Values`.
@@ -506,11 +494,10 @@ func (r BenefitDeductionListParamsStatus) IsKnown() bool {
 }
 
 type BenefitDeductionListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                            `json:"count" api:"required"`
-	Data  []PublicBenefitDeduction         `json:"data" api:"required"`
-	JSON  benefitDeductionListResponseJSON `json:"-"`
+	HasMore bool                             `json:"hasMore" api:"required"`
+	Count   int64                            `json:"count" api:"required"`
+	Data    []PublicBenefitDeduction         `json:"data" api:"required"`
+	JSON    benefitDeductionListResponseJSON `json:"-"`
 }
 
 // benefitDeductionListResponseJSON contains the JSON metadata for the struct [BenefitDeductionListResponse]
@@ -531,7 +518,6 @@ func (r benefitDeductionListResponseJSON) RawJSON() string {
 }
 
 type BenefitDeductionGetResponseWorker struct {
-	// The worker id.
 	ID string `json:"id" api:"required"`
 	// The worker first name.
 	FirstName string `json:"firstName" api:"required"`
@@ -559,8 +545,7 @@ func (r benefitDeductionGetResponseWorkerJSON) RawJSON() string {
 
 type BenefitDeductionGetResponsePlan struct {
 	Type BenefitDeductionGetResponsePlanType `json:"type" api:"required"`
-	// The tag of a company health plan.
-	ID string `json:"id" api:"required"`
+	ID   interface{}                         `json:"id" api:"required"`
 	// The associated health plan name.
 	Name  string                              `json:"name" api:"required"`
 	JSON  benefitDeductionGetResponsePlanJSON `json:"-"`
@@ -667,7 +652,6 @@ func init() {
 }
 
 type PublicBenefitDeductionWorker struct {
-	// The worker id.
 	ID string `json:"id" api:"required"`
 	// The worker first name.
 	FirstName string `json:"firstName" api:"required"`
@@ -755,8 +739,7 @@ type BenefitDeductionGetResponsePlanUnion interface {
 
 type BenefitDeductionGetResponsePlanHealthPlanReference struct {
 	Type BenefitDeductionGetResponsePlanHealthPlanReferenceType `json:"type" api:"required"`
-	// The tag of a company health plan.
-	ID string `json:"id" api:"required"`
+	ID   string                                                 `json:"id" api:"required"`
 	// The associated health plan name.
 	Name string                                                 `json:"name" api:"required"`
 	JSON benefitDeductionGetResponsePlanHealthPlanReferenceJSON `json:"-"`
@@ -784,8 +767,7 @@ func (r BenefitDeductionGetResponsePlanHealthPlanReference) implementsBenefitDed
 
 type BenefitDeductionGetResponsePlanRetirementPlanReference struct {
 	Type BenefitDeductionGetResponsePlanRetirementPlanReferenceType `json:"type" api:"required"`
-	// The tag of a company retirement plan.
-	ID string `json:"id" api:"required"`
+	ID   string                                                     `json:"id" api:"required"`
 	// The associated retirement plan name.
 	Name string                                                     `json:"name" api:"required"`
 	JSON benefitDeductionGetResponsePlanRetirementPlanReferenceJSON `json:"-"`
@@ -1088,8 +1070,7 @@ func (r BenefitDeductionGetResponseCalculationPercentageBenefitCalculationType) 
 }
 
 type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationEmployeeContribution struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                                           `json:"amount" api:"required"`
+	Amount   string                                                                                          `json:"amount" api:"required"`
 	Currency BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationEmployeeContributionCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                                                      `json:"display" api:"required"`
@@ -1114,8 +1095,7 @@ func (r benefitDeductionGetResponseCalculationFixedAmountBenefitCalculationEmplo
 }
 
 type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationEmployerContribution struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                                           `json:"amount" api:"required"`
+	Amount   string                                                                                          `json:"amount" api:"required"`
 	Currency BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationEmployerContributionCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                                                      `json:"display" api:"required"`
@@ -1140,8 +1120,7 @@ func (r benefitDeductionGetResponseCalculationFixedAmountBenefitCalculationEmplo
 }
 
 type BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContribution struct {
-	// a number between 0 and 100
-	Percentage float64 `json:"percentage" api:"required"`
+	Percentage interface{} `json:"percentage" api:"required"`
 	// The server-formatted percentage, for example "3%".
 	Display string                                                                                     `json:"display" api:"required"`
 	JSON    benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContributionJSON `json:"-"`
@@ -1164,8 +1143,7 @@ func (r benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmploy
 }
 
 type BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContribution struct {
-	// a number between 0 and 100
-	Percentage float64 `json:"percentage" api:"required"`
+	Percentage interface{} `json:"percentage" api:"required"`
 	// The server-formatted percentage, for example "3%".
 	Display string                                                                                     `json:"display" api:"required"`
 	JSON    benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContributionJSON `json:"-"`
@@ -1231,8 +1209,7 @@ func (r PublicBenefitDeductionCalculationPercentageBenefitCalculationType) IsKno
 }
 
 type PublicBenefitDeductionCalculationFixedAmountBenefitCalculationEmployeeContribution struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                                      `json:"amount" api:"required"`
+	Amount   string                                                                                     `json:"amount" api:"required"`
 	Currency PublicBenefitDeductionCalculationFixedAmountBenefitCalculationEmployeeContributionCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                                                 `json:"display" api:"required"`
@@ -1257,8 +1234,7 @@ func (r publicBenefitDeductionCalculationFixedAmountBenefitCalculationEmployeeCo
 }
 
 type PublicBenefitDeductionCalculationFixedAmountBenefitCalculationEmployerContribution struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                                                      `json:"amount" api:"required"`
+	Amount   string                                                                                     `json:"amount" api:"required"`
 	Currency PublicBenefitDeductionCalculationFixedAmountBenefitCalculationEmployerContributionCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                                                 `json:"display" api:"required"`
@@ -1283,8 +1259,7 @@ func (r publicBenefitDeductionCalculationFixedAmountBenefitCalculationEmployerCo
 }
 
 type PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContribution struct {
-	// a number between 0 and 100
-	Percentage float64 `json:"percentage" api:"required"`
+	Percentage interface{} `json:"percentage" api:"required"`
 	// The server-formatted percentage, for example "3%".
 	Display string                                                                                `json:"display" api:"required"`
 	JSON    publicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContributionJSON `json:"-"`
@@ -1307,8 +1282,7 @@ func (r publicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeCon
 }
 
 type PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContribution struct {
-	// a number between 0 and 100
-	Percentage float64 `json:"percentage" api:"required"`
+	Percentage interface{} `json:"percentage" api:"required"`
 	// The server-formatted percentage, for example "3%".
 	Display string                                                                                `json:"display" api:"required"`
 	JSON    publicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContributionJSON `json:"-"`

@@ -47,7 +47,9 @@ func NewDepartmentService(opts ...option.RequestOption) (r *DepartmentService) {
 //
 // Example:
 //
-//	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
+//	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -75,7 +77,7 @@ func (r *DepartmentService) List(ctx context.Context, query DepartmentListParams
 // Example:
 //
 //	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-//		Name: sdk.F[string](""),
+//		Name: sdk.F[interface{}](map[string]interface{}{}),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -94,7 +96,7 @@ func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, o
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The unique public id of the department
+//	id: Path parameter.
 //	body: DepartmentUpdateParams request parameters.
 //	opts: Options to apply to this request.
 //
@@ -104,7 +106,7 @@ func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, o
 //
 // Example:
 //
-//	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
+//	department, err := client.Departments.Update(context.Background(), "id", sdk.DepartmentUpdateParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -122,12 +124,9 @@ func (r *DepartmentService) Update(ctx context.Context, id string, body Departme
 }
 
 type DepartmentListParams struct {
-	// The unique public id of the department
-	AfterID param.Field[string] `query:"afterId"`
-	// The unique public id of the department
+	Limit    param.Field[string] `query:"limit" api:"required"`
+	AfterID  param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
-	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
 }
 
 // URLQuery serializes [DepartmentListParams]'s query parameters as `url.Values`.
@@ -139,8 +138,7 @@ func (r DepartmentListParams) URLQuery() (v url.Values) {
 }
 
 type DepartmentNewParams struct {
-	// a non empty string
-	Name param.Field[string] `json:"name" api:"required"`
+	Name param.Field[interface{}] `json:"name" api:"required"`
 }
 
 func (r DepartmentNewParams) MarshalJSON() (data []byte, err error) {
@@ -156,11 +154,10 @@ func (r DepartmentUpdateParams) MarshalJSON() (data []byte, err error) {
 }
 
 type DepartmentListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                        `json:"count" api:"required"`
-	Data  []DepartmentListResponseData `json:"data" api:"required"`
-	JSON  departmentListResponseJSON   `json:"-"`
+	HasMore bool                         `json:"hasMore" api:"required"`
+	Count   int64                        `json:"count" api:"required"`
+	Data    []DepartmentListResponseData `json:"data" api:"required"`
+	JSON    departmentListResponseJSON   `json:"-"`
 }
 
 // departmentListResponseJSON contains the JSON metadata for the struct [DepartmentListResponse]
@@ -181,10 +178,8 @@ func (r departmentListResponseJSON) RawJSON() string {
 }
 
 type DepartmentNewResponse struct {
-	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// a string to be decoded into a Date
+	ID        string                    `json:"id" api:"required"`
+	Name      string                    `json:"name" api:"required"`
 	CreatedAt string                    `json:"createdAt" api:"required"`
 	JSON      departmentNewResponseJSON `json:"-"`
 }
@@ -207,10 +202,8 @@ func (r departmentNewResponseJSON) RawJSON() string {
 }
 
 type DepartmentUpdateResponse struct {
-	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// a string to be decoded into a Date
+	ID        string                       `json:"id" api:"required"`
+	Name      string                       `json:"name" api:"required"`
 	CreatedAt string                       `json:"createdAt" api:"required"`
 	JSON      departmentUpdateResponseJSON `json:"-"`
 }
@@ -233,10 +226,8 @@ func (r departmentUpdateResponseJSON) RawJSON() string {
 }
 
 type DepartmentListResponseData struct {
-	// The unique public id of the department
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// a string to be decoded into a Date
+	ID        string                         `json:"id" api:"required"`
+	Name      string                         `json:"name" api:"required"`
 	CreatedAt string                         `json:"createdAt" api:"required"`
 	JSON      departmentListResponseDataJSON `json:"-"`
 }

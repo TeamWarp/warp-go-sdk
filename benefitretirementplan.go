@@ -48,6 +48,7 @@ func NewBenefitRetirementPlanService(opts ...option.RequestOption) (r *BenefitRe
 // Example:
 //
 //	retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
+//		Limit:    sdk.F[string]("limit"),
 //		Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
 //	})
 //	if err != nil {
@@ -67,7 +68,7 @@ func (r *BenefitRetirementPlanService) List(ctx context.Context, query BenefitRe
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: The tag of a company retirement plan.
+//	id: Path parameter.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -76,7 +77,7 @@ func (r *BenefitRetirementPlanService) List(ctx context.Context, query BenefitRe
 //
 // Example:
 //
-//	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
+//	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -94,7 +95,6 @@ func (r *BenefitRetirementPlanService) Get(ctx context.Context, id string, opts 
 }
 
 type PublicRetirementPlan struct {
-	// The tag of a company retirement plan.
 	ID string `json:"id" api:"required"`
 	// The retirement plan type.
 	Type PublicRetirementPlanType `json:"type" api:"required"`
@@ -102,17 +102,14 @@ type PublicRetirementPlan struct {
 	Name string `json:"name" api:"required"`
 	// The system administering the plan. Manual plans are administered by the company
 	// outside a connected provider.
-	Provider PublicRetirementPlanProvider `json:"provider" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	Provider           PublicRetirementPlanProvider `json:"provider" api:"required"`
+	EffectiveStartDate string                       `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                       `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of a retirement plan.
-	Status PublicRetirementPlanStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string                   `json:"updatedAt" api:"required"`
-	JSON      publicRetirementPlanJSON `json:"-"`
+	Status    PublicRetirementPlanStatus `json:"status" api:"required"`
+	CreatedAt string                     `json:"createdAt" api:"required"`
+	UpdatedAt string                     `json:"updatedAt" api:"required"`
+	JSON      publicRetirementPlanJSON   `json:"-"`
 }
 
 // publicRetirementPlanJSON contains the JSON metadata for the struct [PublicRetirementPlan]
@@ -191,7 +188,6 @@ func (r PublicRetirementPlanStatus) IsKnown() bool {
 }
 
 type BenefitRetirementPlanGetResponse struct {
-	// The tag of a company retirement plan.
 	ID string `json:"id" api:"required"`
 	// The retirement plan type.
 	Type BenefitRetirementPlanGetResponseType `json:"type" api:"required"`
@@ -199,17 +195,14 @@ type BenefitRetirementPlanGetResponse struct {
 	Name string `json:"name" api:"required"`
 	// The system administering the plan. Manual plans are administered by the company
 	// outside a connected provider.
-	Provider BenefitRetirementPlanGetResponseProvider `json:"provider" api:"required"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	Provider           BenefitRetirementPlanGetResponseProvider `json:"provider" api:"required"`
+	EffectiveStartDate string                                   `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                                   `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of a retirement plan.
-	Status BenefitRetirementPlanGetResponseStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string                               `json:"updatedAt" api:"required"`
-	JSON      benefitRetirementPlanGetResponseJSON `json:"-"`
+	Status    BenefitRetirementPlanGetResponseStatus `json:"status" api:"required"`
+	CreatedAt string                                 `json:"createdAt" api:"required"`
+	UpdatedAt string                                 `json:"updatedAt" api:"required"`
+	JSON      benefitRetirementPlanGetResponseJSON   `json:"-"`
 }
 
 // benefitRetirementPlanGetResponseJSON contains the JSON metadata for the struct [BenefitRetirementPlanGetResponse]
@@ -288,15 +281,10 @@ func (r BenefitRetirementPlanGetResponseStatus) IsKnown() bool {
 }
 
 type BenefitRetirementPlanListParams struct {
-	// The tag of a company retirement plan.
-	AfterID param.Field[string] `query:"afterId"`
-	// The tag of a company retirement plan.
-	BeforeID param.Field[string] `query:"beforeId"`
-	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
-	// Statuses to include. Defaults to ["active"]. An elapsed effectiveEndDate is
-	// reported and filtered as "terminated".
-	Statuses param.Field[[]BenefitRetirementPlanListParamsStatus] `query:"statuses"`
+	Limit    param.Field[string]                                  `query:"limit" api:"required"`
+	Statuses param.Field[[]BenefitRetirementPlanListParamsStatus] `query:"statuses" api:"required"`
+	AfterID  param.Field[string]                                  `query:"afterId"`
+	BeforeID param.Field[string]                                  `query:"beforeId"`
 	Types    param.Field[[]BenefitRetirementPlanListParamsType]   `query:"types"`
 }
 
@@ -345,11 +333,10 @@ func (r BenefitRetirementPlanListParamsStatus) IsKnown() bool {
 }
 
 type BenefitRetirementPlanListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                                 `json:"count" api:"required"`
-	Data  []PublicRetirementPlan                `json:"data" api:"required"`
-	JSON  benefitRetirementPlanListResponseJSON `json:"-"`
+	HasMore bool                                  `json:"hasMore" api:"required"`
+	Count   int64                                 `json:"count" api:"required"`
+	Data    []PublicRetirementPlan                `json:"data" api:"required"`
+	JSON    benefitRetirementPlanListResponseJSON `json:"-"`
 }
 
 // benefitRetirementPlanListResponseJSON contains the JSON metadata for the struct [BenefitRetirementPlanListResponse]

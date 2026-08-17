@@ -47,7 +47,9 @@ func NewWorkplaceService(opts ...option.RequestOption) (r *WorkplaceService) {
 //
 // Example:
 //
-//	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
+//	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -76,11 +78,11 @@ func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, 
 //
 //	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 //		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
-//			Line1:      sdk.F[string]("x"),
+//			Line1:      sdk.F[interface{}](map[string]interface{}{}),
 //			City:       sdk.F[string](""),
 //			PostalCode: sdk.F[string](""),
 //		}),
-//		Name: sdk.F[string](""),
+//		Name: sdk.F[interface{}](map[string]interface{}{}),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -99,7 +101,7 @@ func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opt
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Public workplace identifier
+//	id: Path parameter.
 //	body: WorkplaceUpdateParams request parameters.
 //	opts: Options to apply to this request.
 //
@@ -109,7 +111,7 @@ func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opt
 //
 // Example:
 //
-//	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
+//	workplace, err := client.Workplaces.Update(context.Background(), "id", sdk.WorkplaceUpdateParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -127,12 +129,9 @@ func (r *WorkplaceService) Update(ctx context.Context, id string, body Workplace
 }
 
 type WorkplaceListParams struct {
-	// Public workplace identifier
-	AfterID param.Field[string] `query:"afterId"`
-	// Public workplace identifier
+	Limit    param.Field[string] `query:"limit" api:"required"`
+	AfterID  param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
-	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
 }
 
 // URLQuery serializes [WorkplaceListParams]'s query parameters as `url.Values`.
@@ -146,9 +145,8 @@ func (r WorkplaceListParams) URLQuery() (v url.Values) {
 type WorkplaceNewParams struct {
 	// A valid US address
 	Address param.Field[WorkplaceNewParamsAddress] `json:"address" api:"required"`
-	// a non empty string
-	Name param.Field[string]                 `json:"name" api:"required"`
-	Type param.Field[WorkplaceNewParamsType] `json:"type" api:"required"`
+	Name    param.Field[interface{}]               `json:"name" api:"required"`
+	Type    param.Field[WorkplaceNewParamsType]    `json:"type" api:"required"`
 }
 
 func (r WorkplaceNewParams) MarshalJSON() (data []byte, err error) {
@@ -171,13 +169,12 @@ func (r WorkplaceNewParamsType) IsKnown() bool {
 }
 
 type WorkplaceNewParamsAddress struct {
-	City    param.Field[string]                           `json:"city" api:"required"`
-	Country param.Field[WorkplaceNewParamsAddressCountry] `json:"country" api:"required"`
-	// a non empty string
-	Line1      param.Field[string]                         `json:"line1" api:"required"`
-	PostalCode param.Field[string]                         `json:"postalCode" api:"required"`
-	State      param.Field[WorkplaceNewParamsAddressState] `json:"state" api:"required"`
-	Line2      param.Field[string]                         `json:"line2"`
+	City       param.Field[string]                           `json:"city" api:"required"`
+	Country    param.Field[WorkplaceNewParamsAddressCountry] `json:"country" api:"required"`
+	Line1      param.Field[string]                           `json:"line1" api:"required"`
+	PostalCode param.Field[string]                           `json:"postalCode" api:"required"`
+	State      param.Field[WorkplaceNewParamsAddressState]   `json:"state" api:"required"`
+	Line2      param.Field[string]                           `json:"line2"`
 }
 
 func (r WorkplaceNewParamsAddress) MarshalJSON() (data []byte, err error) {
@@ -271,11 +268,10 @@ func (r WorkplaceUpdateParams) MarshalJSON() (data []byte, err error) {
 }
 
 type WorkplaceListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                       `json:"count" api:"required"`
-	Data  []WorkplaceListResponseData `json:"data" api:"required"`
-	JSON  workplaceListResponseJSON   `json:"-"`
+	HasMore bool                        `json:"hasMore" api:"required"`
+	Count   int64                       `json:"count" api:"required"`
+	Data    []WorkplaceListResponseData `json:"data" api:"required"`
+	JSON    workplaceListResponseJSON   `json:"-"`
 }
 
 // workplaceListResponseJSON contains the JSON metadata for the struct [WorkplaceListResponse]
@@ -296,16 +292,14 @@ func (r workplaceListResponseJSON) RawJSON() string {
 }
 
 type WorkplaceNewResponse struct {
-	// Public workplace identifier
 	ID     string                     `json:"id" api:"required"`
 	Name   string                     `json:"name" api:"required"`
 	Type   WorkplaceNewResponseType   `json:"type" api:"required"`
 	Status WorkplaceNewResponseStatus `json:"status" api:"required"`
 	// A valid US address
-	Address WorkplaceNewResponseAddress `json:"address" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string                   `json:"createdAt" api:"required"`
-	JSON      workplaceNewResponseJSON `json:"-"`
+	Address   WorkplaceNewResponseAddress `json:"address" api:"required"`
+	CreatedAt string                      `json:"createdAt" api:"required"`
+	JSON      workplaceNewResponseJSON    `json:"-"`
 }
 
 // workplaceNewResponseJSON contains the JSON metadata for the struct [WorkplaceNewResponse]
@@ -329,16 +323,14 @@ func (r workplaceNewResponseJSON) RawJSON() string {
 }
 
 type WorkplaceUpdateResponse struct {
-	// Public workplace identifier
 	ID     string                        `json:"id" api:"required"`
 	Name   string                        `json:"name" api:"required"`
 	Type   WorkplaceUpdateResponseType   `json:"type" api:"required"`
 	Status WorkplaceUpdateResponseStatus `json:"status" api:"required"`
 	// A valid US address
-	Address WorkplaceUpdateResponseAddress `json:"address" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string                      `json:"createdAt" api:"required"`
-	JSON      workplaceUpdateResponseJSON `json:"-"`
+	Address   WorkplaceUpdateResponseAddress `json:"address" api:"required"`
+	CreatedAt string                         `json:"createdAt" api:"required"`
+	JSON      workplaceUpdateResponseJSON    `json:"-"`
 }
 
 // workplaceUpdateResponseJSON contains the JSON metadata for the struct [WorkplaceUpdateResponse]
@@ -362,16 +354,14 @@ func (r workplaceUpdateResponseJSON) RawJSON() string {
 }
 
 type WorkplaceListResponseData struct {
-	// Public workplace identifier
 	ID     string                          `json:"id" api:"required"`
 	Name   string                          `json:"name" api:"required"`
 	Type   WorkplaceListResponseDataType   `json:"type" api:"required"`
 	Status WorkplaceListResponseDataStatus `json:"status" api:"required"`
 	// A valid US address
-	Address WorkplaceListResponseDataAddress `json:"address" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string                        `json:"createdAt" api:"required"`
-	JSON      workplaceListResponseDataJSON `json:"-"`
+	Address   WorkplaceListResponseDataAddress `json:"address" api:"required"`
+	CreatedAt string                           `json:"createdAt" api:"required"`
+	JSON      workplaceListResponseDataJSON    `json:"-"`
 }
 
 // workplaceListResponseDataJSON contains the JSON metadata for the struct [WorkplaceListResponseData]
@@ -425,7 +415,6 @@ func (r WorkplaceNewResponseStatus) IsKnown() bool {
 }
 
 type WorkplaceNewResponseAddress struct {
-	// a non empty string
 	Line1      string                             `json:"line1" api:"required"`
 	City       string                             `json:"city" api:"required"`
 	PostalCode string                             `json:"postalCode" api:"required"`
@@ -486,7 +475,6 @@ func (r WorkplaceUpdateResponseStatus) IsKnown() bool {
 }
 
 type WorkplaceUpdateResponseAddress struct {
-	// a non empty string
 	Line1      string                                `json:"line1" api:"required"`
 	City       string                                `json:"city" api:"required"`
 	PostalCode string                                `json:"postalCode" api:"required"`
@@ -547,7 +535,6 @@ func (r WorkplaceListResponseDataStatus) IsKnown() bool {
 }
 
 type WorkplaceListResponseDataAddress struct {
-	// a non empty string
 	Line1      string                                  `json:"line1" api:"required"`
 	City       string                                  `json:"city" api:"required"`
 	PostalCode string                                  `json:"postalCode" api:"required"`
