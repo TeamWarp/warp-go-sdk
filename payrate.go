@@ -100,11 +100,11 @@ type PublicPayRate struct {
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PublicPayRateType `json:"type" api:"required"`
-	// The period or calculation basis for the pay rate.
+	// The period for the pay rate.
 	Basis    PublicPayRateBasis    `json:"basis" api:"required"`
 	Amount   string                `json:"amount" api:"required"`
 	Currency PublicPayRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start
 	// date.
@@ -159,16 +159,15 @@ func (r PublicPayRateType) IsKnown() bool {
 type PublicPayRateBasis string
 
 const (
-	PublicPayRateBasisSalary   PublicPayRateBasis = "salary"
-	PublicPayRateBasisMonthly  PublicPayRateBasis = "monthly"
-	PublicPayRateBasisWeekly   PublicPayRateBasis = "weekly"
-	PublicPayRateBasisHourly   PublicPayRateBasis = "hourly"
-	PublicPayRateBasisVariable PublicPayRateBasis = "variable"
+	PublicPayRateBasisYearly  PublicPayRateBasis = "yearly"
+	PublicPayRateBasisMonthly PublicPayRateBasis = "monthly"
+	PublicPayRateBasisWeekly  PublicPayRateBasis = "weekly"
+	PublicPayRateBasisHourly  PublicPayRateBasis = "hourly"
 )
 
 func (r PublicPayRateBasis) IsKnown() bool {
 	switch r {
-	case PublicPayRateBasisSalary, PublicPayRateBasisMonthly, PublicPayRateBasisWeekly, PublicPayRateBasisHourly, PublicPayRateBasisVariable:
+	case PublicPayRateBasisYearly, PublicPayRateBasisMonthly, PublicPayRateBasisWeekly, PublicPayRateBasisHourly:
 		return true
 	}
 	return false
@@ -255,11 +254,11 @@ type PayRateGetResponse struct {
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PayRateGetResponseType `json:"type" api:"required"`
-	// The period or calculation basis for the pay rate.
+	// The period for the pay rate.
 	Basis    PayRateGetResponseBasis    `json:"basis" api:"required"`
 	Amount   string                     `json:"amount" api:"required"`
 	Currency PayRateGetResponseCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start
 	// date.
@@ -314,16 +313,15 @@ func (r PayRateGetResponseType) IsKnown() bool {
 type PayRateGetResponseBasis string
 
 const (
-	PayRateGetResponseBasisSalary   PayRateGetResponseBasis = "salary"
-	PayRateGetResponseBasisMonthly  PayRateGetResponseBasis = "monthly"
-	PayRateGetResponseBasisWeekly   PayRateGetResponseBasis = "weekly"
-	PayRateGetResponseBasisHourly   PayRateGetResponseBasis = "hourly"
-	PayRateGetResponseBasisVariable PayRateGetResponseBasis = "variable"
+	PayRateGetResponseBasisYearly  PayRateGetResponseBasis = "yearly"
+	PayRateGetResponseBasisMonthly PayRateGetResponseBasis = "monthly"
+	PayRateGetResponseBasisWeekly  PayRateGetResponseBasis = "weekly"
+	PayRateGetResponseBasisHourly  PayRateGetResponseBasis = "hourly"
 )
 
 func (r PayRateGetResponseBasis) IsKnown() bool {
 	switch r {
-	case PayRateGetResponseBasisSalary, PayRateGetResponseBasisMonthly, PayRateGetResponseBasisWeekly, PayRateGetResponseBasisHourly, PayRateGetResponseBasisVariable:
+	case PayRateGetResponseBasisYearly, PayRateGetResponseBasisMonthly, PayRateGetResponseBasisWeekly, PayRateGetResponseBasisHourly:
 		return true
 	}
 	return false

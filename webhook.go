@@ -798,10 +798,12 @@ func (r workerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerCreatedWebhookEventPayloadCompensation struct {
-	PayRateID string                                               `json:"payRateId" api:"required"`
-	Amount    string                                               `json:"amount" api:"required"`
-	Currency  WorkerCreatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerCreatedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                               `json:"amount" api:"required"`
+	Currency WorkerCreatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                           `json:"display" api:"required"`
 	JSON    workerCreatedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -809,6 +811,7 @@ type WorkerCreatedWebhookEventPayloadCompensation struct {
 // workerCreatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCompensation]
 type workerCreatedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -822,6 +825,23 @@ func (r *WorkerCreatedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte
 
 func (r workerCreatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerCreatedWebhookEventPayloadCompensationBasisYearly  WorkerCreatedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerCreatedWebhookEventPayloadCompensationBasisMonthly WorkerCreatedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerCreatedWebhookEventPayloadCompensationBasisWeekly  WorkerCreatedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerCreatedWebhookEventPayloadCompensationBasisHourly  WorkerCreatedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCompensationBasisYearly, WorkerCreatedWebhookEventPayloadCompensationBasisMonthly, WorkerCreatedWebhookEventPayloadCompensationBasisWeekly, WorkerCreatedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerCreatedWebhookEventPayloadCompensationCurrency string
@@ -1057,10 +1077,12 @@ func (r workerUpdatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerUpdatedWebhookEventPayloadCompensation struct {
-	PayRateID string                                               `json:"payRateId" api:"required"`
-	Amount    string                                               `json:"amount" api:"required"`
-	Currency  WorkerUpdatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerUpdatedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                               `json:"amount" api:"required"`
+	Currency WorkerUpdatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                           `json:"display" api:"required"`
 	JSON    workerUpdatedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -1068,6 +1090,7 @@ type WorkerUpdatedWebhookEventPayloadCompensation struct {
 // workerUpdatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCompensation]
 type workerUpdatedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1081,6 +1104,23 @@ func (r *WorkerUpdatedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte
 
 func (r workerUpdatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerUpdatedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCompensationBasisYearly  WorkerUpdatedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerUpdatedWebhookEventPayloadCompensationBasisMonthly WorkerUpdatedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerUpdatedWebhookEventPayloadCompensationBasisWeekly  WorkerUpdatedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerUpdatedWebhookEventPayloadCompensationBasisHourly  WorkerUpdatedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCompensationBasisYearly, WorkerUpdatedWebhookEventPayloadCompensationBasisMonthly, WorkerUpdatedWebhookEventPayloadCompensationBasisWeekly, WorkerUpdatedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerUpdatedWebhookEventPayloadCompensationCurrency string
@@ -1316,10 +1356,12 @@ func (r workerDeletedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerDeletedWebhookEventPayloadCompensation struct {
-	PayRateID string                                               `json:"payRateId" api:"required"`
-	Amount    string                                               `json:"amount" api:"required"`
-	Currency  WorkerDeletedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerDeletedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                               `json:"amount" api:"required"`
+	Currency WorkerDeletedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                           `json:"display" api:"required"`
 	JSON    workerDeletedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -1327,6 +1369,7 @@ type WorkerDeletedWebhookEventPayloadCompensation struct {
 // workerDeletedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCompensation]
 type workerDeletedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1340,6 +1383,23 @@ func (r *WorkerDeletedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte
 
 func (r workerDeletedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerDeletedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerDeletedWebhookEventPayloadCompensationBasisYearly  WorkerDeletedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerDeletedWebhookEventPayloadCompensationBasisMonthly WorkerDeletedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerDeletedWebhookEventPayloadCompensationBasisWeekly  WorkerDeletedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerDeletedWebhookEventPayloadCompensationBasisHourly  WorkerDeletedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCompensationBasisYearly, WorkerDeletedWebhookEventPayloadCompensationBasisMonthly, WorkerDeletedWebhookEventPayloadCompensationBasisWeekly, WorkerDeletedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerDeletedWebhookEventPayloadCompensationCurrency string
@@ -1575,10 +1635,12 @@ func (r workerInviteSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerInviteSentWebhookEventPayloadCompensation struct {
-	PayRateID string                                                  `json:"payRateId" api:"required"`
-	Amount    string                                                  `json:"amount" api:"required"`
-	Currency  WorkerInviteSentWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerInviteSentWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                                  `json:"amount" api:"required"`
+	Currency WorkerInviteSentWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                              `json:"display" api:"required"`
 	JSON    workerInviteSentWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -1586,6 +1648,7 @@ type WorkerInviteSentWebhookEventPayloadCompensation struct {
 // workerInviteSentWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCompensation]
 type workerInviteSentWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1599,6 +1662,23 @@ func (r *WorkerInviteSentWebhookEventPayloadCompensation) UnmarshalJSON(data []b
 
 func (r workerInviteSentWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerInviteSentWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCompensationBasisYearly  WorkerInviteSentWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerInviteSentWebhookEventPayloadCompensationBasisMonthly WorkerInviteSentWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerInviteSentWebhookEventPayloadCompensationBasisWeekly  WorkerInviteSentWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerInviteSentWebhookEventPayloadCompensationBasisHourly  WorkerInviteSentWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCompensationBasisYearly, WorkerInviteSentWebhookEventPayloadCompensationBasisMonthly, WorkerInviteSentWebhookEventPayloadCompensationBasisWeekly, WorkerInviteSentWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerInviteSentWebhookEventPayloadCompensationCurrency string
@@ -1834,10 +1914,12 @@ func (r workerInviteAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string 
 }
 
 type WorkerInviteAcceptedWebhookEventPayloadCompensation struct {
-	PayRateID string                                                      `json:"payRateId" api:"required"`
-	Amount    string                                                      `json:"amount" api:"required"`
-	Currency  WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerInviteAcceptedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                                      `json:"amount" api:"required"`
+	Currency WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                                  `json:"display" api:"required"`
 	JSON    workerInviteAcceptedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -1845,6 +1927,7 @@ type WorkerInviteAcceptedWebhookEventPayloadCompensation struct {
 // workerInviteAcceptedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCompensation]
 type workerInviteAcceptedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1858,6 +1941,23 @@ func (r *WorkerInviteAcceptedWebhookEventPayloadCompensation) UnmarshalJSON(data
 
 func (r workerInviteAcceptedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCompensationBasisYearly  WorkerInviteAcceptedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationBasisMonthly WorkerInviteAcceptedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationBasisWeekly  WorkerInviteAcceptedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationBasisHourly  WorkerInviteAcceptedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCompensationBasisYearly, WorkerInviteAcceptedWebhookEventPayloadCompensationBasisMonthly, WorkerInviteAcceptedWebhookEventPayloadCompensationBasisWeekly, WorkerInviteAcceptedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency string
@@ -2093,10 +2193,12 @@ func (r workerOnboardingCompletedWebhookEventPayloadDepartmentJSON) RawJSON() st
 }
 
 type WorkerOnboardingCompletedWebhookEventPayloadCompensation struct {
-	PayRateID string                                                           `json:"payRateId" api:"required"`
-	Amount    string                                                           `json:"amount" api:"required"`
-	Currency  WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                                           `json:"amount" api:"required"`
+	Currency WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                                       `json:"display" api:"required"`
 	JSON    workerOnboardingCompletedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -2104,6 +2206,7 @@ type WorkerOnboardingCompletedWebhookEventPayloadCompensation struct {
 // workerOnboardingCompletedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCompensation]
 type workerOnboardingCompletedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -2117,6 +2220,23 @@ func (r *WorkerOnboardingCompletedWebhookEventPayloadCompensation) UnmarshalJSON
 
 func (r workerOnboardingCompletedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisYearly  WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisMonthly WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisWeekly  WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisHourly  WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisYearly, WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisMonthly, WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisWeekly, WorkerOnboardingCompletedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency string
@@ -2352,10 +2472,12 @@ func (r workerOffboardingStartedWebhookEventPayloadDepartmentJSON) RawJSON() str
 }
 
 type WorkerOffboardingStartedWebhookEventPayloadCompensation struct {
-	PayRateID string                                                          `json:"payRateId" api:"required"`
-	Amount    string                                                          `json:"amount" api:"required"`
-	Currency  WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerOffboardingStartedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                                          `json:"amount" api:"required"`
+	Currency WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                                      `json:"display" api:"required"`
 	JSON    workerOffboardingStartedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -2363,6 +2485,7 @@ type WorkerOffboardingStartedWebhookEventPayloadCompensation struct {
 // workerOffboardingStartedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCompensation]
 type workerOffboardingStartedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -2376,6 +2499,23 @@ func (r *WorkerOffboardingStartedWebhookEventPayloadCompensation) UnmarshalJSON(
 
 func (r workerOffboardingStartedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCompensationBasisYearly  WorkerOffboardingStartedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationBasisMonthly WorkerOffboardingStartedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationBasisWeekly  WorkerOffboardingStartedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationBasisHourly  WorkerOffboardingStartedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCompensationBasisYearly, WorkerOffboardingStartedWebhookEventPayloadCompensationBasisMonthly, WorkerOffboardingStartedWebhookEventPayloadCompensationBasisWeekly, WorkerOffboardingStartedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency string
@@ -2611,10 +2751,12 @@ func (r workerOffboardedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerOffboardedWebhookEventPayloadCompensation struct {
-	PayRateID string                                                  `json:"payRateId" api:"required"`
-	Amount    string                                                  `json:"amount" api:"required"`
-	Currency  WorkerOffboardedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerOffboardedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                                  `json:"amount" api:"required"`
+	Currency WorkerOffboardedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                              `json:"display" api:"required"`
 	JSON    workerOffboardedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -2622,6 +2764,7 @@ type WorkerOffboardedWebhookEventPayloadCompensation struct {
 // workerOffboardedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCompensation]
 type workerOffboardedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -2635,6 +2778,23 @@ func (r *WorkerOffboardedWebhookEventPayloadCompensation) UnmarshalJSON(data []b
 
 func (r workerOffboardedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOffboardedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCompensationBasisYearly  WorkerOffboardedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerOffboardedWebhookEventPayloadCompensationBasisMonthly WorkerOffboardedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerOffboardedWebhookEventPayloadCompensationBasisWeekly  WorkerOffboardedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerOffboardedWebhookEventPayloadCompensationBasisHourly  WorkerOffboardedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCompensationBasisYearly, WorkerOffboardedWebhookEventPayloadCompensationBasisMonthly, WorkerOffboardedWebhookEventPayloadCompensationBasisWeekly, WorkerOffboardedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerOffboardedWebhookEventPayloadCompensationCurrency string
@@ -2870,10 +3030,12 @@ func (r workerReactivatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerReactivatedWebhookEventPayloadCompensation struct {
-	PayRateID string                                                   `json:"payRateId" api:"required"`
-	Amount    string                                                   `json:"amount" api:"required"`
-	Currency  WorkerReactivatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerReactivatedWebhookEventPayloadCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                                   `json:"amount" api:"required"`
+	Currency WorkerReactivatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                               `json:"display" api:"required"`
 	JSON    workerReactivatedWebhookEventPayloadCompensationJSON `json:"-"`
 }
@@ -2881,6 +3043,7 @@ type WorkerReactivatedWebhookEventPayloadCompensation struct {
 // workerReactivatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCompensation]
 type workerReactivatedWebhookEventPayloadCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -2894,6 +3057,23 @@ func (r *WorkerReactivatedWebhookEventPayloadCompensation) UnmarshalJSON(data []
 
 func (r workerReactivatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerReactivatedWebhookEventPayloadCompensationBasis string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCompensationBasisYearly  WorkerReactivatedWebhookEventPayloadCompensationBasis = "yearly"
+	WorkerReactivatedWebhookEventPayloadCompensationBasisMonthly WorkerReactivatedWebhookEventPayloadCompensationBasis = "monthly"
+	WorkerReactivatedWebhookEventPayloadCompensationBasisWeekly  WorkerReactivatedWebhookEventPayloadCompensationBasis = "weekly"
+	WorkerReactivatedWebhookEventPayloadCompensationBasisHourly  WorkerReactivatedWebhookEventPayloadCompensationBasis = "hourly"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCompensationBasisYearly, WorkerReactivatedWebhookEventPayloadCompensationBasisMonthly, WorkerReactivatedWebhookEventPayloadCompensationBasisWeekly, WorkerReactivatedWebhookEventPayloadCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerReactivatedWebhookEventPayloadCompensationCurrency string
