@@ -94,8 +94,9 @@ func (r *PayRateService) Get(ctx context.Context, id string, opts ...option.Requ
 }
 
 type PublicPayRate struct {
-	ID       string `json:"id" api:"required"`
-	WorkerID string `json:"workerId" api:"required"`
+	ID string `json:"id" api:"required"`
+	// Basic identifying information for a worker associated with another resource.
+	Worker PublicPayRateWorker `json:"worker" api:"required"`
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PublicPayRateType `json:"type" api:"required"`
@@ -119,7 +120,7 @@ type PublicPayRate struct {
 // publicPayRateJSON contains the JSON metadata for the struct [PublicPayRate]
 type publicPayRateJSON struct {
 	ID                 apijson.Field
-	WorkerID           apijson.Field
+	Worker             apijson.Field
 	Type               apijson.Field
 	Basis              apijson.Field
 	Amount             apijson.Field
@@ -248,8 +249,9 @@ func (r PublicPayRateCurrency) IsKnown() bool {
 }
 
 type PayRateGetResponse struct {
-	ID       string `json:"id" api:"required"`
-	WorkerID string `json:"workerId" api:"required"`
+	ID string `json:"id" api:"required"`
+	// Basic identifying information for a worker associated with another resource.
+	Worker PayRateGetResponseWorker `json:"worker" api:"required"`
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PayRateGetResponseType `json:"type" api:"required"`
@@ -273,7 +275,7 @@ type PayRateGetResponse struct {
 // payRateGetResponseJSON contains the JSON metadata for the struct [PayRateGetResponse]
 type payRateGetResponseJSON struct {
 	ID                 apijson.Field
-	WorkerID           apijson.Field
+	Worker             apijson.Field
 	Type               apijson.Field
 	Basis              apijson.Field
 	Amount             apijson.Field
@@ -459,5 +461,57 @@ func (r *PayRateListResponse) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r payRateListResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type PayRateGetResponseWorker struct {
+	ID string `json:"id" api:"required"`
+	// The worker first name.
+	FirstName string `json:"firstName" api:"required"`
+	// The worker last name.
+	LastName string                       `json:"lastName" api:"required"`
+	JSON     payRateGetResponseWorkerJSON `json:"-"`
+}
+
+// payRateGetResponseWorkerJSON contains the JSON metadata for the struct [PayRateGetResponseWorker]
+type payRateGetResponseWorkerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PayRateGetResponseWorker) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r payRateGetResponseWorkerJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayRateWorker struct {
+	ID string `json:"id" api:"required"`
+	// The worker first name.
+	FirstName string `json:"firstName" api:"required"`
+	// The worker last name.
+	LastName string                  `json:"lastName" api:"required"`
+	JSON     publicPayRateWorkerJSON `json:"-"`
+}
+
+// publicPayRateWorkerJSON contains the JSON metadata for the struct [PublicPayRateWorker]
+type publicPayRateWorkerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayRateWorker) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayRateWorkerJSON) RawJSON() string {
 	return r.raw
 }
