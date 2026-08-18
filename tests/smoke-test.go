@@ -473,6 +473,26 @@ func _smokeCase39() {
 	fmt.Println(workplace)
 }
 
+func _smokeCase40() {
+	payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
+		Limit: sdk.F[string]("limit"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payRate)
+}
+
+func _smokeCase41() {
+	payRate, err := client.PayRates.Get(context.Background(), "id")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payRate)
+}
+
 var cases = []smokeCase{
 	{
 		Operation: "list",
@@ -752,6 +772,20 @@ var cases = []smokeCase{
 		Method:    "PATCH",
 		Path:      "/v1/workplaces/{id}",
 		Run:       _smokeCase39,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/pay_rates",
+		Run:       _smokeCase40,
+	},
+
+	{
+		Operation: "get",
+		Method:    "GET",
+		Path:      "/v1/pay_rates/{id}",
+		Run:       _smokeCase41,
 	},
 }
 
