@@ -2415,7 +2415,7 @@
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"id\", sdk.CustomFieldNewOptionParams{\n\t\tObjects2: sdk.Objects2Param{\n\t\t\tLabel: sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tValue: sdk.F[interface{}](map[string]interface{}{}),\n\t\t},\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(customField)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"id\", sdk.CustomFieldNewOptionParams{\n\t\tLabel: sdk.F[interface{}](map[string]interface{}{}),\n\t\tValue: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(customField)\n}"
           }
         ]
       }
@@ -6081,24 +6081,7 @@
           }
         },
         "description": "List pay rates visible to the API key. Results may be filtered by worker, effective start date, or regular/additional type. US and global worker rates require their corresponding compensation read scopes.",
-        "summary": "List Pay Rates",
-        "x-codeSamples": [
-          {
-            "lang": "TypeScript",
-            "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.payRates.list({\n  limit: 'limit',\n});\n\nconsole.log(list);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npay_rate = client.pay_rates.list(\n    limit=\"limit\",\n)\n\nprint(pay_rate)"
-          },
-          {
-            "lang": "Go",
-            "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpayRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(payRate)\n}"
-          }
-        ]
+        "summary": "List Pay Rates"
       }
     },
     "/v1/pay_rates/{id}": {
@@ -6208,24 +6191,7 @@
           }
         },
         "description": "Get a specific pay rate by id. The API key must have the compensation read scope corresponding to the worker.",
-        "summary": "Get Pay Rate",
-        "x-codeSamples": [
-          {
-            "lang": "TypeScript",
-            "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst retrieve = await client.payRates.retrieve('id');\n\nconsole.log(retrieve);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npay_rate = client.pay_rates.retrieve(\n    id=\"id\",\n)\n\nprint(pay_rate)"
-          },
-          {
-            "lang": "Go",
-            "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpayRate, err := client.PayRates.Get(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(payRate)\n}"
-          }
-        ]
+        "summary": "Get Pay Rate"
       }
     },
     "/v1/time_off/policies": {
@@ -6404,17 +6370,17 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.timeOff.policies.list({\n  limit: 'limit',\n});\n\nconsole.log(list);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst timeOffGet = await client.timeOff.policies.timeOffGet({\n  limit: 'limit',\n});\n\nconsole.log(timeOffGet);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.list(\n    limit=\"limit\",\n)\n\nprint(policy)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.time_off_get(\n    limit=\"limit\",\n)\n\nprint(policy)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
           }
         ]
       }
@@ -6530,17 +6496,17 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.timeOff.policies.get('id');\n\nconsole.log(get_);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst timeOffGet2 = await client.timeOff.policies.timeOffGet2('id');\n\nconsole.log(timeOffGet2);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.get(\n    id=\"id\",\n)\n\nprint(policy)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.time_off_get2(\n    id=\"id\",\n)\n\nprint(policy)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.Get(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
           }
         ]
       }
@@ -9893,7 +9859,7 @@
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworkplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{\n\t\tAddress: sdk.F[sdk.Objects11Param](sdk.Objects11Param{\n\t\t\tLine1:      sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tCity:       sdk.F[string](\"\"),\n\t\t\tPostalCode: sdk.F[string](\"\"),\n\t\t}),\n\t\tName: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(workplace)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworkplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{\n\t\tAddress: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{\n\t\t\tLine1:      sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tCity:       sdk.F[string](\"\"),\n\t\t\tPostalCode: sdk.F[string](\"\"),\n\t\t}),\n\t\tName: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(workplace)\n}"
           }
         ]
       }

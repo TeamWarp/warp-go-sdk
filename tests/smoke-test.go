@@ -148,10 +148,8 @@ func _smokeCase10() {
 
 func _smokeCase11() {
 	customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
-		Objects2: sdk.Objects2Param{
-			Label: sdk.F[interface{}](map[string]interface{}{}),
-			Value: sdk.F[interface{}](map[string]interface{}{}),
-		},
+		Label: sdk.F[interface{}](map[string]interface{}{}),
+		Value: sdk.F[interface{}](map[string]interface{}{}),
 	})
 	if err != nil {
 		panic(err)
@@ -311,26 +309,6 @@ func _smokeCase25() {
 }
 
 func _smokeCase26() {
-	payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
-		Limit: sdk.F[string]("limit"),
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(payRate)
-}
-
-func _smokeCase27() {
-	payRate, err := client.PayRates.Get(context.Background(), "id")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(payRate)
-}
-
-func _smokeCase28() {
 	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -341,7 +319,7 @@ func _smokeCase28() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase29() {
+func _smokeCase27() {
 	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -352,7 +330,7 @@ func _smokeCase29() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase30() {
+func _smokeCase28() {
 	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -363,8 +341,8 @@ func _smokeCase30() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase31() {
-	policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
+func _smokeCase29() {
+	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{
 		Limit: sdk.F[string]("limit"),
 	})
 	if err != nil {
@@ -374,8 +352,8 @@ func _smokeCase31() {
 	fmt.Println(policy)
 }
 
-func _smokeCase32() {
-	policy, err := client.TimeOff.Policies.Get(context.Background(), "id")
+func _smokeCase30() {
+	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -383,7 +361,7 @@ func _smokeCase32() {
 	fmt.Println(policy)
 }
 
-func _smokeCase33() {
+func _smokeCase31() {
 	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -394,7 +372,7 @@ func _smokeCase33() {
 	fmt.Println(worker)
 }
 
-func _smokeCase34() {
+func _smokeCase32() {
 	worker, err := client.Workers.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
@@ -403,14 +381,14 @@ func _smokeCase34() {
 	fmt.Println(worker)
 }
 
-func _smokeCase35() {
+func _smokeCase33() {
 	err := client.Workers.Delete(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func _smokeCase36() {
+func _smokeCase34() {
 	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
 			Amount: sdk.F[interface{}](map[string]interface{}{}),
@@ -433,7 +411,7 @@ func _smokeCase36() {
 	fmt.Println(worker)
 }
 
-func _smokeCase37() {
+func _smokeCase35() {
 	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
 		DepartmentID: sdk.F[string](map[string]interface{}{}),
 		Email:        sdk.F[string](map[string]interface{}{}),
@@ -450,7 +428,7 @@ func _smokeCase37() {
 	fmt.Println(worker)
 }
 
-func _smokeCase38() {
+func _smokeCase36() {
 	worker, err := client.Workers.Invite(context.Background(), "id")
 	if err != nil {
 		panic(err)
@@ -459,7 +437,7 @@ func _smokeCase38() {
 	fmt.Println(worker)
 }
 
-func _smokeCase39() {
+func _smokeCase37() {
 	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -470,9 +448,9 @@ func _smokeCase39() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase40() {
+func _smokeCase38() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-		Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
+		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 			Line1:      sdk.F[interface{}](map[string]interface{}{}),
 			City:       sdk.F[string](""),
 			PostalCode: sdk.F[string](""),
@@ -486,7 +464,7 @@ func _smokeCase40() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase41() {
+func _smokeCase39() {
 	workplace, err := client.Workplaces.Update(context.Background(), "id", sdk.WorkplaceUpdateParams{})
 	if err != nil {
 		panic(err)
@@ -679,115 +657,101 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "list",
-		Method:    "GET",
-		Path:      "/v1/pay_rates",
-		Run:       _smokeCase26,
-	},
-
-	{
-		Operation: "retrieve",
-		Method:    "GET",
-		Path:      "/v1/pay_rates/{id}",
-		Run:       _smokeCase27,
-	},
-
-	{
 		Operation: "listAssignments",
 		Method:    "GET",
 		Path:      "/v1/time_off/assignments",
-		Run:       _smokeCase28,
+		Run:       _smokeCase26,
 	},
 
 	{
 		Operation: "listBalances",
 		Method:    "GET",
 		Path:      "/v1/time_off/balances",
-		Run:       _smokeCase29,
+		Run:       _smokeCase27,
 	},
 
 	{
 		Operation: "listRequests",
 		Method:    "GET",
 		Path:      "/v1/time_off/requests",
+		Run:       _smokeCase28,
+	},
+
+	{
+		Operation: "timeOffGet",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies",
+		Run:       _smokeCase29,
+	},
+
+	{
+		Operation: "timeOffGet2",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies/{id}",
 		Run:       _smokeCase30,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/time_off/policies",
-		Run:       _smokeCase31,
-	},
-
-	{
-		Operation: "get",
-		Method:    "GET",
-		Path:      "/v1/time_off/policies/{id}",
-		Run:       _smokeCase32,
-	},
-
-	{
-		Operation: "list",
-		Method:    "GET",
 		Path:      "/v1/workers",
-		Run:       _smokeCase33,
+		Run:       _smokeCase31,
 	},
 
 	{
 		Operation: "retrieve",
 		Method:    "GET",
 		Path:      "/v1/workers/{id}",
-		Run:       _smokeCase34,
+		Run:       _smokeCase32,
 	},
 
 	{
 		Operation: "delete",
 		Method:    "DELETE",
 		Path:      "/v1/workers/{id}",
-		Run:       _smokeCase35,
+		Run:       _smokeCase33,
 	},
 
 	{
 		Operation: "createEmployee",
 		Method:    "POST",
 		Path:      "/v1/workers/employee",
-		Run:       _smokeCase36,
+		Run:       _smokeCase34,
 	},
 
 	{
 		Operation: "createContractor",
 		Method:    "POST",
 		Path:      "/v1/workers/contractor",
-		Run:       _smokeCase37,
+		Run:       _smokeCase35,
 	},
 
 	{
 		Operation: "invite",
 		Method:    "POST",
 		Path:      "/v1/workers/{id}/invite",
-		Run:       _smokeCase38,
+		Run:       _smokeCase36,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/workplaces",
-		Run:       _smokeCase39,
+		Run:       _smokeCase37,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/workplaces",
-		Run:       _smokeCase40,
+		Run:       _smokeCase38,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/workplaces/{id}",
-		Run:       _smokeCase41,
+		Run:       _smokeCase39,
 	},
 }
 

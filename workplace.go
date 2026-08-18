@@ -77,7 +77,7 @@ func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, 
 // Example:
 //
 //	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-//		Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
+//		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 //			Line1:      sdk.F[interface{}](map[string]interface{}{}),
 //			City:       sdk.F[string](""),
 //			PostalCode: sdk.F[string](""),
@@ -128,127 +128,6 @@ func (r *WorkplaceService) Update(ctx context.Context, id string, body Workplace
 	return res, err
 }
 
-type Objects11 struct {
-	Line1      string           `json:"line1" api:"required"`
-	City       string           `json:"city" api:"required"`
-	PostalCode string           `json:"postalCode" api:"required"`
-	State      Objects11State   `json:"state" api:"required"`
-	Country    Objects11Country `json:"country" api:"required"`
-	Line2      string           `json:"line2" api:"nullable"`
-	JSON       objects11JSON    `json:"-"`
-}
-
-// objects11JSON contains the JSON metadata for the struct [Objects11]
-type objects11JSON struct {
-	Line1       apijson.Field
-	City        apijson.Field
-	PostalCode  apijson.Field
-	State       apijson.Field
-	Country     apijson.Field
-	Line2       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects11) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects11JSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects11Param struct {
-	City       param.Field[string]           `json:"city" api:"required"`
-	Country    param.Field[Objects11Country] `json:"country" api:"required"`
-	Line1      param.Field[string]           `json:"line1" api:"required"`
-	PostalCode param.Field[string]           `json:"postalCode" api:"required"`
-	State      param.Field[Objects11State]   `json:"state" api:"required"`
-	Line2      param.Field[string]           `json:"line2"`
-}
-
-func (r Objects11Param) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type Objects11State string
-
-const (
-	Objects11StateAl Objects11State = "AL"
-	Objects11StateAk Objects11State = "AK"
-	Objects11StateAz Objects11State = "AZ"
-	Objects11StateAr Objects11State = "AR"
-	Objects11StateCa Objects11State = "CA"
-	Objects11StateCo Objects11State = "CO"
-	Objects11StateCt Objects11State = "CT"
-	Objects11StateDc Objects11State = "DC"
-	Objects11StateDe Objects11State = "DE"
-	Objects11StateFl Objects11State = "FL"
-	Objects11StateGa Objects11State = "GA"
-	Objects11StateHi Objects11State = "HI"
-	Objects11StateID Objects11State = "ID"
-	Objects11StateIl Objects11State = "IL"
-	Objects11StateIn Objects11State = "IN"
-	Objects11StateIa Objects11State = "IA"
-	Objects11StateKs Objects11State = "KS"
-	Objects11StateKy Objects11State = "KY"
-	Objects11StateLa Objects11State = "LA"
-	Objects11StateMe Objects11State = "ME"
-	Objects11StateMd Objects11State = "MD"
-	Objects11StateMa Objects11State = "MA"
-	Objects11StateMi Objects11State = "MI"
-	Objects11StateMn Objects11State = "MN"
-	Objects11StateMs Objects11State = "MS"
-	Objects11StateMo Objects11State = "MO"
-	Objects11StateMt Objects11State = "MT"
-	Objects11StateNe Objects11State = "NE"
-	Objects11StateNv Objects11State = "NV"
-	Objects11StateNh Objects11State = "NH"
-	Objects11StateNj Objects11State = "NJ"
-	Objects11StateNm Objects11State = "NM"
-	Objects11StateNy Objects11State = "NY"
-	Objects11StateNc Objects11State = "NC"
-	Objects11StateNd Objects11State = "ND"
-	Objects11StateOh Objects11State = "OH"
-	Objects11StateOk Objects11State = "OK"
-	Objects11StateOr Objects11State = "OR"
-	Objects11StatePa Objects11State = "PA"
-	Objects11StateRi Objects11State = "RI"
-	Objects11StateSc Objects11State = "SC"
-	Objects11StateSd Objects11State = "SD"
-	Objects11StateTn Objects11State = "TN"
-	Objects11StateTx Objects11State = "TX"
-	Objects11StateUt Objects11State = "UT"
-	Objects11StateVt Objects11State = "VT"
-	Objects11StateVa Objects11State = "VA"
-	Objects11StateWa Objects11State = "WA"
-	Objects11StateWv Objects11State = "WV"
-	Objects11StateWi Objects11State = "WI"
-	Objects11StateWy Objects11State = "WY"
-)
-
-func (r Objects11State) IsKnown() bool {
-	switch r {
-	case Objects11StateAl, Objects11StateAk, Objects11StateAz, Objects11StateAr, Objects11StateCa, Objects11StateCo, Objects11StateCt, Objects11StateDc, Objects11StateDe, Objects11StateFl, Objects11StateGa, Objects11StateHi, Objects11StateID, Objects11StateIl, Objects11StateIn, Objects11StateIa, Objects11StateKs, Objects11StateKy, Objects11StateLa, Objects11StateMe, Objects11StateMd, Objects11StateMa, Objects11StateMi, Objects11StateMn, Objects11StateMs, Objects11StateMo, Objects11StateMt, Objects11StateNe, Objects11StateNv, Objects11StateNh, Objects11StateNj, Objects11StateNm, Objects11StateNy, Objects11StateNc, Objects11StateNd, Objects11StateOh, Objects11StateOk, Objects11StateOr, Objects11StatePa, Objects11StateRi, Objects11StateSc, Objects11StateSd, Objects11StateTn, Objects11StateTx, Objects11StateUt, Objects11StateVt, Objects11StateVa, Objects11StateWa, Objects11StateWv, Objects11StateWi, Objects11StateWy:
-		return true
-	}
-	return false
-}
-
-type Objects11Country string
-
-const (
-	Objects11CountryUs Objects11Country = "US"
-)
-
-func (r Objects11Country) IsKnown() bool {
-	switch r {
-	case Objects11CountryUs:
-		return true
-	}
-	return false
-}
-
 type WorkplaceListParams struct {
 	Limit    param.Field[string] `query:"limit" api:"required"`
 	AfterID  param.Field[string] `query:"afterId"`
@@ -265,9 +144,9 @@ func (r WorkplaceListParams) URLQuery() (v url.Values) {
 
 type WorkplaceNewParams struct {
 	// A valid US address
-	Address param.Field[Objects11Param]         `json:"address" api:"required"`
-	Name    param.Field[interface{}]            `json:"name" api:"required"`
-	Type    param.Field[WorkplaceNewParamsType] `json:"type" api:"required"`
+	Address param.Field[WorkplaceNewParamsAddress] `json:"address" api:"required"`
+	Name    param.Field[interface{}]               `json:"name" api:"required"`
+	Type    param.Field[WorkplaceNewParamsType]    `json:"type" api:"required"`
 }
 
 func (r WorkplaceNewParams) MarshalJSON() (data []byte, err error) {
@@ -284,6 +163,97 @@ const (
 func (r WorkplaceNewParamsType) IsKnown() bool {
 	switch r {
 	case WorkplaceNewParamsTypeRemote, WorkplaceNewParamsTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewParamsAddress struct {
+	City       param.Field[string]                           `json:"city" api:"required"`
+	Country    param.Field[WorkplaceNewParamsAddressCountry] `json:"country" api:"required"`
+	Line1      param.Field[string]                           `json:"line1" api:"required"`
+	PostalCode param.Field[string]                           `json:"postalCode" api:"required"`
+	State      param.Field[WorkplaceNewParamsAddressState]   `json:"state" api:"required"`
+	Line2      param.Field[string]                           `json:"line2"`
+}
+
+func (r WorkplaceNewParamsAddress) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type WorkplaceNewParamsAddressState string
+
+const (
+	WorkplaceNewParamsAddressStateAl WorkplaceNewParamsAddressState = "AL"
+	WorkplaceNewParamsAddressStateAk WorkplaceNewParamsAddressState = "AK"
+	WorkplaceNewParamsAddressStateAz WorkplaceNewParamsAddressState = "AZ"
+	WorkplaceNewParamsAddressStateAr WorkplaceNewParamsAddressState = "AR"
+	WorkplaceNewParamsAddressStateCa WorkplaceNewParamsAddressState = "CA"
+	WorkplaceNewParamsAddressStateCo WorkplaceNewParamsAddressState = "CO"
+	WorkplaceNewParamsAddressStateCt WorkplaceNewParamsAddressState = "CT"
+	WorkplaceNewParamsAddressStateDc WorkplaceNewParamsAddressState = "DC"
+	WorkplaceNewParamsAddressStateDe WorkplaceNewParamsAddressState = "DE"
+	WorkplaceNewParamsAddressStateFl WorkplaceNewParamsAddressState = "FL"
+	WorkplaceNewParamsAddressStateGa WorkplaceNewParamsAddressState = "GA"
+	WorkplaceNewParamsAddressStateHi WorkplaceNewParamsAddressState = "HI"
+	WorkplaceNewParamsAddressStateID WorkplaceNewParamsAddressState = "ID"
+	WorkplaceNewParamsAddressStateIl WorkplaceNewParamsAddressState = "IL"
+	WorkplaceNewParamsAddressStateIn WorkplaceNewParamsAddressState = "IN"
+	WorkplaceNewParamsAddressStateIa WorkplaceNewParamsAddressState = "IA"
+	WorkplaceNewParamsAddressStateKs WorkplaceNewParamsAddressState = "KS"
+	WorkplaceNewParamsAddressStateKy WorkplaceNewParamsAddressState = "KY"
+	WorkplaceNewParamsAddressStateLa WorkplaceNewParamsAddressState = "LA"
+	WorkplaceNewParamsAddressStateMe WorkplaceNewParamsAddressState = "ME"
+	WorkplaceNewParamsAddressStateMd WorkplaceNewParamsAddressState = "MD"
+	WorkplaceNewParamsAddressStateMa WorkplaceNewParamsAddressState = "MA"
+	WorkplaceNewParamsAddressStateMi WorkplaceNewParamsAddressState = "MI"
+	WorkplaceNewParamsAddressStateMn WorkplaceNewParamsAddressState = "MN"
+	WorkplaceNewParamsAddressStateMs WorkplaceNewParamsAddressState = "MS"
+	WorkplaceNewParamsAddressStateMo WorkplaceNewParamsAddressState = "MO"
+	WorkplaceNewParamsAddressStateMt WorkplaceNewParamsAddressState = "MT"
+	WorkplaceNewParamsAddressStateNe WorkplaceNewParamsAddressState = "NE"
+	WorkplaceNewParamsAddressStateNv WorkplaceNewParamsAddressState = "NV"
+	WorkplaceNewParamsAddressStateNh WorkplaceNewParamsAddressState = "NH"
+	WorkplaceNewParamsAddressStateNj WorkplaceNewParamsAddressState = "NJ"
+	WorkplaceNewParamsAddressStateNm WorkplaceNewParamsAddressState = "NM"
+	WorkplaceNewParamsAddressStateNy WorkplaceNewParamsAddressState = "NY"
+	WorkplaceNewParamsAddressStateNc WorkplaceNewParamsAddressState = "NC"
+	WorkplaceNewParamsAddressStateNd WorkplaceNewParamsAddressState = "ND"
+	WorkplaceNewParamsAddressStateOh WorkplaceNewParamsAddressState = "OH"
+	WorkplaceNewParamsAddressStateOk WorkplaceNewParamsAddressState = "OK"
+	WorkplaceNewParamsAddressStateOr WorkplaceNewParamsAddressState = "OR"
+	WorkplaceNewParamsAddressStatePa WorkplaceNewParamsAddressState = "PA"
+	WorkplaceNewParamsAddressStateRi WorkplaceNewParamsAddressState = "RI"
+	WorkplaceNewParamsAddressStateSc WorkplaceNewParamsAddressState = "SC"
+	WorkplaceNewParamsAddressStateSd WorkplaceNewParamsAddressState = "SD"
+	WorkplaceNewParamsAddressStateTn WorkplaceNewParamsAddressState = "TN"
+	WorkplaceNewParamsAddressStateTx WorkplaceNewParamsAddressState = "TX"
+	WorkplaceNewParamsAddressStateUt WorkplaceNewParamsAddressState = "UT"
+	WorkplaceNewParamsAddressStateVt WorkplaceNewParamsAddressState = "VT"
+	WorkplaceNewParamsAddressStateVa WorkplaceNewParamsAddressState = "VA"
+	WorkplaceNewParamsAddressStateWa WorkplaceNewParamsAddressState = "WA"
+	WorkplaceNewParamsAddressStateWv WorkplaceNewParamsAddressState = "WV"
+	WorkplaceNewParamsAddressStateWi WorkplaceNewParamsAddressState = "WI"
+	WorkplaceNewParamsAddressStateWy WorkplaceNewParamsAddressState = "WY"
+)
+
+func (r WorkplaceNewParamsAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceNewParamsAddressStateAl, WorkplaceNewParamsAddressStateAk, WorkplaceNewParamsAddressStateAz, WorkplaceNewParamsAddressStateAr, WorkplaceNewParamsAddressStateCa, WorkplaceNewParamsAddressStateCo, WorkplaceNewParamsAddressStateCt, WorkplaceNewParamsAddressStateDc, WorkplaceNewParamsAddressStateDe, WorkplaceNewParamsAddressStateFl, WorkplaceNewParamsAddressStateGa, WorkplaceNewParamsAddressStateHi, WorkplaceNewParamsAddressStateID, WorkplaceNewParamsAddressStateIl, WorkplaceNewParamsAddressStateIn, WorkplaceNewParamsAddressStateIa, WorkplaceNewParamsAddressStateKs, WorkplaceNewParamsAddressStateKy, WorkplaceNewParamsAddressStateLa, WorkplaceNewParamsAddressStateMe, WorkplaceNewParamsAddressStateMd, WorkplaceNewParamsAddressStateMa, WorkplaceNewParamsAddressStateMi, WorkplaceNewParamsAddressStateMn, WorkplaceNewParamsAddressStateMs, WorkplaceNewParamsAddressStateMo, WorkplaceNewParamsAddressStateMt, WorkplaceNewParamsAddressStateNe, WorkplaceNewParamsAddressStateNv, WorkplaceNewParamsAddressStateNh, WorkplaceNewParamsAddressStateNj, WorkplaceNewParamsAddressStateNm, WorkplaceNewParamsAddressStateNy, WorkplaceNewParamsAddressStateNc, WorkplaceNewParamsAddressStateNd, WorkplaceNewParamsAddressStateOh, WorkplaceNewParamsAddressStateOk, WorkplaceNewParamsAddressStateOr, WorkplaceNewParamsAddressStatePa, WorkplaceNewParamsAddressStateRi, WorkplaceNewParamsAddressStateSc, WorkplaceNewParamsAddressStateSd, WorkplaceNewParamsAddressStateTn, WorkplaceNewParamsAddressStateTx, WorkplaceNewParamsAddressStateUt, WorkplaceNewParamsAddressStateVt, WorkplaceNewParamsAddressStateVa, WorkplaceNewParamsAddressStateWa, WorkplaceNewParamsAddressStateWv, WorkplaceNewParamsAddressStateWi, WorkplaceNewParamsAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewParamsAddressCountry string
+
+const (
+	WorkplaceNewParamsAddressCountryUs WorkplaceNewParamsAddressCountry = "US"
+)
+
+func (r WorkplaceNewParamsAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceNewParamsAddressCountryUs:
 		return true
 	}
 	return false
@@ -327,9 +297,9 @@ type WorkplaceNewResponse struct {
 	Type   WorkplaceNewResponseType   `json:"type" api:"required"`
 	Status WorkplaceNewResponseStatus `json:"status" api:"required"`
 	// A valid US address
-	Address   Objects11                `json:"address" api:"required"`
-	CreatedAt string                   `json:"createdAt" api:"required"`
-	JSON      workplaceNewResponseJSON `json:"-"`
+	Address   WorkplaceNewResponseAddress `json:"address" api:"required"`
+	CreatedAt string                      `json:"createdAt" api:"required"`
+	JSON      workplaceNewResponseJSON    `json:"-"`
 }
 
 // workplaceNewResponseJSON contains the JSON metadata for the struct [WorkplaceNewResponse]
@@ -358,9 +328,9 @@ type WorkplaceUpdateResponse struct {
 	Type   WorkplaceUpdateResponseType   `json:"type" api:"required"`
 	Status WorkplaceUpdateResponseStatus `json:"status" api:"required"`
 	// A valid US address
-	Address   Objects11                   `json:"address" api:"required"`
-	CreatedAt string                      `json:"createdAt" api:"required"`
-	JSON      workplaceUpdateResponseJSON `json:"-"`
+	Address   WorkplaceUpdateResponseAddress `json:"address" api:"required"`
+	CreatedAt string                         `json:"createdAt" api:"required"`
+	JSON      workplaceUpdateResponseJSON    `json:"-"`
 }
 
 // workplaceUpdateResponseJSON contains the JSON metadata for the struct [WorkplaceUpdateResponse]
@@ -389,9 +359,9 @@ type WorkplaceListResponseData struct {
 	Type   WorkplaceListResponseDataType   `json:"type" api:"required"`
 	Status WorkplaceListResponseDataStatus `json:"status" api:"required"`
 	// A valid US address
-	Address   Objects11                     `json:"address" api:"required"`
-	CreatedAt string                        `json:"createdAt" api:"required"`
-	JSON      workplaceListResponseDataJSON `json:"-"`
+	Address   WorkplaceListResponseDataAddress `json:"address" api:"required"`
+	CreatedAt string                           `json:"createdAt" api:"required"`
+	JSON      workplaceListResponseDataJSON    `json:"-"`
 }
 
 // workplaceListResponseDataJSON contains the JSON metadata for the struct [WorkplaceListResponseData]
@@ -444,6 +414,36 @@ func (r WorkplaceNewResponseStatus) IsKnown() bool {
 	return false
 }
 
+type WorkplaceNewResponseAddress struct {
+	Line1      string                             `json:"line1" api:"required"`
+	City       string                             `json:"city" api:"required"`
+	PostalCode string                             `json:"postalCode" api:"required"`
+	State      WorkplaceNewResponseAddressState   `json:"state" api:"required"`
+	Country    WorkplaceNewResponseAddressCountry `json:"country" api:"required"`
+	Line2      string                             `json:"line2" api:"nullable"`
+	JSON       workplaceNewResponseAddressJSON    `json:"-"`
+}
+
+// workplaceNewResponseAddressJSON contains the JSON metadata for the struct [WorkplaceNewResponseAddress]
+type workplaceNewResponseAddressJSON struct {
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceNewResponseAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceNewResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
 type WorkplaceUpdateResponseType string
 
 const (
@@ -474,6 +474,36 @@ func (r WorkplaceUpdateResponseStatus) IsKnown() bool {
 	return false
 }
 
+type WorkplaceUpdateResponseAddress struct {
+	Line1      string                                `json:"line1" api:"required"`
+	City       string                                `json:"city" api:"required"`
+	PostalCode string                                `json:"postalCode" api:"required"`
+	State      WorkplaceUpdateResponseAddressState   `json:"state" api:"required"`
+	Country    WorkplaceUpdateResponseAddressCountry `json:"country" api:"required"`
+	Line2      string                                `json:"line2" api:"nullable"`
+	JSON       workplaceUpdateResponseAddressJSON    `json:"-"`
+}
+
+// workplaceUpdateResponseAddressJSON contains the JSON metadata for the struct [WorkplaceUpdateResponseAddress]
+type workplaceUpdateResponseAddressJSON struct {
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceUpdateResponseAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceUpdateResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
 type WorkplaceListResponseDataType string
 
 const (
@@ -499,6 +529,270 @@ const (
 func (r WorkplaceListResponseDataStatus) IsKnown() bool {
 	switch r {
 	case WorkplaceListResponseDataStatusActive, WorkplaceListResponseDataStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddress struct {
+	Line1      string                                  `json:"line1" api:"required"`
+	City       string                                  `json:"city" api:"required"`
+	PostalCode string                                  `json:"postalCode" api:"required"`
+	State      WorkplaceListResponseDataAddressState   `json:"state" api:"required"`
+	Country    WorkplaceListResponseDataAddressCountry `json:"country" api:"required"`
+	Line2      string                                  `json:"line2" api:"nullable"`
+	JSON       workplaceListResponseDataAddressJSON    `json:"-"`
+}
+
+// workplaceListResponseDataAddressJSON contains the JSON metadata for the struct [WorkplaceListResponseDataAddress]
+type workplaceListResponseDataAddressJSON struct {
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceListResponseDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceListResponseDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceNewResponseAddressState string
+
+const (
+	WorkplaceNewResponseAddressStateAl WorkplaceNewResponseAddressState = "AL"
+	WorkplaceNewResponseAddressStateAk WorkplaceNewResponseAddressState = "AK"
+	WorkplaceNewResponseAddressStateAz WorkplaceNewResponseAddressState = "AZ"
+	WorkplaceNewResponseAddressStateAr WorkplaceNewResponseAddressState = "AR"
+	WorkplaceNewResponseAddressStateCa WorkplaceNewResponseAddressState = "CA"
+	WorkplaceNewResponseAddressStateCo WorkplaceNewResponseAddressState = "CO"
+	WorkplaceNewResponseAddressStateCt WorkplaceNewResponseAddressState = "CT"
+	WorkplaceNewResponseAddressStateDc WorkplaceNewResponseAddressState = "DC"
+	WorkplaceNewResponseAddressStateDe WorkplaceNewResponseAddressState = "DE"
+	WorkplaceNewResponseAddressStateFl WorkplaceNewResponseAddressState = "FL"
+	WorkplaceNewResponseAddressStateGa WorkplaceNewResponseAddressState = "GA"
+	WorkplaceNewResponseAddressStateHi WorkplaceNewResponseAddressState = "HI"
+	WorkplaceNewResponseAddressStateID WorkplaceNewResponseAddressState = "ID"
+	WorkplaceNewResponseAddressStateIl WorkplaceNewResponseAddressState = "IL"
+	WorkplaceNewResponseAddressStateIn WorkplaceNewResponseAddressState = "IN"
+	WorkplaceNewResponseAddressStateIa WorkplaceNewResponseAddressState = "IA"
+	WorkplaceNewResponseAddressStateKs WorkplaceNewResponseAddressState = "KS"
+	WorkplaceNewResponseAddressStateKy WorkplaceNewResponseAddressState = "KY"
+	WorkplaceNewResponseAddressStateLa WorkplaceNewResponseAddressState = "LA"
+	WorkplaceNewResponseAddressStateMe WorkplaceNewResponseAddressState = "ME"
+	WorkplaceNewResponseAddressStateMd WorkplaceNewResponseAddressState = "MD"
+	WorkplaceNewResponseAddressStateMa WorkplaceNewResponseAddressState = "MA"
+	WorkplaceNewResponseAddressStateMi WorkplaceNewResponseAddressState = "MI"
+	WorkplaceNewResponseAddressStateMn WorkplaceNewResponseAddressState = "MN"
+	WorkplaceNewResponseAddressStateMs WorkplaceNewResponseAddressState = "MS"
+	WorkplaceNewResponseAddressStateMo WorkplaceNewResponseAddressState = "MO"
+	WorkplaceNewResponseAddressStateMt WorkplaceNewResponseAddressState = "MT"
+	WorkplaceNewResponseAddressStateNe WorkplaceNewResponseAddressState = "NE"
+	WorkplaceNewResponseAddressStateNv WorkplaceNewResponseAddressState = "NV"
+	WorkplaceNewResponseAddressStateNh WorkplaceNewResponseAddressState = "NH"
+	WorkplaceNewResponseAddressStateNj WorkplaceNewResponseAddressState = "NJ"
+	WorkplaceNewResponseAddressStateNm WorkplaceNewResponseAddressState = "NM"
+	WorkplaceNewResponseAddressStateNy WorkplaceNewResponseAddressState = "NY"
+	WorkplaceNewResponseAddressStateNc WorkplaceNewResponseAddressState = "NC"
+	WorkplaceNewResponseAddressStateNd WorkplaceNewResponseAddressState = "ND"
+	WorkplaceNewResponseAddressStateOh WorkplaceNewResponseAddressState = "OH"
+	WorkplaceNewResponseAddressStateOk WorkplaceNewResponseAddressState = "OK"
+	WorkplaceNewResponseAddressStateOr WorkplaceNewResponseAddressState = "OR"
+	WorkplaceNewResponseAddressStatePa WorkplaceNewResponseAddressState = "PA"
+	WorkplaceNewResponseAddressStateRi WorkplaceNewResponseAddressState = "RI"
+	WorkplaceNewResponseAddressStateSc WorkplaceNewResponseAddressState = "SC"
+	WorkplaceNewResponseAddressStateSd WorkplaceNewResponseAddressState = "SD"
+	WorkplaceNewResponseAddressStateTn WorkplaceNewResponseAddressState = "TN"
+	WorkplaceNewResponseAddressStateTx WorkplaceNewResponseAddressState = "TX"
+	WorkplaceNewResponseAddressStateUt WorkplaceNewResponseAddressState = "UT"
+	WorkplaceNewResponseAddressStateVt WorkplaceNewResponseAddressState = "VT"
+	WorkplaceNewResponseAddressStateVa WorkplaceNewResponseAddressState = "VA"
+	WorkplaceNewResponseAddressStateWa WorkplaceNewResponseAddressState = "WA"
+	WorkplaceNewResponseAddressStateWv WorkplaceNewResponseAddressState = "WV"
+	WorkplaceNewResponseAddressStateWi WorkplaceNewResponseAddressState = "WI"
+	WorkplaceNewResponseAddressStateWy WorkplaceNewResponseAddressState = "WY"
+)
+
+func (r WorkplaceNewResponseAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseAddressStateAl, WorkplaceNewResponseAddressStateAk, WorkplaceNewResponseAddressStateAz, WorkplaceNewResponseAddressStateAr, WorkplaceNewResponseAddressStateCa, WorkplaceNewResponseAddressStateCo, WorkplaceNewResponseAddressStateCt, WorkplaceNewResponseAddressStateDc, WorkplaceNewResponseAddressStateDe, WorkplaceNewResponseAddressStateFl, WorkplaceNewResponseAddressStateGa, WorkplaceNewResponseAddressStateHi, WorkplaceNewResponseAddressStateID, WorkplaceNewResponseAddressStateIl, WorkplaceNewResponseAddressStateIn, WorkplaceNewResponseAddressStateIa, WorkplaceNewResponseAddressStateKs, WorkplaceNewResponseAddressStateKy, WorkplaceNewResponseAddressStateLa, WorkplaceNewResponseAddressStateMe, WorkplaceNewResponseAddressStateMd, WorkplaceNewResponseAddressStateMa, WorkplaceNewResponseAddressStateMi, WorkplaceNewResponseAddressStateMn, WorkplaceNewResponseAddressStateMs, WorkplaceNewResponseAddressStateMo, WorkplaceNewResponseAddressStateMt, WorkplaceNewResponseAddressStateNe, WorkplaceNewResponseAddressStateNv, WorkplaceNewResponseAddressStateNh, WorkplaceNewResponseAddressStateNj, WorkplaceNewResponseAddressStateNm, WorkplaceNewResponseAddressStateNy, WorkplaceNewResponseAddressStateNc, WorkplaceNewResponseAddressStateNd, WorkplaceNewResponseAddressStateOh, WorkplaceNewResponseAddressStateOk, WorkplaceNewResponseAddressStateOr, WorkplaceNewResponseAddressStatePa, WorkplaceNewResponseAddressStateRi, WorkplaceNewResponseAddressStateSc, WorkplaceNewResponseAddressStateSd, WorkplaceNewResponseAddressStateTn, WorkplaceNewResponseAddressStateTx, WorkplaceNewResponseAddressStateUt, WorkplaceNewResponseAddressStateVt, WorkplaceNewResponseAddressStateVa, WorkplaceNewResponseAddressStateWa, WorkplaceNewResponseAddressStateWv, WorkplaceNewResponseAddressStateWi, WorkplaceNewResponseAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewResponseAddressCountry string
+
+const (
+	WorkplaceNewResponseAddressCountryUs WorkplaceNewResponseAddressCountry = "US"
+)
+
+func (r WorkplaceNewResponseAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddressState string
+
+const (
+	WorkplaceUpdateResponseAddressStateAl WorkplaceUpdateResponseAddressState = "AL"
+	WorkplaceUpdateResponseAddressStateAk WorkplaceUpdateResponseAddressState = "AK"
+	WorkplaceUpdateResponseAddressStateAz WorkplaceUpdateResponseAddressState = "AZ"
+	WorkplaceUpdateResponseAddressStateAr WorkplaceUpdateResponseAddressState = "AR"
+	WorkplaceUpdateResponseAddressStateCa WorkplaceUpdateResponseAddressState = "CA"
+	WorkplaceUpdateResponseAddressStateCo WorkplaceUpdateResponseAddressState = "CO"
+	WorkplaceUpdateResponseAddressStateCt WorkplaceUpdateResponseAddressState = "CT"
+	WorkplaceUpdateResponseAddressStateDc WorkplaceUpdateResponseAddressState = "DC"
+	WorkplaceUpdateResponseAddressStateDe WorkplaceUpdateResponseAddressState = "DE"
+	WorkplaceUpdateResponseAddressStateFl WorkplaceUpdateResponseAddressState = "FL"
+	WorkplaceUpdateResponseAddressStateGa WorkplaceUpdateResponseAddressState = "GA"
+	WorkplaceUpdateResponseAddressStateHi WorkplaceUpdateResponseAddressState = "HI"
+	WorkplaceUpdateResponseAddressStateID WorkplaceUpdateResponseAddressState = "ID"
+	WorkplaceUpdateResponseAddressStateIl WorkplaceUpdateResponseAddressState = "IL"
+	WorkplaceUpdateResponseAddressStateIn WorkplaceUpdateResponseAddressState = "IN"
+	WorkplaceUpdateResponseAddressStateIa WorkplaceUpdateResponseAddressState = "IA"
+	WorkplaceUpdateResponseAddressStateKs WorkplaceUpdateResponseAddressState = "KS"
+	WorkplaceUpdateResponseAddressStateKy WorkplaceUpdateResponseAddressState = "KY"
+	WorkplaceUpdateResponseAddressStateLa WorkplaceUpdateResponseAddressState = "LA"
+	WorkplaceUpdateResponseAddressStateMe WorkplaceUpdateResponseAddressState = "ME"
+	WorkplaceUpdateResponseAddressStateMd WorkplaceUpdateResponseAddressState = "MD"
+	WorkplaceUpdateResponseAddressStateMa WorkplaceUpdateResponseAddressState = "MA"
+	WorkplaceUpdateResponseAddressStateMi WorkplaceUpdateResponseAddressState = "MI"
+	WorkplaceUpdateResponseAddressStateMn WorkplaceUpdateResponseAddressState = "MN"
+	WorkplaceUpdateResponseAddressStateMs WorkplaceUpdateResponseAddressState = "MS"
+	WorkplaceUpdateResponseAddressStateMo WorkplaceUpdateResponseAddressState = "MO"
+	WorkplaceUpdateResponseAddressStateMt WorkplaceUpdateResponseAddressState = "MT"
+	WorkplaceUpdateResponseAddressStateNe WorkplaceUpdateResponseAddressState = "NE"
+	WorkplaceUpdateResponseAddressStateNv WorkplaceUpdateResponseAddressState = "NV"
+	WorkplaceUpdateResponseAddressStateNh WorkplaceUpdateResponseAddressState = "NH"
+	WorkplaceUpdateResponseAddressStateNj WorkplaceUpdateResponseAddressState = "NJ"
+	WorkplaceUpdateResponseAddressStateNm WorkplaceUpdateResponseAddressState = "NM"
+	WorkplaceUpdateResponseAddressStateNy WorkplaceUpdateResponseAddressState = "NY"
+	WorkplaceUpdateResponseAddressStateNc WorkplaceUpdateResponseAddressState = "NC"
+	WorkplaceUpdateResponseAddressStateNd WorkplaceUpdateResponseAddressState = "ND"
+	WorkplaceUpdateResponseAddressStateOh WorkplaceUpdateResponseAddressState = "OH"
+	WorkplaceUpdateResponseAddressStateOk WorkplaceUpdateResponseAddressState = "OK"
+	WorkplaceUpdateResponseAddressStateOr WorkplaceUpdateResponseAddressState = "OR"
+	WorkplaceUpdateResponseAddressStatePa WorkplaceUpdateResponseAddressState = "PA"
+	WorkplaceUpdateResponseAddressStateRi WorkplaceUpdateResponseAddressState = "RI"
+	WorkplaceUpdateResponseAddressStateSc WorkplaceUpdateResponseAddressState = "SC"
+	WorkplaceUpdateResponseAddressStateSd WorkplaceUpdateResponseAddressState = "SD"
+	WorkplaceUpdateResponseAddressStateTn WorkplaceUpdateResponseAddressState = "TN"
+	WorkplaceUpdateResponseAddressStateTx WorkplaceUpdateResponseAddressState = "TX"
+	WorkplaceUpdateResponseAddressStateUt WorkplaceUpdateResponseAddressState = "UT"
+	WorkplaceUpdateResponseAddressStateVt WorkplaceUpdateResponseAddressState = "VT"
+	WorkplaceUpdateResponseAddressStateVa WorkplaceUpdateResponseAddressState = "VA"
+	WorkplaceUpdateResponseAddressStateWa WorkplaceUpdateResponseAddressState = "WA"
+	WorkplaceUpdateResponseAddressStateWv WorkplaceUpdateResponseAddressState = "WV"
+	WorkplaceUpdateResponseAddressStateWi WorkplaceUpdateResponseAddressState = "WI"
+	WorkplaceUpdateResponseAddressStateWy WorkplaceUpdateResponseAddressState = "WY"
+)
+
+func (r WorkplaceUpdateResponseAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseAddressStateAl, WorkplaceUpdateResponseAddressStateAk, WorkplaceUpdateResponseAddressStateAz, WorkplaceUpdateResponseAddressStateAr, WorkplaceUpdateResponseAddressStateCa, WorkplaceUpdateResponseAddressStateCo, WorkplaceUpdateResponseAddressStateCt, WorkplaceUpdateResponseAddressStateDc, WorkplaceUpdateResponseAddressStateDe, WorkplaceUpdateResponseAddressStateFl, WorkplaceUpdateResponseAddressStateGa, WorkplaceUpdateResponseAddressStateHi, WorkplaceUpdateResponseAddressStateID, WorkplaceUpdateResponseAddressStateIl, WorkplaceUpdateResponseAddressStateIn, WorkplaceUpdateResponseAddressStateIa, WorkplaceUpdateResponseAddressStateKs, WorkplaceUpdateResponseAddressStateKy, WorkplaceUpdateResponseAddressStateLa, WorkplaceUpdateResponseAddressStateMe, WorkplaceUpdateResponseAddressStateMd, WorkplaceUpdateResponseAddressStateMa, WorkplaceUpdateResponseAddressStateMi, WorkplaceUpdateResponseAddressStateMn, WorkplaceUpdateResponseAddressStateMs, WorkplaceUpdateResponseAddressStateMo, WorkplaceUpdateResponseAddressStateMt, WorkplaceUpdateResponseAddressStateNe, WorkplaceUpdateResponseAddressStateNv, WorkplaceUpdateResponseAddressStateNh, WorkplaceUpdateResponseAddressStateNj, WorkplaceUpdateResponseAddressStateNm, WorkplaceUpdateResponseAddressStateNy, WorkplaceUpdateResponseAddressStateNc, WorkplaceUpdateResponseAddressStateNd, WorkplaceUpdateResponseAddressStateOh, WorkplaceUpdateResponseAddressStateOk, WorkplaceUpdateResponseAddressStateOr, WorkplaceUpdateResponseAddressStatePa, WorkplaceUpdateResponseAddressStateRi, WorkplaceUpdateResponseAddressStateSc, WorkplaceUpdateResponseAddressStateSd, WorkplaceUpdateResponseAddressStateTn, WorkplaceUpdateResponseAddressStateTx, WorkplaceUpdateResponseAddressStateUt, WorkplaceUpdateResponseAddressStateVt, WorkplaceUpdateResponseAddressStateVa, WorkplaceUpdateResponseAddressStateWa, WorkplaceUpdateResponseAddressStateWv, WorkplaceUpdateResponseAddressStateWi, WorkplaceUpdateResponseAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddressCountry string
+
+const (
+	WorkplaceUpdateResponseAddressCountryUs WorkplaceUpdateResponseAddressCountry = "US"
+)
+
+func (r WorkplaceUpdateResponseAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddressState string
+
+const (
+	WorkplaceListResponseDataAddressStateAl WorkplaceListResponseDataAddressState = "AL"
+	WorkplaceListResponseDataAddressStateAk WorkplaceListResponseDataAddressState = "AK"
+	WorkplaceListResponseDataAddressStateAz WorkplaceListResponseDataAddressState = "AZ"
+	WorkplaceListResponseDataAddressStateAr WorkplaceListResponseDataAddressState = "AR"
+	WorkplaceListResponseDataAddressStateCa WorkplaceListResponseDataAddressState = "CA"
+	WorkplaceListResponseDataAddressStateCo WorkplaceListResponseDataAddressState = "CO"
+	WorkplaceListResponseDataAddressStateCt WorkplaceListResponseDataAddressState = "CT"
+	WorkplaceListResponseDataAddressStateDc WorkplaceListResponseDataAddressState = "DC"
+	WorkplaceListResponseDataAddressStateDe WorkplaceListResponseDataAddressState = "DE"
+	WorkplaceListResponseDataAddressStateFl WorkplaceListResponseDataAddressState = "FL"
+	WorkplaceListResponseDataAddressStateGa WorkplaceListResponseDataAddressState = "GA"
+	WorkplaceListResponseDataAddressStateHi WorkplaceListResponseDataAddressState = "HI"
+	WorkplaceListResponseDataAddressStateID WorkplaceListResponseDataAddressState = "ID"
+	WorkplaceListResponseDataAddressStateIl WorkplaceListResponseDataAddressState = "IL"
+	WorkplaceListResponseDataAddressStateIn WorkplaceListResponseDataAddressState = "IN"
+	WorkplaceListResponseDataAddressStateIa WorkplaceListResponseDataAddressState = "IA"
+	WorkplaceListResponseDataAddressStateKs WorkplaceListResponseDataAddressState = "KS"
+	WorkplaceListResponseDataAddressStateKy WorkplaceListResponseDataAddressState = "KY"
+	WorkplaceListResponseDataAddressStateLa WorkplaceListResponseDataAddressState = "LA"
+	WorkplaceListResponseDataAddressStateMe WorkplaceListResponseDataAddressState = "ME"
+	WorkplaceListResponseDataAddressStateMd WorkplaceListResponseDataAddressState = "MD"
+	WorkplaceListResponseDataAddressStateMa WorkplaceListResponseDataAddressState = "MA"
+	WorkplaceListResponseDataAddressStateMi WorkplaceListResponseDataAddressState = "MI"
+	WorkplaceListResponseDataAddressStateMn WorkplaceListResponseDataAddressState = "MN"
+	WorkplaceListResponseDataAddressStateMs WorkplaceListResponseDataAddressState = "MS"
+	WorkplaceListResponseDataAddressStateMo WorkplaceListResponseDataAddressState = "MO"
+	WorkplaceListResponseDataAddressStateMt WorkplaceListResponseDataAddressState = "MT"
+	WorkplaceListResponseDataAddressStateNe WorkplaceListResponseDataAddressState = "NE"
+	WorkplaceListResponseDataAddressStateNv WorkplaceListResponseDataAddressState = "NV"
+	WorkplaceListResponseDataAddressStateNh WorkplaceListResponseDataAddressState = "NH"
+	WorkplaceListResponseDataAddressStateNj WorkplaceListResponseDataAddressState = "NJ"
+	WorkplaceListResponseDataAddressStateNm WorkplaceListResponseDataAddressState = "NM"
+	WorkplaceListResponseDataAddressStateNy WorkplaceListResponseDataAddressState = "NY"
+	WorkplaceListResponseDataAddressStateNc WorkplaceListResponseDataAddressState = "NC"
+	WorkplaceListResponseDataAddressStateNd WorkplaceListResponseDataAddressState = "ND"
+	WorkplaceListResponseDataAddressStateOh WorkplaceListResponseDataAddressState = "OH"
+	WorkplaceListResponseDataAddressStateOk WorkplaceListResponseDataAddressState = "OK"
+	WorkplaceListResponseDataAddressStateOr WorkplaceListResponseDataAddressState = "OR"
+	WorkplaceListResponseDataAddressStatePa WorkplaceListResponseDataAddressState = "PA"
+	WorkplaceListResponseDataAddressStateRi WorkplaceListResponseDataAddressState = "RI"
+	WorkplaceListResponseDataAddressStateSc WorkplaceListResponseDataAddressState = "SC"
+	WorkplaceListResponseDataAddressStateSd WorkplaceListResponseDataAddressState = "SD"
+	WorkplaceListResponseDataAddressStateTn WorkplaceListResponseDataAddressState = "TN"
+	WorkplaceListResponseDataAddressStateTx WorkplaceListResponseDataAddressState = "TX"
+	WorkplaceListResponseDataAddressStateUt WorkplaceListResponseDataAddressState = "UT"
+	WorkplaceListResponseDataAddressStateVt WorkplaceListResponseDataAddressState = "VT"
+	WorkplaceListResponseDataAddressStateVa WorkplaceListResponseDataAddressState = "VA"
+	WorkplaceListResponseDataAddressStateWa WorkplaceListResponseDataAddressState = "WA"
+	WorkplaceListResponseDataAddressStateWv WorkplaceListResponseDataAddressState = "WV"
+	WorkplaceListResponseDataAddressStateWi WorkplaceListResponseDataAddressState = "WI"
+	WorkplaceListResponseDataAddressStateWy WorkplaceListResponseDataAddressState = "WY"
+)
+
+func (r WorkplaceListResponseDataAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataAddressStateAl, WorkplaceListResponseDataAddressStateAk, WorkplaceListResponseDataAddressStateAz, WorkplaceListResponseDataAddressStateAr, WorkplaceListResponseDataAddressStateCa, WorkplaceListResponseDataAddressStateCo, WorkplaceListResponseDataAddressStateCt, WorkplaceListResponseDataAddressStateDc, WorkplaceListResponseDataAddressStateDe, WorkplaceListResponseDataAddressStateFl, WorkplaceListResponseDataAddressStateGa, WorkplaceListResponseDataAddressStateHi, WorkplaceListResponseDataAddressStateID, WorkplaceListResponseDataAddressStateIl, WorkplaceListResponseDataAddressStateIn, WorkplaceListResponseDataAddressStateIa, WorkplaceListResponseDataAddressStateKs, WorkplaceListResponseDataAddressStateKy, WorkplaceListResponseDataAddressStateLa, WorkplaceListResponseDataAddressStateMe, WorkplaceListResponseDataAddressStateMd, WorkplaceListResponseDataAddressStateMa, WorkplaceListResponseDataAddressStateMi, WorkplaceListResponseDataAddressStateMn, WorkplaceListResponseDataAddressStateMs, WorkplaceListResponseDataAddressStateMo, WorkplaceListResponseDataAddressStateMt, WorkplaceListResponseDataAddressStateNe, WorkplaceListResponseDataAddressStateNv, WorkplaceListResponseDataAddressStateNh, WorkplaceListResponseDataAddressStateNj, WorkplaceListResponseDataAddressStateNm, WorkplaceListResponseDataAddressStateNy, WorkplaceListResponseDataAddressStateNc, WorkplaceListResponseDataAddressStateNd, WorkplaceListResponseDataAddressStateOh, WorkplaceListResponseDataAddressStateOk, WorkplaceListResponseDataAddressStateOr, WorkplaceListResponseDataAddressStatePa, WorkplaceListResponseDataAddressStateRi, WorkplaceListResponseDataAddressStateSc, WorkplaceListResponseDataAddressStateSd, WorkplaceListResponseDataAddressStateTn, WorkplaceListResponseDataAddressStateTx, WorkplaceListResponseDataAddressStateUt, WorkplaceListResponseDataAddressStateVt, WorkplaceListResponseDataAddressStateVa, WorkplaceListResponseDataAddressStateWa, WorkplaceListResponseDataAddressStateWv, WorkplaceListResponseDataAddressStateWi, WorkplaceListResponseDataAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddressCountry string
+
+const (
+	WorkplaceListResponseDataAddressCountryUs WorkplaceListResponseDataAddressCountry = "US"
+)
+
+func (r WorkplaceListResponseDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataAddressCountryUs:
 		return true
 	}
 	return false
