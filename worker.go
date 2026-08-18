@@ -1251,10 +1251,12 @@ func (r workerGetResponseDepartmentJSON) RawJSON() string {
 }
 
 type WorkerGetResponseCompensation struct {
-	PayRateID string                                `json:"payRateId" api:"required"`
-	Amount    string                                `json:"amount" api:"required"`
-	Currency  WorkerGetResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerGetResponseCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                `json:"amount" api:"required"`
+	Currency WorkerGetResponseCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                            `json:"display" api:"required"`
 	JSON    workerGetResponseCompensationJSON `json:"-"`
 }
@@ -1262,6 +1264,7 @@ type WorkerGetResponseCompensation struct {
 // workerGetResponseCompensationJSON contains the JSON metadata for the struct [WorkerGetResponseCompensation]
 type workerGetResponseCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1455,10 +1458,12 @@ func (r workerInviteResponseJSON) RawJSON() string {
 }
 
 type Objects10Compensation struct {
-	PayRateID string                        `json:"payRateId" api:"required"`
-	Amount    string                        `json:"amount" api:"required"`
-	Currency  Objects10CompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    Objects10CompensationBasis    `json:"basis" api:"required"`
+	Amount   string                        `json:"amount" api:"required"`
+	Currency Objects10CompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                    `json:"display" api:"required"`
 	JSON    objects10CompensationJSON `json:"-"`
 }
@@ -1466,6 +1471,7 @@ type Objects10Compensation struct {
 // objects10CompensationJSON contains the JSON metadata for the struct [Objects10Compensation]
 type objects10CompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1479,6 +1485,23 @@ func (r *Objects10Compensation) UnmarshalJSON(data []byte) (err error) {
 
 func (r objects10CompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerGetResponseCompensationBasis string
+
+const (
+	WorkerGetResponseCompensationBasisYearly  WorkerGetResponseCompensationBasis = "yearly"
+	WorkerGetResponseCompensationBasisMonthly WorkerGetResponseCompensationBasis = "monthly"
+	WorkerGetResponseCompensationBasisWeekly  WorkerGetResponseCompensationBasis = "weekly"
+	WorkerGetResponseCompensationBasisHourly  WorkerGetResponseCompensationBasis = "hourly"
+)
+
+func (r WorkerGetResponseCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerGetResponseCompensationBasisYearly, WorkerGetResponseCompensationBasisMonthly, WorkerGetResponseCompensationBasisWeekly, WorkerGetResponseCompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type WorkerGetResponseCompensationCurrency string
@@ -1590,10 +1613,12 @@ func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
 }
 
 type WorkerNewEmployeeResponseCompensation struct {
-	PayRateID string                                        `json:"payRateId" api:"required"`
-	Amount    string                                        `json:"amount" api:"required"`
-	Currency  WorkerNewEmployeeResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerNewEmployeeResponseCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                        `json:"amount" api:"required"`
+	Currency WorkerNewEmployeeResponseCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                    `json:"display" api:"required"`
 	JSON    workerNewEmployeeResponseCompensationJSON `json:"-"`
 }
@@ -1601,6 +1626,7 @@ type WorkerNewEmployeeResponseCompensation struct {
 // workerNewEmployeeResponseCompensationJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCompensation]
 type workerNewEmployeeResponseCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1651,10 +1677,12 @@ func (r WorkerNewContractorResponseStatus) IsKnown() bool {
 }
 
 type WorkerNewContractorResponseCompensation struct {
-	PayRateID string                                          `json:"payRateId" api:"required"`
-	Amount    string                                          `json:"amount" api:"required"`
-	Currency  WorkerNewContractorResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerNewContractorResponseCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                          `json:"amount" api:"required"`
+	Currency WorkerNewContractorResponseCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                                      `json:"display" api:"required"`
 	JSON    workerNewContractorResponseCompensationJSON `json:"-"`
 }
@@ -1662,6 +1690,7 @@ type WorkerNewContractorResponseCompensation struct {
 // workerNewContractorResponseCompensationJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCompensation]
 type workerNewContractorResponseCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1712,10 +1741,12 @@ func (r WorkerInviteResponseStatus) IsKnown() bool {
 }
 
 type WorkerInviteResponseCompensation struct {
-	PayRateID string                                   `json:"payRateId" api:"required"`
-	Amount    string                                   `json:"amount" api:"required"`
-	Currency  WorkerInviteResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period for the pay rate.
+	Basis    WorkerInviteResponseCompensationBasis    `json:"basis" api:"required"`
+	Amount   string                                   `json:"amount" api:"required"`
+	Currency WorkerInviteResponseCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
 	Display string                               `json:"display" api:"required"`
 	JSON    workerInviteResponseCompensationJSON `json:"-"`
 }
@@ -1723,6 +1754,7 @@ type WorkerInviteResponseCompensation struct {
 // workerInviteResponseCompensationJSON contains the JSON metadata for the struct [WorkerInviteResponseCompensation]
 type workerInviteResponseCompensationJSON struct {
 	PayRateID   apijson.Field
+	Basis       apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -1736,6 +1768,23 @@ func (r *WorkerInviteResponseCompensation) UnmarshalJSON(data []byte) (err error
 
 func (r workerInviteResponseCompensationJSON) RawJSON() string {
 	return r.raw
+}
+
+type Objects10CompensationBasis string
+
+const (
+	Objects10CompensationBasisYearly  Objects10CompensationBasis = "yearly"
+	Objects10CompensationBasisMonthly Objects10CompensationBasis = "monthly"
+	Objects10CompensationBasisWeekly  Objects10CompensationBasis = "weekly"
+	Objects10CompensationBasisHourly  Objects10CompensationBasis = "hourly"
+)
+
+func (r Objects10CompensationBasis) IsKnown() bool {
+	switch r {
+	case Objects10CompensationBasisYearly, Objects10CompensationBasisMonthly, Objects10CompensationBasisWeekly, Objects10CompensationBasisHourly:
+		return true
+	}
+	return false
 }
 
 type Objects10CompensationCurrency string
@@ -1807,6 +1856,23 @@ const (
 func (r Objects10CompensationCurrency) IsKnown() bool {
 	switch r {
 	case Objects10CompensationCurrencyUsd, Objects10CompensationCurrencyAud, Objects10CompensationCurrencyBgn, Objects10CompensationCurrencyBrl, Objects10CompensationCurrencyCad, Objects10CompensationCurrencyChf, Objects10CompensationCurrencyCzk, Objects10CompensationCurrencyDkk, Objects10CompensationCurrencyEur, Objects10CompensationCurrencyGbp, Objects10CompensationCurrencyHkd, Objects10CompensationCurrencyHuf, Objects10CompensationCurrencyIdr, Objects10CompensationCurrencyInr, Objects10CompensationCurrencyJpy, Objects10CompensationCurrencyMyr, Objects10CompensationCurrencyNok, Objects10CompensationCurrencyNzd, Objects10CompensationCurrencyCny, Objects10CompensationCurrencyPln, Objects10CompensationCurrencyRon, Objects10CompensationCurrencyTry, Objects10CompensationCurrencySek, Objects10CompensationCurrencySgd, Objects10CompensationCurrencyAed, Objects10CompensationCurrencyArs, Objects10CompensationCurrencyBdt, Objects10CompensationCurrencyBwp, Objects10CompensationCurrencyClp, Objects10CompensationCurrencyCop, Objects10CompensationCurrencyCrc, Objects10CompensationCurrencyEgp, Objects10CompensationCurrencyFjd, Objects10CompensationCurrencyGel, Objects10CompensationCurrencyGhs, Objects10CompensationCurrencyIls, Objects10CompensationCurrencyKes, Objects10CompensationCurrencyKrw, Objects10CompensationCurrencyLkr, Objects10CompensationCurrencyMad, Objects10CompensationCurrencyMxn, Objects10CompensationCurrencyNpr, Objects10CompensationCurrencyPhp, Objects10CompensationCurrencyPkr, Objects10CompensationCurrencyThb, Objects10CompensationCurrencyUah, Objects10CompensationCurrencyUgx, Objects10CompensationCurrencyUyu, Objects10CompensationCurrencyVnd, Objects10CompensationCurrencyZar, Objects10CompensationCurrencyZmw, Objects10CompensationCurrencyTnd, Objects10CompensationCurrencyNgn, Objects10CompensationCurrencyRsd, Objects10CompensationCurrencyTwd, Objects10CompensationCurrencyGtq, Objects10CompensationCurrencyHnl, Objects10CompensationCurrencyDop, Objects10CompensationCurrencySar, Objects10CompensationCurrencyXaf, Objects10CompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
+type WorkerNewEmployeeResponseCompensationBasis string
+
+const (
+	WorkerNewEmployeeResponseCompensationBasisYearly  WorkerNewEmployeeResponseCompensationBasis = "yearly"
+	WorkerNewEmployeeResponseCompensationBasisMonthly WorkerNewEmployeeResponseCompensationBasis = "monthly"
+	WorkerNewEmployeeResponseCompensationBasisWeekly  WorkerNewEmployeeResponseCompensationBasis = "weekly"
+	WorkerNewEmployeeResponseCompensationBasisHourly  WorkerNewEmployeeResponseCompensationBasis = "hourly"
+)
+
+func (r WorkerNewEmployeeResponseCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerNewEmployeeResponseCompensationBasisYearly, WorkerNewEmployeeResponseCompensationBasisMonthly, WorkerNewEmployeeResponseCompensationBasisWeekly, WorkerNewEmployeeResponseCompensationBasisHourly:
 		return true
 	}
 	return false
@@ -1886,6 +1952,23 @@ func (r WorkerNewEmployeeResponseCompensationCurrency) IsKnown() bool {
 	return false
 }
 
+type WorkerNewContractorResponseCompensationBasis string
+
+const (
+	WorkerNewContractorResponseCompensationBasisYearly  WorkerNewContractorResponseCompensationBasis = "yearly"
+	WorkerNewContractorResponseCompensationBasisMonthly WorkerNewContractorResponseCompensationBasis = "monthly"
+	WorkerNewContractorResponseCompensationBasisWeekly  WorkerNewContractorResponseCompensationBasis = "weekly"
+	WorkerNewContractorResponseCompensationBasisHourly  WorkerNewContractorResponseCompensationBasis = "hourly"
+)
+
+func (r WorkerNewContractorResponseCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerNewContractorResponseCompensationBasisYearly, WorkerNewContractorResponseCompensationBasisMonthly, WorkerNewContractorResponseCompensationBasisWeekly, WorkerNewContractorResponseCompensationBasisHourly:
+		return true
+	}
+	return false
+}
+
 type WorkerNewContractorResponseCompensationCurrency string
 
 const (
@@ -1955,6 +2038,23 @@ const (
 func (r WorkerNewContractorResponseCompensationCurrency) IsKnown() bool {
 	switch r {
 	case WorkerNewContractorResponseCompensationCurrencyUsd, WorkerNewContractorResponseCompensationCurrencyAud, WorkerNewContractorResponseCompensationCurrencyBgn, WorkerNewContractorResponseCompensationCurrencyBrl, WorkerNewContractorResponseCompensationCurrencyCad, WorkerNewContractorResponseCompensationCurrencyChf, WorkerNewContractorResponseCompensationCurrencyCzk, WorkerNewContractorResponseCompensationCurrencyDkk, WorkerNewContractorResponseCompensationCurrencyEur, WorkerNewContractorResponseCompensationCurrencyGbp, WorkerNewContractorResponseCompensationCurrencyHkd, WorkerNewContractorResponseCompensationCurrencyHuf, WorkerNewContractorResponseCompensationCurrencyIdr, WorkerNewContractorResponseCompensationCurrencyInr, WorkerNewContractorResponseCompensationCurrencyJpy, WorkerNewContractorResponseCompensationCurrencyMyr, WorkerNewContractorResponseCompensationCurrencyNok, WorkerNewContractorResponseCompensationCurrencyNzd, WorkerNewContractorResponseCompensationCurrencyCny, WorkerNewContractorResponseCompensationCurrencyPln, WorkerNewContractorResponseCompensationCurrencyRon, WorkerNewContractorResponseCompensationCurrencyTry, WorkerNewContractorResponseCompensationCurrencySek, WorkerNewContractorResponseCompensationCurrencySgd, WorkerNewContractorResponseCompensationCurrencyAed, WorkerNewContractorResponseCompensationCurrencyArs, WorkerNewContractorResponseCompensationCurrencyBdt, WorkerNewContractorResponseCompensationCurrencyBwp, WorkerNewContractorResponseCompensationCurrencyClp, WorkerNewContractorResponseCompensationCurrencyCop, WorkerNewContractorResponseCompensationCurrencyCrc, WorkerNewContractorResponseCompensationCurrencyEgp, WorkerNewContractorResponseCompensationCurrencyFjd, WorkerNewContractorResponseCompensationCurrencyGel, WorkerNewContractorResponseCompensationCurrencyGhs, WorkerNewContractorResponseCompensationCurrencyIls, WorkerNewContractorResponseCompensationCurrencyKes, WorkerNewContractorResponseCompensationCurrencyKrw, WorkerNewContractorResponseCompensationCurrencyLkr, WorkerNewContractorResponseCompensationCurrencyMad, WorkerNewContractorResponseCompensationCurrencyMxn, WorkerNewContractorResponseCompensationCurrencyNpr, WorkerNewContractorResponseCompensationCurrencyPhp, WorkerNewContractorResponseCompensationCurrencyPkr, WorkerNewContractorResponseCompensationCurrencyThb, WorkerNewContractorResponseCompensationCurrencyUah, WorkerNewContractorResponseCompensationCurrencyUgx, WorkerNewContractorResponseCompensationCurrencyUyu, WorkerNewContractorResponseCompensationCurrencyVnd, WorkerNewContractorResponseCompensationCurrencyZar, WorkerNewContractorResponseCompensationCurrencyZmw, WorkerNewContractorResponseCompensationCurrencyTnd, WorkerNewContractorResponseCompensationCurrencyNgn, WorkerNewContractorResponseCompensationCurrencyRsd, WorkerNewContractorResponseCompensationCurrencyTwd, WorkerNewContractorResponseCompensationCurrencyGtq, WorkerNewContractorResponseCompensationCurrencyHnl, WorkerNewContractorResponseCompensationCurrencyDop, WorkerNewContractorResponseCompensationCurrencySar, WorkerNewContractorResponseCompensationCurrencyXaf, WorkerNewContractorResponseCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteResponseCompensationBasis string
+
+const (
+	WorkerInviteResponseCompensationBasisYearly  WorkerInviteResponseCompensationBasis = "yearly"
+	WorkerInviteResponseCompensationBasisMonthly WorkerInviteResponseCompensationBasis = "monthly"
+	WorkerInviteResponseCompensationBasisWeekly  WorkerInviteResponseCompensationBasis = "weekly"
+	WorkerInviteResponseCompensationBasisHourly  WorkerInviteResponseCompensationBasis = "hourly"
+)
+
+func (r WorkerInviteResponseCompensationBasis) IsKnown() bool {
+	switch r {
+	case WorkerInviteResponseCompensationBasisYearly, WorkerInviteResponseCompensationBasisMonthly, WorkerInviteResponseCompensationBasisWeekly, WorkerInviteResponseCompensationBasisHourly:
 		return true
 	}
 	return false
