@@ -37,6 +37,9 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [Void Offer](#void-offer)
   - [Extend Offer Deadline](#extend-offer-deadline)
   - [Resend Offer](#resend-offer)
+- [`PayRates`](#payrates)
+  - [List Pay Rates](#list-pay-rates)
+  - [Get Pay Rate](#get-pay-rate)
 - [`TimeOff`](#timeoff)
   - [List Time Off Assignments](#list-time-off-assignments)
   - [List Time Off Balances](#list-time-off-balances)
@@ -55,9 +58,6 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [List Workplaces](#list-workplaces)
   - [Create Workplace](#create-workplace)
   - [Update Workplace](#update-workplace)
-- [`PayRates`](#payrates)
-  - [List Pay Rates](#list-pay-rates)
-  - [Get Pay Rate](#get-pay-rate)
 
 ## Setup
 
@@ -577,6 +577,45 @@ if err != nil {
 fmt.Println(offer)
 ```
 
+## `PayRates`
+
+### List Pay Rates
+
+List pay rates visible to the API key. Results may be filtered by worker, effective start date, or regular/additional type. US and global worker rates require their corresponding compensation read scopes.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`PayRateListParams`](./payrate.go) |
+| Response | [`PayRateListResponse`](./payrate.go) |
+
+```go
+payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
+	Limit: sdk.F[string]("limit"),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payRate)
+```
+
+### Get Pay Rate
+
+Get a specific pay rate by id. The API key must have the compensation read scope corresponding to the worker.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`PayRateGetResponse`](./payrate.go) |
+
+```go
+payRate, err := client.PayRates.Get(context.Background(), "id")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payRate)
+```
+
 ## `TimeOff`
 
 ### List Time Off Assignments
@@ -836,7 +875,7 @@ Create a new workplace.
 
 ```go
 workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-	Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
+	Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
 		Line1:      sdk.F[interface{}](map[string]interface{}{}),
 		City:       sdk.F[string](""),
 		PostalCode: sdk.F[string](""),
@@ -866,43 +905,4 @@ if err != nil {
 }
 
 fmt.Println(workplace)
-```
-
-## `PayRates`
-
-### List Pay Rates
-
-List pay rates visible to the API key. Results may be filtered by worker, effective start date, or regular/additional type. US and global worker rates require their corresponding compensation read scopes.
-
-| Direction | Type |
-| --- | --- |
-| Request | [`PayRateListParams`](./payrate.go) |
-| Response | [`PayRateListResponse`](./payrate.go) |
-
-```go
-payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
-	Limit: sdk.F[string]("limit"),
-})
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(payRate)
-```
-
-### Get Pay Rate
-
-Get a specific pay rate by id. The API key must have the compensation read scope corresponding to the worker.
-
-| Direction | Type |
-| --- | --- |
-| Response | [`PayRateGetResponse`](./payrate.go) |
-
-```go
-payRate, err := client.PayRates.Get(context.Background(), "id")
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(payRate)
 ```
