@@ -507,10 +507,10 @@ type TimeOffBalanceAdjustedWebhookEventPayload struct {
 	AdjustmentMinutes TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes `json:"adjustmentMinutes" api:"nullable"`
 	// The date the adjustment takes effect. Omitted when no balance snapshot was
 	// captured.
-	EffectiveDate   string                                        `json:"effectiveDate" api:"nullable"`
-	PreviousBalance Union1                                        `json:"previousBalance"`
-	NewBalance      Union1                                        `json:"newBalance"`
-	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON `json:"-"`
+	EffectiveDate   string                                                   `json:"effectiveDate" api:"nullable"`
+	PreviousBalance TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance `json:"previousBalance"`
+	NewBalance      TimeOffBalanceAdjustedWebhookEventPayloadNewBalance      `json:"newBalance"`
+	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON            `json:"-"`
 }
 
 // timeOffBalanceAdjustedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayload]
@@ -602,6 +602,38 @@ const (
 func (r TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes) IsKnown() bool {
 	switch r {
 	case TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUsd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesAud, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBgn, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBrl, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCad, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesChf, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCzk, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesDkk, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesEur, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGbp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHkd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHuf, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesIdr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesInr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesJpy, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMyr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNok, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNzd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCny, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPln, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesRon, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTry, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSek, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSgd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesAed, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesArs, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBdt, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesBwp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesClp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCop, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesCrc, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesEgp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesFjd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGel, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGhs, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesIls, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesKes, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesKrw, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesLkr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMad, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesMxn, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNpr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPhp, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPkr, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesThb, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUah, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUgx, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesUyu, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesVnd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesZar, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesZmw, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTnd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesNgn, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesRsd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesTwd, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesGtq, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesHnl, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesDop, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesSar, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesXaf, TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutesPen:
+		return true
+	}
+	return false
+}
+
+type TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance string
+
+const (
+	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity  TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity2 TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "-Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceNaN       TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "NaN"
+)
+
+func (r TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance) IsKnown() bool {
+	switch r {
+	case TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity, TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity2, TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceNaN:
+		return true
+	}
+	return false
+}
+
+type TimeOffBalanceAdjustedWebhookEventPayloadNewBalance string
+
+const (
+	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity  TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity2 TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "-Infinity"
+	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceNaN       TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "NaN"
+)
+
+func (r TimeOffBalanceAdjustedWebhookEventPayloadNewBalance) IsKnown() bool {
+	switch r {
+	case TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity, TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity2, TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceNaN:
 		return true
 	}
 	return false

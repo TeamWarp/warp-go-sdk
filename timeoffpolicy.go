@@ -38,16 +38,16 @@ func NewTimeOffPolicyService(opts ...option.RequestOption) (r *TimeOffPolicyServ
 // Parameters:
 //
 //	ctx: Context for the request.
-//	query: TimeOffPolicyListParams request parameters.
+//	query: TimeOffPolicyTimeOffGetParams request parameters.
 //	opts: Options to apply to this request.
 //
 // Returns:
 //
-//	*TimeOffPolicyListResponse: Success
+//	*TimeOffPolicyTimeOffGetResponse: Success
 //
 // Example:
 //
-//	policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
+//	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{
 //		Limit: sdk.F[string]("limit"),
 //	})
 //	if err != nil {
@@ -55,7 +55,7 @@ func NewTimeOffPolicyService(opts ...option.RequestOption) (r *TimeOffPolicyServ
 //	}
 //
 //	fmt.Println(policy)
-func (r *TimeOffPolicyService) List(ctx context.Context, query TimeOffPolicyListParams, opts ...option.RequestOption) (res *TimeOffPolicyListResponse, err error) {
+func (r *TimeOffPolicyService) TimeOffGet(ctx context.Context, query TimeOffPolicyTimeOffGetParams, opts ...option.RequestOption) (res *TimeOffPolicyTimeOffGetResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/time_off/policies"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
@@ -72,17 +72,17 @@ func (r *TimeOffPolicyService) List(ctx context.Context, query TimeOffPolicyList
 //
 // Returns:
 //
-//	*TimeOffPolicyGetResponse: Success
+//	*TimeOffPolicyTimeOffGet2Response: Success
 //
 // Example:
 //
-//	policy, err := client.TimeOff.Policies.Get(context.Background(), "id")
+//	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "id")
 //	if err != nil {
 //		panic(err)
 //	}
 //
 //	fmt.Println(policy)
-func (r *TimeOffPolicyService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *TimeOffPolicyGetResponse, err error) {
+func (r *TimeOffPolicyService) TimeOffGet2(ctx context.Context, id string, opts ...option.RequestOption) (res *TimeOffPolicyTimeOffGet2Response, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -167,24 +167,24 @@ func (r Objects9Unit) IsKnown() bool {
 	return false
 }
 
-type TimeOffPolicyGetResponse struct {
-	ID                  string                           `json:"id" api:"required"`
-	TimeOffTypeID       string                           `json:"timeOffTypeId" api:"required"`
-	TimeOffTypeName     string                           `json:"timeOffTypeName" api:"required"`
-	Paid                bool                             `json:"paid" api:"required"`
-	IsUnlimited         bool                             `json:"isUnlimited" api:"required"`
-	Schedule            TimeOffPolicyGetResponseSchedule `json:"schedule" api:"required"`
-	Unit                TimeOffPolicyGetResponseUnit     `json:"unit" api:"required"`
-	Name                string                           `json:"name" api:"required"`
-	Description         string                           `json:"description" api:"required,nullable"`
-	HoursWorkedPerChunk interface{}                      `json:"hoursWorkedPerChunk" api:"required,nullable"`
-	MinutesPerChunk     interface{}                      `json:"minutesPerChunk" api:"required,nullable"`
-	MinutesPerPeriod    interface{}                      `json:"minutesPerPeriod" api:"required,nullable"`
-	JSON                timeOffPolicyGetResponseJSON     `json:"-"`
+type TimeOffPolicyTimeOffGet2Response struct {
+	ID                  string                                   `json:"id" api:"required"`
+	TimeOffTypeID       string                                   `json:"timeOffTypeId" api:"required"`
+	TimeOffTypeName     string                                   `json:"timeOffTypeName" api:"required"`
+	Paid                bool                                     `json:"paid" api:"required"`
+	IsUnlimited         bool                                     `json:"isUnlimited" api:"required"`
+	Schedule            TimeOffPolicyTimeOffGet2ResponseSchedule `json:"schedule" api:"required"`
+	Unit                TimeOffPolicyTimeOffGet2ResponseUnit     `json:"unit" api:"required"`
+	Name                string                                   `json:"name" api:"required"`
+	Description         string                                   `json:"description" api:"required,nullable"`
+	HoursWorkedPerChunk interface{}                              `json:"hoursWorkedPerChunk" api:"required,nullable"`
+	MinutesPerChunk     interface{}                              `json:"minutesPerChunk" api:"required,nullable"`
+	MinutesPerPeriod    interface{}                              `json:"minutesPerPeriod" api:"required,nullable"`
+	JSON                timeOffPolicyTimeOffGet2ResponseJSON     `json:"-"`
 }
 
-// timeOffPolicyGetResponseJSON contains the JSON metadata for the struct [TimeOffPolicyGetResponse]
-type timeOffPolicyGetResponseJSON struct {
+// timeOffPolicyTimeOffGet2ResponseJSON contains the JSON metadata for the struct [TimeOffPolicyTimeOffGet2Response]
+type timeOffPolicyTimeOffGet2ResponseJSON struct {
 	ID                  apijson.Field
 	TimeOffTypeID       apijson.Field
 	TimeOffTypeName     apijson.Field
@@ -201,69 +201,69 @@ type timeOffPolicyGetResponseJSON struct {
 	ExtraFields         map[string]apijson.Field
 }
 
-func (r *TimeOffPolicyGetResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *TimeOffPolicyTimeOffGet2Response) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r timeOffPolicyGetResponseJSON) RawJSON() string {
+func (r timeOffPolicyTimeOffGet2ResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type TimeOffPolicyGetResponseSchedule string
+type TimeOffPolicyTimeOffGet2ResponseSchedule string
 
 const (
-	TimeOffPolicyGetResponseSchedulePerHourWorked TimeOffPolicyGetResponseSchedule = "per_hour_worked"
-	TimeOffPolicyGetResponseScheduleMonthly       TimeOffPolicyGetResponseSchedule = "monthly"
-	TimeOffPolicyGetResponseScheduleYearly        TimeOffPolicyGetResponseSchedule = "yearly"
-	TimeOffPolicyGetResponseScheduleUnlimited     TimeOffPolicyGetResponseSchedule = "unlimited"
+	TimeOffPolicyTimeOffGet2ResponseSchedulePerHourWorked TimeOffPolicyTimeOffGet2ResponseSchedule = "per_hour_worked"
+	TimeOffPolicyTimeOffGet2ResponseScheduleMonthly       TimeOffPolicyTimeOffGet2ResponseSchedule = "monthly"
+	TimeOffPolicyTimeOffGet2ResponseScheduleYearly        TimeOffPolicyTimeOffGet2ResponseSchedule = "yearly"
+	TimeOffPolicyTimeOffGet2ResponseScheduleUnlimited     TimeOffPolicyTimeOffGet2ResponseSchedule = "unlimited"
 )
 
-func (r TimeOffPolicyGetResponseSchedule) IsKnown() bool {
+func (r TimeOffPolicyTimeOffGet2ResponseSchedule) IsKnown() bool {
 	switch r {
-	case TimeOffPolicyGetResponseSchedulePerHourWorked, TimeOffPolicyGetResponseScheduleMonthly, TimeOffPolicyGetResponseScheduleYearly, TimeOffPolicyGetResponseScheduleUnlimited:
+	case TimeOffPolicyTimeOffGet2ResponseSchedulePerHourWorked, TimeOffPolicyTimeOffGet2ResponseScheduleMonthly, TimeOffPolicyTimeOffGet2ResponseScheduleYearly, TimeOffPolicyTimeOffGet2ResponseScheduleUnlimited:
 		return true
 	}
 	return false
 }
 
-type TimeOffPolicyGetResponseUnit string
+type TimeOffPolicyTimeOffGet2ResponseUnit string
 
 const (
-	TimeOffPolicyGetResponseUnitHour TimeOffPolicyGetResponseUnit = "hour"
-	TimeOffPolicyGetResponseUnitDay  TimeOffPolicyGetResponseUnit = "day"
+	TimeOffPolicyTimeOffGet2ResponseUnitHour TimeOffPolicyTimeOffGet2ResponseUnit = "hour"
+	TimeOffPolicyTimeOffGet2ResponseUnitDay  TimeOffPolicyTimeOffGet2ResponseUnit = "day"
 )
 
-func (r TimeOffPolicyGetResponseUnit) IsKnown() bool {
+func (r TimeOffPolicyTimeOffGet2ResponseUnit) IsKnown() bool {
 	switch r {
-	case TimeOffPolicyGetResponseUnitHour, TimeOffPolicyGetResponseUnitDay:
+	case TimeOffPolicyTimeOffGet2ResponseUnitHour, TimeOffPolicyTimeOffGet2ResponseUnitDay:
 		return true
 	}
 	return false
 }
 
-type TimeOffPolicyListParams struct {
+type TimeOffPolicyTimeOffGetParams struct {
 	Limit    param.Field[string] `query:"limit" api:"required"`
 	AfterID  param.Field[string] `query:"afterId"`
 	BeforeID param.Field[string] `query:"beforeId"`
 }
 
-// URLQuery serializes [TimeOffPolicyListParams]'s query parameters as `url.Values`.
-func (r TimeOffPolicyListParams) URLQuery() (v url.Values) {
+// URLQuery serializes [TimeOffPolicyTimeOffGetParams]'s query parameters as `url.Values`.
+func (r TimeOffPolicyTimeOffGetParams) URLQuery() (v url.Values) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
 }
 
-type TimeOffPolicyListResponse struct {
-	HasMore bool                          `json:"hasMore" api:"required"`
-	Count   int64                         `json:"count" api:"required"`
-	Data    []Objects9                    `json:"data" api:"required"`
-	JSON    timeOffPolicyListResponseJSON `json:"-"`
+type TimeOffPolicyTimeOffGetResponse struct {
+	HasMore bool                                `json:"hasMore" api:"required"`
+	Count   int64                               `json:"count" api:"required"`
+	Data    []Objects9                          `json:"data" api:"required"`
+	JSON    timeOffPolicyTimeOffGetResponseJSON `json:"-"`
 }
 
-// timeOffPolicyListResponseJSON contains the JSON metadata for the struct [TimeOffPolicyListResponse]
-type timeOffPolicyListResponseJSON struct {
+// timeOffPolicyTimeOffGetResponseJSON contains the JSON metadata for the struct [TimeOffPolicyTimeOffGetResponse]
+type timeOffPolicyTimeOffGetResponseJSON struct {
 	HasMore     apijson.Field
 	Count       apijson.Field
 	Data        apijson.Field
@@ -271,10 +271,10 @@ type timeOffPolicyListResponseJSON struct {
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *TimeOffPolicyListResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *TimeOffPolicyTimeOffGetResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r timeOffPolicyListResponseJSON) RawJSON() string {
+func (r timeOffPolicyTimeOffGetResponseJSON) RawJSON() string {
 	return r.raw
 }
