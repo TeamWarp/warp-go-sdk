@@ -25,6 +25,7 @@ type Client struct {
 	TimeOff      *TimeOffService
 	Workers      *WorkerService
 	Workplaces   *WorkplaceService
+	PayRates     *PayRateService
 	Webhooks     *WebhookService
 }
 
@@ -68,6 +69,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.TimeOff = NewTimeOffService(opts...)
 	r.Workers = NewWorkerService(opts...)
 	r.Workplaces = NewWorkplaceService(opts...)
+	r.PayRates = NewPayRateService(opts...)
 	r.Webhooks = NewWebhookService(opts...)
 
 	return

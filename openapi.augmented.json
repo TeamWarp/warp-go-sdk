@@ -6081,7 +6081,24 @@
           }
         },
         "description": "List pay rates visible to the API key. Results may be filtered by worker, effective start date, or regular/additional type. US and global worker rates require their corresponding compensation read scopes.",
-        "summary": "List Pay Rates"
+        "summary": "List Pay Rates",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.payRates.list({\n  limit: 'limit',\n});\n\nconsole.log(list);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npay_rate = client.pay_rates.list(\n    limit=\"limit\",\n)\n\nprint(pay_rate)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpayRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(payRate)\n}"
+          }
+        ]
       }
     },
     "/v1/pay_rates/{id}": {
@@ -6191,7 +6208,24 @@
           }
         },
         "description": "Get a specific pay rate by id. The API key must have the compensation read scope corresponding to the worker.",
-        "summary": "Get Pay Rate"
+        "summary": "Get Pay Rate",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.payRates.get('id');\n\nconsole.log(get_);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npay_rate = client.pay_rates.get(\n    id=\"id\",\n)\n\nprint(pay_rate)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpayRate, err := client.PayRates.Get(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(payRate)\n}"
+          }
+        ]
       }
     },
     "/v1/time_off/policies": {
