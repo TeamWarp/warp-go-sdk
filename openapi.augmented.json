@@ -9893,7 +9893,7 @@
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworkplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{\n\t\tAddress: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{\n\t\t\tLine1:      sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tCity:       sdk.F[string](\"\"),\n\t\t\tPostalCode: sdk.F[string](\"\"),\n\t\t}),\n\t\tName: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(workplace)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworkplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{\n\t\tAddress: sdk.F[sdk.Objects11Param](sdk.Objects11Param{\n\t\t\tLine1:      sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tCity:       sdk.F[string](\"\"),\n\t\t\tPostalCode: sdk.F[string](\"\"),\n\t\t}),\n\t\tName: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(workplace)\n}"
           }
         ]
       }
