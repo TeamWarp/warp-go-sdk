@@ -342,7 +342,7 @@ func _smokeCase28() {
 }
 
 func _smokeCase29() {
-	policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{
+	policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
 		Limit: sdk.F[string]("limit"),
 	})
 	if err != nil {
@@ -353,7 +353,7 @@ func _smokeCase29() {
 }
 
 func _smokeCase30() {
-	policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "id")
+	policy, err := client.TimeOff.Policies.Get(context.Background(), "id")
 	if err != nil {
 		panic(err)
 	}
@@ -551,7 +551,7 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "retrieve",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/custom_fields/{id}",
 		Run:       _smokeCase8,
@@ -698,14 +698,14 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "timeOffGet",
+		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/time_off/policies",
 		Run:       _smokeCase29,
 	},
 
 	{
-		Operation: "timeOffGet2",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/time_off/policies/{id}",
 		Run:       _smokeCase30,
@@ -719,7 +719,7 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "retrieve",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/workers/{id}",
 		Run:       _smokeCase32,

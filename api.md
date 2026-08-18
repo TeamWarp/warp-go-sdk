@@ -647,11 +647,11 @@ Get the time off policies for your company
 
 | Direction | Type |
 | --- | --- |
-| Request | [`TimeOffPolicyTimeOffGetParams`](./timeoffpolicy.go) |
-| Response | [`TimeOffPolicyTimeOffGetResponse`](./timeoffpolicy.go) |
+| Request | [`TimeOffPolicyListParams`](./timeoffpolicy.go) |
+| Response | [`TimeOffPolicyListResponse`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{
+policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
 	Limit: sdk.F[string]("limit"),
 })
 if err != nil {
@@ -667,10 +667,10 @@ Get a specific time off policy by id
 
 | Direction | Type |
 | --- | --- |
-| Response | [`TimeOffPolicyTimeOffGet2Response`](./timeoffpolicy.go) |
+| Response | [`TimeOffPolicyGetResponse`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "id")
+policy, err := client.TimeOff.Policies.Get(context.Background(), "id")
 if err != nil {
 	panic(err)
 }

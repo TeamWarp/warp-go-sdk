@@ -1826,12 +1826,12 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst retrieve = await client.customFields.retrieve('id');\n\nconsole.log(retrieve);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.customFields.get('id');\n\nconsole.log(get_);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.retrieve(\n    id=\"id\",\n)\n\nprint(custom_field)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ncustom_field = client.custom_fields.get(\n    id=\"id\",\n)\n\nprint(custom_field)"
           },
           {
             "lang": "Go",
@@ -6404,17 +6404,17 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst timeOffGet = await client.timeOff.policies.timeOffGet({\n  limit: 'limit',\n});\n\nconsole.log(timeOffGet);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.timeOff.policies.list({\n  limit: 'limit',\n});\n\nconsole.log(list);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.time_off_get(\n    limit=\"limit\",\n)\n\nprint(policy)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.list(\n    limit=\"limit\",\n)\n\nprint(policy)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
           }
         ]
       }
@@ -6530,17 +6530,17 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst timeOffGet2 = await client.timeOff.policies.timeOffGet2('id');\n\nconsole.log(timeOffGet2);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.timeOff.policies.get('id');\n\nconsole.log(get_);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.time_off_get2(\n    id=\"id\",\n)\n\nprint(policy)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.get(\n    id=\"id\",\n)\n\nprint(policy)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.Get(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
           }
         ]
       }
@@ -7782,12 +7782,12 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst retrieve = await client.workers.retrieve('id');\n\nconsole.log(retrieve);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.workers.get('id');\n\nconsole.log(get_);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\nworker = client.workers.retrieve(\n    id=\"id\",\n)\n\nprint(worker)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\nworker = client.workers.get(\n    id=\"id\",\n)\n\nprint(worker)"
           },
           {
             "lang": "Go",
