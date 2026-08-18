@@ -507,10 +507,10 @@ type TimeOffBalanceAdjustedWebhookEventPayload struct {
 	AdjustmentMinutes TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes `json:"adjustmentMinutes" api:"nullable"`
 	// The date the adjustment takes effect. Omitted when no balance snapshot was
 	// captured.
-	EffectiveDate   string                                                   `json:"effectiveDate" api:"nullable"`
-	PreviousBalance TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance `json:"previousBalance"`
-	NewBalance      TimeOffBalanceAdjustedWebhookEventPayloadNewBalance      `json:"newBalance"`
-	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON            `json:"-"`
+	EffectiveDate   string                                        `json:"effectiveDate" api:"nullable"`
+	PreviousBalance Union1                                        `json:"previousBalance"`
+	NewBalance      Union1                                        `json:"newBalance"`
+	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON `json:"-"`
 }
 
 // timeOffBalanceAdjustedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayload]
@@ -607,38 +607,6 @@ func (r TimeOffBalanceAdjustedWebhookEventPayloadAdjustmentMinutes) IsKnown() bo
 	return false
 }
 
-type TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance string
-
-const (
-	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity  TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "Infinity"
-	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity2 TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "-Infinity"
-	TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceNaN       TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance = "NaN"
-)
-
-func (r TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalance) IsKnown() bool {
-	switch r {
-	case TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity, TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceInfinity2, TimeOffBalanceAdjustedWebhookEventPayloadPreviousBalanceNaN:
-		return true
-	}
-	return false
-}
-
-type TimeOffBalanceAdjustedWebhookEventPayloadNewBalance string
-
-const (
-	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity  TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "Infinity"
-	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity2 TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "-Infinity"
-	TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceNaN       TimeOffBalanceAdjustedWebhookEventPayloadNewBalance = "NaN"
-)
-
-func (r TimeOffBalanceAdjustedWebhookEventPayloadNewBalance) IsKnown() bool {
-	switch r {
-	case TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity, TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceInfinity2, TimeOffBalanceAdjustedWebhookEventPayloadNewBalanceNaN:
-		return true
-	}
-	return false
-}
-
 type WorkerCreatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -703,7 +671,11 @@ type WorkerCreatedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerCreatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerCreatedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerCreatedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerCreatedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayload]
@@ -724,6 +696,7 @@ type workerCreatedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -792,6 +765,107 @@ func (r workerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerCreatedWebhookEventPayloadCompensation struct {
+	PayRateID string                                               `json:"payRateId" api:"required"`
+	Amount    string                                               `json:"amount" api:"required"`
+	Currency  WorkerCreatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                           `json:"display" api:"required"`
+	JSON    workerCreatedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCompensation]
+type workerCreatedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyUsd WorkerCreatedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyAud WorkerCreatedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyBgn WorkerCreatedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyBrl WorkerCreatedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyCad WorkerCreatedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyChf WorkerCreatedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyCzk WorkerCreatedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyDkk WorkerCreatedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyEur WorkerCreatedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyGbp WorkerCreatedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyHkd WorkerCreatedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyHuf WorkerCreatedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyIdr WorkerCreatedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyInr WorkerCreatedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyJpy WorkerCreatedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyMyr WorkerCreatedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyNok WorkerCreatedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyNzd WorkerCreatedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyCny WorkerCreatedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyPln WorkerCreatedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyRon WorkerCreatedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyTry WorkerCreatedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencySek WorkerCreatedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencySgd WorkerCreatedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyAed WorkerCreatedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyArs WorkerCreatedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyBdt WorkerCreatedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyBwp WorkerCreatedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyClp WorkerCreatedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyCop WorkerCreatedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyCrc WorkerCreatedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyEgp WorkerCreatedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyFjd WorkerCreatedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyGel WorkerCreatedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyGhs WorkerCreatedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyIls WorkerCreatedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyKes WorkerCreatedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyKrw WorkerCreatedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyLkr WorkerCreatedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyMad WorkerCreatedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyMxn WorkerCreatedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyNpr WorkerCreatedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyPhp WorkerCreatedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyPkr WorkerCreatedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyThb WorkerCreatedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyUah WorkerCreatedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyUgx WorkerCreatedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyUyu WorkerCreatedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyVnd WorkerCreatedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyZar WorkerCreatedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyZmw WorkerCreatedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyTnd WorkerCreatedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyNgn WorkerCreatedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyRsd WorkerCreatedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyTwd WorkerCreatedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyGtq WorkerCreatedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyHnl WorkerCreatedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyDop WorkerCreatedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencySar WorkerCreatedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyXaf WorkerCreatedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerCreatedWebhookEventPayloadCompensationCurrencyPen WorkerCreatedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCompensationCurrencyUsd, WorkerCreatedWebhookEventPayloadCompensationCurrencyAud, WorkerCreatedWebhookEventPayloadCompensationCurrencyBgn, WorkerCreatedWebhookEventPayloadCompensationCurrencyBrl, WorkerCreatedWebhookEventPayloadCompensationCurrencyCad, WorkerCreatedWebhookEventPayloadCompensationCurrencyChf, WorkerCreatedWebhookEventPayloadCompensationCurrencyCzk, WorkerCreatedWebhookEventPayloadCompensationCurrencyDkk, WorkerCreatedWebhookEventPayloadCompensationCurrencyEur, WorkerCreatedWebhookEventPayloadCompensationCurrencyGbp, WorkerCreatedWebhookEventPayloadCompensationCurrencyHkd, WorkerCreatedWebhookEventPayloadCompensationCurrencyHuf, WorkerCreatedWebhookEventPayloadCompensationCurrencyIdr, WorkerCreatedWebhookEventPayloadCompensationCurrencyInr, WorkerCreatedWebhookEventPayloadCompensationCurrencyJpy, WorkerCreatedWebhookEventPayloadCompensationCurrencyMyr, WorkerCreatedWebhookEventPayloadCompensationCurrencyNok, WorkerCreatedWebhookEventPayloadCompensationCurrencyNzd, WorkerCreatedWebhookEventPayloadCompensationCurrencyCny, WorkerCreatedWebhookEventPayloadCompensationCurrencyPln, WorkerCreatedWebhookEventPayloadCompensationCurrencyRon, WorkerCreatedWebhookEventPayloadCompensationCurrencyTry, WorkerCreatedWebhookEventPayloadCompensationCurrencySek, WorkerCreatedWebhookEventPayloadCompensationCurrencySgd, WorkerCreatedWebhookEventPayloadCompensationCurrencyAed, WorkerCreatedWebhookEventPayloadCompensationCurrencyArs, WorkerCreatedWebhookEventPayloadCompensationCurrencyBdt, WorkerCreatedWebhookEventPayloadCompensationCurrencyBwp, WorkerCreatedWebhookEventPayloadCompensationCurrencyClp, WorkerCreatedWebhookEventPayloadCompensationCurrencyCop, WorkerCreatedWebhookEventPayloadCompensationCurrencyCrc, WorkerCreatedWebhookEventPayloadCompensationCurrencyEgp, WorkerCreatedWebhookEventPayloadCompensationCurrencyFjd, WorkerCreatedWebhookEventPayloadCompensationCurrencyGel, WorkerCreatedWebhookEventPayloadCompensationCurrencyGhs, WorkerCreatedWebhookEventPayloadCompensationCurrencyIls, WorkerCreatedWebhookEventPayloadCompensationCurrencyKes, WorkerCreatedWebhookEventPayloadCompensationCurrencyKrw, WorkerCreatedWebhookEventPayloadCompensationCurrencyLkr, WorkerCreatedWebhookEventPayloadCompensationCurrencyMad, WorkerCreatedWebhookEventPayloadCompensationCurrencyMxn, WorkerCreatedWebhookEventPayloadCompensationCurrencyNpr, WorkerCreatedWebhookEventPayloadCompensationCurrencyPhp, WorkerCreatedWebhookEventPayloadCompensationCurrencyPkr, WorkerCreatedWebhookEventPayloadCompensationCurrencyThb, WorkerCreatedWebhookEventPayloadCompensationCurrencyUah, WorkerCreatedWebhookEventPayloadCompensationCurrencyUgx, WorkerCreatedWebhookEventPayloadCompensationCurrencyUyu, WorkerCreatedWebhookEventPayloadCompensationCurrencyVnd, WorkerCreatedWebhookEventPayloadCompensationCurrencyZar, WorkerCreatedWebhookEventPayloadCompensationCurrencyZmw, WorkerCreatedWebhookEventPayloadCompensationCurrencyTnd, WorkerCreatedWebhookEventPayloadCompensationCurrencyNgn, WorkerCreatedWebhookEventPayloadCompensationCurrencyRsd, WorkerCreatedWebhookEventPayloadCompensationCurrencyTwd, WorkerCreatedWebhookEventPayloadCompensationCurrencyGtq, WorkerCreatedWebhookEventPayloadCompensationCurrencyHnl, WorkerCreatedWebhookEventPayloadCompensationCurrencyDop, WorkerCreatedWebhookEventPayloadCompensationCurrencySar, WorkerCreatedWebhookEventPayloadCompensationCurrencyXaf, WorkerCreatedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerUpdatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -856,7 +930,11 @@ type WorkerUpdatedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerUpdatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerUpdatedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerUpdatedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerUpdatedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerUpdatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayload]
@@ -877,6 +955,7 @@ type workerUpdatedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -945,6 +1024,107 @@ func (r workerUpdatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerUpdatedWebhookEventPayloadCompensation struct {
+	PayRateID string                                               `json:"payRateId" api:"required"`
+	Amount    string                                               `json:"amount" api:"required"`
+	Currency  WorkerUpdatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                           `json:"display" api:"required"`
+	JSON    workerUpdatedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCompensation]
+type workerUpdatedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerUpdatedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyUsd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyAud WorkerUpdatedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyBgn WorkerUpdatedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyBrl WorkerUpdatedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyCad WorkerUpdatedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyChf WorkerUpdatedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyCzk WorkerUpdatedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyDkk WorkerUpdatedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyEur WorkerUpdatedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyGbp WorkerUpdatedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyHkd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyHuf WorkerUpdatedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyIdr WorkerUpdatedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyInr WorkerUpdatedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyJpy WorkerUpdatedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyMyr WorkerUpdatedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyNok WorkerUpdatedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyNzd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyCny WorkerUpdatedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyPln WorkerUpdatedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyRon WorkerUpdatedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyTry WorkerUpdatedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencySek WorkerUpdatedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencySgd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyAed WorkerUpdatedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyArs WorkerUpdatedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyBdt WorkerUpdatedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyBwp WorkerUpdatedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyClp WorkerUpdatedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyCop WorkerUpdatedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyCrc WorkerUpdatedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyEgp WorkerUpdatedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyFjd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyGel WorkerUpdatedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyGhs WorkerUpdatedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyIls WorkerUpdatedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyKes WorkerUpdatedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyKrw WorkerUpdatedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyLkr WorkerUpdatedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyMad WorkerUpdatedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyMxn WorkerUpdatedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyNpr WorkerUpdatedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyPhp WorkerUpdatedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyPkr WorkerUpdatedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyThb WorkerUpdatedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyUah WorkerUpdatedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyUgx WorkerUpdatedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyUyu WorkerUpdatedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyVnd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyZar WorkerUpdatedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyZmw WorkerUpdatedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyTnd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyNgn WorkerUpdatedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyRsd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyTwd WorkerUpdatedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyGtq WorkerUpdatedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyHnl WorkerUpdatedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyDop WorkerUpdatedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencySar WorkerUpdatedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyXaf WorkerUpdatedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerUpdatedWebhookEventPayloadCompensationCurrencyPen WorkerUpdatedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCompensationCurrencyUsd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyAud, WorkerUpdatedWebhookEventPayloadCompensationCurrencyBgn, WorkerUpdatedWebhookEventPayloadCompensationCurrencyBrl, WorkerUpdatedWebhookEventPayloadCompensationCurrencyCad, WorkerUpdatedWebhookEventPayloadCompensationCurrencyChf, WorkerUpdatedWebhookEventPayloadCompensationCurrencyCzk, WorkerUpdatedWebhookEventPayloadCompensationCurrencyDkk, WorkerUpdatedWebhookEventPayloadCompensationCurrencyEur, WorkerUpdatedWebhookEventPayloadCompensationCurrencyGbp, WorkerUpdatedWebhookEventPayloadCompensationCurrencyHkd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyHuf, WorkerUpdatedWebhookEventPayloadCompensationCurrencyIdr, WorkerUpdatedWebhookEventPayloadCompensationCurrencyInr, WorkerUpdatedWebhookEventPayloadCompensationCurrencyJpy, WorkerUpdatedWebhookEventPayloadCompensationCurrencyMyr, WorkerUpdatedWebhookEventPayloadCompensationCurrencyNok, WorkerUpdatedWebhookEventPayloadCompensationCurrencyNzd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyCny, WorkerUpdatedWebhookEventPayloadCompensationCurrencyPln, WorkerUpdatedWebhookEventPayloadCompensationCurrencyRon, WorkerUpdatedWebhookEventPayloadCompensationCurrencyTry, WorkerUpdatedWebhookEventPayloadCompensationCurrencySek, WorkerUpdatedWebhookEventPayloadCompensationCurrencySgd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyAed, WorkerUpdatedWebhookEventPayloadCompensationCurrencyArs, WorkerUpdatedWebhookEventPayloadCompensationCurrencyBdt, WorkerUpdatedWebhookEventPayloadCompensationCurrencyBwp, WorkerUpdatedWebhookEventPayloadCompensationCurrencyClp, WorkerUpdatedWebhookEventPayloadCompensationCurrencyCop, WorkerUpdatedWebhookEventPayloadCompensationCurrencyCrc, WorkerUpdatedWebhookEventPayloadCompensationCurrencyEgp, WorkerUpdatedWebhookEventPayloadCompensationCurrencyFjd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyGel, WorkerUpdatedWebhookEventPayloadCompensationCurrencyGhs, WorkerUpdatedWebhookEventPayloadCompensationCurrencyIls, WorkerUpdatedWebhookEventPayloadCompensationCurrencyKes, WorkerUpdatedWebhookEventPayloadCompensationCurrencyKrw, WorkerUpdatedWebhookEventPayloadCompensationCurrencyLkr, WorkerUpdatedWebhookEventPayloadCompensationCurrencyMad, WorkerUpdatedWebhookEventPayloadCompensationCurrencyMxn, WorkerUpdatedWebhookEventPayloadCompensationCurrencyNpr, WorkerUpdatedWebhookEventPayloadCompensationCurrencyPhp, WorkerUpdatedWebhookEventPayloadCompensationCurrencyPkr, WorkerUpdatedWebhookEventPayloadCompensationCurrencyThb, WorkerUpdatedWebhookEventPayloadCompensationCurrencyUah, WorkerUpdatedWebhookEventPayloadCompensationCurrencyUgx, WorkerUpdatedWebhookEventPayloadCompensationCurrencyUyu, WorkerUpdatedWebhookEventPayloadCompensationCurrencyVnd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyZar, WorkerUpdatedWebhookEventPayloadCompensationCurrencyZmw, WorkerUpdatedWebhookEventPayloadCompensationCurrencyTnd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyNgn, WorkerUpdatedWebhookEventPayloadCompensationCurrencyRsd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyTwd, WorkerUpdatedWebhookEventPayloadCompensationCurrencyGtq, WorkerUpdatedWebhookEventPayloadCompensationCurrencyHnl, WorkerUpdatedWebhookEventPayloadCompensationCurrencyDop, WorkerUpdatedWebhookEventPayloadCompensationCurrencySar, WorkerUpdatedWebhookEventPayloadCompensationCurrencyXaf, WorkerUpdatedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerDeletedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1009,7 +1189,11 @@ type WorkerDeletedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerDeletedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerDeletedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerDeletedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerDeletedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerDeletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayload]
@@ -1030,6 +1214,7 @@ type workerDeletedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1098,6 +1283,107 @@ func (r workerDeletedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerDeletedWebhookEventPayloadCompensation struct {
+	PayRateID string                                               `json:"payRateId" api:"required"`
+	Amount    string                                               `json:"amount" api:"required"`
+	Currency  WorkerDeletedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                           `json:"display" api:"required"`
+	JSON    workerDeletedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCompensation]
+type workerDeletedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerDeletedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyUsd WorkerDeletedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyAud WorkerDeletedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyBgn WorkerDeletedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyBrl WorkerDeletedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyCad WorkerDeletedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyChf WorkerDeletedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyCzk WorkerDeletedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyDkk WorkerDeletedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyEur WorkerDeletedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyGbp WorkerDeletedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyHkd WorkerDeletedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyHuf WorkerDeletedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyIdr WorkerDeletedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyInr WorkerDeletedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyJpy WorkerDeletedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyMyr WorkerDeletedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyNok WorkerDeletedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyNzd WorkerDeletedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyCny WorkerDeletedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyPln WorkerDeletedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyRon WorkerDeletedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyTry WorkerDeletedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencySek WorkerDeletedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencySgd WorkerDeletedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyAed WorkerDeletedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyArs WorkerDeletedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyBdt WorkerDeletedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyBwp WorkerDeletedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyClp WorkerDeletedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyCop WorkerDeletedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyCrc WorkerDeletedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyEgp WorkerDeletedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyFjd WorkerDeletedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyGel WorkerDeletedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyGhs WorkerDeletedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyIls WorkerDeletedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyKes WorkerDeletedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyKrw WorkerDeletedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyLkr WorkerDeletedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyMad WorkerDeletedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyMxn WorkerDeletedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyNpr WorkerDeletedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyPhp WorkerDeletedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyPkr WorkerDeletedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyThb WorkerDeletedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyUah WorkerDeletedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyUgx WorkerDeletedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyUyu WorkerDeletedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyVnd WorkerDeletedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyZar WorkerDeletedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyZmw WorkerDeletedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyTnd WorkerDeletedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyNgn WorkerDeletedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyRsd WorkerDeletedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyTwd WorkerDeletedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyGtq WorkerDeletedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyHnl WorkerDeletedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyDop WorkerDeletedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencySar WorkerDeletedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyXaf WorkerDeletedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerDeletedWebhookEventPayloadCompensationCurrencyPen WorkerDeletedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCompensationCurrencyUsd, WorkerDeletedWebhookEventPayloadCompensationCurrencyAud, WorkerDeletedWebhookEventPayloadCompensationCurrencyBgn, WorkerDeletedWebhookEventPayloadCompensationCurrencyBrl, WorkerDeletedWebhookEventPayloadCompensationCurrencyCad, WorkerDeletedWebhookEventPayloadCompensationCurrencyChf, WorkerDeletedWebhookEventPayloadCompensationCurrencyCzk, WorkerDeletedWebhookEventPayloadCompensationCurrencyDkk, WorkerDeletedWebhookEventPayloadCompensationCurrencyEur, WorkerDeletedWebhookEventPayloadCompensationCurrencyGbp, WorkerDeletedWebhookEventPayloadCompensationCurrencyHkd, WorkerDeletedWebhookEventPayloadCompensationCurrencyHuf, WorkerDeletedWebhookEventPayloadCompensationCurrencyIdr, WorkerDeletedWebhookEventPayloadCompensationCurrencyInr, WorkerDeletedWebhookEventPayloadCompensationCurrencyJpy, WorkerDeletedWebhookEventPayloadCompensationCurrencyMyr, WorkerDeletedWebhookEventPayloadCompensationCurrencyNok, WorkerDeletedWebhookEventPayloadCompensationCurrencyNzd, WorkerDeletedWebhookEventPayloadCompensationCurrencyCny, WorkerDeletedWebhookEventPayloadCompensationCurrencyPln, WorkerDeletedWebhookEventPayloadCompensationCurrencyRon, WorkerDeletedWebhookEventPayloadCompensationCurrencyTry, WorkerDeletedWebhookEventPayloadCompensationCurrencySek, WorkerDeletedWebhookEventPayloadCompensationCurrencySgd, WorkerDeletedWebhookEventPayloadCompensationCurrencyAed, WorkerDeletedWebhookEventPayloadCompensationCurrencyArs, WorkerDeletedWebhookEventPayloadCompensationCurrencyBdt, WorkerDeletedWebhookEventPayloadCompensationCurrencyBwp, WorkerDeletedWebhookEventPayloadCompensationCurrencyClp, WorkerDeletedWebhookEventPayloadCompensationCurrencyCop, WorkerDeletedWebhookEventPayloadCompensationCurrencyCrc, WorkerDeletedWebhookEventPayloadCompensationCurrencyEgp, WorkerDeletedWebhookEventPayloadCompensationCurrencyFjd, WorkerDeletedWebhookEventPayloadCompensationCurrencyGel, WorkerDeletedWebhookEventPayloadCompensationCurrencyGhs, WorkerDeletedWebhookEventPayloadCompensationCurrencyIls, WorkerDeletedWebhookEventPayloadCompensationCurrencyKes, WorkerDeletedWebhookEventPayloadCompensationCurrencyKrw, WorkerDeletedWebhookEventPayloadCompensationCurrencyLkr, WorkerDeletedWebhookEventPayloadCompensationCurrencyMad, WorkerDeletedWebhookEventPayloadCompensationCurrencyMxn, WorkerDeletedWebhookEventPayloadCompensationCurrencyNpr, WorkerDeletedWebhookEventPayloadCompensationCurrencyPhp, WorkerDeletedWebhookEventPayloadCompensationCurrencyPkr, WorkerDeletedWebhookEventPayloadCompensationCurrencyThb, WorkerDeletedWebhookEventPayloadCompensationCurrencyUah, WorkerDeletedWebhookEventPayloadCompensationCurrencyUgx, WorkerDeletedWebhookEventPayloadCompensationCurrencyUyu, WorkerDeletedWebhookEventPayloadCompensationCurrencyVnd, WorkerDeletedWebhookEventPayloadCompensationCurrencyZar, WorkerDeletedWebhookEventPayloadCompensationCurrencyZmw, WorkerDeletedWebhookEventPayloadCompensationCurrencyTnd, WorkerDeletedWebhookEventPayloadCompensationCurrencyNgn, WorkerDeletedWebhookEventPayloadCompensationCurrencyRsd, WorkerDeletedWebhookEventPayloadCompensationCurrencyTwd, WorkerDeletedWebhookEventPayloadCompensationCurrencyGtq, WorkerDeletedWebhookEventPayloadCompensationCurrencyHnl, WorkerDeletedWebhookEventPayloadCompensationCurrencyDop, WorkerDeletedWebhookEventPayloadCompensationCurrencySar, WorkerDeletedWebhookEventPayloadCompensationCurrencyXaf, WorkerDeletedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteSentWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1162,7 +1448,11 @@ type WorkerInviteSentWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteSentWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerInviteSentWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerInviteSentWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerInviteSentWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerInviteSentWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayload]
@@ -1183,6 +1473,7 @@ type workerInviteSentWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1251,6 +1542,107 @@ func (r workerInviteSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerInviteSentWebhookEventPayloadCompensation struct {
+	PayRateID string                                                  `json:"payRateId" api:"required"`
+	Amount    string                                                  `json:"amount" api:"required"`
+	Currency  WorkerInviteSentWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                              `json:"display" api:"required"`
+	JSON    workerInviteSentWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCompensation]
+type workerInviteSentWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteSentWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyUsd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyAud WorkerInviteSentWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyBgn WorkerInviteSentWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyBrl WorkerInviteSentWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyCad WorkerInviteSentWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyChf WorkerInviteSentWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyCzk WorkerInviteSentWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyDkk WorkerInviteSentWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyEur WorkerInviteSentWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyGbp WorkerInviteSentWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyHkd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyHuf WorkerInviteSentWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyIdr WorkerInviteSentWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyInr WorkerInviteSentWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyJpy WorkerInviteSentWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyMyr WorkerInviteSentWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyNok WorkerInviteSentWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyNzd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyCny WorkerInviteSentWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyPln WorkerInviteSentWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyRon WorkerInviteSentWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyTry WorkerInviteSentWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencySek WorkerInviteSentWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencySgd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyAed WorkerInviteSentWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyArs WorkerInviteSentWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyBdt WorkerInviteSentWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyBwp WorkerInviteSentWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyClp WorkerInviteSentWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyCop WorkerInviteSentWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyCrc WorkerInviteSentWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyEgp WorkerInviteSentWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyFjd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyGel WorkerInviteSentWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyGhs WorkerInviteSentWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyIls WorkerInviteSentWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyKes WorkerInviteSentWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyKrw WorkerInviteSentWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyLkr WorkerInviteSentWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyMad WorkerInviteSentWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyMxn WorkerInviteSentWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyNpr WorkerInviteSentWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyPhp WorkerInviteSentWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyPkr WorkerInviteSentWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyThb WorkerInviteSentWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyUah WorkerInviteSentWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyUgx WorkerInviteSentWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyUyu WorkerInviteSentWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyVnd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyZar WorkerInviteSentWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyZmw WorkerInviteSentWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyTnd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyNgn WorkerInviteSentWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyRsd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyTwd WorkerInviteSentWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyGtq WorkerInviteSentWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyHnl WorkerInviteSentWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyDop WorkerInviteSentWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencySar WorkerInviteSentWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyXaf WorkerInviteSentWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerInviteSentWebhookEventPayloadCompensationCurrencyPen WorkerInviteSentWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCompensationCurrencyUsd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyAud, WorkerInviteSentWebhookEventPayloadCompensationCurrencyBgn, WorkerInviteSentWebhookEventPayloadCompensationCurrencyBrl, WorkerInviteSentWebhookEventPayloadCompensationCurrencyCad, WorkerInviteSentWebhookEventPayloadCompensationCurrencyChf, WorkerInviteSentWebhookEventPayloadCompensationCurrencyCzk, WorkerInviteSentWebhookEventPayloadCompensationCurrencyDkk, WorkerInviteSentWebhookEventPayloadCompensationCurrencyEur, WorkerInviteSentWebhookEventPayloadCompensationCurrencyGbp, WorkerInviteSentWebhookEventPayloadCompensationCurrencyHkd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyHuf, WorkerInviteSentWebhookEventPayloadCompensationCurrencyIdr, WorkerInviteSentWebhookEventPayloadCompensationCurrencyInr, WorkerInviteSentWebhookEventPayloadCompensationCurrencyJpy, WorkerInviteSentWebhookEventPayloadCompensationCurrencyMyr, WorkerInviteSentWebhookEventPayloadCompensationCurrencyNok, WorkerInviteSentWebhookEventPayloadCompensationCurrencyNzd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyCny, WorkerInviteSentWebhookEventPayloadCompensationCurrencyPln, WorkerInviteSentWebhookEventPayloadCompensationCurrencyRon, WorkerInviteSentWebhookEventPayloadCompensationCurrencyTry, WorkerInviteSentWebhookEventPayloadCompensationCurrencySek, WorkerInviteSentWebhookEventPayloadCompensationCurrencySgd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyAed, WorkerInviteSentWebhookEventPayloadCompensationCurrencyArs, WorkerInviteSentWebhookEventPayloadCompensationCurrencyBdt, WorkerInviteSentWebhookEventPayloadCompensationCurrencyBwp, WorkerInviteSentWebhookEventPayloadCompensationCurrencyClp, WorkerInviteSentWebhookEventPayloadCompensationCurrencyCop, WorkerInviteSentWebhookEventPayloadCompensationCurrencyCrc, WorkerInviteSentWebhookEventPayloadCompensationCurrencyEgp, WorkerInviteSentWebhookEventPayloadCompensationCurrencyFjd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyGel, WorkerInviteSentWebhookEventPayloadCompensationCurrencyGhs, WorkerInviteSentWebhookEventPayloadCompensationCurrencyIls, WorkerInviteSentWebhookEventPayloadCompensationCurrencyKes, WorkerInviteSentWebhookEventPayloadCompensationCurrencyKrw, WorkerInviteSentWebhookEventPayloadCompensationCurrencyLkr, WorkerInviteSentWebhookEventPayloadCompensationCurrencyMad, WorkerInviteSentWebhookEventPayloadCompensationCurrencyMxn, WorkerInviteSentWebhookEventPayloadCompensationCurrencyNpr, WorkerInviteSentWebhookEventPayloadCompensationCurrencyPhp, WorkerInviteSentWebhookEventPayloadCompensationCurrencyPkr, WorkerInviteSentWebhookEventPayloadCompensationCurrencyThb, WorkerInviteSentWebhookEventPayloadCompensationCurrencyUah, WorkerInviteSentWebhookEventPayloadCompensationCurrencyUgx, WorkerInviteSentWebhookEventPayloadCompensationCurrencyUyu, WorkerInviteSentWebhookEventPayloadCompensationCurrencyVnd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyZar, WorkerInviteSentWebhookEventPayloadCompensationCurrencyZmw, WorkerInviteSentWebhookEventPayloadCompensationCurrencyTnd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyNgn, WorkerInviteSentWebhookEventPayloadCompensationCurrencyRsd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyTwd, WorkerInviteSentWebhookEventPayloadCompensationCurrencyGtq, WorkerInviteSentWebhookEventPayloadCompensationCurrencyHnl, WorkerInviteSentWebhookEventPayloadCompensationCurrencyDop, WorkerInviteSentWebhookEventPayloadCompensationCurrencySar, WorkerInviteSentWebhookEventPayloadCompensationCurrencyXaf, WorkerInviteSentWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteAcceptedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1315,7 +1707,11 @@ type WorkerInviteAcceptedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteAcceptedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerInviteAcceptedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerInviteAcceptedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerInviteAcceptedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayload]
@@ -1336,6 +1732,7 @@ type workerInviteAcceptedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1404,6 +1801,107 @@ func (r workerInviteAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string 
 	return r.raw
 }
 
+type WorkerInviteAcceptedWebhookEventPayloadCompensation struct {
+	PayRateID string                                                      `json:"payRateId" api:"required"`
+	Amount    string                                                      `json:"amount" api:"required"`
+	Currency  WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                                  `json:"display" api:"required"`
+	JSON    workerInviteAcceptedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCompensation]
+type workerInviteAcceptedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUsd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyAud WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBgn WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBrl WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCad WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyChf WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCzk WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyDkk WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyEur WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGbp WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyHkd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyHuf WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyIdr WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyInr WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyJpy WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyMyr WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNok WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNzd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCny WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPln WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyRon WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyTry WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencySek WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencySgd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyAed WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyArs WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBdt WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBwp WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyClp WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCop WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCrc WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyEgp WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyFjd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGel WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGhs WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyIls WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyKes WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyKrw WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyLkr WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyMad WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyMxn WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNpr WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPhp WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPkr WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyThb WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUah WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUgx WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUyu WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyVnd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyZar WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyZmw WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyTnd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNgn WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyRsd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyTwd WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGtq WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyHnl WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyDop WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencySar WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyXaf WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPen WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUsd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyAud, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBgn, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBrl, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCad, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyChf, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCzk, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyDkk, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyEur, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGbp, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyHkd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyHuf, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyIdr, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyInr, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyJpy, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyMyr, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNok, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNzd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCny, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPln, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyRon, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyTry, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencySek, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencySgd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyAed, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyArs, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBdt, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyBwp, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyClp, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCop, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyCrc, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyEgp, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyFjd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGel, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGhs, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyIls, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyKes, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyKrw, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyLkr, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyMad, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyMxn, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNpr, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPhp, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPkr, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyThb, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUah, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUgx, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyUyu, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyVnd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyZar, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyZmw, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyTnd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyNgn, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyRsd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyTwd, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyGtq, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyHnl, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyDop, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencySar, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyXaf, WorkerInviteAcceptedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerOnboardingCompletedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1468,7 +1966,11 @@ type WorkerOnboardingCompletedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOnboardingCompletedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerOnboardingCompletedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerOnboardingCompletedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerOnboardingCompletedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayload]
@@ -1489,6 +1991,7 @@ type workerOnboardingCompletedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1557,6 +2060,107 @@ func (r workerOnboardingCompletedWebhookEventPayloadDepartmentJSON) RawJSON() st
 	return r.raw
 }
 
+type WorkerOnboardingCompletedWebhookEventPayloadCompensation struct {
+	PayRateID string                                                           `json:"payRateId" api:"required"`
+	Amount    string                                                           `json:"amount" api:"required"`
+	Currency  WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                                       `json:"display" api:"required"`
+	JSON    workerOnboardingCompletedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCompensation]
+type workerOnboardingCompletedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUsd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyAud WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBgn WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBrl WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCad WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyChf WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCzk WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyDkk WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyEur WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGbp WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyHkd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyHuf WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyIdr WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyInr WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyJpy WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyMyr WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNok WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNzd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCny WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPln WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyRon WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyTry WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencySek WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencySgd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyAed WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyArs WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBdt WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBwp WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyClp WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCop WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCrc WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyEgp WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyFjd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGel WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGhs WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyIls WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyKes WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyKrw WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyLkr WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyMad WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyMxn WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNpr WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPhp WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPkr WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyThb WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUah WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUgx WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUyu WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyVnd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyZar WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyZmw WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyTnd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNgn WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyRsd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyTwd WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGtq WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyHnl WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyDop WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencySar WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyXaf WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPen WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUsd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyAud, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBgn, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBrl, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCad, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyChf, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCzk, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyDkk, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyEur, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGbp, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyHkd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyHuf, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyIdr, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyInr, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyJpy, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyMyr, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNok, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNzd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCny, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPln, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyRon, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyTry, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencySek, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencySgd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyAed, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyArs, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBdt, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyBwp, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyClp, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCop, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyCrc, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyEgp, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyFjd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGel, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGhs, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyIls, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyKes, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyKrw, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyLkr, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyMad, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyMxn, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNpr, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPhp, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPkr, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyThb, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUah, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUgx, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyUyu, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyVnd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyZar, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyZmw, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyTnd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyNgn, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyRsd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyTwd, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyGtq, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyHnl, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyDop, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencySar, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyXaf, WorkerOnboardingCompletedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerOffboardingStartedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1621,7 +2225,11 @@ type WorkerOffboardingStartedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOffboardingStartedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerOffboardingStartedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerOffboardingStartedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerOffboardingStartedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayload]
@@ -1642,6 +2250,7 @@ type workerOffboardingStartedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1710,6 +2319,107 @@ func (r workerOffboardingStartedWebhookEventPayloadDepartmentJSON) RawJSON() str
 	return r.raw
 }
 
+type WorkerOffboardingStartedWebhookEventPayloadCompensation struct {
+	PayRateID string                                                          `json:"payRateId" api:"required"`
+	Amount    string                                                          `json:"amount" api:"required"`
+	Currency  WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                                      `json:"display" api:"required"`
+	JSON    workerOffboardingStartedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCompensation]
+type workerOffboardingStartedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUsd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyAud WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBgn WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBrl WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCad WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyChf WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCzk WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyDkk WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyEur WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGbp WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyHkd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyHuf WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyIdr WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyInr WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyJpy WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyMyr WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNok WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNzd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCny WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPln WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyRon WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyTry WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencySek WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencySgd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyAed WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyArs WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBdt WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBwp WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyClp WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCop WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCrc WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyEgp WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyFjd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGel WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGhs WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyIls WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyKes WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyKrw WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyLkr WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyMad WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyMxn WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNpr WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPhp WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPkr WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyThb WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUah WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUgx WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUyu WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyVnd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyZar WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyZmw WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyTnd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNgn WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyRsd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyTwd WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGtq WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyHnl WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyDop WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencySar WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyXaf WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPen WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUsd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyAud, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBgn, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBrl, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCad, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyChf, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCzk, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyDkk, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyEur, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGbp, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyHkd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyHuf, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyIdr, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyInr, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyJpy, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyMyr, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNok, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNzd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCny, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPln, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyRon, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyTry, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencySek, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencySgd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyAed, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyArs, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBdt, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyBwp, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyClp, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCop, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyCrc, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyEgp, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyFjd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGel, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGhs, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyIls, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyKes, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyKrw, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyLkr, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyMad, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyMxn, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNpr, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPhp, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPkr, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyThb, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUah, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUgx, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyUyu, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyVnd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyZar, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyZmw, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyTnd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyNgn, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyRsd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyTwd, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyGtq, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyHnl, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyDop, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencySar, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyXaf, WorkerOffboardingStartedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerOffboardedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1774,7 +2484,11 @@ type WorkerOffboardedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOffboardedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerOffboardedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerOffboardedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerOffboardedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerOffboardedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayload]
@@ -1795,6 +2509,7 @@ type workerOffboardedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1863,6 +2578,107 @@ func (r workerOffboardedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerOffboardedWebhookEventPayloadCompensation struct {
+	PayRateID string                                                  `json:"payRateId" api:"required"`
+	Amount    string                                                  `json:"amount" api:"required"`
+	Currency  WorkerOffboardedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                              `json:"display" api:"required"`
+	JSON    workerOffboardedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCompensation]
+type workerOffboardedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyUsd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyAud WorkerOffboardedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyBgn WorkerOffboardedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyBrl WorkerOffboardedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyCad WorkerOffboardedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyChf WorkerOffboardedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyCzk WorkerOffboardedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyDkk WorkerOffboardedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyEur WorkerOffboardedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyGbp WorkerOffboardedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyHkd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyHuf WorkerOffboardedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyIdr WorkerOffboardedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyInr WorkerOffboardedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyJpy WorkerOffboardedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyMyr WorkerOffboardedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyNok WorkerOffboardedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyNzd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyCny WorkerOffboardedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyPln WorkerOffboardedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyRon WorkerOffboardedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyTry WorkerOffboardedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencySek WorkerOffboardedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencySgd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyAed WorkerOffboardedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyArs WorkerOffboardedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyBdt WorkerOffboardedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyBwp WorkerOffboardedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyClp WorkerOffboardedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyCop WorkerOffboardedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyCrc WorkerOffboardedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyEgp WorkerOffboardedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyFjd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyGel WorkerOffboardedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyGhs WorkerOffboardedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyIls WorkerOffboardedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyKes WorkerOffboardedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyKrw WorkerOffboardedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyLkr WorkerOffboardedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyMad WorkerOffboardedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyMxn WorkerOffboardedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyNpr WorkerOffboardedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyPhp WorkerOffboardedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyPkr WorkerOffboardedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyThb WorkerOffboardedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyUah WorkerOffboardedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyUgx WorkerOffboardedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyUyu WorkerOffboardedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyVnd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyZar WorkerOffboardedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyZmw WorkerOffboardedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyTnd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyNgn WorkerOffboardedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyRsd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyTwd WorkerOffboardedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyGtq WorkerOffboardedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyHnl WorkerOffboardedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyDop WorkerOffboardedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencySar WorkerOffboardedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyXaf WorkerOffboardedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerOffboardedWebhookEventPayloadCompensationCurrencyPen WorkerOffboardedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCompensationCurrencyUsd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyAud, WorkerOffboardedWebhookEventPayloadCompensationCurrencyBgn, WorkerOffboardedWebhookEventPayloadCompensationCurrencyBrl, WorkerOffboardedWebhookEventPayloadCompensationCurrencyCad, WorkerOffboardedWebhookEventPayloadCompensationCurrencyChf, WorkerOffboardedWebhookEventPayloadCompensationCurrencyCzk, WorkerOffboardedWebhookEventPayloadCompensationCurrencyDkk, WorkerOffboardedWebhookEventPayloadCompensationCurrencyEur, WorkerOffboardedWebhookEventPayloadCompensationCurrencyGbp, WorkerOffboardedWebhookEventPayloadCompensationCurrencyHkd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyHuf, WorkerOffboardedWebhookEventPayloadCompensationCurrencyIdr, WorkerOffboardedWebhookEventPayloadCompensationCurrencyInr, WorkerOffboardedWebhookEventPayloadCompensationCurrencyJpy, WorkerOffboardedWebhookEventPayloadCompensationCurrencyMyr, WorkerOffboardedWebhookEventPayloadCompensationCurrencyNok, WorkerOffboardedWebhookEventPayloadCompensationCurrencyNzd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyCny, WorkerOffboardedWebhookEventPayloadCompensationCurrencyPln, WorkerOffboardedWebhookEventPayloadCompensationCurrencyRon, WorkerOffboardedWebhookEventPayloadCompensationCurrencyTry, WorkerOffboardedWebhookEventPayloadCompensationCurrencySek, WorkerOffboardedWebhookEventPayloadCompensationCurrencySgd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyAed, WorkerOffboardedWebhookEventPayloadCompensationCurrencyArs, WorkerOffboardedWebhookEventPayloadCompensationCurrencyBdt, WorkerOffboardedWebhookEventPayloadCompensationCurrencyBwp, WorkerOffboardedWebhookEventPayloadCompensationCurrencyClp, WorkerOffboardedWebhookEventPayloadCompensationCurrencyCop, WorkerOffboardedWebhookEventPayloadCompensationCurrencyCrc, WorkerOffboardedWebhookEventPayloadCompensationCurrencyEgp, WorkerOffboardedWebhookEventPayloadCompensationCurrencyFjd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyGel, WorkerOffboardedWebhookEventPayloadCompensationCurrencyGhs, WorkerOffboardedWebhookEventPayloadCompensationCurrencyIls, WorkerOffboardedWebhookEventPayloadCompensationCurrencyKes, WorkerOffboardedWebhookEventPayloadCompensationCurrencyKrw, WorkerOffboardedWebhookEventPayloadCompensationCurrencyLkr, WorkerOffboardedWebhookEventPayloadCompensationCurrencyMad, WorkerOffboardedWebhookEventPayloadCompensationCurrencyMxn, WorkerOffboardedWebhookEventPayloadCompensationCurrencyNpr, WorkerOffboardedWebhookEventPayloadCompensationCurrencyPhp, WorkerOffboardedWebhookEventPayloadCompensationCurrencyPkr, WorkerOffboardedWebhookEventPayloadCompensationCurrencyThb, WorkerOffboardedWebhookEventPayloadCompensationCurrencyUah, WorkerOffboardedWebhookEventPayloadCompensationCurrencyUgx, WorkerOffboardedWebhookEventPayloadCompensationCurrencyUyu, WorkerOffboardedWebhookEventPayloadCompensationCurrencyVnd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyZar, WorkerOffboardedWebhookEventPayloadCompensationCurrencyZmw, WorkerOffboardedWebhookEventPayloadCompensationCurrencyTnd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyNgn, WorkerOffboardedWebhookEventPayloadCompensationCurrencyRsd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyTwd, WorkerOffboardedWebhookEventPayloadCompensationCurrencyGtq, WorkerOffboardedWebhookEventPayloadCompensationCurrencyHnl, WorkerOffboardedWebhookEventPayloadCompensationCurrencyDop, WorkerOffboardedWebhookEventPayloadCompensationCurrencySar, WorkerOffboardedWebhookEventPayloadCompensationCurrencyXaf, WorkerOffboardedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type WorkerReactivatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1927,7 +2743,11 @@ type WorkerReactivatedWebhookEventPayload struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerReactivatedWebhookEventPayloadDepartment `json:"department" api:"required,nullable"`
-	JSON       workerReactivatedWebhookEventPayloadJSON       `json:"-"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation WorkerReactivatedWebhookEventPayloadCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerReactivatedWebhookEventPayloadJSON         `json:"-"`
 }
 
 // workerReactivatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayload]
@@ -1948,6 +2768,7 @@ type workerReactivatedWebhookEventPayloadJSON struct {
 	DisplayName   apijson.Field
 	TimeZone      apijson.Field
 	Department    apijson.Field
+	Compensation  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -2014,6 +2835,107 @@ func (r *WorkerReactivatedWebhookEventPayloadDepartment) UnmarshalJSON(data []by
 
 func (r workerReactivatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerReactivatedWebhookEventPayloadCompensation struct {
+	PayRateID string                                                   `json:"payRateId" api:"required"`
+	Amount    string                                                   `json:"amount" api:"required"`
+	Currency  WorkerReactivatedWebhookEventPayloadCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                                               `json:"display" api:"required"`
+	JSON    workerReactivatedWebhookEventPayloadCompensationJSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCompensationJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCompensation]
+type workerReactivatedWebhookEventPayloadCompensationJSON struct {
+	PayRateID   apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerReactivatedWebhookEventPayloadCompensationCurrency string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyUsd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "USD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyAud WorkerReactivatedWebhookEventPayloadCompensationCurrency = "AUD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyBgn WorkerReactivatedWebhookEventPayloadCompensationCurrency = "BGN"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyBrl WorkerReactivatedWebhookEventPayloadCompensationCurrency = "BRL"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyCad WorkerReactivatedWebhookEventPayloadCompensationCurrency = "CAD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyChf WorkerReactivatedWebhookEventPayloadCompensationCurrency = "CHF"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyCzk WorkerReactivatedWebhookEventPayloadCompensationCurrency = "CZK"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyDkk WorkerReactivatedWebhookEventPayloadCompensationCurrency = "DKK"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyEur WorkerReactivatedWebhookEventPayloadCompensationCurrency = "EUR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyGbp WorkerReactivatedWebhookEventPayloadCompensationCurrency = "GBP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyHkd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "HKD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyHuf WorkerReactivatedWebhookEventPayloadCompensationCurrency = "HUF"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyIdr WorkerReactivatedWebhookEventPayloadCompensationCurrency = "IDR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyInr WorkerReactivatedWebhookEventPayloadCompensationCurrency = "INR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyJpy WorkerReactivatedWebhookEventPayloadCompensationCurrency = "JPY"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyMyr WorkerReactivatedWebhookEventPayloadCompensationCurrency = "MYR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyNok WorkerReactivatedWebhookEventPayloadCompensationCurrency = "NOK"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyNzd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "NZD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyCny WorkerReactivatedWebhookEventPayloadCompensationCurrency = "CNY"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyPln WorkerReactivatedWebhookEventPayloadCompensationCurrency = "PLN"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyRon WorkerReactivatedWebhookEventPayloadCompensationCurrency = "RON"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyTry WorkerReactivatedWebhookEventPayloadCompensationCurrency = "TRY"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencySek WorkerReactivatedWebhookEventPayloadCompensationCurrency = "SEK"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencySgd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "SGD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyAed WorkerReactivatedWebhookEventPayloadCompensationCurrency = "AED"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyArs WorkerReactivatedWebhookEventPayloadCompensationCurrency = "ARS"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyBdt WorkerReactivatedWebhookEventPayloadCompensationCurrency = "BDT"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyBwp WorkerReactivatedWebhookEventPayloadCompensationCurrency = "BWP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyClp WorkerReactivatedWebhookEventPayloadCompensationCurrency = "CLP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyCop WorkerReactivatedWebhookEventPayloadCompensationCurrency = "COP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyCrc WorkerReactivatedWebhookEventPayloadCompensationCurrency = "CRC"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyEgp WorkerReactivatedWebhookEventPayloadCompensationCurrency = "EGP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyFjd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "FJD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyGel WorkerReactivatedWebhookEventPayloadCompensationCurrency = "GEL"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyGhs WorkerReactivatedWebhookEventPayloadCompensationCurrency = "GHS"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyIls WorkerReactivatedWebhookEventPayloadCompensationCurrency = "ILS"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyKes WorkerReactivatedWebhookEventPayloadCompensationCurrency = "KES"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyKrw WorkerReactivatedWebhookEventPayloadCompensationCurrency = "KRW"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyLkr WorkerReactivatedWebhookEventPayloadCompensationCurrency = "LKR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyMad WorkerReactivatedWebhookEventPayloadCompensationCurrency = "MAD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyMxn WorkerReactivatedWebhookEventPayloadCompensationCurrency = "MXN"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyNpr WorkerReactivatedWebhookEventPayloadCompensationCurrency = "NPR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyPhp WorkerReactivatedWebhookEventPayloadCompensationCurrency = "PHP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyPkr WorkerReactivatedWebhookEventPayloadCompensationCurrency = "PKR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyThb WorkerReactivatedWebhookEventPayloadCompensationCurrency = "THB"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyUah WorkerReactivatedWebhookEventPayloadCompensationCurrency = "UAH"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyUgx WorkerReactivatedWebhookEventPayloadCompensationCurrency = "UGX"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyUyu WorkerReactivatedWebhookEventPayloadCompensationCurrency = "UYU"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyVnd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "VND"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyZar WorkerReactivatedWebhookEventPayloadCompensationCurrency = "ZAR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyZmw WorkerReactivatedWebhookEventPayloadCompensationCurrency = "ZMW"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyTnd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "TND"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyNgn WorkerReactivatedWebhookEventPayloadCompensationCurrency = "NGN"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyRsd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "RSD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyTwd WorkerReactivatedWebhookEventPayloadCompensationCurrency = "TWD"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyGtq WorkerReactivatedWebhookEventPayloadCompensationCurrency = "GTQ"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyHnl WorkerReactivatedWebhookEventPayloadCompensationCurrency = "HNL"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyDop WorkerReactivatedWebhookEventPayloadCompensationCurrency = "DOP"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencySar WorkerReactivatedWebhookEventPayloadCompensationCurrency = "SAR"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyXaf WorkerReactivatedWebhookEventPayloadCompensationCurrency = "XAF"
+	WorkerReactivatedWebhookEventPayloadCompensationCurrencyPen WorkerReactivatedWebhookEventPayloadCompensationCurrency = "PEN"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCompensationCurrency) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCompensationCurrencyUsd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyAud, WorkerReactivatedWebhookEventPayloadCompensationCurrencyBgn, WorkerReactivatedWebhookEventPayloadCompensationCurrencyBrl, WorkerReactivatedWebhookEventPayloadCompensationCurrencyCad, WorkerReactivatedWebhookEventPayloadCompensationCurrencyChf, WorkerReactivatedWebhookEventPayloadCompensationCurrencyCzk, WorkerReactivatedWebhookEventPayloadCompensationCurrencyDkk, WorkerReactivatedWebhookEventPayloadCompensationCurrencyEur, WorkerReactivatedWebhookEventPayloadCompensationCurrencyGbp, WorkerReactivatedWebhookEventPayloadCompensationCurrencyHkd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyHuf, WorkerReactivatedWebhookEventPayloadCompensationCurrencyIdr, WorkerReactivatedWebhookEventPayloadCompensationCurrencyInr, WorkerReactivatedWebhookEventPayloadCompensationCurrencyJpy, WorkerReactivatedWebhookEventPayloadCompensationCurrencyMyr, WorkerReactivatedWebhookEventPayloadCompensationCurrencyNok, WorkerReactivatedWebhookEventPayloadCompensationCurrencyNzd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyCny, WorkerReactivatedWebhookEventPayloadCompensationCurrencyPln, WorkerReactivatedWebhookEventPayloadCompensationCurrencyRon, WorkerReactivatedWebhookEventPayloadCompensationCurrencyTry, WorkerReactivatedWebhookEventPayloadCompensationCurrencySek, WorkerReactivatedWebhookEventPayloadCompensationCurrencySgd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyAed, WorkerReactivatedWebhookEventPayloadCompensationCurrencyArs, WorkerReactivatedWebhookEventPayloadCompensationCurrencyBdt, WorkerReactivatedWebhookEventPayloadCompensationCurrencyBwp, WorkerReactivatedWebhookEventPayloadCompensationCurrencyClp, WorkerReactivatedWebhookEventPayloadCompensationCurrencyCop, WorkerReactivatedWebhookEventPayloadCompensationCurrencyCrc, WorkerReactivatedWebhookEventPayloadCompensationCurrencyEgp, WorkerReactivatedWebhookEventPayloadCompensationCurrencyFjd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyGel, WorkerReactivatedWebhookEventPayloadCompensationCurrencyGhs, WorkerReactivatedWebhookEventPayloadCompensationCurrencyIls, WorkerReactivatedWebhookEventPayloadCompensationCurrencyKes, WorkerReactivatedWebhookEventPayloadCompensationCurrencyKrw, WorkerReactivatedWebhookEventPayloadCompensationCurrencyLkr, WorkerReactivatedWebhookEventPayloadCompensationCurrencyMad, WorkerReactivatedWebhookEventPayloadCompensationCurrencyMxn, WorkerReactivatedWebhookEventPayloadCompensationCurrencyNpr, WorkerReactivatedWebhookEventPayloadCompensationCurrencyPhp, WorkerReactivatedWebhookEventPayloadCompensationCurrencyPkr, WorkerReactivatedWebhookEventPayloadCompensationCurrencyThb, WorkerReactivatedWebhookEventPayloadCompensationCurrencyUah, WorkerReactivatedWebhookEventPayloadCompensationCurrencyUgx, WorkerReactivatedWebhookEventPayloadCompensationCurrencyUyu, WorkerReactivatedWebhookEventPayloadCompensationCurrencyVnd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyZar, WorkerReactivatedWebhookEventPayloadCompensationCurrencyZmw, WorkerReactivatedWebhookEventPayloadCompensationCurrencyTnd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyNgn, WorkerReactivatedWebhookEventPayloadCompensationCurrencyRsd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyTwd, WorkerReactivatedWebhookEventPayloadCompensationCurrencyGtq, WorkerReactivatedWebhookEventPayloadCompensationCurrencyHnl, WorkerReactivatedWebhookEventPayloadCompensationCurrencyDop, WorkerReactivatedWebhookEventPayloadCompensationCurrencySar, WorkerReactivatedWebhookEventPayloadCompensationCurrencyXaf, WorkerReactivatedWebhookEventPayloadCompensationCurrencyPen:
+		return true
+	}
+	return false
 }
 
 type OfferCreatedWebhookEvent struct {

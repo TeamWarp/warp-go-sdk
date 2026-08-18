@@ -2415,7 +2415,7 @@
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"id\", sdk.CustomFieldNewOptionParams{\n\t\tLabel: sdk.F[interface{}](map[string]interface{}{}),\n\t\tValue: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(customField)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"id\", sdk.CustomFieldNewOptionParams{\n\t\tObjects2: sdk.Objects2Param{\n\t\t\tLabel: sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tValue: sdk.F[interface{}](map[string]interface{}{}),\n\t\t},\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(customField)\n}"
           }
         ]
       }
@@ -5835,6 +5835,399 @@
         ]
       }
     },
+    "/v1/pay_rates": {
+      "get": {
+        "tags": [
+          "Pay Rates"
+        ],
+        "operationId": "Pay Rates.list",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "required": true
+          },
+          {
+            "name": "afterId",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "allOf": [
+                    {
+                      "pattern": "^pyr_",
+                      "description": "The tag of the pay rate.",
+                      "examples": [
+                        "pyr_1234"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "beforeId",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "allOf": [
+                    {
+                      "pattern": "^pyr_",
+                      "description": "The tag of the pay rate.",
+                      "examples": [
+                        "pyr_1234"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "workerId",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "allOf": [
+                    {
+                      "pattern": "^wrk_",
+                      "description": "The id of the worker.",
+                      "examples": [
+                        "wrk_1234"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only return pay rates assigned to this worker."
+            },
+            "required": false
+          },
+          {
+            "name": "effectiveOnOrAfter",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "allOf": [
+                    {
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only return pay rates whose effective start date is on or after this date."
+            },
+            "required": false
+          },
+          {
+            "name": "effectiveBefore",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "allOf": [
+                    {
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only return pay rates whose effective start date is before this date."
+            },
+            "required": false
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PublicPayRateType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only return regular or additional pay rates of this type."
+            },
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hasMore": {
+                      "type": "boolean"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PublicPayRate"
+                      }
+                    }
+                  },
+                  "required": [
+                    "hasMore",
+                    "count",
+                    "data"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiKeyUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyUnauthorizedEncoded"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "MissingRequiredCompanyPermissions | ApiNotEnabled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MissingRequiredCompanyPermissionsEncoded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApiNotEnabledEncoded"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RateLimitExceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitExceededEncoded"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/effect_HttpApiError_InternalServerErrorEncoded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/effect_HttpApiError_InternalServerErrorEncoded"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "description": "List pay rates visible to the API key. Results may be filtered by worker, effective start date, or regular/additional type. US and global worker rates require their corresponding compensation read scopes.",
+        "summary": "List Pay Rates",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.payRates.list({\n  limit: 'limit',\n});\n\nconsole.log(list);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npay_rate = client.pay_rates.list(\n    limit=\"limit\",\n)\n\nprint(pay_rate)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpayRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(payRate)\n}"
+          }
+        ]
+      }
+    },
+    "/v1/pay_rates/{id}": {
+      "get": {
+        "tags": [
+          "Pay Rates"
+        ],
+        "operationId": "Pay Rates.get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "allOf": [
+                {
+                  "pattern": "^pyr_",
+                  "description": "The tag of the pay rate.",
+                  "examples": [
+                    "pyr_1234"
+                  ]
+                }
+              ]
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A regular or additional pay rate assigned to a worker.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicPayRate"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiKeyUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyUnauthorizedEncoded"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "MissingRequiredCompanyPermissions | ApiNotEnabled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/MissingRequiredCompanyPermissionsEncoded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApiNotEnabledEncoded"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The specified pay rate could not be found or is not visible to this API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayRateNotFoundErrorEncoded"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RateLimitExceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitExceededEncoded"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "InternalServerError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/effect_HttpApiError_InternalServerErrorEncoded"
+                    },
+                    {
+                      "$ref": "#/components/schemas/effect_HttpApiError_InternalServerErrorEncoded"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "description": "Get a specific pay rate by id. The API key must have the compensation read scope corresponding to the worker.",
+        "summary": "Get Pay Rate",
+        "x-codeSamples": [
+          {
+            "lang": "TypeScript",
+            "label": "TypeScript",
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst retrieve = await client.payRates.retrieve('id');\n\nconsole.log(retrieve);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npay_rate = client.pay_rates.retrieve(\n    id=\"id\",\n)\n\nprint(pay_rate)"
+          },
+          {
+            "lang": "Go",
+            "label": "Go",
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpayRate, err := client.PayRates.Get(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(payRate)\n}"
+          }
+        ]
+      }
+    },
     "/v1/time_off/policies": {
       "get": {
         "tags": [
@@ -6011,17 +6404,17 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst timeOffGet = await client.timeOff.policies.timeOffGet({\n  limit: 'limit',\n});\n\nconsole.log(timeOffGet);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst list = await client.timeOff.policies.list({\n  limit: 'limit',\n});\n\nconsole.log(list);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.time_off_get(\n    limit=\"limit\",\n)\n\nprint(policy)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.list(\n    limit=\"limit\",\n)\n\nprint(policy)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{\n\t\tLimit: sdk.F[string](\"limit\"),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
           }
         ]
       }
@@ -6137,17 +6530,17 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst timeOffGet2 = await client.timeOff.policies.timeOffGet2('id');\n\nconsole.log(timeOffGet2);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.timeOff.policies.get('id');\n\nconsole.log(get_);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.time_off_get2(\n    id=\"id\",\n)\n\nprint(policy)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\npolicy = client.time_off.policies.get(\n    id=\"id\",\n)\n\nprint(policy)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tpolicy, err := client.TimeOff.Policies.Get(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(policy)\n}"
           }
         ]
       }
@@ -7638,6 +8031,9 @@
                     },
                     "department": {
                       "$ref": "#/components/schemas/Union_31"
+                    },
+                    "compensation": {
+                      "$ref": "#/components/schemas/Union_32"
                     }
                   },
                   "required": [
@@ -7656,7 +8052,8 @@
                     "preferredName",
                     "displayName",
                     "timeZone",
-                    "department"
+                    "department",
+                    "compensation"
                   ],
                   "additionalProperties": false
                 }
@@ -8142,6 +8539,9 @@
                     },
                     "department": {
                       "$ref": "#/components/schemas/Union_31"
+                    },
+                    "compensation": {
+                      "$ref": "#/components/schemas/Union_32"
                     }
                   },
                   "required": [
@@ -8160,7 +8560,8 @@
                     "preferredName",
                     "displayName",
                     "timeZone",
-                    "department"
+                    "department",
+                    "compensation"
                   ],
                   "additionalProperties": false
                 }
@@ -8971,6 +9372,9 @@
                     },
                     "department": {
                       "$ref": "#/components/schemas/Union_31"
+                    },
+                    "compensation": {
+                      "$ref": "#/components/schemas/Union_32"
                     }
                   },
                   "required": [
@@ -8989,7 +9393,8 @@
                     "preferredName",
                     "displayName",
                     "timeZone",
-                    "department"
+                    "department",
+                    "compensation"
                   ],
                   "additionalProperties": false
                 }
@@ -9128,7 +9533,7 @@
             "name": "afterId",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Union_32"
+              "$ref": "#/components/schemas/Union_33"
             },
             "required": false
           },
@@ -9136,7 +9541,7 @@
             "name": "beforeId",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Union_32"
+              "$ref": "#/components/schemas/Union_33"
             },
             "required": false
           }
@@ -9185,10 +9590,10 @@
                             ]
                           },
                           "type": {
-                            "$ref": "#/components/schemas/Union_33"
+                            "$ref": "#/components/schemas/Union_34"
                           },
                           "status": {
-                            "$ref": "#/components/schemas/Union_34"
+                            "$ref": "#/components/schemas/Union_35"
                           },
                           "address": {
                             "$ref": "#/components/schemas/Objects_11"
@@ -9333,10 +9738,10 @@
                       ]
                     },
                     "type": {
-                      "$ref": "#/components/schemas/Union_33"
+                      "$ref": "#/components/schemas/Union_34"
                     },
                     "status": {
-                      "$ref": "#/components/schemas/Union_34"
+                      "$ref": "#/components/schemas/Union_35"
                     },
                     "address": {
                       "$ref": "#/components/schemas/Objects_11"
@@ -9488,7 +9893,7 @@
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworkplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{\n\t\tAddress: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{\n\t\t\tLine1:      sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tCity:       sdk.F[string](\"\"),\n\t\t\tPostalCode: sdk.F[string](\"\"),\n\t\t}),\n\t\tName: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(workplace)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tworkplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{\n\t\tAddress: sdk.F[sdk.Objects11Param](sdk.Objects11Param{\n\t\t\tLine1:      sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tCity:       sdk.F[string](\"\"),\n\t\t\tPostalCode: sdk.F[string](\"\"),\n\t\t}),\n\t\tName: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(workplace)\n}"
           }
         ]
       }
@@ -9551,10 +9956,10 @@
                       ]
                     },
                     "type": {
-                      "$ref": "#/components/schemas/Union_33"
+                      "$ref": "#/components/schemas/Union_34"
                     },
                     "status": {
-                      "$ref": "#/components/schemas/Union_34"
+                      "$ref": "#/components/schemas/Union_35"
                     },
                     "address": {
                       "$ref": "#/components/schemas/Objects_11"
@@ -9771,6 +10176,51 @@
           "-Infinity",
           "NaN"
         ]
+      },
+      "PublicWorkerCompensation": {
+        "type": "object",
+        "properties": {
+          "payRateId": {
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "^pyr_",
+                "description": "The id of the regular pay rate represented here.",
+                "examples": [
+                  "pyr_1234"
+                ]
+              }
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "allOf": [
+              {
+                "minimum": 0,
+                "description": "Amount in the currency base unit, e.g. cents for USD."
+              }
+            ]
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Union_"
+          },
+          "display": {
+            "type": "string",
+            "description": "The server-formatted display string for the amount in its currency.",
+            "examples": [
+              "$150,000.00",
+              "$85.50"
+            ]
+          }
+        },
+        "required": [
+          "payRateId",
+          "amount",
+          "currency",
+          "display"
+        ],
+        "additionalProperties": false,
+        "description": "The worker's current regular pay rate. For a worker whose start date is in the future, this is the regular rate effective on their start date. Null when no regular rate applies or when the API key lacks the corresponding US or global compensation read scope."
       },
       "PublicMoneyAmount": {
         "type": "object",
@@ -12313,6 +12763,169 @@
         ],
         "additionalProperties": false
       },
+      "PublicPayRateType": {
+        "type": "string",
+        "enum": [
+          "regular",
+          "additional"
+        ],
+        "description": "Whether the rate is the worker's regular base compensation or an additional rate such as a bonus, commission, or stipend."
+      },
+      "PublicPayRateBasis": {
+        "type": "string",
+        "enum": [
+          "salary",
+          "monthly",
+          "weekly",
+          "hourly",
+          "variable"
+        ],
+        "description": "The period or calculation basis for the pay rate."
+      },
+      "PublicPayRate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "^pyr_",
+                "description": "The pay rate id.",
+                "examples": [
+                  "pyr_1234"
+                ]
+              }
+            ]
+          },
+          "workerId": {
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "^wrk_",
+                "description": "The id of the worker assigned this pay rate.",
+                "examples": [
+                  "wrk_1234"
+                ]
+              }
+            ]
+          },
+          "type": {
+            "$ref": "#/components/schemas/PublicPayRateType"
+          },
+          "basis": {
+            "$ref": "#/components/schemas/PublicPayRateBasis"
+          },
+          "amount": {
+            "type": "integer",
+            "allOf": [
+              {
+                "minimum": 0,
+                "description": "Amount in the currency base unit, e.g. cents for USD."
+              }
+            ]
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Union_"
+          },
+          "display": {
+            "type": "string",
+            "description": "The server-formatted display string for the amount in its currency.",
+            "examples": [
+              "$150,000.00",
+              "$85.50"
+            ]
+          },
+          "effectiveStartDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "allOf": [
+                  {
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The first date on which the rate applies. Additional rates may have no start date."
+          },
+          "effectiveEndDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "allOf": [
+                  {
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The first date on which the rate no longer applies, or null when it is open-ended."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A human-readable label for the pay rate, when one is configured."
+          }
+        },
+        "required": [
+          "id",
+          "workerId",
+          "type",
+          "basis",
+          "amount",
+          "currency",
+          "display",
+          "effectiveStartDate",
+          "effectiveEndDate",
+          "description"
+        ],
+        "additionalProperties": false,
+        "description": "A regular or additional pay rate assigned to a worker."
+      },
+      "PayRateNotFoundErrorEncoded": {
+        "type": "object",
+        "properties": {
+          "_tag": {
+            "type": "string",
+            "enum": [
+              "PayRateNotFoundError"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "allOf": [
+              {
+                "pattern": "^pyr_",
+                "description": "The tag of the pay rate.",
+                "examples": [
+                  "pyr_1234"
+                ]
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_tag",
+          "id",
+          "message"
+        ],
+        "additionalProperties": false
+      },
       "Objects_9": {
         "type": "object",
         "properties": {
@@ -12699,6 +13312,17 @@
           null
         ]
       },
+      "Union_32": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/PublicWorkerCompensation"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
+      },
       "Objects_10": {
         "type": "object",
         "properties": {
@@ -12788,6 +13412,9 @@
           },
           "department": {
             "$ref": "#/components/schemas/Union_31"
+          },
+          "compensation": {
+            "$ref": "#/components/schemas/Union_32"
           }
         },
         "required": [
@@ -12806,7 +13433,8 @@
           "preferredName",
           "displayName",
           "timeZone",
-          "department"
+          "department",
+          "compensation"
         ],
         "additionalProperties": false
       },
@@ -13101,7 +13729,7 @@
         ],
         "additionalProperties": false
       },
-      "Union_32": {
+      "Union_33": {
         "anyOf": [
           {
             "type": "string",
@@ -13120,14 +13748,14 @@
           }
         ]
       },
-      "Union_33": {
+      "Union_34": {
         "type": "string",
         "enum": [
           "remote",
           "office"
         ]
       },
-      "Union_34": {
+      "Union_35": {
         "type": "string",
         "enum": [
           "active",
@@ -13251,7 +13879,7 @@
             ]
           },
           "id": {
-            "$ref": "#/components/schemas/Union_32"
+            "$ref": "#/components/schemas/Union_33"
           },
           "name": {
             "type": "string"
@@ -13374,6 +14002,10 @@
     {
       "name": "Offers",
       "description": "Endpoints for managing candidate offers. Create and send offers, list existing offers, and manage their lifecycle."
+    },
+    {
+      "name": "Pay Rates",
+      "description": "Read regular and additional worker pay rates."
     },
     {
       "name": "Time Off",
@@ -14381,6 +15013,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -14399,7 +15042,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -14691,6 +15335,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -14709,7 +15364,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -15001,6 +15657,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -15019,7 +15686,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -15311,6 +15979,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -15329,7 +16008,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -15621,6 +16301,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -15639,7 +16330,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -15931,6 +16623,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -15949,7 +16652,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -16241,6 +16945,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -16259,7 +16974,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -16551,6 +17267,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -16569,7 +17296,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },
@@ -16861,6 +17589,17 @@
                           },
                           null
                         ]
+                      },
+                      "compensation": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/PublicWorkerCompensation"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "The worker's current regular compensation, or the rate effective on a future start date. Null when the worker has no applicable regular pay rate or the API key lacks the corresponding compensation read scope."
                       }
                     },
                     "required": [
@@ -16879,7 +17618,8 @@
                       "preferredName",
                       "displayName",
                       "timeZone",
-                      "department"
+                      "department",
+                      "compensation"
                     ],
                     "additionalProperties": false
                   },

@@ -22,6 +22,7 @@ type Client struct {
 	CustomFields *CustomFieldService
 	Departments  *DepartmentService
 	Offers       *OfferService
+	PayRates     *PayRateService
 	TimeOff      *TimeOffService
 	Workers      *WorkerService
 	Workplaces   *WorkplaceService
@@ -65,6 +66,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.CustomFields = NewCustomFieldService(opts...)
 	r.Departments = NewDepartmentService(opts...)
 	r.Offers = NewOfferService(opts...)
+	r.PayRates = NewPayRateService(opts...)
 	r.TimeOff = NewTimeOffService(opts...)
 	r.Workers = NewWorkerService(opts...)
 	r.Workplaces = NewWorkplaceService(opts...)
