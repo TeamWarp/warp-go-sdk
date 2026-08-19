@@ -100,10 +100,10 @@ type PublicPayRate struct {
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PublicPayRateType `json:"type" api:"required"`
-	// The period for the pay rate.
-	Basis    PublicPayRateBasis `json:"basis" api:"required"`
-	Amount   string             `json:"amount" api:"required"`
-	Currency Union              `json:"currency" api:"required"`
+	// The period represented by the pay rate amount.
+	Per      PublicPayRatePer `json:"per" api:"required"`
+	Amount   string           `json:"amount" api:"required"`
+	Currency Union            `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start
@@ -122,7 +122,7 @@ type publicPayRateJSON struct {
 	ID                 apijson.Field
 	Worker             apijson.Field
 	Type               apijson.Field
-	Basis              apijson.Field
+	Per                apijson.Field
 	Amount             apijson.Field
 	Currency           apijson.Field
 	Display            apijson.Field
@@ -156,18 +156,18 @@ func (r PublicPayRateType) IsKnown() bool {
 	return false
 }
 
-type PublicPayRateBasis string
+type PublicPayRatePer string
 
 const (
-	PublicPayRateBasisYearly  PublicPayRateBasis = "yearly"
-	PublicPayRateBasisMonthly PublicPayRateBasis = "monthly"
-	PublicPayRateBasisWeekly  PublicPayRateBasis = "weekly"
-	PublicPayRateBasisHourly  PublicPayRateBasis = "hourly"
+	PublicPayRatePerYear  PublicPayRatePer = "year"
+	PublicPayRatePerMonth PublicPayRatePer = "month"
+	PublicPayRatePerWeek  PublicPayRatePer = "week"
+	PublicPayRatePerHour  PublicPayRatePer = "hour"
 )
 
-func (r PublicPayRateBasis) IsKnown() bool {
+func (r PublicPayRatePer) IsKnown() bool {
 	switch r {
-	case PublicPayRateBasisYearly, PublicPayRateBasisMonthly, PublicPayRateBasisWeekly, PublicPayRateBasisHourly:
+	case PublicPayRatePerYear, PublicPayRatePerMonth, PublicPayRatePerWeek, PublicPayRatePerHour:
 		return true
 	}
 	return false
@@ -180,10 +180,10 @@ type PayRateGetResponse struct {
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PayRateGetResponseType `json:"type" api:"required"`
-	// The period for the pay rate.
-	Basis    PayRateGetResponseBasis `json:"basis" api:"required"`
-	Amount   string                  `json:"amount" api:"required"`
-	Currency Union                   `json:"currency" api:"required"`
+	// The period represented by the pay rate amount.
+	Per      PayRateGetResponsePer `json:"per" api:"required"`
+	Amount   string                `json:"amount" api:"required"`
+	Currency Union                 `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start
@@ -202,7 +202,7 @@ type payRateGetResponseJSON struct {
 	ID                 apijson.Field
 	Worker             apijson.Field
 	Type               apijson.Field
-	Basis              apijson.Field
+	Per                apijson.Field
 	Amount             apijson.Field
 	Currency           apijson.Field
 	Display            apijson.Field
@@ -236,18 +236,18 @@ func (r PayRateGetResponseType) IsKnown() bool {
 	return false
 }
 
-type PayRateGetResponseBasis string
+type PayRateGetResponsePer string
 
 const (
-	PayRateGetResponseBasisYearly  PayRateGetResponseBasis = "yearly"
-	PayRateGetResponseBasisMonthly PayRateGetResponseBasis = "monthly"
-	PayRateGetResponseBasisWeekly  PayRateGetResponseBasis = "weekly"
-	PayRateGetResponseBasisHourly  PayRateGetResponseBasis = "hourly"
+	PayRateGetResponsePerYear  PayRateGetResponsePer = "year"
+	PayRateGetResponsePerMonth PayRateGetResponsePer = "month"
+	PayRateGetResponsePerWeek  PayRateGetResponsePer = "week"
+	PayRateGetResponsePerHour  PayRateGetResponsePer = "hour"
 )
 
-func (r PayRateGetResponseBasis) IsKnown() bool {
+func (r PayRateGetResponsePer) IsKnown() bool {
 	switch r {
-	case PayRateGetResponseBasisYearly, PayRateGetResponseBasisMonthly, PayRateGetResponseBasisWeekly, PayRateGetResponseBasisHourly:
+	case PayRateGetResponsePerYear, PayRateGetResponsePerMonth, PayRateGetResponsePerWeek, PayRateGetResponsePerHour:
 		return true
 	}
 	return false

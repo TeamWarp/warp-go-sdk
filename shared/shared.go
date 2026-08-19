@@ -82,10 +82,10 @@ func (r Union) IsKnown() bool {
 
 type PublicWorkerCompensation struct {
 	PayRateID string `json:"payRateId" api:"required"`
-	// The period for the pay rate.
-	Basis    PublicWorkerCompensationBasis `json:"basis" api:"required"`
-	Amount   string                        `json:"amount" api:"required"`
-	Currency Union                         `json:"currency" api:"required"`
+	// The period represented by the pay rate amount.
+	Per      PublicWorkerCompensationPer `json:"per" api:"required"`
+	Amount   string                      `json:"amount" api:"required"`
+	Currency Union                       `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string                       `json:"display" api:"required"`
 	JSON    publicWorkerCompensationJSON `json:"-"`
@@ -94,7 +94,7 @@ type PublicWorkerCompensation struct {
 // publicWorkerCompensationJSON contains the JSON metadata for the struct [PublicWorkerCompensation]
 type publicWorkerCompensationJSON struct {
 	PayRateID   apijson.Field
-	Basis       apijson.Field
+	Per         apijson.Field
 	Amount      apijson.Field
 	Currency    apijson.Field
 	Display     apijson.Field
@@ -110,18 +110,18 @@ func (r publicWorkerCompensationJSON) RawJSON() string {
 	return r.raw
 }
 
-type PublicWorkerCompensationBasis string
+type PublicWorkerCompensationPer string
 
 const (
-	PublicWorkerCompensationBasisYearly  PublicWorkerCompensationBasis = "yearly"
-	PublicWorkerCompensationBasisMonthly PublicWorkerCompensationBasis = "monthly"
-	PublicWorkerCompensationBasisWeekly  PublicWorkerCompensationBasis = "weekly"
-	PublicWorkerCompensationBasisHourly  PublicWorkerCompensationBasis = "hourly"
+	PublicWorkerCompensationPerYear  PublicWorkerCompensationPer = "year"
+	PublicWorkerCompensationPerMonth PublicWorkerCompensationPer = "month"
+	PublicWorkerCompensationPerWeek  PublicWorkerCompensationPer = "week"
+	PublicWorkerCompensationPerHour  PublicWorkerCompensationPer = "hour"
 )
 
-func (r PublicWorkerCompensationBasis) IsKnown() bool {
+func (r PublicWorkerCompensationPer) IsKnown() bool {
 	switch r {
-	case PublicWorkerCompensationBasisYearly, PublicWorkerCompensationBasisMonthly, PublicWorkerCompensationBasisWeekly, PublicWorkerCompensationBasisHourly:
+	case PublicWorkerCompensationPerYear, PublicWorkerCompensationPerMonth, PublicWorkerCompensationPerWeek, PublicWorkerCompensationPerHour:
 		return true
 	}
 	return false
