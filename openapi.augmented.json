@@ -2415,7 +2415,7 @@
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"id\", sdk.CustomFieldNewOptionParams{\n\t\tLabel: sdk.F[interface{}](map[string]interface{}{}),\n\t\tValue: sdk.F[interface{}](map[string]interface{}{}),\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(customField)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\tcustomField, err := client.CustomFields.NewOption(context.Background(), \"id\", sdk.CustomFieldNewOptionParams{\n\t\tObjects2: sdk.Objects2Param{\n\t\t\tLabel: sdk.F[interface{}](map[string]interface{}{}),\n\t\t\tValue: sdk.F[interface{}](map[string]interface{}{}),\n\t\t},\n\t})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(customField)\n}"
           }
         ]
       }

@@ -202,8 +202,10 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 // Example:
 //
 //	customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
-//		Label: sdk.F[interface{}](map[string]interface{}{}),
-//		Value: sdk.F[interface{}](map[string]interface{}{}),
+//		Objects2: sdk.Objects2Param{
+//			Label: sdk.F[interface{}](map[string]interface{}{}),
+//			Value: sdk.F[interface{}](map[string]interface{}{}),
+//		},
 //	})
 //	if err != nil {
 //		panic(err)
@@ -409,6 +411,22 @@ type Objects2Param struct {
 
 func (r Objects2Param) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
+}
+
+type Union1 string
+
+const (
+	Union1Infinity  Union1 = "Infinity"
+	Union1Infinity2 Union1 = "-Infinity"
+	Union1NaN       Union1 = "NaN"
+)
+
+func (r Union1) IsKnown() bool {
+	switch r {
+	case Union1Infinity, Union1Infinity2, Union1NaN:
+		return true
+	}
+	return false
 }
 
 type Objects4 struct {
@@ -619,13 +637,11 @@ func (r CustomFieldUpdateParamsInputBy) IsKnown() bool {
 }
 
 type CustomFieldNewOptionParams struct {
-	Label     param.Field[interface{}] `json:"label" api:"required"`
-	Value     param.Field[interface{}] `json:"value" api:"required"`
-	SortOrder param.Field[interface{}] `json:"sortOrder"`
+	Objects2 Objects2Param `json:"objects_2" api:"required"`
 }
 
 func (r CustomFieldNewOptionParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
+	return apijson.MarshalRoot(r.Objects2)
 }
 
 type CustomFieldUpdateOptionParams struct {

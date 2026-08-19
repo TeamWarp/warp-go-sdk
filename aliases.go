@@ -75,14 +75,6 @@ const (
 	UnionPen = shared.UnionPen
 )
 
-type Union1 = shared.Union1
-
-const (
-	Union1Infinity  = shared.Union1Infinity
-	Union1Infinity2 = shared.Union1Infinity2
-	Union1NaN       = shared.Union1NaN
-)
-
 type PublicWorkerCompensation = shared.PublicWorkerCompensation
 
 type PublicWorkerCompensationBasis = shared.PublicWorkerCompensationBasis
