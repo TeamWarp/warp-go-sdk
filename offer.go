@@ -109,6 +109,7 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 //
 //	ctx: Context for the request.
 //	id: Path parameter.
+//	body: OfferVoidParams request parameters.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -117,20 +118,20 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 //
 // Example:
 //
-//	offer, err := client.Offers.Void(context.Background(), "id")
+//	offer, err := client.Offers.Void(context.Background(), "id", sdk.OfferVoidParams{})
 //	if err != nil {
 //		panic(err)
 //	}
 //
 //	fmt.Println(offer)
-func (r *OfferService) Void(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Objects5, err error) {
+func (r *OfferService) Void(ctx context.Context, id string, body OfferVoidParams, opts ...option.RequestOption) (res *shared.Objects5, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
 	path := fmt.Sprintf("v1/offers/%s/void", url.PathEscape(id))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
 }
 
@@ -660,6 +661,30 @@ const (
 func (r OfferNewParamsCompensationPayType) IsKnown() bool {
 	switch r {
 	case OfferNewParamsCompensationPayTypeFixed, OfferNewParamsCompensationPayTypePayAsYouGo:
+		return true
+	}
+	return false
+}
+
+type OfferVoidParams struct {
+	VoidReason param.Field[OfferVoidParamsVoidReason] `json:"voidReason" api:"required"`
+	VoidNotes  param.Field[string]                    `json:"voidNotes"`
+}
+
+func (r OfferVoidParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type OfferVoidParamsVoidReason string
+
+const (
+	OfferVoidParamsVoidReasonCandidateDeclined OfferVoidParamsVoidReason = "candidate_declined"
+	OfferVoidParamsVoidReasonOther             OfferVoidParamsVoidReason = "other"
+)
+
+func (r OfferVoidParamsVoidReason) IsKnown() bool {
+	switch r {
+	case OfferVoidParamsVoidReasonCandidateDeclined, OfferVoidParamsVoidReasonOther:
 		return true
 	}
 	return false

@@ -531,10 +531,11 @@ Void a previously sent offer. Only sent offers can be voided.
 
 | Direction | Type |
 | --- | --- |
+| Request | [`OfferVoidParams`](./offer.go) |
 | Response | [`Objects5`](./shared/shared.go) |
 
 ```go
-offer, err := client.Offers.Void(context.Background(), "id")
+offer, err := client.Offers.Void(context.Background(), "id", sdk.OfferVoidParams{})
 if err != nil {
 	panic(err)
 }
