@@ -1219,12 +1219,12 @@
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst get_ = await client.benefits.deductions.get('id');\n\nconsole.log(get_);"
+            "source": "import Warp from 'warp-hr';\n\nconst client = new Warp({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst retrieve = await client.benefits.deductions.retrieve('id');\n\nconsole.log(retrieve);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ndeduction = client.benefits.deductions.get(\n    id=\"id\",\n)\n\nprint(deduction)"
+            "source": "import os\n\nfrom warp_hr import Warp\n\nclient = Warp(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\ndeduction = client.benefits.deductions.retrieve(\n    id=\"id\",\n)\n\nprint(deduction)"
           },
           {
             "lang": "Go",
