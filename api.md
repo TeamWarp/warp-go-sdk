@@ -296,8 +296,10 @@ Add an option to a select or multi_select custom worker field. The option value 
 
 ```go
 customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
-	Label: sdk.F[interface{}](map[string]interface{}{}),
-	Value: sdk.F[interface{}](map[string]interface{}{}),
+	Objects2: sdk.Objects2Param{
+		Label: sdk.F[interface{}](map[string]interface{}{}),
+		Value: sdk.F[interface{}](map[string]interface{}{}),
+	},
 })
 if err != nil {
 	panic(err)

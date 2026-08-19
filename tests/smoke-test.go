@@ -148,8 +148,10 @@ func _smokeCase10() {
 
 func _smokeCase11() {
 	customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
-		Label: sdk.F[interface{}](map[string]interface{}{}),
-		Value: sdk.F[interface{}](map[string]interface{}{}),
+		Objects2: sdk.Objects2Param{
+			Label: sdk.F[interface{}](map[string]interface{}{}),
+			Value: sdk.F[interface{}](map[string]interface{}{}),
+		},
 	})
 	if err != nil {
 		panic(err)

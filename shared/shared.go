@@ -80,22 +80,6 @@ func (r Union) IsKnown() bool {
 	return false
 }
 
-type Union1 string
-
-const (
-	Union1Infinity  Union1 = "Infinity"
-	Union1Infinity2 Union1 = "-Infinity"
-	Union1NaN       Union1 = "NaN"
-)
-
-func (r Union1) IsKnown() bool {
-	switch r {
-	case Union1Infinity, Union1Infinity2, Union1NaN:
-		return true
-	}
-	return false
-}
-
 type PublicWorkerCompensation struct {
 	PayRateID string `json:"payRateId" api:"required"`
 	// The period for the pay rate.
