@@ -532,7 +532,7 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "retrieve",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/benefits/deductions/{id}",
 		Run:       _smokeCase5,
