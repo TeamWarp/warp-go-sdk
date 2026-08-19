@@ -1567,8 +1567,6 @@ func (r TimeOffPolicyNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union20 = string
-
 type Union21 = string
 
 type Union23 string
