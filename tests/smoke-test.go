@@ -282,7 +282,7 @@ func _smokeCase22() {
 }
 
 func _smokeCase23() {
-	offer, err := client.Offers.Void(context.Background(), "id")
+	offer, err := client.Offers.Void(context.Background(), "id", sdk.OfferVoidParams{})
 	if err != nil {
 		panic(err)
 	}

@@ -5586,21 +5586,61 @@
         },
         "description": "Void a previously sent offer. Only sent offers can be voided.",
         "summary": "Void Offer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "voidReason": {
+                    "type": "string",
+                    "enum": [
+                      "candidate_declined",
+                      "other"
+                    ]
+                  },
+                  "voidNotes": {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "voidReason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": true
+        },
         "x-codeSamples": [
           {
             "lang": "TypeScript",
             "label": "TypeScript",
-            "source": "import WarpAPI from 'warp-hr';\n\nconst client = new WarpAPI({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst objects5 = await client.offers.void('id');\n\nconsole.log(objects5);"
+            "source": "import WarpAPI from 'warp-hr';\n\nconst client = new WarpAPI({\n  apiKey: process.env['WARP_API_KEY'], // defaults to the WARP_API_KEY env var\n});\n\nconst objects5 = await client.offers.void('id', {\n  voidReason: 'candidate_declined',\n});\n\nconsole.log(objects5);"
           },
           {
             "lang": "Python",
             "label": "Python",
-            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\noffer = client.offers.void(\n    id=\"id\",\n)\n\nprint(offer)"
+            "source": "import os\n\nfrom warp_hr import WarpAPI\n\nclient = WarpAPI(\n    api_key=os.environ.get(\"WARP_API_KEY\"),\n)\n\noffer = client.offers.void(\n    id=\"id\",\n    void_reason=\"candidate_declined\",\n)\n\nprint(offer)"
           },
           {
             "lang": "Go",
             "label": "Go",
-            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\toffer, err := client.Offers.Void(context.Background(), \"id\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(offer)\n}"
+            "source": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\tsdk \"warp-hr\"\n\t\"warp-hr/option\"\n)\n\nfunc main() {\n\tclient := sdk.NewClient(\n\t\toption.WithAPIKey(os.Getenv(\"WARP_API_KEY\")),\n\t)\n\n\toffer, err := client.Offers.Void(context.Background(), \"id\", sdk.OfferVoidParams{})\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tfmt.Println(offer)\n}"
           }
         ]
       }
