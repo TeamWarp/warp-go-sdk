@@ -6753,7 +6753,8 @@
                                 "description": "The external-facing id of the worker assignment.",
                                 "examples": [
                                   "wrkasn_1234"
-                                ]
+                                ],
+                                "example": "wrkasn_1234"
                               }
                             ]
                           },
@@ -7024,7 +7025,8 @@
                                 "description": "The external-facing id of the worker assignment.",
                                 "examples": [
                                   "wrkasn_1234"
-                                ]
+                                ],
+                                "example": "wrkasn_1234"
                               }
                             ]
                           },
@@ -13384,7 +13386,8 @@
                 "description": "The external-facing id of the worker assignment.",
                 "examples": [
                   "wrkasn_1234"
-                ]
+                ],
+                "example": "wrkasn_1234"
               }
             ]
           },
