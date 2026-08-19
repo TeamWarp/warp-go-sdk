@@ -623,8 +623,6 @@ const (
 	TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound = shared.TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound
 )
 
-type Union20 = shared.Union20
-
 type Union21 = shared.Union21
 
 type Union23 = shared.Union23
