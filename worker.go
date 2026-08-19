@@ -1104,15 +1104,15 @@ func (r WorkerNewContractorParamsCompensationCurrency) IsKnown() bool {
 type WorkerNewContractorParamsCompensationPer string
 
 const (
-	WorkerNewContractorParamsCompensationPerHour  WorkerNewContractorParamsCompensationPer = "hour"
 	WorkerNewContractorParamsCompensationPerYear  WorkerNewContractorParamsCompensationPer = "year"
 	WorkerNewContractorParamsCompensationPerMonth WorkerNewContractorParamsCompensationPer = "month"
 	WorkerNewContractorParamsCompensationPerWeek  WorkerNewContractorParamsCompensationPer = "week"
+	WorkerNewContractorParamsCompensationPerHour  WorkerNewContractorParamsCompensationPer = "hour"
 )
 
 func (r WorkerNewContractorParamsCompensationPer) IsKnown() bool {
 	switch r {
-	case WorkerNewContractorParamsCompensationPerHour, WorkerNewContractorParamsCompensationPerYear, WorkerNewContractorParamsCompensationPerMonth, WorkerNewContractorParamsCompensationPerWeek:
+	case WorkerNewContractorParamsCompensationPerYear, WorkerNewContractorParamsCompensationPerMonth, WorkerNewContractorParamsCompensationPerWeek, WorkerNewContractorParamsCompensationPerHour:
 		return true
 	}
 	return false

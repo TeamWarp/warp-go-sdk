@@ -77,13 +77,13 @@ const (
 
 type PublicWorkerCompensation = shared.PublicWorkerCompensation
 
-type PublicWorkerCompensationBasis = shared.PublicWorkerCompensationBasis
+type PublicWorkerCompensationPer = shared.PublicWorkerCompensationPer
 
 const (
-	PublicWorkerCompensationBasisYearly  = shared.PublicWorkerCompensationBasisYearly
-	PublicWorkerCompensationBasisMonthly = shared.PublicWorkerCompensationBasisMonthly
-	PublicWorkerCompensationBasisWeekly  = shared.PublicWorkerCompensationBasisWeekly
-	PublicWorkerCompensationBasisHourly  = shared.PublicWorkerCompensationBasisHourly
+	PublicWorkerCompensationPerYear  = shared.PublicWorkerCompensationPerYear
+	PublicWorkerCompensationPerMonth = shared.PublicWorkerCompensationPerMonth
+	PublicWorkerCompensationPerWeek  = shared.PublicWorkerCompensationPerWeek
+	PublicWorkerCompensationPerHour  = shared.PublicWorkerCompensationPerHour
 )
 
 type PublicMoneyAmount = shared.PublicMoneyAmount
