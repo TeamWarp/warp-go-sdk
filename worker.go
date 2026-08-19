@@ -15,6 +15,7 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // WorkerService contains methods and other services that help with interacting
@@ -342,19 +343,19 @@ func (r RemoteWorkLocationState) IsKnown() bool {
 }
 
 type Objects10 struct {
-	ID            string          `json:"id" api:"required"`
-	Position      string          `json:"position" api:"required"`
-	Type          Objects10Type   `json:"type" api:"required"`
-	Status        Objects10Status `json:"status" api:"required"`
-	StartDate     string          `json:"startDate" api:"required"`
-	EndDate       string          `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool            `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string          `json:"businessName" api:"required,nullable"`
-	FirstName     string          `json:"firstName" api:"required"`
-	LastName      string          `json:"lastName" api:"required"`
-	Email         string          `json:"email" api:"required"`
-	WorkEmail     string          `json:"workEmail" api:"required,nullable"`
-	PreferredName string          `json:"preferredName" api:"required,nullable"`
+	ID            string  `json:"id" api:"required"`
+	Position      string  `json:"position" api:"required"`
+	Type          Union24 `json:"type" api:"required"`
+	Status        Union23 `json:"status" api:"required"`
+	StartDate     string  `json:"startDate" api:"required"`
+	EndDate       string  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string  `json:"businessName" api:"required,nullable"`
+	FirstName     string  `json:"firstName" api:"required"`
+	LastName      string  `json:"lastName" api:"required"`
+	Email         string  `json:"email" api:"required"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -365,8 +366,8 @@ type Objects10 struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation Objects10Compensation `json:"compensation" api:"required,nullable"`
-	JSON         objects10JSON         `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	JSON         objects10JSON                   `json:"-"`
 }
 
 // objects10JSON contains the JSON metadata for the struct [Objects10]
@@ -400,54 +401,20 @@ func (r objects10JSON) RawJSON() string {
 	return r.raw
 }
 
-type Objects10Type string
-
-const (
-	Objects10TypeEmployee   Objects10Type = "employee"
-	Objects10TypeContractor Objects10Type = "contractor"
-)
-
-func (r Objects10Type) IsKnown() bool {
-	switch r {
-	case Objects10TypeEmployee, Objects10TypeContractor:
-		return true
-	}
-	return false
-}
-
-type Objects10Status string
-
-const (
-	Objects10StatusDraft       Objects10Status = "draft"
-	Objects10StatusInvited     Objects10Status = "invited"
-	Objects10StatusOnboarding  Objects10Status = "onboarding"
-	Objects10StatusActive      Objects10Status = "active"
-	Objects10StatusOffboarding Objects10Status = "offboarding"
-	Objects10StatusInactive    Objects10Status = "inactive"
-)
-
-func (r Objects10Status) IsKnown() bool {
-	switch r {
-	case Objects10StatusDraft, Objects10StatusInvited, Objects10StatusOnboarding, Objects10StatusActive, Objects10StatusOffboarding, Objects10StatusInactive:
-		return true
-	}
-	return false
-}
-
 type WorkerGetResponse struct {
-	ID            string                  `json:"id" api:"required"`
-	Position      string                  `json:"position" api:"required"`
-	Type          WorkerGetResponseType   `json:"type" api:"required"`
-	Status        WorkerGetResponseStatus `json:"status" api:"required"`
-	StartDate     string                  `json:"startDate" api:"required"`
-	EndDate       string                  `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                    `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                  `json:"businessName" api:"required,nullable"`
-	FirstName     string                  `json:"firstName" api:"required"`
-	LastName      string                  `json:"lastName" api:"required"`
-	Email         string                  `json:"email" api:"required"`
-	WorkEmail     string                  `json:"workEmail" api:"required,nullable"`
-	PreferredName string                  `json:"preferredName" api:"required,nullable"`
+	ID            string  `json:"id" api:"required"`
+	Position      string  `json:"position" api:"required"`
+	Type          Union24 `json:"type" api:"required"`
+	Status        Union23 `json:"status" api:"required"`
+	StartDate     string  `json:"startDate" api:"required"`
+	EndDate       string  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string  `json:"businessName" api:"required,nullable"`
+	FirstName     string  `json:"firstName" api:"required"`
+	LastName      string  `json:"lastName" api:"required"`
+	Email         string  `json:"email" api:"required"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -458,8 +425,8 @@ type WorkerGetResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation WorkerGetResponseCompensation `json:"compensation" api:"required,nullable"`
-	JSON         workerGetResponseJSON         `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerGetResponseJSON           `json:"-"`
 }
 
 // workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
@@ -528,12 +495,12 @@ func (r WorkerGetResponseStatus) IsKnown() bool {
 }
 
 type WorkerListParams struct {
-	Limit     param.Field[string]                   `query:"limit" api:"required"`
-	AfterID   param.Field[string]                   `query:"afterId"`
-	BeforeID  param.Field[string]                   `query:"beforeId"`
-	Statuses  param.Field[[]WorkerListParamsStatus] `query:"statuses"`
-	Types     param.Field[[]WorkerListParamsType]   `query:"types"`
-	WorkEmail param.Field[string]                   `query:"workEmail"`
+	Limit     param.Field[string]    `query:"limit" api:"required"`
+	AfterID   param.Field[string]    `query:"afterId"`
+	BeforeID  param.Field[string]    `query:"beforeId"`
+	Statuses  param.Field[[]Union23] `query:"statuses"`
+	Types     param.Field[[]Union24] `query:"types"`
+	WorkEmail param.Field[string]    `query:"workEmail"`
 }
 
 // URLQuery serializes [WorkerListParams]'s query parameters as `url.Values`.
@@ -542,40 +509,6 @@ func (r WorkerListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
-}
-
-type WorkerListParamsStatus string
-
-const (
-	WorkerListParamsStatusDraft       WorkerListParamsStatus = "draft"
-	WorkerListParamsStatusInvited     WorkerListParamsStatus = "invited"
-	WorkerListParamsStatusOnboarding  WorkerListParamsStatus = "onboarding"
-	WorkerListParamsStatusActive      WorkerListParamsStatus = "active"
-	WorkerListParamsStatusOffboarding WorkerListParamsStatus = "offboarding"
-	WorkerListParamsStatusInactive    WorkerListParamsStatus = "inactive"
-)
-
-func (r WorkerListParamsStatus) IsKnown() bool {
-	switch r {
-	case WorkerListParamsStatusDraft, WorkerListParamsStatusInvited, WorkerListParamsStatusOnboarding, WorkerListParamsStatusActive, WorkerListParamsStatusOffboarding, WorkerListParamsStatusInactive:
-		return true
-	}
-	return false
-}
-
-type WorkerListParamsType string
-
-const (
-	WorkerListParamsTypeEmployee   WorkerListParamsType = "employee"
-	WorkerListParamsTypeContractor WorkerListParamsType = "contractor"
-)
-
-func (r WorkerListParamsType) IsKnown() bool {
-	switch r {
-	case WorkerListParamsTypeEmployee, WorkerListParamsTypeContractor:
-		return true
-	}
-	return false
 }
 
 type WorkerNewEmployeeParams struct {
@@ -1250,50 +1183,20 @@ func (r workerGetResponseDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerGetResponseCompensation struct {
-	PayRateID string `json:"payRateId" api:"required"`
-	// The period for the pay rate.
-	Basis    WorkerGetResponseCompensationBasis    `json:"basis" api:"required"`
-	Amount   string                                `json:"amount" api:"required"`
-	Currency WorkerGetResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted pay rate, including its period.
-	Display string                            `json:"display" api:"required"`
-	JSON    workerGetResponseCompensationJSON `json:"-"`
-}
-
-// workerGetResponseCompensationJSON contains the JSON metadata for the struct [WorkerGetResponseCompensation]
-type workerGetResponseCompensationJSON struct {
-	PayRateID   apijson.Field
-	Basis       apijson.Field
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
 type WorkerNewEmployeeResponse struct {
-	ID            string                          `json:"id" api:"required"`
-	Position      string                          `json:"position" api:"required"`
-	Type          WorkerNewEmployeeResponseType   `json:"type" api:"required"`
-	Status        WorkerNewEmployeeResponseStatus `json:"status" api:"required"`
-	StartDate     string                          `json:"startDate" api:"required"`
-	EndDate       string                          `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                            `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                          `json:"businessName" api:"required,nullable"`
-	FirstName     string                          `json:"firstName" api:"required"`
-	LastName      string                          `json:"lastName" api:"required"`
-	Email         string                          `json:"email" api:"required"`
-	WorkEmail     string                          `json:"workEmail" api:"required,nullable"`
-	PreferredName string                          `json:"preferredName" api:"required,nullable"`
+	ID            string  `json:"id" api:"required"`
+	Position      string  `json:"position" api:"required"`
+	Type          Union24 `json:"type" api:"required"`
+	Status        Union23 `json:"status" api:"required"`
+	StartDate     string  `json:"startDate" api:"required"`
+	EndDate       string  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string  `json:"businessName" api:"required,nullable"`
+	FirstName     string  `json:"firstName" api:"required"`
+	LastName      string  `json:"lastName" api:"required"`
+	Email         string  `json:"email" api:"required"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1304,8 +1207,8 @@ type WorkerNewEmployeeResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation WorkerNewEmployeeResponseCompensation `json:"compensation" api:"required,nullable"`
-	JSON         workerNewEmployeeResponseJSON         `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerNewEmployeeResponseJSON   `json:"-"`
 }
 
 // workerNewEmployeeResponseJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponse]
@@ -1340,19 +1243,19 @@ func (r workerNewEmployeeResponseJSON) RawJSON() string {
 }
 
 type WorkerNewContractorResponse struct {
-	ID            string                            `json:"id" api:"required"`
-	Position      string                            `json:"position" api:"required"`
-	Type          WorkerNewContractorResponseType   `json:"type" api:"required"`
-	Status        WorkerNewContractorResponseStatus `json:"status" api:"required"`
-	StartDate     string                            `json:"startDate" api:"required"`
-	EndDate       string                            `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                              `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                            `json:"businessName" api:"required,nullable"`
-	FirstName     string                            `json:"firstName" api:"required"`
-	LastName      string                            `json:"lastName" api:"required"`
-	Email         string                            `json:"email" api:"required"`
-	WorkEmail     string                            `json:"workEmail" api:"required,nullable"`
-	PreferredName string                            `json:"preferredName" api:"required,nullable"`
+	ID            string  `json:"id" api:"required"`
+	Position      string  `json:"position" api:"required"`
+	Type          Union24 `json:"type" api:"required"`
+	Status        Union23 `json:"status" api:"required"`
+	StartDate     string  `json:"startDate" api:"required"`
+	EndDate       string  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string  `json:"businessName" api:"required,nullable"`
+	FirstName     string  `json:"firstName" api:"required"`
+	LastName      string  `json:"lastName" api:"required"`
+	Email         string  `json:"email" api:"required"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1363,8 +1266,8 @@ type WorkerNewContractorResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation WorkerNewContractorResponseCompensation `json:"compensation" api:"required,nullable"`
-	JSON         workerNewContractorResponseJSON         `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerNewContractorResponseJSON `json:"-"`
 }
 
 // workerNewContractorResponseJSON contains the JSON metadata for the struct [WorkerNewContractorResponse]
@@ -1399,19 +1302,19 @@ func (r workerNewContractorResponseJSON) RawJSON() string {
 }
 
 type WorkerInviteResponse struct {
-	ID            string                     `json:"id" api:"required"`
-	Position      string                     `json:"position" api:"required"`
-	Type          WorkerInviteResponseType   `json:"type" api:"required"`
-	Status        WorkerInviteResponseStatus `json:"status" api:"required"`
-	StartDate     string                     `json:"startDate" api:"required"`
-	EndDate       string                     `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                       `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                     `json:"businessName" api:"required,nullable"`
-	FirstName     string                     `json:"firstName" api:"required"`
-	LastName      string                     `json:"lastName" api:"required"`
-	Email         string                     `json:"email" api:"required"`
-	WorkEmail     string                     `json:"workEmail" api:"required,nullable"`
-	PreferredName string                     `json:"preferredName" api:"required,nullable"`
+	ID            string  `json:"id" api:"required"`
+	Position      string  `json:"position" api:"required"`
+	Type          Union24 `json:"type" api:"required"`
+	Status        Union23 `json:"status" api:"required"`
+	StartDate     string  `json:"startDate" api:"required"`
+	EndDate       string  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string  `json:"businessName" api:"required,nullable"`
+	FirstName     string  `json:"firstName" api:"required"`
+	LastName      string  `json:"lastName" api:"required"`
+	Email         string  `json:"email" api:"required"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1422,8 +1325,8 @@ type WorkerInviteResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation WorkerInviteResponseCompensation `json:"compensation" api:"required,nullable"`
-	JSON         workerInviteResponseJSON         `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	JSON         workerInviteResponseJSON        `json:"-"`
 }
 
 // workerInviteResponseJSON contains the JSON metadata for the struct [WorkerInviteResponse]
@@ -1455,681 +1358,4 @@ func (r *WorkerInviteResponse) UnmarshalJSON(data []byte) (err error) {
 
 func (r workerInviteResponseJSON) RawJSON() string {
 	return r.raw
-}
-
-type Objects10Compensation struct {
-	PayRateID string `json:"payRateId" api:"required"`
-	// The period for the pay rate.
-	Basis    Objects10CompensationBasis    `json:"basis" api:"required"`
-	Amount   string                        `json:"amount" api:"required"`
-	Currency Objects10CompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted pay rate, including its period.
-	Display string                    `json:"display" api:"required"`
-	JSON    objects10CompensationJSON `json:"-"`
-}
-
-// objects10CompensationJSON contains the JSON metadata for the struct [Objects10Compensation]
-type objects10CompensationJSON struct {
-	PayRateID   apijson.Field
-	Basis       apijson.Field
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10Compensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseCompensationBasis string
-
-const (
-	WorkerGetResponseCompensationBasisYearly  WorkerGetResponseCompensationBasis = "yearly"
-	WorkerGetResponseCompensationBasisMonthly WorkerGetResponseCompensationBasis = "monthly"
-	WorkerGetResponseCompensationBasisWeekly  WorkerGetResponseCompensationBasis = "weekly"
-	WorkerGetResponseCompensationBasisHourly  WorkerGetResponseCompensationBasis = "hourly"
-)
-
-func (r WorkerGetResponseCompensationBasis) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCompensationBasisYearly, WorkerGetResponseCompensationBasisMonthly, WorkerGetResponseCompensationBasisWeekly, WorkerGetResponseCompensationBasisHourly:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCompensationCurrency string
-
-const (
-	WorkerGetResponseCompensationCurrencyUsd WorkerGetResponseCompensationCurrency = "USD"
-	WorkerGetResponseCompensationCurrencyAud WorkerGetResponseCompensationCurrency = "AUD"
-	WorkerGetResponseCompensationCurrencyBgn WorkerGetResponseCompensationCurrency = "BGN"
-	WorkerGetResponseCompensationCurrencyBrl WorkerGetResponseCompensationCurrency = "BRL"
-	WorkerGetResponseCompensationCurrencyCad WorkerGetResponseCompensationCurrency = "CAD"
-	WorkerGetResponseCompensationCurrencyChf WorkerGetResponseCompensationCurrency = "CHF"
-	WorkerGetResponseCompensationCurrencyCzk WorkerGetResponseCompensationCurrency = "CZK"
-	WorkerGetResponseCompensationCurrencyDkk WorkerGetResponseCompensationCurrency = "DKK"
-	WorkerGetResponseCompensationCurrencyEur WorkerGetResponseCompensationCurrency = "EUR"
-	WorkerGetResponseCompensationCurrencyGbp WorkerGetResponseCompensationCurrency = "GBP"
-	WorkerGetResponseCompensationCurrencyHkd WorkerGetResponseCompensationCurrency = "HKD"
-	WorkerGetResponseCompensationCurrencyHuf WorkerGetResponseCompensationCurrency = "HUF"
-	WorkerGetResponseCompensationCurrencyIdr WorkerGetResponseCompensationCurrency = "IDR"
-	WorkerGetResponseCompensationCurrencyInr WorkerGetResponseCompensationCurrency = "INR"
-	WorkerGetResponseCompensationCurrencyJpy WorkerGetResponseCompensationCurrency = "JPY"
-	WorkerGetResponseCompensationCurrencyMyr WorkerGetResponseCompensationCurrency = "MYR"
-	WorkerGetResponseCompensationCurrencyNok WorkerGetResponseCompensationCurrency = "NOK"
-	WorkerGetResponseCompensationCurrencyNzd WorkerGetResponseCompensationCurrency = "NZD"
-	WorkerGetResponseCompensationCurrencyCny WorkerGetResponseCompensationCurrency = "CNY"
-	WorkerGetResponseCompensationCurrencyPln WorkerGetResponseCompensationCurrency = "PLN"
-	WorkerGetResponseCompensationCurrencyRon WorkerGetResponseCompensationCurrency = "RON"
-	WorkerGetResponseCompensationCurrencyTry WorkerGetResponseCompensationCurrency = "TRY"
-	WorkerGetResponseCompensationCurrencySek WorkerGetResponseCompensationCurrency = "SEK"
-	WorkerGetResponseCompensationCurrencySgd WorkerGetResponseCompensationCurrency = "SGD"
-	WorkerGetResponseCompensationCurrencyAed WorkerGetResponseCompensationCurrency = "AED"
-	WorkerGetResponseCompensationCurrencyArs WorkerGetResponseCompensationCurrency = "ARS"
-	WorkerGetResponseCompensationCurrencyBdt WorkerGetResponseCompensationCurrency = "BDT"
-	WorkerGetResponseCompensationCurrencyBwp WorkerGetResponseCompensationCurrency = "BWP"
-	WorkerGetResponseCompensationCurrencyClp WorkerGetResponseCompensationCurrency = "CLP"
-	WorkerGetResponseCompensationCurrencyCop WorkerGetResponseCompensationCurrency = "COP"
-	WorkerGetResponseCompensationCurrencyCrc WorkerGetResponseCompensationCurrency = "CRC"
-	WorkerGetResponseCompensationCurrencyEgp WorkerGetResponseCompensationCurrency = "EGP"
-	WorkerGetResponseCompensationCurrencyFjd WorkerGetResponseCompensationCurrency = "FJD"
-	WorkerGetResponseCompensationCurrencyGel WorkerGetResponseCompensationCurrency = "GEL"
-	WorkerGetResponseCompensationCurrencyGhs WorkerGetResponseCompensationCurrency = "GHS"
-	WorkerGetResponseCompensationCurrencyIls WorkerGetResponseCompensationCurrency = "ILS"
-	WorkerGetResponseCompensationCurrencyKes WorkerGetResponseCompensationCurrency = "KES"
-	WorkerGetResponseCompensationCurrencyKrw WorkerGetResponseCompensationCurrency = "KRW"
-	WorkerGetResponseCompensationCurrencyLkr WorkerGetResponseCompensationCurrency = "LKR"
-	WorkerGetResponseCompensationCurrencyMad WorkerGetResponseCompensationCurrency = "MAD"
-	WorkerGetResponseCompensationCurrencyMxn WorkerGetResponseCompensationCurrency = "MXN"
-	WorkerGetResponseCompensationCurrencyNpr WorkerGetResponseCompensationCurrency = "NPR"
-	WorkerGetResponseCompensationCurrencyPhp WorkerGetResponseCompensationCurrency = "PHP"
-	WorkerGetResponseCompensationCurrencyPkr WorkerGetResponseCompensationCurrency = "PKR"
-	WorkerGetResponseCompensationCurrencyThb WorkerGetResponseCompensationCurrency = "THB"
-	WorkerGetResponseCompensationCurrencyUah WorkerGetResponseCompensationCurrency = "UAH"
-	WorkerGetResponseCompensationCurrencyUgx WorkerGetResponseCompensationCurrency = "UGX"
-	WorkerGetResponseCompensationCurrencyUyu WorkerGetResponseCompensationCurrency = "UYU"
-	WorkerGetResponseCompensationCurrencyVnd WorkerGetResponseCompensationCurrency = "VND"
-	WorkerGetResponseCompensationCurrencyZar WorkerGetResponseCompensationCurrency = "ZAR"
-	WorkerGetResponseCompensationCurrencyZmw WorkerGetResponseCompensationCurrency = "ZMW"
-	WorkerGetResponseCompensationCurrencyTnd WorkerGetResponseCompensationCurrency = "TND"
-	WorkerGetResponseCompensationCurrencyNgn WorkerGetResponseCompensationCurrency = "NGN"
-	WorkerGetResponseCompensationCurrencyRsd WorkerGetResponseCompensationCurrency = "RSD"
-	WorkerGetResponseCompensationCurrencyTwd WorkerGetResponseCompensationCurrency = "TWD"
-	WorkerGetResponseCompensationCurrencyGtq WorkerGetResponseCompensationCurrency = "GTQ"
-	WorkerGetResponseCompensationCurrencyHnl WorkerGetResponseCompensationCurrency = "HNL"
-	WorkerGetResponseCompensationCurrencyDop WorkerGetResponseCompensationCurrency = "DOP"
-	WorkerGetResponseCompensationCurrencySar WorkerGetResponseCompensationCurrency = "SAR"
-	WorkerGetResponseCompensationCurrencyXaf WorkerGetResponseCompensationCurrency = "XAF"
-	WorkerGetResponseCompensationCurrencyPen WorkerGetResponseCompensationCurrency = "PEN"
-)
-
-func (r WorkerGetResponseCompensationCurrency) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCompensationCurrencyUsd, WorkerGetResponseCompensationCurrencyAud, WorkerGetResponseCompensationCurrencyBgn, WorkerGetResponseCompensationCurrencyBrl, WorkerGetResponseCompensationCurrencyCad, WorkerGetResponseCompensationCurrencyChf, WorkerGetResponseCompensationCurrencyCzk, WorkerGetResponseCompensationCurrencyDkk, WorkerGetResponseCompensationCurrencyEur, WorkerGetResponseCompensationCurrencyGbp, WorkerGetResponseCompensationCurrencyHkd, WorkerGetResponseCompensationCurrencyHuf, WorkerGetResponseCompensationCurrencyIdr, WorkerGetResponseCompensationCurrencyInr, WorkerGetResponseCompensationCurrencyJpy, WorkerGetResponseCompensationCurrencyMyr, WorkerGetResponseCompensationCurrencyNok, WorkerGetResponseCompensationCurrencyNzd, WorkerGetResponseCompensationCurrencyCny, WorkerGetResponseCompensationCurrencyPln, WorkerGetResponseCompensationCurrencyRon, WorkerGetResponseCompensationCurrencyTry, WorkerGetResponseCompensationCurrencySek, WorkerGetResponseCompensationCurrencySgd, WorkerGetResponseCompensationCurrencyAed, WorkerGetResponseCompensationCurrencyArs, WorkerGetResponseCompensationCurrencyBdt, WorkerGetResponseCompensationCurrencyBwp, WorkerGetResponseCompensationCurrencyClp, WorkerGetResponseCompensationCurrencyCop, WorkerGetResponseCompensationCurrencyCrc, WorkerGetResponseCompensationCurrencyEgp, WorkerGetResponseCompensationCurrencyFjd, WorkerGetResponseCompensationCurrencyGel, WorkerGetResponseCompensationCurrencyGhs, WorkerGetResponseCompensationCurrencyIls, WorkerGetResponseCompensationCurrencyKes, WorkerGetResponseCompensationCurrencyKrw, WorkerGetResponseCompensationCurrencyLkr, WorkerGetResponseCompensationCurrencyMad, WorkerGetResponseCompensationCurrencyMxn, WorkerGetResponseCompensationCurrencyNpr, WorkerGetResponseCompensationCurrencyPhp, WorkerGetResponseCompensationCurrencyPkr, WorkerGetResponseCompensationCurrencyThb, WorkerGetResponseCompensationCurrencyUah, WorkerGetResponseCompensationCurrencyUgx, WorkerGetResponseCompensationCurrencyUyu, WorkerGetResponseCompensationCurrencyVnd, WorkerGetResponseCompensationCurrencyZar, WorkerGetResponseCompensationCurrencyZmw, WorkerGetResponseCompensationCurrencyTnd, WorkerGetResponseCompensationCurrencyNgn, WorkerGetResponseCompensationCurrencyRsd, WorkerGetResponseCompensationCurrencyTwd, WorkerGetResponseCompensationCurrencyGtq, WorkerGetResponseCompensationCurrencyHnl, WorkerGetResponseCompensationCurrencyDop, WorkerGetResponseCompensationCurrencySar, WorkerGetResponseCompensationCurrencyXaf, WorkerGetResponseCompensationCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseType string
-
-const (
-	WorkerNewEmployeeResponseTypeEmployee   WorkerNewEmployeeResponseType = "employee"
-	WorkerNewEmployeeResponseTypeContractor WorkerNewEmployeeResponseType = "contractor"
-)
-
-func (r WorkerNewEmployeeResponseType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseTypeEmployee, WorkerNewEmployeeResponseTypeContractor:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseStatus string
-
-const (
-	WorkerNewEmployeeResponseStatusDraft       WorkerNewEmployeeResponseStatus = "draft"
-	WorkerNewEmployeeResponseStatusInvited     WorkerNewEmployeeResponseStatus = "invited"
-	WorkerNewEmployeeResponseStatusOnboarding  WorkerNewEmployeeResponseStatus = "onboarding"
-	WorkerNewEmployeeResponseStatusActive      WorkerNewEmployeeResponseStatus = "active"
-	WorkerNewEmployeeResponseStatusOffboarding WorkerNewEmployeeResponseStatus = "offboarding"
-	WorkerNewEmployeeResponseStatusInactive    WorkerNewEmployeeResponseStatus = "inactive"
-)
-
-func (r WorkerNewEmployeeResponseStatus) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseStatusDraft, WorkerNewEmployeeResponseStatusInvited, WorkerNewEmployeeResponseStatusOnboarding, WorkerNewEmployeeResponseStatusActive, WorkerNewEmployeeResponseStatusOffboarding, WorkerNewEmployeeResponseStatusInactive:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCompensation struct {
-	PayRateID string `json:"payRateId" api:"required"`
-	// The period for the pay rate.
-	Basis    WorkerNewEmployeeResponseCompensationBasis    `json:"basis" api:"required"`
-	Amount   string                                        `json:"amount" api:"required"`
-	Currency WorkerNewEmployeeResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted pay rate, including its period.
-	Display string                                    `json:"display" api:"required"`
-	JSON    workerNewEmployeeResponseCompensationJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseCompensationJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCompensation]
-type workerNewEmployeeResponseCompensationJSON struct {
-	PayRateID   apijson.Field
-	Basis       apijson.Field
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewContractorResponseType string
-
-const (
-	WorkerNewContractorResponseTypeEmployee   WorkerNewContractorResponseType = "employee"
-	WorkerNewContractorResponseTypeContractor WorkerNewContractorResponseType = "contractor"
-)
-
-func (r WorkerNewContractorResponseType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseTypeEmployee, WorkerNewContractorResponseTypeContractor:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseStatus string
-
-const (
-	WorkerNewContractorResponseStatusDraft       WorkerNewContractorResponseStatus = "draft"
-	WorkerNewContractorResponseStatusInvited     WorkerNewContractorResponseStatus = "invited"
-	WorkerNewContractorResponseStatusOnboarding  WorkerNewContractorResponseStatus = "onboarding"
-	WorkerNewContractorResponseStatusActive      WorkerNewContractorResponseStatus = "active"
-	WorkerNewContractorResponseStatusOffboarding WorkerNewContractorResponseStatus = "offboarding"
-	WorkerNewContractorResponseStatusInactive    WorkerNewContractorResponseStatus = "inactive"
-)
-
-func (r WorkerNewContractorResponseStatus) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseStatusDraft, WorkerNewContractorResponseStatusInvited, WorkerNewContractorResponseStatusOnboarding, WorkerNewContractorResponseStatusActive, WorkerNewContractorResponseStatusOffboarding, WorkerNewContractorResponseStatusInactive:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCompensation struct {
-	PayRateID string `json:"payRateId" api:"required"`
-	// The period for the pay rate.
-	Basis    WorkerNewContractorResponseCompensationBasis    `json:"basis" api:"required"`
-	Amount   string                                          `json:"amount" api:"required"`
-	Currency WorkerNewContractorResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted pay rate, including its period.
-	Display string                                      `json:"display" api:"required"`
-	JSON    workerNewContractorResponseCompensationJSON `json:"-"`
-}
-
-// workerNewContractorResponseCompensationJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCompensation]
-type workerNewContractorResponseCompensationJSON struct {
-	PayRateID   apijson.Field
-	Basis       apijson.Field
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerInviteResponseType string
-
-const (
-	WorkerInviteResponseTypeEmployee   WorkerInviteResponseType = "employee"
-	WorkerInviteResponseTypeContractor WorkerInviteResponseType = "contractor"
-)
-
-func (r WorkerInviteResponseType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseTypeEmployee, WorkerInviteResponseTypeContractor:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseStatus string
-
-const (
-	WorkerInviteResponseStatusDraft       WorkerInviteResponseStatus = "draft"
-	WorkerInviteResponseStatusInvited     WorkerInviteResponseStatus = "invited"
-	WorkerInviteResponseStatusOnboarding  WorkerInviteResponseStatus = "onboarding"
-	WorkerInviteResponseStatusActive      WorkerInviteResponseStatus = "active"
-	WorkerInviteResponseStatusOffboarding WorkerInviteResponseStatus = "offboarding"
-	WorkerInviteResponseStatusInactive    WorkerInviteResponseStatus = "inactive"
-)
-
-func (r WorkerInviteResponseStatus) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseStatusDraft, WorkerInviteResponseStatusInvited, WorkerInviteResponseStatusOnboarding, WorkerInviteResponseStatusActive, WorkerInviteResponseStatusOffboarding, WorkerInviteResponseStatusInactive:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCompensation struct {
-	PayRateID string `json:"payRateId" api:"required"`
-	// The period for the pay rate.
-	Basis    WorkerInviteResponseCompensationBasis    `json:"basis" api:"required"`
-	Amount   string                                   `json:"amount" api:"required"`
-	Currency WorkerInviteResponseCompensationCurrency `json:"currency" api:"required"`
-	// The server-formatted pay rate, including its period.
-	Display string                               `json:"display" api:"required"`
-	JSON    workerInviteResponseCompensationJSON `json:"-"`
-}
-
-// workerInviteResponseCompensationJSON contains the JSON metadata for the struct [WorkerInviteResponseCompensation]
-type workerInviteResponseCompensationJSON struct {
-	PayRateID   apijson.Field
-	Basis       apijson.Field
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects10CompensationBasis string
-
-const (
-	Objects10CompensationBasisYearly  Objects10CompensationBasis = "yearly"
-	Objects10CompensationBasisMonthly Objects10CompensationBasis = "monthly"
-	Objects10CompensationBasisWeekly  Objects10CompensationBasis = "weekly"
-	Objects10CompensationBasisHourly  Objects10CompensationBasis = "hourly"
-)
-
-func (r Objects10CompensationBasis) IsKnown() bool {
-	switch r {
-	case Objects10CompensationBasisYearly, Objects10CompensationBasisMonthly, Objects10CompensationBasisWeekly, Objects10CompensationBasisHourly:
-		return true
-	}
-	return false
-}
-
-type Objects10CompensationCurrency string
-
-const (
-	Objects10CompensationCurrencyUsd Objects10CompensationCurrency = "USD"
-	Objects10CompensationCurrencyAud Objects10CompensationCurrency = "AUD"
-	Objects10CompensationCurrencyBgn Objects10CompensationCurrency = "BGN"
-	Objects10CompensationCurrencyBrl Objects10CompensationCurrency = "BRL"
-	Objects10CompensationCurrencyCad Objects10CompensationCurrency = "CAD"
-	Objects10CompensationCurrencyChf Objects10CompensationCurrency = "CHF"
-	Objects10CompensationCurrencyCzk Objects10CompensationCurrency = "CZK"
-	Objects10CompensationCurrencyDkk Objects10CompensationCurrency = "DKK"
-	Objects10CompensationCurrencyEur Objects10CompensationCurrency = "EUR"
-	Objects10CompensationCurrencyGbp Objects10CompensationCurrency = "GBP"
-	Objects10CompensationCurrencyHkd Objects10CompensationCurrency = "HKD"
-	Objects10CompensationCurrencyHuf Objects10CompensationCurrency = "HUF"
-	Objects10CompensationCurrencyIdr Objects10CompensationCurrency = "IDR"
-	Objects10CompensationCurrencyInr Objects10CompensationCurrency = "INR"
-	Objects10CompensationCurrencyJpy Objects10CompensationCurrency = "JPY"
-	Objects10CompensationCurrencyMyr Objects10CompensationCurrency = "MYR"
-	Objects10CompensationCurrencyNok Objects10CompensationCurrency = "NOK"
-	Objects10CompensationCurrencyNzd Objects10CompensationCurrency = "NZD"
-	Objects10CompensationCurrencyCny Objects10CompensationCurrency = "CNY"
-	Objects10CompensationCurrencyPln Objects10CompensationCurrency = "PLN"
-	Objects10CompensationCurrencyRon Objects10CompensationCurrency = "RON"
-	Objects10CompensationCurrencyTry Objects10CompensationCurrency = "TRY"
-	Objects10CompensationCurrencySek Objects10CompensationCurrency = "SEK"
-	Objects10CompensationCurrencySgd Objects10CompensationCurrency = "SGD"
-	Objects10CompensationCurrencyAed Objects10CompensationCurrency = "AED"
-	Objects10CompensationCurrencyArs Objects10CompensationCurrency = "ARS"
-	Objects10CompensationCurrencyBdt Objects10CompensationCurrency = "BDT"
-	Objects10CompensationCurrencyBwp Objects10CompensationCurrency = "BWP"
-	Objects10CompensationCurrencyClp Objects10CompensationCurrency = "CLP"
-	Objects10CompensationCurrencyCop Objects10CompensationCurrency = "COP"
-	Objects10CompensationCurrencyCrc Objects10CompensationCurrency = "CRC"
-	Objects10CompensationCurrencyEgp Objects10CompensationCurrency = "EGP"
-	Objects10CompensationCurrencyFjd Objects10CompensationCurrency = "FJD"
-	Objects10CompensationCurrencyGel Objects10CompensationCurrency = "GEL"
-	Objects10CompensationCurrencyGhs Objects10CompensationCurrency = "GHS"
-	Objects10CompensationCurrencyIls Objects10CompensationCurrency = "ILS"
-	Objects10CompensationCurrencyKes Objects10CompensationCurrency = "KES"
-	Objects10CompensationCurrencyKrw Objects10CompensationCurrency = "KRW"
-	Objects10CompensationCurrencyLkr Objects10CompensationCurrency = "LKR"
-	Objects10CompensationCurrencyMad Objects10CompensationCurrency = "MAD"
-	Objects10CompensationCurrencyMxn Objects10CompensationCurrency = "MXN"
-	Objects10CompensationCurrencyNpr Objects10CompensationCurrency = "NPR"
-	Objects10CompensationCurrencyPhp Objects10CompensationCurrency = "PHP"
-	Objects10CompensationCurrencyPkr Objects10CompensationCurrency = "PKR"
-	Objects10CompensationCurrencyThb Objects10CompensationCurrency = "THB"
-	Objects10CompensationCurrencyUah Objects10CompensationCurrency = "UAH"
-	Objects10CompensationCurrencyUgx Objects10CompensationCurrency = "UGX"
-	Objects10CompensationCurrencyUyu Objects10CompensationCurrency = "UYU"
-	Objects10CompensationCurrencyVnd Objects10CompensationCurrency = "VND"
-	Objects10CompensationCurrencyZar Objects10CompensationCurrency = "ZAR"
-	Objects10CompensationCurrencyZmw Objects10CompensationCurrency = "ZMW"
-	Objects10CompensationCurrencyTnd Objects10CompensationCurrency = "TND"
-	Objects10CompensationCurrencyNgn Objects10CompensationCurrency = "NGN"
-	Objects10CompensationCurrencyRsd Objects10CompensationCurrency = "RSD"
-	Objects10CompensationCurrencyTwd Objects10CompensationCurrency = "TWD"
-	Objects10CompensationCurrencyGtq Objects10CompensationCurrency = "GTQ"
-	Objects10CompensationCurrencyHnl Objects10CompensationCurrency = "HNL"
-	Objects10CompensationCurrencyDop Objects10CompensationCurrency = "DOP"
-	Objects10CompensationCurrencySar Objects10CompensationCurrency = "SAR"
-	Objects10CompensationCurrencyXaf Objects10CompensationCurrency = "XAF"
-	Objects10CompensationCurrencyPen Objects10CompensationCurrency = "PEN"
-)
-
-func (r Objects10CompensationCurrency) IsKnown() bool {
-	switch r {
-	case Objects10CompensationCurrencyUsd, Objects10CompensationCurrencyAud, Objects10CompensationCurrencyBgn, Objects10CompensationCurrencyBrl, Objects10CompensationCurrencyCad, Objects10CompensationCurrencyChf, Objects10CompensationCurrencyCzk, Objects10CompensationCurrencyDkk, Objects10CompensationCurrencyEur, Objects10CompensationCurrencyGbp, Objects10CompensationCurrencyHkd, Objects10CompensationCurrencyHuf, Objects10CompensationCurrencyIdr, Objects10CompensationCurrencyInr, Objects10CompensationCurrencyJpy, Objects10CompensationCurrencyMyr, Objects10CompensationCurrencyNok, Objects10CompensationCurrencyNzd, Objects10CompensationCurrencyCny, Objects10CompensationCurrencyPln, Objects10CompensationCurrencyRon, Objects10CompensationCurrencyTry, Objects10CompensationCurrencySek, Objects10CompensationCurrencySgd, Objects10CompensationCurrencyAed, Objects10CompensationCurrencyArs, Objects10CompensationCurrencyBdt, Objects10CompensationCurrencyBwp, Objects10CompensationCurrencyClp, Objects10CompensationCurrencyCop, Objects10CompensationCurrencyCrc, Objects10CompensationCurrencyEgp, Objects10CompensationCurrencyFjd, Objects10CompensationCurrencyGel, Objects10CompensationCurrencyGhs, Objects10CompensationCurrencyIls, Objects10CompensationCurrencyKes, Objects10CompensationCurrencyKrw, Objects10CompensationCurrencyLkr, Objects10CompensationCurrencyMad, Objects10CompensationCurrencyMxn, Objects10CompensationCurrencyNpr, Objects10CompensationCurrencyPhp, Objects10CompensationCurrencyPkr, Objects10CompensationCurrencyThb, Objects10CompensationCurrencyUah, Objects10CompensationCurrencyUgx, Objects10CompensationCurrencyUyu, Objects10CompensationCurrencyVnd, Objects10CompensationCurrencyZar, Objects10CompensationCurrencyZmw, Objects10CompensationCurrencyTnd, Objects10CompensationCurrencyNgn, Objects10CompensationCurrencyRsd, Objects10CompensationCurrencyTwd, Objects10CompensationCurrencyGtq, Objects10CompensationCurrencyHnl, Objects10CompensationCurrencyDop, Objects10CompensationCurrencySar, Objects10CompensationCurrencyXaf, Objects10CompensationCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCompensationBasis string
-
-const (
-	WorkerNewEmployeeResponseCompensationBasisYearly  WorkerNewEmployeeResponseCompensationBasis = "yearly"
-	WorkerNewEmployeeResponseCompensationBasisMonthly WorkerNewEmployeeResponseCompensationBasis = "monthly"
-	WorkerNewEmployeeResponseCompensationBasisWeekly  WorkerNewEmployeeResponseCompensationBasis = "weekly"
-	WorkerNewEmployeeResponseCompensationBasisHourly  WorkerNewEmployeeResponseCompensationBasis = "hourly"
-)
-
-func (r WorkerNewEmployeeResponseCompensationBasis) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCompensationBasisYearly, WorkerNewEmployeeResponseCompensationBasisMonthly, WorkerNewEmployeeResponseCompensationBasisWeekly, WorkerNewEmployeeResponseCompensationBasisHourly:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCompensationCurrency string
-
-const (
-	WorkerNewEmployeeResponseCompensationCurrencyUsd WorkerNewEmployeeResponseCompensationCurrency = "USD"
-	WorkerNewEmployeeResponseCompensationCurrencyAud WorkerNewEmployeeResponseCompensationCurrency = "AUD"
-	WorkerNewEmployeeResponseCompensationCurrencyBgn WorkerNewEmployeeResponseCompensationCurrency = "BGN"
-	WorkerNewEmployeeResponseCompensationCurrencyBrl WorkerNewEmployeeResponseCompensationCurrency = "BRL"
-	WorkerNewEmployeeResponseCompensationCurrencyCad WorkerNewEmployeeResponseCompensationCurrency = "CAD"
-	WorkerNewEmployeeResponseCompensationCurrencyChf WorkerNewEmployeeResponseCompensationCurrency = "CHF"
-	WorkerNewEmployeeResponseCompensationCurrencyCzk WorkerNewEmployeeResponseCompensationCurrency = "CZK"
-	WorkerNewEmployeeResponseCompensationCurrencyDkk WorkerNewEmployeeResponseCompensationCurrency = "DKK"
-	WorkerNewEmployeeResponseCompensationCurrencyEur WorkerNewEmployeeResponseCompensationCurrency = "EUR"
-	WorkerNewEmployeeResponseCompensationCurrencyGbp WorkerNewEmployeeResponseCompensationCurrency = "GBP"
-	WorkerNewEmployeeResponseCompensationCurrencyHkd WorkerNewEmployeeResponseCompensationCurrency = "HKD"
-	WorkerNewEmployeeResponseCompensationCurrencyHuf WorkerNewEmployeeResponseCompensationCurrency = "HUF"
-	WorkerNewEmployeeResponseCompensationCurrencyIdr WorkerNewEmployeeResponseCompensationCurrency = "IDR"
-	WorkerNewEmployeeResponseCompensationCurrencyInr WorkerNewEmployeeResponseCompensationCurrency = "INR"
-	WorkerNewEmployeeResponseCompensationCurrencyJpy WorkerNewEmployeeResponseCompensationCurrency = "JPY"
-	WorkerNewEmployeeResponseCompensationCurrencyMyr WorkerNewEmployeeResponseCompensationCurrency = "MYR"
-	WorkerNewEmployeeResponseCompensationCurrencyNok WorkerNewEmployeeResponseCompensationCurrency = "NOK"
-	WorkerNewEmployeeResponseCompensationCurrencyNzd WorkerNewEmployeeResponseCompensationCurrency = "NZD"
-	WorkerNewEmployeeResponseCompensationCurrencyCny WorkerNewEmployeeResponseCompensationCurrency = "CNY"
-	WorkerNewEmployeeResponseCompensationCurrencyPln WorkerNewEmployeeResponseCompensationCurrency = "PLN"
-	WorkerNewEmployeeResponseCompensationCurrencyRon WorkerNewEmployeeResponseCompensationCurrency = "RON"
-	WorkerNewEmployeeResponseCompensationCurrencyTry WorkerNewEmployeeResponseCompensationCurrency = "TRY"
-	WorkerNewEmployeeResponseCompensationCurrencySek WorkerNewEmployeeResponseCompensationCurrency = "SEK"
-	WorkerNewEmployeeResponseCompensationCurrencySgd WorkerNewEmployeeResponseCompensationCurrency = "SGD"
-	WorkerNewEmployeeResponseCompensationCurrencyAed WorkerNewEmployeeResponseCompensationCurrency = "AED"
-	WorkerNewEmployeeResponseCompensationCurrencyArs WorkerNewEmployeeResponseCompensationCurrency = "ARS"
-	WorkerNewEmployeeResponseCompensationCurrencyBdt WorkerNewEmployeeResponseCompensationCurrency = "BDT"
-	WorkerNewEmployeeResponseCompensationCurrencyBwp WorkerNewEmployeeResponseCompensationCurrency = "BWP"
-	WorkerNewEmployeeResponseCompensationCurrencyClp WorkerNewEmployeeResponseCompensationCurrency = "CLP"
-	WorkerNewEmployeeResponseCompensationCurrencyCop WorkerNewEmployeeResponseCompensationCurrency = "COP"
-	WorkerNewEmployeeResponseCompensationCurrencyCrc WorkerNewEmployeeResponseCompensationCurrency = "CRC"
-	WorkerNewEmployeeResponseCompensationCurrencyEgp WorkerNewEmployeeResponseCompensationCurrency = "EGP"
-	WorkerNewEmployeeResponseCompensationCurrencyFjd WorkerNewEmployeeResponseCompensationCurrency = "FJD"
-	WorkerNewEmployeeResponseCompensationCurrencyGel WorkerNewEmployeeResponseCompensationCurrency = "GEL"
-	WorkerNewEmployeeResponseCompensationCurrencyGhs WorkerNewEmployeeResponseCompensationCurrency = "GHS"
-	WorkerNewEmployeeResponseCompensationCurrencyIls WorkerNewEmployeeResponseCompensationCurrency = "ILS"
-	WorkerNewEmployeeResponseCompensationCurrencyKes WorkerNewEmployeeResponseCompensationCurrency = "KES"
-	WorkerNewEmployeeResponseCompensationCurrencyKrw WorkerNewEmployeeResponseCompensationCurrency = "KRW"
-	WorkerNewEmployeeResponseCompensationCurrencyLkr WorkerNewEmployeeResponseCompensationCurrency = "LKR"
-	WorkerNewEmployeeResponseCompensationCurrencyMad WorkerNewEmployeeResponseCompensationCurrency = "MAD"
-	WorkerNewEmployeeResponseCompensationCurrencyMxn WorkerNewEmployeeResponseCompensationCurrency = "MXN"
-	WorkerNewEmployeeResponseCompensationCurrencyNpr WorkerNewEmployeeResponseCompensationCurrency = "NPR"
-	WorkerNewEmployeeResponseCompensationCurrencyPhp WorkerNewEmployeeResponseCompensationCurrency = "PHP"
-	WorkerNewEmployeeResponseCompensationCurrencyPkr WorkerNewEmployeeResponseCompensationCurrency = "PKR"
-	WorkerNewEmployeeResponseCompensationCurrencyThb WorkerNewEmployeeResponseCompensationCurrency = "THB"
-	WorkerNewEmployeeResponseCompensationCurrencyUah WorkerNewEmployeeResponseCompensationCurrency = "UAH"
-	WorkerNewEmployeeResponseCompensationCurrencyUgx WorkerNewEmployeeResponseCompensationCurrency = "UGX"
-	WorkerNewEmployeeResponseCompensationCurrencyUyu WorkerNewEmployeeResponseCompensationCurrency = "UYU"
-	WorkerNewEmployeeResponseCompensationCurrencyVnd WorkerNewEmployeeResponseCompensationCurrency = "VND"
-	WorkerNewEmployeeResponseCompensationCurrencyZar WorkerNewEmployeeResponseCompensationCurrency = "ZAR"
-	WorkerNewEmployeeResponseCompensationCurrencyZmw WorkerNewEmployeeResponseCompensationCurrency = "ZMW"
-	WorkerNewEmployeeResponseCompensationCurrencyTnd WorkerNewEmployeeResponseCompensationCurrency = "TND"
-	WorkerNewEmployeeResponseCompensationCurrencyNgn WorkerNewEmployeeResponseCompensationCurrency = "NGN"
-	WorkerNewEmployeeResponseCompensationCurrencyRsd WorkerNewEmployeeResponseCompensationCurrency = "RSD"
-	WorkerNewEmployeeResponseCompensationCurrencyTwd WorkerNewEmployeeResponseCompensationCurrency = "TWD"
-	WorkerNewEmployeeResponseCompensationCurrencyGtq WorkerNewEmployeeResponseCompensationCurrency = "GTQ"
-	WorkerNewEmployeeResponseCompensationCurrencyHnl WorkerNewEmployeeResponseCompensationCurrency = "HNL"
-	WorkerNewEmployeeResponseCompensationCurrencyDop WorkerNewEmployeeResponseCompensationCurrency = "DOP"
-	WorkerNewEmployeeResponseCompensationCurrencySar WorkerNewEmployeeResponseCompensationCurrency = "SAR"
-	WorkerNewEmployeeResponseCompensationCurrencyXaf WorkerNewEmployeeResponseCompensationCurrency = "XAF"
-	WorkerNewEmployeeResponseCompensationCurrencyPen WorkerNewEmployeeResponseCompensationCurrency = "PEN"
-)
-
-func (r WorkerNewEmployeeResponseCompensationCurrency) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCompensationCurrencyUsd, WorkerNewEmployeeResponseCompensationCurrencyAud, WorkerNewEmployeeResponseCompensationCurrencyBgn, WorkerNewEmployeeResponseCompensationCurrencyBrl, WorkerNewEmployeeResponseCompensationCurrencyCad, WorkerNewEmployeeResponseCompensationCurrencyChf, WorkerNewEmployeeResponseCompensationCurrencyCzk, WorkerNewEmployeeResponseCompensationCurrencyDkk, WorkerNewEmployeeResponseCompensationCurrencyEur, WorkerNewEmployeeResponseCompensationCurrencyGbp, WorkerNewEmployeeResponseCompensationCurrencyHkd, WorkerNewEmployeeResponseCompensationCurrencyHuf, WorkerNewEmployeeResponseCompensationCurrencyIdr, WorkerNewEmployeeResponseCompensationCurrencyInr, WorkerNewEmployeeResponseCompensationCurrencyJpy, WorkerNewEmployeeResponseCompensationCurrencyMyr, WorkerNewEmployeeResponseCompensationCurrencyNok, WorkerNewEmployeeResponseCompensationCurrencyNzd, WorkerNewEmployeeResponseCompensationCurrencyCny, WorkerNewEmployeeResponseCompensationCurrencyPln, WorkerNewEmployeeResponseCompensationCurrencyRon, WorkerNewEmployeeResponseCompensationCurrencyTry, WorkerNewEmployeeResponseCompensationCurrencySek, WorkerNewEmployeeResponseCompensationCurrencySgd, WorkerNewEmployeeResponseCompensationCurrencyAed, WorkerNewEmployeeResponseCompensationCurrencyArs, WorkerNewEmployeeResponseCompensationCurrencyBdt, WorkerNewEmployeeResponseCompensationCurrencyBwp, WorkerNewEmployeeResponseCompensationCurrencyClp, WorkerNewEmployeeResponseCompensationCurrencyCop, WorkerNewEmployeeResponseCompensationCurrencyCrc, WorkerNewEmployeeResponseCompensationCurrencyEgp, WorkerNewEmployeeResponseCompensationCurrencyFjd, WorkerNewEmployeeResponseCompensationCurrencyGel, WorkerNewEmployeeResponseCompensationCurrencyGhs, WorkerNewEmployeeResponseCompensationCurrencyIls, WorkerNewEmployeeResponseCompensationCurrencyKes, WorkerNewEmployeeResponseCompensationCurrencyKrw, WorkerNewEmployeeResponseCompensationCurrencyLkr, WorkerNewEmployeeResponseCompensationCurrencyMad, WorkerNewEmployeeResponseCompensationCurrencyMxn, WorkerNewEmployeeResponseCompensationCurrencyNpr, WorkerNewEmployeeResponseCompensationCurrencyPhp, WorkerNewEmployeeResponseCompensationCurrencyPkr, WorkerNewEmployeeResponseCompensationCurrencyThb, WorkerNewEmployeeResponseCompensationCurrencyUah, WorkerNewEmployeeResponseCompensationCurrencyUgx, WorkerNewEmployeeResponseCompensationCurrencyUyu, WorkerNewEmployeeResponseCompensationCurrencyVnd, WorkerNewEmployeeResponseCompensationCurrencyZar, WorkerNewEmployeeResponseCompensationCurrencyZmw, WorkerNewEmployeeResponseCompensationCurrencyTnd, WorkerNewEmployeeResponseCompensationCurrencyNgn, WorkerNewEmployeeResponseCompensationCurrencyRsd, WorkerNewEmployeeResponseCompensationCurrencyTwd, WorkerNewEmployeeResponseCompensationCurrencyGtq, WorkerNewEmployeeResponseCompensationCurrencyHnl, WorkerNewEmployeeResponseCompensationCurrencyDop, WorkerNewEmployeeResponseCompensationCurrencySar, WorkerNewEmployeeResponseCompensationCurrencyXaf, WorkerNewEmployeeResponseCompensationCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCompensationBasis string
-
-const (
-	WorkerNewContractorResponseCompensationBasisYearly  WorkerNewContractorResponseCompensationBasis = "yearly"
-	WorkerNewContractorResponseCompensationBasisMonthly WorkerNewContractorResponseCompensationBasis = "monthly"
-	WorkerNewContractorResponseCompensationBasisWeekly  WorkerNewContractorResponseCompensationBasis = "weekly"
-	WorkerNewContractorResponseCompensationBasisHourly  WorkerNewContractorResponseCompensationBasis = "hourly"
-)
-
-func (r WorkerNewContractorResponseCompensationBasis) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCompensationBasisYearly, WorkerNewContractorResponseCompensationBasisMonthly, WorkerNewContractorResponseCompensationBasisWeekly, WorkerNewContractorResponseCompensationBasisHourly:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCompensationCurrency string
-
-const (
-	WorkerNewContractorResponseCompensationCurrencyUsd WorkerNewContractorResponseCompensationCurrency = "USD"
-	WorkerNewContractorResponseCompensationCurrencyAud WorkerNewContractorResponseCompensationCurrency = "AUD"
-	WorkerNewContractorResponseCompensationCurrencyBgn WorkerNewContractorResponseCompensationCurrency = "BGN"
-	WorkerNewContractorResponseCompensationCurrencyBrl WorkerNewContractorResponseCompensationCurrency = "BRL"
-	WorkerNewContractorResponseCompensationCurrencyCad WorkerNewContractorResponseCompensationCurrency = "CAD"
-	WorkerNewContractorResponseCompensationCurrencyChf WorkerNewContractorResponseCompensationCurrency = "CHF"
-	WorkerNewContractorResponseCompensationCurrencyCzk WorkerNewContractorResponseCompensationCurrency = "CZK"
-	WorkerNewContractorResponseCompensationCurrencyDkk WorkerNewContractorResponseCompensationCurrency = "DKK"
-	WorkerNewContractorResponseCompensationCurrencyEur WorkerNewContractorResponseCompensationCurrency = "EUR"
-	WorkerNewContractorResponseCompensationCurrencyGbp WorkerNewContractorResponseCompensationCurrency = "GBP"
-	WorkerNewContractorResponseCompensationCurrencyHkd WorkerNewContractorResponseCompensationCurrency = "HKD"
-	WorkerNewContractorResponseCompensationCurrencyHuf WorkerNewContractorResponseCompensationCurrency = "HUF"
-	WorkerNewContractorResponseCompensationCurrencyIdr WorkerNewContractorResponseCompensationCurrency = "IDR"
-	WorkerNewContractorResponseCompensationCurrencyInr WorkerNewContractorResponseCompensationCurrency = "INR"
-	WorkerNewContractorResponseCompensationCurrencyJpy WorkerNewContractorResponseCompensationCurrency = "JPY"
-	WorkerNewContractorResponseCompensationCurrencyMyr WorkerNewContractorResponseCompensationCurrency = "MYR"
-	WorkerNewContractorResponseCompensationCurrencyNok WorkerNewContractorResponseCompensationCurrency = "NOK"
-	WorkerNewContractorResponseCompensationCurrencyNzd WorkerNewContractorResponseCompensationCurrency = "NZD"
-	WorkerNewContractorResponseCompensationCurrencyCny WorkerNewContractorResponseCompensationCurrency = "CNY"
-	WorkerNewContractorResponseCompensationCurrencyPln WorkerNewContractorResponseCompensationCurrency = "PLN"
-	WorkerNewContractorResponseCompensationCurrencyRon WorkerNewContractorResponseCompensationCurrency = "RON"
-	WorkerNewContractorResponseCompensationCurrencyTry WorkerNewContractorResponseCompensationCurrency = "TRY"
-	WorkerNewContractorResponseCompensationCurrencySek WorkerNewContractorResponseCompensationCurrency = "SEK"
-	WorkerNewContractorResponseCompensationCurrencySgd WorkerNewContractorResponseCompensationCurrency = "SGD"
-	WorkerNewContractorResponseCompensationCurrencyAed WorkerNewContractorResponseCompensationCurrency = "AED"
-	WorkerNewContractorResponseCompensationCurrencyArs WorkerNewContractorResponseCompensationCurrency = "ARS"
-	WorkerNewContractorResponseCompensationCurrencyBdt WorkerNewContractorResponseCompensationCurrency = "BDT"
-	WorkerNewContractorResponseCompensationCurrencyBwp WorkerNewContractorResponseCompensationCurrency = "BWP"
-	WorkerNewContractorResponseCompensationCurrencyClp WorkerNewContractorResponseCompensationCurrency = "CLP"
-	WorkerNewContractorResponseCompensationCurrencyCop WorkerNewContractorResponseCompensationCurrency = "COP"
-	WorkerNewContractorResponseCompensationCurrencyCrc WorkerNewContractorResponseCompensationCurrency = "CRC"
-	WorkerNewContractorResponseCompensationCurrencyEgp WorkerNewContractorResponseCompensationCurrency = "EGP"
-	WorkerNewContractorResponseCompensationCurrencyFjd WorkerNewContractorResponseCompensationCurrency = "FJD"
-	WorkerNewContractorResponseCompensationCurrencyGel WorkerNewContractorResponseCompensationCurrency = "GEL"
-	WorkerNewContractorResponseCompensationCurrencyGhs WorkerNewContractorResponseCompensationCurrency = "GHS"
-	WorkerNewContractorResponseCompensationCurrencyIls WorkerNewContractorResponseCompensationCurrency = "ILS"
-	WorkerNewContractorResponseCompensationCurrencyKes WorkerNewContractorResponseCompensationCurrency = "KES"
-	WorkerNewContractorResponseCompensationCurrencyKrw WorkerNewContractorResponseCompensationCurrency = "KRW"
-	WorkerNewContractorResponseCompensationCurrencyLkr WorkerNewContractorResponseCompensationCurrency = "LKR"
-	WorkerNewContractorResponseCompensationCurrencyMad WorkerNewContractorResponseCompensationCurrency = "MAD"
-	WorkerNewContractorResponseCompensationCurrencyMxn WorkerNewContractorResponseCompensationCurrency = "MXN"
-	WorkerNewContractorResponseCompensationCurrencyNpr WorkerNewContractorResponseCompensationCurrency = "NPR"
-	WorkerNewContractorResponseCompensationCurrencyPhp WorkerNewContractorResponseCompensationCurrency = "PHP"
-	WorkerNewContractorResponseCompensationCurrencyPkr WorkerNewContractorResponseCompensationCurrency = "PKR"
-	WorkerNewContractorResponseCompensationCurrencyThb WorkerNewContractorResponseCompensationCurrency = "THB"
-	WorkerNewContractorResponseCompensationCurrencyUah WorkerNewContractorResponseCompensationCurrency = "UAH"
-	WorkerNewContractorResponseCompensationCurrencyUgx WorkerNewContractorResponseCompensationCurrency = "UGX"
-	WorkerNewContractorResponseCompensationCurrencyUyu WorkerNewContractorResponseCompensationCurrency = "UYU"
-	WorkerNewContractorResponseCompensationCurrencyVnd WorkerNewContractorResponseCompensationCurrency = "VND"
-	WorkerNewContractorResponseCompensationCurrencyZar WorkerNewContractorResponseCompensationCurrency = "ZAR"
-	WorkerNewContractorResponseCompensationCurrencyZmw WorkerNewContractorResponseCompensationCurrency = "ZMW"
-	WorkerNewContractorResponseCompensationCurrencyTnd WorkerNewContractorResponseCompensationCurrency = "TND"
-	WorkerNewContractorResponseCompensationCurrencyNgn WorkerNewContractorResponseCompensationCurrency = "NGN"
-	WorkerNewContractorResponseCompensationCurrencyRsd WorkerNewContractorResponseCompensationCurrency = "RSD"
-	WorkerNewContractorResponseCompensationCurrencyTwd WorkerNewContractorResponseCompensationCurrency = "TWD"
-	WorkerNewContractorResponseCompensationCurrencyGtq WorkerNewContractorResponseCompensationCurrency = "GTQ"
-	WorkerNewContractorResponseCompensationCurrencyHnl WorkerNewContractorResponseCompensationCurrency = "HNL"
-	WorkerNewContractorResponseCompensationCurrencyDop WorkerNewContractorResponseCompensationCurrency = "DOP"
-	WorkerNewContractorResponseCompensationCurrencySar WorkerNewContractorResponseCompensationCurrency = "SAR"
-	WorkerNewContractorResponseCompensationCurrencyXaf WorkerNewContractorResponseCompensationCurrency = "XAF"
-	WorkerNewContractorResponseCompensationCurrencyPen WorkerNewContractorResponseCompensationCurrency = "PEN"
-)
-
-func (r WorkerNewContractorResponseCompensationCurrency) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCompensationCurrencyUsd, WorkerNewContractorResponseCompensationCurrencyAud, WorkerNewContractorResponseCompensationCurrencyBgn, WorkerNewContractorResponseCompensationCurrencyBrl, WorkerNewContractorResponseCompensationCurrencyCad, WorkerNewContractorResponseCompensationCurrencyChf, WorkerNewContractorResponseCompensationCurrencyCzk, WorkerNewContractorResponseCompensationCurrencyDkk, WorkerNewContractorResponseCompensationCurrencyEur, WorkerNewContractorResponseCompensationCurrencyGbp, WorkerNewContractorResponseCompensationCurrencyHkd, WorkerNewContractorResponseCompensationCurrencyHuf, WorkerNewContractorResponseCompensationCurrencyIdr, WorkerNewContractorResponseCompensationCurrencyInr, WorkerNewContractorResponseCompensationCurrencyJpy, WorkerNewContractorResponseCompensationCurrencyMyr, WorkerNewContractorResponseCompensationCurrencyNok, WorkerNewContractorResponseCompensationCurrencyNzd, WorkerNewContractorResponseCompensationCurrencyCny, WorkerNewContractorResponseCompensationCurrencyPln, WorkerNewContractorResponseCompensationCurrencyRon, WorkerNewContractorResponseCompensationCurrencyTry, WorkerNewContractorResponseCompensationCurrencySek, WorkerNewContractorResponseCompensationCurrencySgd, WorkerNewContractorResponseCompensationCurrencyAed, WorkerNewContractorResponseCompensationCurrencyArs, WorkerNewContractorResponseCompensationCurrencyBdt, WorkerNewContractorResponseCompensationCurrencyBwp, WorkerNewContractorResponseCompensationCurrencyClp, WorkerNewContractorResponseCompensationCurrencyCop, WorkerNewContractorResponseCompensationCurrencyCrc, WorkerNewContractorResponseCompensationCurrencyEgp, WorkerNewContractorResponseCompensationCurrencyFjd, WorkerNewContractorResponseCompensationCurrencyGel, WorkerNewContractorResponseCompensationCurrencyGhs, WorkerNewContractorResponseCompensationCurrencyIls, WorkerNewContractorResponseCompensationCurrencyKes, WorkerNewContractorResponseCompensationCurrencyKrw, WorkerNewContractorResponseCompensationCurrencyLkr, WorkerNewContractorResponseCompensationCurrencyMad, WorkerNewContractorResponseCompensationCurrencyMxn, WorkerNewContractorResponseCompensationCurrencyNpr, WorkerNewContractorResponseCompensationCurrencyPhp, WorkerNewContractorResponseCompensationCurrencyPkr, WorkerNewContractorResponseCompensationCurrencyThb, WorkerNewContractorResponseCompensationCurrencyUah, WorkerNewContractorResponseCompensationCurrencyUgx, WorkerNewContractorResponseCompensationCurrencyUyu, WorkerNewContractorResponseCompensationCurrencyVnd, WorkerNewContractorResponseCompensationCurrencyZar, WorkerNewContractorResponseCompensationCurrencyZmw, WorkerNewContractorResponseCompensationCurrencyTnd, WorkerNewContractorResponseCompensationCurrencyNgn, WorkerNewContractorResponseCompensationCurrencyRsd, WorkerNewContractorResponseCompensationCurrencyTwd, WorkerNewContractorResponseCompensationCurrencyGtq, WorkerNewContractorResponseCompensationCurrencyHnl, WorkerNewContractorResponseCompensationCurrencyDop, WorkerNewContractorResponseCompensationCurrencySar, WorkerNewContractorResponseCompensationCurrencyXaf, WorkerNewContractorResponseCompensationCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCompensationBasis string
-
-const (
-	WorkerInviteResponseCompensationBasisYearly  WorkerInviteResponseCompensationBasis = "yearly"
-	WorkerInviteResponseCompensationBasisMonthly WorkerInviteResponseCompensationBasis = "monthly"
-	WorkerInviteResponseCompensationBasisWeekly  WorkerInviteResponseCompensationBasis = "weekly"
-	WorkerInviteResponseCompensationBasisHourly  WorkerInviteResponseCompensationBasis = "hourly"
-)
-
-func (r WorkerInviteResponseCompensationBasis) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCompensationBasisYearly, WorkerInviteResponseCompensationBasisMonthly, WorkerInviteResponseCompensationBasisWeekly, WorkerInviteResponseCompensationBasisHourly:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCompensationCurrency string
-
-const (
-	WorkerInviteResponseCompensationCurrencyUsd WorkerInviteResponseCompensationCurrency = "USD"
-	WorkerInviteResponseCompensationCurrencyAud WorkerInviteResponseCompensationCurrency = "AUD"
-	WorkerInviteResponseCompensationCurrencyBgn WorkerInviteResponseCompensationCurrency = "BGN"
-	WorkerInviteResponseCompensationCurrencyBrl WorkerInviteResponseCompensationCurrency = "BRL"
-	WorkerInviteResponseCompensationCurrencyCad WorkerInviteResponseCompensationCurrency = "CAD"
-	WorkerInviteResponseCompensationCurrencyChf WorkerInviteResponseCompensationCurrency = "CHF"
-	WorkerInviteResponseCompensationCurrencyCzk WorkerInviteResponseCompensationCurrency = "CZK"
-	WorkerInviteResponseCompensationCurrencyDkk WorkerInviteResponseCompensationCurrency = "DKK"
-	WorkerInviteResponseCompensationCurrencyEur WorkerInviteResponseCompensationCurrency = "EUR"
-	WorkerInviteResponseCompensationCurrencyGbp WorkerInviteResponseCompensationCurrency = "GBP"
-	WorkerInviteResponseCompensationCurrencyHkd WorkerInviteResponseCompensationCurrency = "HKD"
-	WorkerInviteResponseCompensationCurrencyHuf WorkerInviteResponseCompensationCurrency = "HUF"
-	WorkerInviteResponseCompensationCurrencyIdr WorkerInviteResponseCompensationCurrency = "IDR"
-	WorkerInviteResponseCompensationCurrencyInr WorkerInviteResponseCompensationCurrency = "INR"
-	WorkerInviteResponseCompensationCurrencyJpy WorkerInviteResponseCompensationCurrency = "JPY"
-	WorkerInviteResponseCompensationCurrencyMyr WorkerInviteResponseCompensationCurrency = "MYR"
-	WorkerInviteResponseCompensationCurrencyNok WorkerInviteResponseCompensationCurrency = "NOK"
-	WorkerInviteResponseCompensationCurrencyNzd WorkerInviteResponseCompensationCurrency = "NZD"
-	WorkerInviteResponseCompensationCurrencyCny WorkerInviteResponseCompensationCurrency = "CNY"
-	WorkerInviteResponseCompensationCurrencyPln WorkerInviteResponseCompensationCurrency = "PLN"
-	WorkerInviteResponseCompensationCurrencyRon WorkerInviteResponseCompensationCurrency = "RON"
-	WorkerInviteResponseCompensationCurrencyTry WorkerInviteResponseCompensationCurrency = "TRY"
-	WorkerInviteResponseCompensationCurrencySek WorkerInviteResponseCompensationCurrency = "SEK"
-	WorkerInviteResponseCompensationCurrencySgd WorkerInviteResponseCompensationCurrency = "SGD"
-	WorkerInviteResponseCompensationCurrencyAed WorkerInviteResponseCompensationCurrency = "AED"
-	WorkerInviteResponseCompensationCurrencyArs WorkerInviteResponseCompensationCurrency = "ARS"
-	WorkerInviteResponseCompensationCurrencyBdt WorkerInviteResponseCompensationCurrency = "BDT"
-	WorkerInviteResponseCompensationCurrencyBwp WorkerInviteResponseCompensationCurrency = "BWP"
-	WorkerInviteResponseCompensationCurrencyClp WorkerInviteResponseCompensationCurrency = "CLP"
-	WorkerInviteResponseCompensationCurrencyCop WorkerInviteResponseCompensationCurrency = "COP"
-	WorkerInviteResponseCompensationCurrencyCrc WorkerInviteResponseCompensationCurrency = "CRC"
-	WorkerInviteResponseCompensationCurrencyEgp WorkerInviteResponseCompensationCurrency = "EGP"
-	WorkerInviteResponseCompensationCurrencyFjd WorkerInviteResponseCompensationCurrency = "FJD"
-	WorkerInviteResponseCompensationCurrencyGel WorkerInviteResponseCompensationCurrency = "GEL"
-	WorkerInviteResponseCompensationCurrencyGhs WorkerInviteResponseCompensationCurrency = "GHS"
-	WorkerInviteResponseCompensationCurrencyIls WorkerInviteResponseCompensationCurrency = "ILS"
-	WorkerInviteResponseCompensationCurrencyKes WorkerInviteResponseCompensationCurrency = "KES"
-	WorkerInviteResponseCompensationCurrencyKrw WorkerInviteResponseCompensationCurrency = "KRW"
-	WorkerInviteResponseCompensationCurrencyLkr WorkerInviteResponseCompensationCurrency = "LKR"
-	WorkerInviteResponseCompensationCurrencyMad WorkerInviteResponseCompensationCurrency = "MAD"
-	WorkerInviteResponseCompensationCurrencyMxn WorkerInviteResponseCompensationCurrency = "MXN"
-	WorkerInviteResponseCompensationCurrencyNpr WorkerInviteResponseCompensationCurrency = "NPR"
-	WorkerInviteResponseCompensationCurrencyPhp WorkerInviteResponseCompensationCurrency = "PHP"
-	WorkerInviteResponseCompensationCurrencyPkr WorkerInviteResponseCompensationCurrency = "PKR"
-	WorkerInviteResponseCompensationCurrencyThb WorkerInviteResponseCompensationCurrency = "THB"
-	WorkerInviteResponseCompensationCurrencyUah WorkerInviteResponseCompensationCurrency = "UAH"
-	WorkerInviteResponseCompensationCurrencyUgx WorkerInviteResponseCompensationCurrency = "UGX"
-	WorkerInviteResponseCompensationCurrencyUyu WorkerInviteResponseCompensationCurrency = "UYU"
-	WorkerInviteResponseCompensationCurrencyVnd WorkerInviteResponseCompensationCurrency = "VND"
-	WorkerInviteResponseCompensationCurrencyZar WorkerInviteResponseCompensationCurrency = "ZAR"
-	WorkerInviteResponseCompensationCurrencyZmw WorkerInviteResponseCompensationCurrency = "ZMW"
-	WorkerInviteResponseCompensationCurrencyTnd WorkerInviteResponseCompensationCurrency = "TND"
-	WorkerInviteResponseCompensationCurrencyNgn WorkerInviteResponseCompensationCurrency = "NGN"
-	WorkerInviteResponseCompensationCurrencyRsd WorkerInviteResponseCompensationCurrency = "RSD"
-	WorkerInviteResponseCompensationCurrencyTwd WorkerInviteResponseCompensationCurrency = "TWD"
-	WorkerInviteResponseCompensationCurrencyGtq WorkerInviteResponseCompensationCurrency = "GTQ"
-	WorkerInviteResponseCompensationCurrencyHnl WorkerInviteResponseCompensationCurrency = "HNL"
-	WorkerInviteResponseCompensationCurrencyDop WorkerInviteResponseCompensationCurrency = "DOP"
-	WorkerInviteResponseCompensationCurrencySar WorkerInviteResponseCompensationCurrency = "SAR"
-	WorkerInviteResponseCompensationCurrencyXaf WorkerInviteResponseCompensationCurrency = "XAF"
-	WorkerInviteResponseCompensationCurrencyPen WorkerInviteResponseCompensationCurrency = "PEN"
-)
-
-func (r WorkerInviteResponseCompensationCurrency) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCompensationCurrencyUsd, WorkerInviteResponseCompensationCurrencyAud, WorkerInviteResponseCompensationCurrencyBgn, WorkerInviteResponseCompensationCurrencyBrl, WorkerInviteResponseCompensationCurrencyCad, WorkerInviteResponseCompensationCurrencyChf, WorkerInviteResponseCompensationCurrencyCzk, WorkerInviteResponseCompensationCurrencyDkk, WorkerInviteResponseCompensationCurrencyEur, WorkerInviteResponseCompensationCurrencyGbp, WorkerInviteResponseCompensationCurrencyHkd, WorkerInviteResponseCompensationCurrencyHuf, WorkerInviteResponseCompensationCurrencyIdr, WorkerInviteResponseCompensationCurrencyInr, WorkerInviteResponseCompensationCurrencyJpy, WorkerInviteResponseCompensationCurrencyMyr, WorkerInviteResponseCompensationCurrencyNok, WorkerInviteResponseCompensationCurrencyNzd, WorkerInviteResponseCompensationCurrencyCny, WorkerInviteResponseCompensationCurrencyPln, WorkerInviteResponseCompensationCurrencyRon, WorkerInviteResponseCompensationCurrencyTry, WorkerInviteResponseCompensationCurrencySek, WorkerInviteResponseCompensationCurrencySgd, WorkerInviteResponseCompensationCurrencyAed, WorkerInviteResponseCompensationCurrencyArs, WorkerInviteResponseCompensationCurrencyBdt, WorkerInviteResponseCompensationCurrencyBwp, WorkerInviteResponseCompensationCurrencyClp, WorkerInviteResponseCompensationCurrencyCop, WorkerInviteResponseCompensationCurrencyCrc, WorkerInviteResponseCompensationCurrencyEgp, WorkerInviteResponseCompensationCurrencyFjd, WorkerInviteResponseCompensationCurrencyGel, WorkerInviteResponseCompensationCurrencyGhs, WorkerInviteResponseCompensationCurrencyIls, WorkerInviteResponseCompensationCurrencyKes, WorkerInviteResponseCompensationCurrencyKrw, WorkerInviteResponseCompensationCurrencyLkr, WorkerInviteResponseCompensationCurrencyMad, WorkerInviteResponseCompensationCurrencyMxn, WorkerInviteResponseCompensationCurrencyNpr, WorkerInviteResponseCompensationCurrencyPhp, WorkerInviteResponseCompensationCurrencyPkr, WorkerInviteResponseCompensationCurrencyThb, WorkerInviteResponseCompensationCurrencyUah, WorkerInviteResponseCompensationCurrencyUgx, WorkerInviteResponseCompensationCurrencyUyu, WorkerInviteResponseCompensationCurrencyVnd, WorkerInviteResponseCompensationCurrencyZar, WorkerInviteResponseCompensationCurrencyZmw, WorkerInviteResponseCompensationCurrencyTnd, WorkerInviteResponseCompensationCurrencyNgn, WorkerInviteResponseCompensationCurrencyRsd, WorkerInviteResponseCompensationCurrencyTwd, WorkerInviteResponseCompensationCurrencyGtq, WorkerInviteResponseCompensationCurrencyHnl, WorkerInviteResponseCompensationCurrencyDop, WorkerInviteResponseCompensationCurrencySar, WorkerInviteResponseCompensationCurrencyXaf, WorkerInviteResponseCompensationCurrencyPen:
-		return true
-	}
-	return false
 }

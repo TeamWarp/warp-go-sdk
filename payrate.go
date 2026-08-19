@@ -101,9 +101,9 @@ type PublicPayRate struct {
 	// such as a bonus, commission, or stipend.
 	Type PublicPayRateType `json:"type" api:"required"`
 	// The period for the pay rate.
-	Basis    PublicPayRateBasis    `json:"basis" api:"required"`
-	Amount   string                `json:"amount" api:"required"`
-	Currency PublicPayRateCurrency `json:"currency" api:"required"`
+	Basis    PublicPayRateBasis `json:"basis" api:"required"`
+	Amount   string             `json:"amount" api:"required"`
+	Currency Union              `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start
@@ -173,80 +173,6 @@ func (r PublicPayRateBasis) IsKnown() bool {
 	return false
 }
 
-type PublicPayRateCurrency string
-
-const (
-	PublicPayRateCurrencyUsd PublicPayRateCurrency = "USD"
-	PublicPayRateCurrencyAud PublicPayRateCurrency = "AUD"
-	PublicPayRateCurrencyBgn PublicPayRateCurrency = "BGN"
-	PublicPayRateCurrencyBrl PublicPayRateCurrency = "BRL"
-	PublicPayRateCurrencyCad PublicPayRateCurrency = "CAD"
-	PublicPayRateCurrencyChf PublicPayRateCurrency = "CHF"
-	PublicPayRateCurrencyCzk PublicPayRateCurrency = "CZK"
-	PublicPayRateCurrencyDkk PublicPayRateCurrency = "DKK"
-	PublicPayRateCurrencyEur PublicPayRateCurrency = "EUR"
-	PublicPayRateCurrencyGbp PublicPayRateCurrency = "GBP"
-	PublicPayRateCurrencyHkd PublicPayRateCurrency = "HKD"
-	PublicPayRateCurrencyHuf PublicPayRateCurrency = "HUF"
-	PublicPayRateCurrencyIdr PublicPayRateCurrency = "IDR"
-	PublicPayRateCurrencyInr PublicPayRateCurrency = "INR"
-	PublicPayRateCurrencyJpy PublicPayRateCurrency = "JPY"
-	PublicPayRateCurrencyMyr PublicPayRateCurrency = "MYR"
-	PublicPayRateCurrencyNok PublicPayRateCurrency = "NOK"
-	PublicPayRateCurrencyNzd PublicPayRateCurrency = "NZD"
-	PublicPayRateCurrencyCny PublicPayRateCurrency = "CNY"
-	PublicPayRateCurrencyPln PublicPayRateCurrency = "PLN"
-	PublicPayRateCurrencyRon PublicPayRateCurrency = "RON"
-	PublicPayRateCurrencyTry PublicPayRateCurrency = "TRY"
-	PublicPayRateCurrencySek PublicPayRateCurrency = "SEK"
-	PublicPayRateCurrencySgd PublicPayRateCurrency = "SGD"
-	PublicPayRateCurrencyAed PublicPayRateCurrency = "AED"
-	PublicPayRateCurrencyArs PublicPayRateCurrency = "ARS"
-	PublicPayRateCurrencyBdt PublicPayRateCurrency = "BDT"
-	PublicPayRateCurrencyBwp PublicPayRateCurrency = "BWP"
-	PublicPayRateCurrencyClp PublicPayRateCurrency = "CLP"
-	PublicPayRateCurrencyCop PublicPayRateCurrency = "COP"
-	PublicPayRateCurrencyCrc PublicPayRateCurrency = "CRC"
-	PublicPayRateCurrencyEgp PublicPayRateCurrency = "EGP"
-	PublicPayRateCurrencyFjd PublicPayRateCurrency = "FJD"
-	PublicPayRateCurrencyGel PublicPayRateCurrency = "GEL"
-	PublicPayRateCurrencyGhs PublicPayRateCurrency = "GHS"
-	PublicPayRateCurrencyIls PublicPayRateCurrency = "ILS"
-	PublicPayRateCurrencyKes PublicPayRateCurrency = "KES"
-	PublicPayRateCurrencyKrw PublicPayRateCurrency = "KRW"
-	PublicPayRateCurrencyLkr PublicPayRateCurrency = "LKR"
-	PublicPayRateCurrencyMad PublicPayRateCurrency = "MAD"
-	PublicPayRateCurrencyMxn PublicPayRateCurrency = "MXN"
-	PublicPayRateCurrencyNpr PublicPayRateCurrency = "NPR"
-	PublicPayRateCurrencyPhp PublicPayRateCurrency = "PHP"
-	PublicPayRateCurrencyPkr PublicPayRateCurrency = "PKR"
-	PublicPayRateCurrencyThb PublicPayRateCurrency = "THB"
-	PublicPayRateCurrencyUah PublicPayRateCurrency = "UAH"
-	PublicPayRateCurrencyUgx PublicPayRateCurrency = "UGX"
-	PublicPayRateCurrencyUyu PublicPayRateCurrency = "UYU"
-	PublicPayRateCurrencyVnd PublicPayRateCurrency = "VND"
-	PublicPayRateCurrencyZar PublicPayRateCurrency = "ZAR"
-	PublicPayRateCurrencyZmw PublicPayRateCurrency = "ZMW"
-	PublicPayRateCurrencyTnd PublicPayRateCurrency = "TND"
-	PublicPayRateCurrencyNgn PublicPayRateCurrency = "NGN"
-	PublicPayRateCurrencyRsd PublicPayRateCurrency = "RSD"
-	PublicPayRateCurrencyTwd PublicPayRateCurrency = "TWD"
-	PublicPayRateCurrencyGtq PublicPayRateCurrency = "GTQ"
-	PublicPayRateCurrencyHnl PublicPayRateCurrency = "HNL"
-	PublicPayRateCurrencyDop PublicPayRateCurrency = "DOP"
-	PublicPayRateCurrencySar PublicPayRateCurrency = "SAR"
-	PublicPayRateCurrencyXaf PublicPayRateCurrency = "XAF"
-	PublicPayRateCurrencyPen PublicPayRateCurrency = "PEN"
-)
-
-func (r PublicPayRateCurrency) IsKnown() bool {
-	switch r {
-	case PublicPayRateCurrencyUsd, PublicPayRateCurrencyAud, PublicPayRateCurrencyBgn, PublicPayRateCurrencyBrl, PublicPayRateCurrencyCad, PublicPayRateCurrencyChf, PublicPayRateCurrencyCzk, PublicPayRateCurrencyDkk, PublicPayRateCurrencyEur, PublicPayRateCurrencyGbp, PublicPayRateCurrencyHkd, PublicPayRateCurrencyHuf, PublicPayRateCurrencyIdr, PublicPayRateCurrencyInr, PublicPayRateCurrencyJpy, PublicPayRateCurrencyMyr, PublicPayRateCurrencyNok, PublicPayRateCurrencyNzd, PublicPayRateCurrencyCny, PublicPayRateCurrencyPln, PublicPayRateCurrencyRon, PublicPayRateCurrencyTry, PublicPayRateCurrencySek, PublicPayRateCurrencySgd, PublicPayRateCurrencyAed, PublicPayRateCurrencyArs, PublicPayRateCurrencyBdt, PublicPayRateCurrencyBwp, PublicPayRateCurrencyClp, PublicPayRateCurrencyCop, PublicPayRateCurrencyCrc, PublicPayRateCurrencyEgp, PublicPayRateCurrencyFjd, PublicPayRateCurrencyGel, PublicPayRateCurrencyGhs, PublicPayRateCurrencyIls, PublicPayRateCurrencyKes, PublicPayRateCurrencyKrw, PublicPayRateCurrencyLkr, PublicPayRateCurrencyMad, PublicPayRateCurrencyMxn, PublicPayRateCurrencyNpr, PublicPayRateCurrencyPhp, PublicPayRateCurrencyPkr, PublicPayRateCurrencyThb, PublicPayRateCurrencyUah, PublicPayRateCurrencyUgx, PublicPayRateCurrencyUyu, PublicPayRateCurrencyVnd, PublicPayRateCurrencyZar, PublicPayRateCurrencyZmw, PublicPayRateCurrencyTnd, PublicPayRateCurrencyNgn, PublicPayRateCurrencyRsd, PublicPayRateCurrencyTwd, PublicPayRateCurrencyGtq, PublicPayRateCurrencyHnl, PublicPayRateCurrencyDop, PublicPayRateCurrencySar, PublicPayRateCurrencyXaf, PublicPayRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type PayRateGetResponse struct {
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
@@ -255,9 +181,9 @@ type PayRateGetResponse struct {
 	// such as a bonus, commission, or stipend.
 	Type PayRateGetResponseType `json:"type" api:"required"`
 	// The period for the pay rate.
-	Basis    PayRateGetResponseBasis    `json:"basis" api:"required"`
-	Amount   string                     `json:"amount" api:"required"`
-	Currency PayRateGetResponseCurrency `json:"currency" api:"required"`
+	Basis    PayRateGetResponseBasis `json:"basis" api:"required"`
+	Amount   string                  `json:"amount" api:"required"`
+	Currency Union                   `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start

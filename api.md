@@ -202,7 +202,7 @@ List the custom worker field definitions your API key can read. Each field belon
 
 | Direction | Type |
 | --- | --- |
-| Response | [`[]Objects`](./customfield.go) |
+| Response | [`[]Objects`](./shared/shared.go) |
 
 ```go
 customField, err := client.CustomFields.List(context.Background())
@@ -257,7 +257,7 @@ Update a custom worker field definition. The field type cannot be changed; creat
 | Direction | Type |
 | --- | --- |
 | Request | [`CustomFieldUpdateParams`](./customfield.go) |
-| Response | [`CustomFieldUpdateResponse`](./customfield.go) |
+| Response | [`Objects`](./shared/shared.go) |
 
 ```go
 customField, err := client.CustomFields.Update(context.Background(), "id", sdk.CustomFieldUpdateParams{})
@@ -274,7 +274,7 @@ Archive a custom worker field. Archived fields keep their existing worker values
 
 | Direction | Type |
 | --- | --- |
-| Response | [`CustomFieldArchiveResponse`](./customfield.go) |
+| Response | [`Objects`](./shared/shared.go) |
 
 ```go
 customField, err := client.CustomFields.Archive(context.Background(), "id")
@@ -313,7 +313,7 @@ Update the label or sort order of a custom worker field option. Options of archi
 | Direction | Type |
 | --- | --- |
 | Request | [`CustomFieldUpdateOptionParams`](./customfield.go) |
-| Response | [`CustomFieldUpdateOptionResponse`](./customfield.go) |
+| Response | [`Objects3`](./shared/shared.go) |
 
 ```go
 customField, err := client.CustomFields.UpdateOption(context.Background(), "id", sdk.CustomFieldUpdateOptionParams{})
@@ -341,7 +341,7 @@ Archive a custom worker field option. Archived options remain on existing worker
 
 | Direction | Type |
 | --- | --- |
-| Response | [`CustomFieldArchiveOptionResponse`](./customfield.go) |
+| Response | [`Objects3`](./shared/shared.go) |
 
 ```go
 customField, err := client.CustomFields.ArchiveOption(context.Background(), "id")
@@ -529,7 +529,7 @@ Void a previously sent offer. Only sent offers can be voided.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`OfferVoidResponse`](./offer.go) |
+| Response | [`Objects5`](./shared/shared.go) |
 
 ```go
 offer, err := client.Offers.Void(context.Background(), "id")
@@ -547,7 +547,7 @@ Extend the expiration deadline of a sent offer.
 | Direction | Type |
 | --- | --- |
 | Request | [`OfferExtendDeadlineParams`](./offer.go) |
-| Response | [`OfferExtendDeadlineResponse`](./offer.go) |
+| Response | [`Objects5`](./shared/shared.go) |
 
 ```go
 offer, err := client.Offers.ExtendDeadline(context.Background(), "id", sdk.OfferExtendDeadlineParams{
@@ -566,7 +566,7 @@ Resend the offer email to the candidate for a sent offer.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`OfferResendResponse`](./offer.go) |
+| Response | [`Objects5`](./shared/shared.go) |
 
 ```go
 offer, err := client.Offers.Resend(context.Background(), "id")
