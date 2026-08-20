@@ -218,14 +218,15 @@ func (r OfferListParams) URLQuery() (v url.Values) {
 }
 
 type OfferNewParams struct {
-	Candidate      param.Field[OfferNewParamsCandidate]    `json:"candidate" api:"required"`
-	Compensation   param.Field[OfferNewParamsCompensation] `json:"compensation" api:"required"`
-	Position       param.Field[OfferNewParamsPosition]     `json:"position" api:"required"`
-	WorkerType     param.Field[OfferNewParamsWorkerType]   `json:"workerType" api:"required"`
-	DepartmentID   param.Field[string]                     `json:"departmentId"`
-	ExpirationTime param.Field[string]                     `json:"expirationTime"`
-	ManagerID      param.Field[string]                     `json:"managerId"`
-	WorkplaceID    param.Field[string]                     `json:"workplaceId"`
+	Candidate                   param.Field[OfferNewParamsCandidate]                   `json:"candidate" api:"required"`
+	Compensation                param.Field[OfferNewParamsCompensation]                `json:"compensation" api:"required"`
+	Position                    param.Field[OfferNewParamsPosition]                    `json:"position" api:"required"`
+	WorkerType                  param.Field[OfferNewParamsWorkerType]                  `json:"workerType" api:"required"`
+	BackgroundCheckWorkLocation param.Field[OfferNewParamsBackgroundCheckWorkLocation] `json:"backgroundCheckWorkLocation"`
+	DepartmentID                param.Field[string]                                    `json:"departmentId"`
+	ExpirationTime              param.Field[string]                                    `json:"expirationTime"`
+	ManagerID                   param.Field[string]                                    `json:"managerId"`
+	WorkplaceID                 param.Field[string]                                    `json:"workplaceId"`
 }
 
 func (r OfferNewParams) MarshalJSON() (data []byte, err error) {
@@ -664,6 +665,16 @@ func (r OfferNewParamsCompensationPayType) IsKnown() bool {
 		return true
 	}
 	return false
+}
+
+type OfferNewParamsBackgroundCheckWorkLocation struct {
+	City    param.Field[string] `json:"city" api:"required"`
+	Country param.Field[string] `json:"country" api:"required"`
+	State   param.Field[string] `json:"state" api:"required"`
+}
+
+func (r OfferNewParamsBackgroundCheckWorkLocation) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
 }
 
 type OfferVoidParams struct {
