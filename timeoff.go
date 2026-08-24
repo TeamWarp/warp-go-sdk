@@ -155,16 +155,16 @@ func (r TimeOffListBalancesParams) URLQuery() (v url.Values) {
 }
 
 type TimeOffListRequestsParams struct {
-	Limit           param.Field[string]                            `query:"limit" api:"required"`
-	AfterID         param.Field[string]                            `query:"afterId"`
-	BeforeID        param.Field[string]                            `query:"beforeId"`
-	EndsBefore      param.Field[string]                            `query:"endsBefore"`
-	EndsOnOrAfter   param.Field[string]                            `query:"endsOnOrAfter"`
-	PolicyIDs       param.Field[[]string]                          `query:"policyIds"`
-	StartsBefore    param.Field[string]                            `query:"startsBefore"`
-	StartsOnOrAfter param.Field[string]                            `query:"startsOnOrAfter"`
-	Statuses        param.Field[[]TimeOffListRequestsParamsStatus] `query:"statuses"`
-	WorkerIDs       param.Field[[]string]                          `query:"workerIds"`
+	Limit           param.Field[string]    `query:"limit" api:"required"`
+	AfterID         param.Field[string]    `query:"afterId"`
+	BeforeID        param.Field[string]    `query:"beforeId"`
+	EndsBefore      param.Field[string]    `query:"endsBefore"`
+	EndsOnOrAfter   param.Field[string]    `query:"endsOnOrAfter"`
+	PolicyIDs       param.Field[[]string]  `query:"policyIds"`
+	StartsBefore    param.Field[string]    `query:"startsBefore"`
+	StartsOnOrAfter param.Field[string]    `query:"startsOnOrAfter"`
+	Statuses        param.Field[[]Union25] `query:"statuses"`
+	WorkerIDs       param.Field[[]string]  `query:"workerIds"`
 }
 
 // URLQuery serializes [TimeOffListRequestsParams]'s query parameters as `url.Values`.
@@ -173,22 +173,6 @@ func (r TimeOffListRequestsParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
-}
-
-type TimeOffListRequestsParamsStatus string
-
-const (
-	TimeOffListRequestsParamsStatusPending  TimeOffListRequestsParamsStatus = "pending"
-	TimeOffListRequestsParamsStatusApproved TimeOffListRequestsParamsStatus = "approved"
-	TimeOffListRequestsParamsStatusDenied   TimeOffListRequestsParamsStatus = "denied"
-)
-
-func (r TimeOffListRequestsParamsStatus) IsKnown() bool {
-	switch r {
-	case TimeOffListRequestsParamsStatusPending, TimeOffListRequestsParamsStatusApproved, TimeOffListRequestsParamsStatusDenied:
-		return true
-	}
-	return false
 }
 
 type TimeOffListAssignmentsResponse struct {
@@ -327,7 +311,7 @@ type TimeOffListRequestsResponseData struct {
 	ID               string                                        `json:"id" api:"required"`
 	TimeOffPolicyID  string                                        `json:"timeOffPolicyId" api:"required"`
 	WorkerID         string                                        `json:"workerId" api:"required"`
-	Status           TimeOffListRequestsResponseDataStatus         `json:"status" api:"required"`
+	Status           Union25                                       `json:"status" api:"required"`
 	StartAt          string                                        `json:"startAt" api:"required"`
 	StartRangeType   TimeOffListRequestsResponseDataStartRangeType `json:"startRangeType" api:"required"`
 	EndAt            string                                        `json:"endAt" api:"required"`
@@ -364,22 +348,6 @@ func (r *TimeOffListRequestsResponseData) UnmarshalJSON(data []byte) (err error)
 
 func (r timeOffListRequestsResponseDataJSON) RawJSON() string {
 	return r.raw
-}
-
-type TimeOffListRequestsResponseDataStatus string
-
-const (
-	TimeOffListRequestsResponseDataStatusPending  TimeOffListRequestsResponseDataStatus = "pending"
-	TimeOffListRequestsResponseDataStatusApproved TimeOffListRequestsResponseDataStatus = "approved"
-	TimeOffListRequestsResponseDataStatusDenied   TimeOffListRequestsResponseDataStatus = "denied"
-)
-
-func (r TimeOffListRequestsResponseDataStatus) IsKnown() bool {
-	switch r {
-	case TimeOffListRequestsResponseDataStatusPending, TimeOffListRequestsResponseDataStatusApproved, TimeOffListRequestsResponseDataStatusDenied:
-		return true
-	}
-	return false
 }
 
 type TimeOffListRequestsResponseDataStartRangeType string

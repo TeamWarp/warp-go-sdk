@@ -76,7 +76,7 @@ func (r *TimeOffPolicyService) List(ctx context.Context, query TimeOffPolicyList
 //
 // Example:
 //
-//	policy, err := client.TimeOff.Policies.Get(context.Background(), "id")
+//	policy, err := client.TimeOff.Policies.Get(context.Background(), "top_1234")
 //	if err != nil {
 //		panic(err)
 //	}

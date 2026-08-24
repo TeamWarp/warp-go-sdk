@@ -69,6 +69,9 @@ Non-success responses return generated API errors. Error objects expose status, 
 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+	Limit:    sdk.F[string]("limit"),
+	Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+})
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
@@ -77,7 +80,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "github.com/TeamWarp/warp-go-sdk", "errors", "fmt"
+// imports: "context", "errors", "fmt", sdk "github.com/TeamWarp/warp-go-sdk"
 ```
 
 ## Requirements

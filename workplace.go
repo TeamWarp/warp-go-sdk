@@ -78,11 +78,11 @@ func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, 
 //
 //	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 //		Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
-//			Line1:      sdk.F[interface{}](map[string]interface{}{}),
+//			Line1:      sdk.F[string]("x"),
 //			City:       sdk.F[string](""),
 //			PostalCode: sdk.F[string](""),
 //		}),
-//		Name: sdk.F[interface{}](map[string]interface{}{}),
+//		Name: sdk.F[string]("x"),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -111,7 +111,7 @@ func (r *WorkplaceService) New(ctx context.Context, body WorkplaceNewParams, opt
 //
 // Example:
 //
-//	workplace, err := client.Workplaces.Update(context.Background(), "id", sdk.WorkplaceUpdateParams{})
+//	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -266,7 +266,7 @@ func (r WorkplaceListParams) URLQuery() (v url.Values) {
 type WorkplaceNewParams struct {
 	// A valid US address
 	Address param.Field[Objects11Param]         `json:"address" api:"required"`
-	Name    param.Field[interface{}]            `json:"name" api:"required"`
+	Name    param.Field[string]                 `json:"name" api:"required"`
 	Type    param.Field[WorkplaceNewParamsType] `json:"type" api:"required"`
 }
 
@@ -322,10 +322,10 @@ func (r workplaceListResponseJSON) RawJSON() string {
 }
 
 type WorkplaceNewResponse struct {
-	ID     string  `json:"id" api:"required"`
-	Name   string  `json:"name" api:"required"`
-	Type   Union34 `json:"type" api:"required"`
-	Status Union35 `json:"status" api:"required"`
+	ID     string                     `json:"id" api:"required"`
+	Name   string                     `json:"name" api:"required"`
+	Type   WorkplaceNewResponseType   `json:"type" api:"required"`
+	Status WorkplaceNewResponseStatus `json:"status" api:"required"`
 	// A valid US address
 	Address   Objects11                `json:"address" api:"required"`
 	CreatedAt string                   `json:"createdAt" api:"required"`
@@ -353,10 +353,10 @@ func (r workplaceNewResponseJSON) RawJSON() string {
 }
 
 type WorkplaceUpdateResponse struct {
-	ID     string  `json:"id" api:"required"`
-	Name   string  `json:"name" api:"required"`
-	Type   Union34 `json:"type" api:"required"`
-	Status Union35 `json:"status" api:"required"`
+	ID     string                        `json:"id" api:"required"`
+	Name   string                        `json:"name" api:"required"`
+	Type   WorkplaceUpdateResponseType   `json:"type" api:"required"`
+	Status WorkplaceUpdateResponseStatus `json:"status" api:"required"`
 	// A valid US address
 	Address   Objects11                   `json:"address" api:"required"`
 	CreatedAt string                      `json:"createdAt" api:"required"`
@@ -384,10 +384,10 @@ func (r workplaceUpdateResponseJSON) RawJSON() string {
 }
 
 type WorkplaceListResponseData struct {
-	ID     string  `json:"id" api:"required"`
-	Name   string  `json:"name" api:"required"`
-	Type   Union34 `json:"type" api:"required"`
-	Status Union35 `json:"status" api:"required"`
+	ID     string                          `json:"id" api:"required"`
+	Name   string                          `json:"name" api:"required"`
+	Type   WorkplaceListResponseDataType   `json:"type" api:"required"`
+	Status WorkplaceListResponseDataStatus `json:"status" api:"required"`
 	// A valid US address
 	Address   Objects11                     `json:"address" api:"required"`
 	CreatedAt string                        `json:"createdAt" api:"required"`
@@ -412,4 +412,94 @@ func (r *WorkplaceListResponseData) UnmarshalJSON(data []byte) (err error) {
 
 func (r workplaceListResponseDataJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkplaceNewResponseType string
+
+const (
+	WorkplaceNewResponseTypeRemote WorkplaceNewResponseType = "remote"
+	WorkplaceNewResponseTypeOffice WorkplaceNewResponseType = "office"
+)
+
+func (r WorkplaceNewResponseType) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseTypeRemote, WorkplaceNewResponseTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewResponseStatus string
+
+const (
+	WorkplaceNewResponseStatusActive   WorkplaceNewResponseStatus = "active"
+	WorkplaceNewResponseStatusArchived WorkplaceNewResponseStatus = "archived"
+)
+
+func (r WorkplaceNewResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseStatusActive, WorkplaceNewResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseType string
+
+const (
+	WorkplaceUpdateResponseTypeRemote WorkplaceUpdateResponseType = "remote"
+	WorkplaceUpdateResponseTypeOffice WorkplaceUpdateResponseType = "office"
+)
+
+func (r WorkplaceUpdateResponseType) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseTypeRemote, WorkplaceUpdateResponseTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseStatus string
+
+const (
+	WorkplaceUpdateResponseStatusActive   WorkplaceUpdateResponseStatus = "active"
+	WorkplaceUpdateResponseStatusArchived WorkplaceUpdateResponseStatus = "archived"
+)
+
+func (r WorkplaceUpdateResponseStatus) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseStatusActive, WorkplaceUpdateResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataType string
+
+const (
+	WorkplaceListResponseDataTypeRemote WorkplaceListResponseDataType = "remote"
+	WorkplaceListResponseDataTypeOffice WorkplaceListResponseDataType = "office"
+)
+
+func (r WorkplaceListResponseDataType) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataTypeRemote, WorkplaceListResponseDataTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataStatus string
+
+const (
+	WorkplaceListResponseDataStatusActive   WorkplaceListResponseDataStatus = "active"
+	WorkplaceListResponseDataStatusArchived WorkplaceListResponseDataStatus = "archived"
+)
+
+func (r WorkplaceListResponseDataStatus) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataStatusActive, WorkplaceListResponseDataStatusArchived:
+		return true
+	}
+	return false
 }

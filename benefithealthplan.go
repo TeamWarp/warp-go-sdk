@@ -77,7 +77,7 @@ func (r *BenefitHealthPlanService) List(ctx context.Context, query BenefitHealth
 //
 // Example:
 //
-//	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "id")
+//	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
 //	if err != nil {
 //		panic(err)
 //	}

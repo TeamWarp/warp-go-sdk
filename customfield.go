@@ -78,7 +78,7 @@ func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOpt
 // Example:
 //
 //	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
-//		Name: sdk.F[interface{}](map[string]interface{}{}),
+//		Name: sdk.F[string]("x"),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -106,7 +106,7 @@ func (r *CustomFieldService) New(ctx context.Context, body CustomFieldNewParams,
 //
 // Example:
 //
-//	customField, err := client.CustomFields.Get(context.Background(), "id")
+//	customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -138,7 +138,7 @@ func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.
 //
 // Example:
 //
-//	customField, err := client.CustomFields.Update(context.Background(), "id", sdk.CustomFieldUpdateParams{})
+//	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -169,7 +169,7 @@ func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomF
 //
 // Example:
 //
-//	customField, err := client.CustomFields.Archive(context.Background(), "id")
+//	customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -201,10 +201,10 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 //
 // Example:
 //
-//	customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
+//	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
 //		Objects2: sdk.Objects2Param{
-//			Label: sdk.F[interface{}](map[string]interface{}{}),
-//			Value: sdk.F[interface{}](map[string]interface{}{}),
+//			Label: sdk.F[string]("x"),
+//			Value: sdk.F[string]("x"),
 //		},
 //	})
 //	if err != nil {
@@ -238,7 +238,7 @@ func (r *CustomFieldService) NewOption(ctx context.Context, id string, body Cust
 //
 // Example:
 //
-//	customField, err := client.CustomFields.UpdateOption(context.Background(), "id", sdk.CustomFieldUpdateOptionParams{})
+//	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -269,7 +269,7 @@ func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body C
 //
 // Example:
 //
-//	err := client.CustomFields.DeleteOption(context.Background(), "id")
+//	err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -299,7 +299,7 @@ func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts .
 //
 // Example:
 //
-//	customField, err := client.CustomFields.ArchiveOption(context.Background(), "id")
+//	customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -358,9 +358,9 @@ func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldLi
 // Example:
 //
 //	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
-//		FieldID:  sdk.F[string](map[string]interface{}{}),
+//		FieldID:  sdk.F[string]("cf_1234"),
 //		Value:    sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
-//		WorkerID: sdk.F[string](map[string]interface{}{}),
+//		WorkerID: sdk.F[string]("wrk_1234"),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -389,8 +389,8 @@ func (r *CustomFieldService) UpsertValue(ctx context.Context, body CustomFieldUp
 // Example:
 //
 //	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
-//		FieldID:  sdk.F[string](map[string]interface{}{}),
-//		WorkerID: sdk.F[string](map[string]interface{}{}),
+//		FieldID:  sdk.F[string]("cf_1234"),
+//		WorkerID: sdk.F[string]("wrk_1234"),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -404,8 +404,8 @@ func (r *CustomFieldService) ClearValue(ctx context.Context, body CustomFieldCle
 }
 
 type Objects2Param struct {
-	Label     param.Field[interface{}] `json:"label" api:"required"`
-	Value     param.Field[interface{}] `json:"value" api:"required"`
+	Label     param.Field[string]      `json:"label" api:"required"`
+	Value     param.Field[string]      `json:"value" api:"required"`
 	SortOrder param.Field[interface{}] `json:"sortOrder"`
 }
 
@@ -416,14 +416,72 @@ func (r Objects2Param) MarshalJSON() (data []byte, err error) {
 type Union1 string
 
 const (
-	Union1Infinity  Union1 = "Infinity"
-	Union1Infinity2 Union1 = "-Infinity"
-	Union1NaN       Union1 = "NaN"
+	Union1Usd Union1 = "USD"
+	Union1Aud Union1 = "AUD"
+	Union1Bgn Union1 = "BGN"
+	Union1Brl Union1 = "BRL"
+	Union1Cad Union1 = "CAD"
+	Union1Chf Union1 = "CHF"
+	Union1Czk Union1 = "CZK"
+	Union1Dkk Union1 = "DKK"
+	Union1Eur Union1 = "EUR"
+	Union1Gbp Union1 = "GBP"
+	Union1Hkd Union1 = "HKD"
+	Union1Huf Union1 = "HUF"
+	Union1Idr Union1 = "IDR"
+	Union1Inr Union1 = "INR"
+	Union1Jpy Union1 = "JPY"
+	Union1Myr Union1 = "MYR"
+	Union1Nok Union1 = "NOK"
+	Union1Nzd Union1 = "NZD"
+	Union1Cny Union1 = "CNY"
+	Union1Pln Union1 = "PLN"
+	Union1Ron Union1 = "RON"
+	Union1Try Union1 = "TRY"
+	Union1Sek Union1 = "SEK"
+	Union1Sgd Union1 = "SGD"
+	Union1Aed Union1 = "AED"
+	Union1Ars Union1 = "ARS"
+	Union1Bdt Union1 = "BDT"
+	Union1Bwp Union1 = "BWP"
+	Union1Clp Union1 = "CLP"
+	Union1Cop Union1 = "COP"
+	Union1Crc Union1 = "CRC"
+	Union1Egp Union1 = "EGP"
+	Union1Fjd Union1 = "FJD"
+	Union1Gel Union1 = "GEL"
+	Union1Ghs Union1 = "GHS"
+	Union1Ils Union1 = "ILS"
+	Union1Kes Union1 = "KES"
+	Union1Krw Union1 = "KRW"
+	Union1Lkr Union1 = "LKR"
+	Union1Mad Union1 = "MAD"
+	Union1Mxn Union1 = "MXN"
+	Union1Npr Union1 = "NPR"
+	Union1Php Union1 = "PHP"
+	Union1Pkr Union1 = "PKR"
+	Union1Thb Union1 = "THB"
+	Union1Uah Union1 = "UAH"
+	Union1Ugx Union1 = "UGX"
+	Union1Uyu Union1 = "UYU"
+	Union1Vnd Union1 = "VND"
+	Union1Zar Union1 = "ZAR"
+	Union1Zmw Union1 = "ZMW"
+	Union1Tnd Union1 = "TND"
+	Union1Ngn Union1 = "NGN"
+	Union1Rsd Union1 = "RSD"
+	Union1Twd Union1 = "TWD"
+	Union1Gtq Union1 = "GTQ"
+	Union1Hnl Union1 = "HNL"
+	Union1Dop Union1 = "DOP"
+	Union1Sar Union1 = "SAR"
+	Union1Xaf Union1 = "XAF"
+	Union1Pen Union1 = "PEN"
 )
 
 func (r Union1) IsKnown() bool {
 	switch r {
-	case Union1Infinity, Union1Infinity2, Union1NaN:
+	case Union1Usd, Union1Aud, Union1Bgn, Union1Brl, Union1Cad, Union1Chf, Union1Czk, Union1Dkk, Union1Eur, Union1Gbp, Union1Hkd, Union1Huf, Union1Idr, Union1Inr, Union1Jpy, Union1Myr, Union1Nok, Union1Nzd, Union1Cny, Union1Pln, Union1Ron, Union1Try, Union1Sek, Union1Sgd, Union1Aed, Union1Ars, Union1Bdt, Union1Bwp, Union1Clp, Union1Cop, Union1Crc, Union1Egp, Union1Fjd, Union1Gel, Union1Ghs, Union1Ils, Union1Kes, Union1Krw, Union1Lkr, Union1Mad, Union1Mxn, Union1Npr, Union1Php, Union1Pkr, Union1Thb, Union1Uah, Union1Ugx, Union1Uyu, Union1Vnd, Union1Zar, Union1Zmw, Union1Tnd, Union1Ngn, Union1Rsd, Union1Twd, Union1Gtq, Union1Hnl, Union1Dop, Union1Sar, Union1Xaf, Union1Pen:
 		return true
 	}
 	return false
@@ -487,7 +545,7 @@ func (r customFieldUpsertValueResponseJSON) RawJSON() string {
 
 type CustomFieldNewParams struct {
 	Category    param.Field[CustomFieldNewParamsCategory]    `json:"category" api:"required"`
-	Name        param.Field[interface{}]                     `json:"name" api:"required"`
+	Name        param.Field[string]                          `json:"name" api:"required"`
 	Type        param.Field[CustomFieldNewParamsType]        `json:"type" api:"required"`
 	AccessLevel param.Field[CustomFieldNewParamsAccessLevel] `json:"accessLevel"`
 	Config      param.Field[interface{}]                     `json:"config"`
@@ -578,7 +636,7 @@ type CustomFieldUpdateParams struct {
 	Config      param.Field[interface{}]                        `json:"config"`
 	Description param.Field[string]                             `json:"description"`
 	InputBy     param.Field[CustomFieldUpdateParamsInputBy]     `json:"inputBy"`
-	Name        param.Field[interface{}]                        `json:"name"`
+	Name        param.Field[string]                             `json:"name"`
 	Required    param.Field[bool]                               `json:"required"`
 }
 
@@ -645,7 +703,7 @@ func (r CustomFieldNewOptionParams) MarshalJSON() (data []byte, err error) {
 }
 
 type CustomFieldUpdateOptionParams struct {
-	Label     param.Field[interface{}] `json:"label"`
+	Label     param.Field[string]      `json:"label"`
 	SortOrder param.Field[interface{}] `json:"sortOrder"`
 }
 
@@ -971,12 +1029,12 @@ type CustomFieldNewResponse struct {
 	ID          string                     `json:"id" api:"required"`
 	Name        string                     `json:"name" api:"required"`
 	Description string                     `json:"description" api:"required,nullable"`
-	Type        Union3                     `json:"type" api:"required"`
+	Type        Union4                     `json:"type" api:"required"`
 	Config      interface{}                `json:"config" api:"required"`
-	Status      Union4                     `json:"status" api:"required"`
-	Category    Union5                     `json:"category" api:"required"`
-	AccessLevel Union6                     `json:"accessLevel" api:"required"`
-	InputBy     Union7                     `json:"inputBy" api:"required"`
+	Status      Union5                     `json:"status" api:"required"`
+	Category    Union6                     `json:"category" api:"required"`
+	AccessLevel Union7                     `json:"accessLevel" api:"required"`
+	InputBy     Union8                     `json:"inputBy" api:"required"`
 	CanWrite    bool                       `json:"canWrite" api:"required"`
 	CreatedAt   string                     `json:"createdAt" api:"required"`
 	Required    bool                       `json:"required" api:"nullable"`
@@ -1013,12 +1071,12 @@ type CustomFieldGetResponse struct {
 	ID          string                     `json:"id" api:"required"`
 	Name        string                     `json:"name" api:"required"`
 	Description string                     `json:"description" api:"required,nullable"`
-	Type        Union3                     `json:"type" api:"required"`
+	Type        Union4                     `json:"type" api:"required"`
 	Config      interface{}                `json:"config" api:"required"`
-	Status      Union4                     `json:"status" api:"required"`
-	Category    Union5                     `json:"category" api:"required"`
-	AccessLevel Union6                     `json:"accessLevel" api:"required"`
-	InputBy     Union7                     `json:"inputBy" api:"required"`
+	Status      Union5                     `json:"status" api:"required"`
+	Category    Union6                     `json:"category" api:"required"`
+	AccessLevel Union7                     `json:"accessLevel" api:"required"`
+	InputBy     Union8                     `json:"inputBy" api:"required"`
 	CanWrite    bool                       `json:"canWrite" api:"required"`
 	CreatedAt   string                     `json:"createdAt" api:"required"`
 	Options     []shared.Objects3          `json:"options" api:"required"`
@@ -1087,7 +1145,7 @@ type CustomFieldUpsertValueResponseValue struct {
 	Type         CustomFieldUpsertValueResponseValueType `json:"type" api:"required"`
 	Value        interface{}                             `json:"value"`
 	Amount       interface{}                             `json:"amount"`
-	CurrencyCode Union                                   `json:"currencyCode"`
+	CurrencyCode Union1                                  `json:"currencyCode"`
 	Option       shared.Objects3                         `json:"option"`
 	Options      interface{}                             `json:"options"`
 	JSON         customFieldUpsertValueResponseValueJSON `json:"-"`
@@ -1292,7 +1350,7 @@ func (r CustomFieldUpsertValueResponseValueVariant3) implementsCustomFieldUpsert
 type CustomFieldUpsertValueResponseValueVariant4 struct {
 	Type         CustomFieldUpsertValueResponseValueVariant4Type `json:"type" api:"required"`
 	Amount       interface{}                                     `json:"amount" api:"required"`
-	CurrencyCode Union                                           `json:"currencyCode" api:"required"`
+	CurrencyCode Union1                                          `json:"currencyCode" api:"required"`
 	JSON         customFieldUpsertValueResponseValueVariant4JSON `json:"-"`
 }
 

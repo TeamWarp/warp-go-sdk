@@ -76,7 +76,7 @@ func (r *PayRateService) List(ctx context.Context, query PayRateListParams, opts
 //
 // Example:
 //
-//	payRate, err := client.PayRates.Get(context.Background(), "id")
+//	payRate, err := client.PayRates.Get(context.Background(), "pyr_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -102,8 +102,8 @@ type PublicPayRate struct {
 	Type PublicPayRateType `json:"type" api:"required"`
 	// The period represented by the pay rate amount.
 	Per      PublicPayRatePer `json:"per" api:"required"`
-	Amount   string           `json:"amount" api:"required"`
-	Currency Union            `json:"currency" api:"required"`
+	Amount   int64            `json:"amount" api:"required"`
+	Currency Union1           `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start
@@ -182,8 +182,8 @@ type PayRateGetResponse struct {
 	Type PayRateGetResponseType `json:"type" api:"required"`
 	// The period represented by the pay rate amount.
 	Per      PayRateGetResponsePer `json:"per" api:"required"`
-	Amount   string                `json:"amount" api:"required"`
-	Currency Union                 `json:"currency" api:"required"`
+	Amount   int64                 `json:"amount" api:"required"`
+	Currency Union1                `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string `json:"display" api:"required"`
 	// The first date on which the rate applies. Additional rates may have no start

@@ -77,7 +77,7 @@ func (r *DepartmentService) List(ctx context.Context, query DepartmentListParams
 // Example:
 //
 //	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-//		Name: sdk.F[interface{}](map[string]interface{}{}),
+//		Name: sdk.F[string]("x"),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -106,7 +106,7 @@ func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, o
 //
 // Example:
 //
-//	department, err := client.Departments.Update(context.Background(), "id", sdk.DepartmentUpdateParams{})
+//	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -138,7 +138,7 @@ func (r DepartmentListParams) URLQuery() (v url.Values) {
 }
 
 type DepartmentNewParams struct {
-	Name param.Field[interface{}] `json:"name" api:"required"`
+	Name param.Field[string] `json:"name" api:"required"`
 }
 
 func (r DepartmentNewParams) MarshalJSON() (data []byte, err error) {
