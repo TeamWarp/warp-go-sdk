@@ -1514,7 +1514,179 @@ func (r InvalidOfferStatusErrorEncodedTag) IsKnown() bool {
 	return false
 }
 
+type PublicPayrollType string
+
+const (
+	PublicPayrollTypeUs     PublicPayrollType = "us"
+	PublicPayrollTypeGlobal PublicPayrollType = "global"
+)
+
+func (r PublicPayrollType) IsKnown() bool {
+	switch r {
+	case PublicPayrollTypeUs, PublicPayrollTypeGlobal:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollSubtype string
+
+const (
+	PublicPayrollSubtypeRegular       PublicPayrollSubtype = "regular"
+	PublicPayrollSubtypeOffCycle      PublicPayrollSubtype = "off_cycle"
+	PublicPayrollSubtypeBonus         PublicPayrollSubtype = "bonus"
+	PublicPayrollSubtypeInvoice       PublicPayrollSubtype = "invoice"
+	PublicPayrollSubtypeContractor    PublicPayrollSubtype = "contractor"
+	PublicPayrollSubtypeDismissal     PublicPayrollSubtype = "dismissal"
+	PublicPayrollSubtypeReimbursement PublicPayrollSubtype = "reimbursement"
+	PublicPayrollSubtypeManual        PublicPayrollSubtype = "manual"
+)
+
+func (r PublicPayrollSubtype) IsKnown() bool {
+	switch r {
+	case PublicPayrollSubtypeRegular, PublicPayrollSubtypeOffCycle, PublicPayrollSubtypeBonus, PublicPayrollSubtypeInvoice, PublicPayrollSubtypeContractor, PublicPayrollSubtypeDismissal, PublicPayrollSubtypeReimbursement, PublicPayrollSubtypeManual:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollStatus string
+
+const (
+	PublicPayrollStatusDraft         PublicPayrollStatus = "draft"
+	PublicPayrollStatusPending       PublicPayrollStatus = "pending"
+	PublicPayrollStatusProcessing    PublicPayrollStatus = "processing"
+	PublicPayrollStatusPartiallyPaid PublicPayrollStatus = "partially_paid"
+	PublicPayrollStatusProcessed     PublicPayrollStatus = "processed"
+	PublicPayrollStatusFailed        PublicPayrollStatus = "failed"
+	PublicPayrollStatusVoided        PublicPayrollStatus = "voided"
+)
+
+func (r PublicPayrollStatus) IsKnown() bool {
+	switch r {
+	case PublicPayrollStatusDraft, PublicPayrollStatusPending, PublicPayrollStatusProcessing, PublicPayrollStatusPartiallyPaid, PublicPayrollStatusProcessed, PublicPayrollStatusFailed, PublicPayrollStatusVoided:
+		return true
+	}
+	return false
+}
+
+type PublicPayFrequency string
+
+const (
+	PublicPayFrequencyWeekly      PublicPayFrequency = "weekly"
+	PublicPayFrequencyBiweekly    PublicPayFrequency = "biweekly"
+	PublicPayFrequencyMonthly     PublicPayFrequency = "monthly"
+	PublicPayFrequencySemimonthly PublicPayFrequency = "semimonthly"
+	PublicPayFrequencyQuarterly   PublicPayFrequency = "quarterly"
+	PublicPayFrequencyAnnually    PublicPayFrequency = "annually"
+)
+
+func (r PublicPayFrequency) IsKnown() bool {
+	switch r {
+	case PublicPayFrequencyWeekly, PublicPayFrequencyBiweekly, PublicPayFrequencyMonthly, PublicPayFrequencySemimonthly, PublicPayFrequencyQuarterly, PublicPayFrequencyAnnually:
+		return true
+	}
+	return false
+}
+
 type Union20 = string
+
+type PublicPayrollCurrency string
+
+const (
+	PublicPayrollCurrencyUsd PublicPayrollCurrency = "USD"
+	PublicPayrollCurrencyAud PublicPayrollCurrency = "AUD"
+	PublicPayrollCurrencyBgn PublicPayrollCurrency = "BGN"
+	PublicPayrollCurrencyBrl PublicPayrollCurrency = "BRL"
+	PublicPayrollCurrencyCad PublicPayrollCurrency = "CAD"
+	PublicPayrollCurrencyChf PublicPayrollCurrency = "CHF"
+	PublicPayrollCurrencyCzk PublicPayrollCurrency = "CZK"
+	PublicPayrollCurrencyDkk PublicPayrollCurrency = "DKK"
+	PublicPayrollCurrencyEur PublicPayrollCurrency = "EUR"
+	PublicPayrollCurrencyGbp PublicPayrollCurrency = "GBP"
+	PublicPayrollCurrencyHkd PublicPayrollCurrency = "HKD"
+	PublicPayrollCurrencyHuf PublicPayrollCurrency = "HUF"
+	PublicPayrollCurrencyIdr PublicPayrollCurrency = "IDR"
+	PublicPayrollCurrencyInr PublicPayrollCurrency = "INR"
+	PublicPayrollCurrencyJpy PublicPayrollCurrency = "JPY"
+	PublicPayrollCurrencyMyr PublicPayrollCurrency = "MYR"
+	PublicPayrollCurrencyNok PublicPayrollCurrency = "NOK"
+	PublicPayrollCurrencyNzd PublicPayrollCurrency = "NZD"
+	PublicPayrollCurrencyCny PublicPayrollCurrency = "CNY"
+	PublicPayrollCurrencyPln PublicPayrollCurrency = "PLN"
+	PublicPayrollCurrencyRon PublicPayrollCurrency = "RON"
+	PublicPayrollCurrencyTry PublicPayrollCurrency = "TRY"
+	PublicPayrollCurrencySek PublicPayrollCurrency = "SEK"
+	PublicPayrollCurrencySgd PublicPayrollCurrency = "SGD"
+	PublicPayrollCurrencyAed PublicPayrollCurrency = "AED"
+	PublicPayrollCurrencyArs PublicPayrollCurrency = "ARS"
+	PublicPayrollCurrencyBdt PublicPayrollCurrency = "BDT"
+	PublicPayrollCurrencyBwp PublicPayrollCurrency = "BWP"
+	PublicPayrollCurrencyClp PublicPayrollCurrency = "CLP"
+	PublicPayrollCurrencyCop PublicPayrollCurrency = "COP"
+	PublicPayrollCurrencyCrc PublicPayrollCurrency = "CRC"
+	PublicPayrollCurrencyEgp PublicPayrollCurrency = "EGP"
+	PublicPayrollCurrencyFjd PublicPayrollCurrency = "FJD"
+	PublicPayrollCurrencyGel PublicPayrollCurrency = "GEL"
+	PublicPayrollCurrencyGhs PublicPayrollCurrency = "GHS"
+	PublicPayrollCurrencyIls PublicPayrollCurrency = "ILS"
+	PublicPayrollCurrencyKes PublicPayrollCurrency = "KES"
+	PublicPayrollCurrencyKrw PublicPayrollCurrency = "KRW"
+	PublicPayrollCurrencyLkr PublicPayrollCurrency = "LKR"
+	PublicPayrollCurrencyMad PublicPayrollCurrency = "MAD"
+	PublicPayrollCurrencyMxn PublicPayrollCurrency = "MXN"
+	PublicPayrollCurrencyNpr PublicPayrollCurrency = "NPR"
+	PublicPayrollCurrencyPhp PublicPayrollCurrency = "PHP"
+	PublicPayrollCurrencyPkr PublicPayrollCurrency = "PKR"
+	PublicPayrollCurrencyThb PublicPayrollCurrency = "THB"
+	PublicPayrollCurrencyUah PublicPayrollCurrency = "UAH"
+	PublicPayrollCurrencyUgx PublicPayrollCurrency = "UGX"
+	PublicPayrollCurrencyUyu PublicPayrollCurrency = "UYU"
+	PublicPayrollCurrencyVnd PublicPayrollCurrency = "VND"
+	PublicPayrollCurrencyZar PublicPayrollCurrency = "ZAR"
+	PublicPayrollCurrencyZmw PublicPayrollCurrency = "ZMW"
+	PublicPayrollCurrencyTnd PublicPayrollCurrency = "TND"
+	PublicPayrollCurrencyNgn PublicPayrollCurrency = "NGN"
+	PublicPayrollCurrencyRsd PublicPayrollCurrency = "RSD"
+	PublicPayrollCurrencyTwd PublicPayrollCurrency = "TWD"
+	PublicPayrollCurrencyGtq PublicPayrollCurrency = "GTQ"
+	PublicPayrollCurrencyHnl PublicPayrollCurrency = "HNL"
+	PublicPayrollCurrencyDop PublicPayrollCurrency = "DOP"
+	PublicPayrollCurrencySar PublicPayrollCurrency = "SAR"
+	PublicPayrollCurrencyXaf PublicPayrollCurrency = "XAF"
+	PublicPayrollCurrencyPen PublicPayrollCurrency = "PEN"
+	PublicPayrollCurrencyBob PublicPayrollCurrency = "BOB"
+)
+
+func (r PublicPayrollCurrency) IsKnown() bool {
+	switch r {
+	case PublicPayrollCurrencyUsd, PublicPayrollCurrencyAud, PublicPayrollCurrencyBgn, PublicPayrollCurrencyBrl, PublicPayrollCurrencyCad, PublicPayrollCurrencyChf, PublicPayrollCurrencyCzk, PublicPayrollCurrencyDkk, PublicPayrollCurrencyEur, PublicPayrollCurrencyGbp, PublicPayrollCurrencyHkd, PublicPayrollCurrencyHuf, PublicPayrollCurrencyIdr, PublicPayrollCurrencyInr, PublicPayrollCurrencyJpy, PublicPayrollCurrencyMyr, PublicPayrollCurrencyNok, PublicPayrollCurrencyNzd, PublicPayrollCurrencyCny, PublicPayrollCurrencyPln, PublicPayrollCurrencyRon, PublicPayrollCurrencyTry, PublicPayrollCurrencySek, PublicPayrollCurrencySgd, PublicPayrollCurrencyAed, PublicPayrollCurrencyArs, PublicPayrollCurrencyBdt, PublicPayrollCurrencyBwp, PublicPayrollCurrencyClp, PublicPayrollCurrencyCop, PublicPayrollCurrencyCrc, PublicPayrollCurrencyEgp, PublicPayrollCurrencyFjd, PublicPayrollCurrencyGel, PublicPayrollCurrencyGhs, PublicPayrollCurrencyIls, PublicPayrollCurrencyKes, PublicPayrollCurrencyKrw, PublicPayrollCurrencyLkr, PublicPayrollCurrencyMad, PublicPayrollCurrencyMxn, PublicPayrollCurrencyNpr, PublicPayrollCurrencyPhp, PublicPayrollCurrencyPkr, PublicPayrollCurrencyThb, PublicPayrollCurrencyUah, PublicPayrollCurrencyUgx, PublicPayrollCurrencyUyu, PublicPayrollCurrencyVnd, PublicPayrollCurrencyZar, PublicPayrollCurrencyZmw, PublicPayrollCurrencyTnd, PublicPayrollCurrencyNgn, PublicPayrollCurrencyRsd, PublicPayrollCurrencyTwd, PublicPayrollCurrencyGtq, PublicPayrollCurrencyHnl, PublicPayrollCurrencyDop, PublicPayrollCurrencySar, PublicPayrollCurrencyXaf, PublicPayrollCurrencyPen, PublicPayrollCurrencyBob:
+		return true
+	}
+	return false
+}
+
+type PublicPayPeriod struct {
+	StartDate string              `json:"startDate" api:"required"`
+	EndDate   string              `json:"endDate" api:"required"`
+	JSON      publicPayPeriodJSON `json:"-"`
+}
+
+// publicPayPeriodJSON contains the JSON metadata for the struct [PublicPayPeriod]
+type publicPayPeriodJSON struct {
+	StartDate   apijson.Field
+	EndDate     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayPeriod) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayPeriodJSON) RawJSON() string {
+	return r.raw
+}
 
 type Union21 string
 
@@ -1527,6 +1699,43 @@ const (
 func (r Union21) IsKnown() bool {
 	switch r {
 	case Union21UsW2, Union21Us1099, Union21GlobalContractor:
+		return true
+	}
+	return false
+}
+
+type PublicPaycheckStatus string
+
+const (
+	PublicPaycheckStatusDraft         PublicPaycheckStatus = "draft"
+	PublicPaycheckStatusPending       PublicPaycheckStatus = "pending"
+	PublicPaycheckStatusProcessing    PublicPaycheckStatus = "processing"
+	PublicPaycheckStatusDebited       PublicPaycheckStatus = "debited"
+	PublicPaycheckStatusCredited      PublicPaycheckStatus = "credited"
+	PublicPaycheckStatusPartiallyPaid PublicPaycheckStatus = "partially_paid"
+	PublicPaycheckStatusProcessed     PublicPaycheckStatus = "processed"
+	PublicPaycheckStatusFailed        PublicPaycheckStatus = "failed"
+	PublicPaycheckStatusVoided        PublicPaycheckStatus = "voided"
+)
+
+func (r PublicPaycheckStatus) IsKnown() bool {
+	switch r {
+	case PublicPaycheckStatusDraft, PublicPaycheckStatusPending, PublicPaycheckStatusProcessing, PublicPaycheckStatusDebited, PublicPaycheckStatusCredited, PublicPaycheckStatusPartiallyPaid, PublicPaycheckStatusProcessed, PublicPaycheckStatusFailed, PublicPaycheckStatusVoided:
+		return true
+	}
+	return false
+}
+
+type PublicPaycheckPaymentMethod string
+
+const (
+	PublicPaycheckPaymentMethodDirectDeposit PublicPaycheckPaymentMethod = "direct_deposit"
+	PublicPaycheckPaymentMethodManual        PublicPaycheckPaymentMethod = "manual"
+)
+
+func (r PublicPaycheckPaymentMethod) IsKnown() bool {
+	switch r {
+	case PublicPaycheckPaymentMethodDirectDeposit, PublicPaycheckPaymentMethodManual:
 		return true
 	}
 	return false

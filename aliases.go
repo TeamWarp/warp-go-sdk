@@ -592,7 +592,119 @@ const (
 	InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError = shared.InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError
 )
 
+type PublicPayrollType = shared.PublicPayrollType
+
+const (
+	PublicPayrollTypeUs     = shared.PublicPayrollTypeUs
+	PublicPayrollTypeGlobal = shared.PublicPayrollTypeGlobal
+)
+
+type PublicPayrollSubtype = shared.PublicPayrollSubtype
+
+const (
+	PublicPayrollSubtypeRegular       = shared.PublicPayrollSubtypeRegular
+	PublicPayrollSubtypeOffCycle      = shared.PublicPayrollSubtypeOffCycle
+	PublicPayrollSubtypeBonus         = shared.PublicPayrollSubtypeBonus
+	PublicPayrollSubtypeInvoice       = shared.PublicPayrollSubtypeInvoice
+	PublicPayrollSubtypeContractor    = shared.PublicPayrollSubtypeContractor
+	PublicPayrollSubtypeDismissal     = shared.PublicPayrollSubtypeDismissal
+	PublicPayrollSubtypeReimbursement = shared.PublicPayrollSubtypeReimbursement
+	PublicPayrollSubtypeManual        = shared.PublicPayrollSubtypeManual
+)
+
+type PublicPayrollStatus = shared.PublicPayrollStatus
+
+const (
+	PublicPayrollStatusDraft         = shared.PublicPayrollStatusDraft
+	PublicPayrollStatusPending       = shared.PublicPayrollStatusPending
+	PublicPayrollStatusProcessing    = shared.PublicPayrollStatusProcessing
+	PublicPayrollStatusPartiallyPaid = shared.PublicPayrollStatusPartiallyPaid
+	PublicPayrollStatusProcessed     = shared.PublicPayrollStatusProcessed
+	PublicPayrollStatusFailed        = shared.PublicPayrollStatusFailed
+	PublicPayrollStatusVoided        = shared.PublicPayrollStatusVoided
+)
+
+type PublicPayFrequency = shared.PublicPayFrequency
+
+const (
+	PublicPayFrequencyWeekly      = shared.PublicPayFrequencyWeekly
+	PublicPayFrequencyBiweekly    = shared.PublicPayFrequencyBiweekly
+	PublicPayFrequencyMonthly     = shared.PublicPayFrequencyMonthly
+	PublicPayFrequencySemimonthly = shared.PublicPayFrequencySemimonthly
+	PublicPayFrequencyQuarterly   = shared.PublicPayFrequencyQuarterly
+	PublicPayFrequencyAnnually    = shared.PublicPayFrequencyAnnually
+)
+
 type Union20 = shared.Union20
+
+type PublicPayrollCurrency = shared.PublicPayrollCurrency
+
+const (
+	PublicPayrollCurrencyUsd = shared.PublicPayrollCurrencyUsd
+	PublicPayrollCurrencyAud = shared.PublicPayrollCurrencyAud
+	PublicPayrollCurrencyBgn = shared.PublicPayrollCurrencyBgn
+	PublicPayrollCurrencyBrl = shared.PublicPayrollCurrencyBrl
+	PublicPayrollCurrencyCad = shared.PublicPayrollCurrencyCad
+	PublicPayrollCurrencyChf = shared.PublicPayrollCurrencyChf
+	PublicPayrollCurrencyCzk = shared.PublicPayrollCurrencyCzk
+	PublicPayrollCurrencyDkk = shared.PublicPayrollCurrencyDkk
+	PublicPayrollCurrencyEur = shared.PublicPayrollCurrencyEur
+	PublicPayrollCurrencyGbp = shared.PublicPayrollCurrencyGbp
+	PublicPayrollCurrencyHkd = shared.PublicPayrollCurrencyHkd
+	PublicPayrollCurrencyHuf = shared.PublicPayrollCurrencyHuf
+	PublicPayrollCurrencyIdr = shared.PublicPayrollCurrencyIdr
+	PublicPayrollCurrencyInr = shared.PublicPayrollCurrencyInr
+	PublicPayrollCurrencyJpy = shared.PublicPayrollCurrencyJpy
+	PublicPayrollCurrencyMyr = shared.PublicPayrollCurrencyMyr
+	PublicPayrollCurrencyNok = shared.PublicPayrollCurrencyNok
+	PublicPayrollCurrencyNzd = shared.PublicPayrollCurrencyNzd
+	PublicPayrollCurrencyCny = shared.PublicPayrollCurrencyCny
+	PublicPayrollCurrencyPln = shared.PublicPayrollCurrencyPln
+	PublicPayrollCurrencyRon = shared.PublicPayrollCurrencyRon
+	PublicPayrollCurrencyTry = shared.PublicPayrollCurrencyTry
+	PublicPayrollCurrencySek = shared.PublicPayrollCurrencySek
+	PublicPayrollCurrencySgd = shared.PublicPayrollCurrencySgd
+	PublicPayrollCurrencyAed = shared.PublicPayrollCurrencyAed
+	PublicPayrollCurrencyArs = shared.PublicPayrollCurrencyArs
+	PublicPayrollCurrencyBdt = shared.PublicPayrollCurrencyBdt
+	PublicPayrollCurrencyBwp = shared.PublicPayrollCurrencyBwp
+	PublicPayrollCurrencyClp = shared.PublicPayrollCurrencyClp
+	PublicPayrollCurrencyCop = shared.PublicPayrollCurrencyCop
+	PublicPayrollCurrencyCrc = shared.PublicPayrollCurrencyCrc
+	PublicPayrollCurrencyEgp = shared.PublicPayrollCurrencyEgp
+	PublicPayrollCurrencyFjd = shared.PublicPayrollCurrencyFjd
+	PublicPayrollCurrencyGel = shared.PublicPayrollCurrencyGel
+	PublicPayrollCurrencyGhs = shared.PublicPayrollCurrencyGhs
+	PublicPayrollCurrencyIls = shared.PublicPayrollCurrencyIls
+	PublicPayrollCurrencyKes = shared.PublicPayrollCurrencyKes
+	PublicPayrollCurrencyKrw = shared.PublicPayrollCurrencyKrw
+	PublicPayrollCurrencyLkr = shared.PublicPayrollCurrencyLkr
+	PublicPayrollCurrencyMad = shared.PublicPayrollCurrencyMad
+	PublicPayrollCurrencyMxn = shared.PublicPayrollCurrencyMxn
+	PublicPayrollCurrencyNpr = shared.PublicPayrollCurrencyNpr
+	PublicPayrollCurrencyPhp = shared.PublicPayrollCurrencyPhp
+	PublicPayrollCurrencyPkr = shared.PublicPayrollCurrencyPkr
+	PublicPayrollCurrencyThb = shared.PublicPayrollCurrencyThb
+	PublicPayrollCurrencyUah = shared.PublicPayrollCurrencyUah
+	PublicPayrollCurrencyUgx = shared.PublicPayrollCurrencyUgx
+	PublicPayrollCurrencyUyu = shared.PublicPayrollCurrencyUyu
+	PublicPayrollCurrencyVnd = shared.PublicPayrollCurrencyVnd
+	PublicPayrollCurrencyZar = shared.PublicPayrollCurrencyZar
+	PublicPayrollCurrencyZmw = shared.PublicPayrollCurrencyZmw
+	PublicPayrollCurrencyTnd = shared.PublicPayrollCurrencyTnd
+	PublicPayrollCurrencyNgn = shared.PublicPayrollCurrencyNgn
+	PublicPayrollCurrencyRsd = shared.PublicPayrollCurrencyRsd
+	PublicPayrollCurrencyTwd = shared.PublicPayrollCurrencyTwd
+	PublicPayrollCurrencyGtq = shared.PublicPayrollCurrencyGtq
+	PublicPayrollCurrencyHnl = shared.PublicPayrollCurrencyHnl
+	PublicPayrollCurrencyDop = shared.PublicPayrollCurrencyDop
+	PublicPayrollCurrencySar = shared.PublicPayrollCurrencySar
+	PublicPayrollCurrencyXaf = shared.PublicPayrollCurrencyXaf
+	PublicPayrollCurrencyPen = shared.PublicPayrollCurrencyPen
+	PublicPayrollCurrencyBob = shared.PublicPayrollCurrencyBob
+)
+
+type PublicPayPeriod = shared.PublicPayPeriod
 
 type Union21 = shared.Union21
 
@@ -600,6 +712,27 @@ const (
 	Union21UsW2             = shared.Union21UsW2
 	Union21Us1099           = shared.Union21Us1099
 	Union21GlobalContractor = shared.Union21GlobalContractor
+)
+
+type PublicPaycheckStatus = shared.PublicPaycheckStatus
+
+const (
+	PublicPaycheckStatusDraft         = shared.PublicPaycheckStatusDraft
+	PublicPaycheckStatusPending       = shared.PublicPaycheckStatusPending
+	PublicPaycheckStatusProcessing    = shared.PublicPaycheckStatusProcessing
+	PublicPaycheckStatusDebited       = shared.PublicPaycheckStatusDebited
+	PublicPaycheckStatusCredited      = shared.PublicPaycheckStatusCredited
+	PublicPaycheckStatusPartiallyPaid = shared.PublicPaycheckStatusPartiallyPaid
+	PublicPaycheckStatusProcessed     = shared.PublicPaycheckStatusProcessed
+	PublicPaycheckStatusFailed        = shared.PublicPaycheckStatusFailed
+	PublicPaycheckStatusVoided        = shared.PublicPaycheckStatusVoided
+)
+
+type PublicPaycheckPaymentMethod = shared.PublicPaycheckPaymentMethod
+
+const (
+	PublicPaycheckPaymentMethodDirectDeposit = shared.PublicPaycheckPaymentMethodDirectDeposit
+	PublicPaycheckPaymentMethodManual        = shared.PublicPaycheckPaymentMethodManual
 )
 
 type TimeOffPolicyNotFoundEncoded = shared.TimeOffPolicyNotFoundEncoded
