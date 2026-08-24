@@ -495,6 +495,46 @@ func _smokeCase41() {
 	fmt.Println(workplace)
 }
 
+func _smokeCase42() {
+	payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
+		Limit: sdk.F[string]("limit"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payroll)
+}
+
+func _smokeCase43() {
+	payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payroll)
+}
+
+func _smokeCase44() {
+	payroll, err := client.Payroll.List(context.Background(), sdk.PayrollListParams{
+		Limit: sdk.F[string]("limit"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payroll)
+}
+
+func _smokeCase45() {
+	payroll, err := client.Payroll.Get(context.Background(), "pay_1234")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payroll)
+}
+
 var cases = []smokeCase{
 	{
 		Operation: "list",
@@ -788,6 +828,34 @@ var cases = []smokeCase{
 		Method:    "PATCH",
 		Path:      "/v1/workplaces/{id}",
 		Run:       _smokeCase41,
+	},
+
+	{
+		Operation: "listPaychecks",
+		Method:    "GET",
+		Path:      "/v1/paychecks",
+		Run:       _smokeCase42,
+	},
+
+	{
+		Operation: "retrievePaycheck",
+		Method:    "GET",
+		Path:      "/v1/paychecks/{id}",
+		Run:       _smokeCase43,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/payrolls",
+		Run:       _smokeCase44,
+	},
+
+	{
+		Operation: "retrieve",
+		Method:    "GET",
+		Path:      "/v1/payrolls/{id}",
+		Run:       _smokeCase45,
 	},
 }
 
