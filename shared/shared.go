@@ -9,72 +9,41 @@ import (
 type Union string
 
 const (
-	UnionUsd Union = "USD"
-	UnionAud Union = "AUD"
-	UnionBgn Union = "BGN"
-	UnionBrl Union = "BRL"
-	UnionCad Union = "CAD"
-	UnionChf Union = "CHF"
-	UnionCzk Union = "CZK"
-	UnionDkk Union = "DKK"
-	UnionEur Union = "EUR"
-	UnionGbp Union = "GBP"
-	UnionHkd Union = "HKD"
-	UnionHuf Union = "HUF"
-	UnionIdr Union = "IDR"
-	UnionInr Union = "INR"
-	UnionJpy Union = "JPY"
-	UnionMyr Union = "MYR"
-	UnionNok Union = "NOK"
-	UnionNzd Union = "NZD"
-	UnionCny Union = "CNY"
-	UnionPln Union = "PLN"
-	UnionRon Union = "RON"
-	UnionTry Union = "TRY"
-	UnionSek Union = "SEK"
-	UnionSgd Union = "SGD"
-	UnionAed Union = "AED"
-	UnionArs Union = "ARS"
-	UnionBdt Union = "BDT"
-	UnionBwp Union = "BWP"
-	UnionClp Union = "CLP"
-	UnionCop Union = "COP"
-	UnionCrc Union = "CRC"
-	UnionEgp Union = "EGP"
-	UnionFjd Union = "FJD"
-	UnionGel Union = "GEL"
-	UnionGhs Union = "GHS"
-	UnionIls Union = "ILS"
-	UnionKes Union = "KES"
-	UnionKrw Union = "KRW"
-	UnionLkr Union = "LKR"
-	UnionMad Union = "MAD"
-	UnionMxn Union = "MXN"
-	UnionNpr Union = "NPR"
-	UnionPhp Union = "PHP"
-	UnionPkr Union = "PKR"
-	UnionThb Union = "THB"
-	UnionUah Union = "UAH"
-	UnionUgx Union = "UGX"
-	UnionUyu Union = "UYU"
-	UnionVnd Union = "VND"
-	UnionZar Union = "ZAR"
-	UnionZmw Union = "ZMW"
-	UnionTnd Union = "TND"
-	UnionNgn Union = "NGN"
-	UnionRsd Union = "RSD"
-	UnionTwd Union = "TWD"
-	UnionGtq Union = "GTQ"
-	UnionHnl Union = "HNL"
-	UnionDop Union = "DOP"
-	UnionSar Union = "SAR"
-	UnionXaf Union = "XAF"
-	UnionPen Union = "PEN"
+	UnionMedical             Union = "medical"
+	UnionDental              Union = "dental"
+	UnionVision              Union = "vision"
+	UnionLife                Union = "life"
+	UnionShortTermDisability Union = "short_term_disability"
+	UnionLongTermDisability  Union = "long_term_disability"
+	Union401k                Union = "401k"
+	UnionRoth401k            Union = "roth_401k"
+	Union403b                Union = "403b"
+	UnionRoth403b            Union = "roth_403b"
+	Union457                 Union = "457"
+	UnionRoth457             Union = "roth_457"
+	UnionHsa                 Union = "hsa"
+	UnionFsaMedical          Union = "fsa_medical"
+	UnionFsaDependentCare    Union = "fsa_dependent_care"
+	UnionTransit             Union = "transit"
+	UnionParking             Union = "parking"
+	UnionAccident            Union = "accident"
+	UnionCancer              Union = "cancer"
+	UnionCriticalIllness     Union = "critical_illness"
+	UnionHospital            Union = "hospital"
+	UnionMedicalOther        Union = "medical_other"
+	UnionSimpleIra           Union = "simple_ira"
+	UnionRothSimpleIra       Union = "roth_simple_ira"
+	UnionNqdc                Union = "nqdc"
+	UnionNontaxableFringe    Union = "nontaxable_fringe"
+	UnionPucc                Union = "pucc"
+	UnionVoluntary           Union = "voluntary"
+	UnionPostTax             Union = "post_tax"
+	UnionOther               Union = "other"
 )
 
 func (r Union) IsKnown() bool {
 	switch r {
-	case UnionUsd, UnionAud, UnionBgn, UnionBrl, UnionCad, UnionChf, UnionCzk, UnionDkk, UnionEur, UnionGbp, UnionHkd, UnionHuf, UnionIdr, UnionInr, UnionJpy, UnionMyr, UnionNok, UnionNzd, UnionCny, UnionPln, UnionRon, UnionTry, UnionSek, UnionSgd, UnionAed, UnionArs, UnionBdt, UnionBwp, UnionClp, UnionCop, UnionCrc, UnionEgp, UnionFjd, UnionGel, UnionGhs, UnionIls, UnionKes, UnionKrw, UnionLkr, UnionMad, UnionMxn, UnionNpr, UnionPhp, UnionPkr, UnionThb, UnionUah, UnionUgx, UnionUyu, UnionVnd, UnionZar, UnionZmw, UnionTnd, UnionNgn, UnionRsd, UnionTwd, UnionGtq, UnionHnl, UnionDop, UnionSar, UnionXaf, UnionPen:
+	case UnionMedical, UnionDental, UnionVision, UnionLife, UnionShortTermDisability, UnionLongTermDisability, Union401k, UnionRoth401k, Union403b, UnionRoth403b, Union457, UnionRoth457, UnionHsa, UnionFsaMedical, UnionFsaDependentCare, UnionTransit, UnionParking, UnionAccident, UnionCancer, UnionCriticalIllness, UnionHospital, UnionMedicalOther, UnionSimpleIra, UnionRothSimpleIra, UnionNqdc, UnionNontaxableFringe, UnionPucc, UnionVoluntary, UnionPostTax, UnionOther:
 		return true
 	}
 	return false
@@ -84,8 +53,8 @@ type PublicWorkerCompensation struct {
 	PayRateID string `json:"payRateId" api:"required"`
 	// The period represented by the pay rate amount.
 	Per      PublicWorkerCompensationPer `json:"per" api:"required"`
-	Amount   string                      `json:"amount" api:"required"`
-	Currency Union                       `json:"currency" api:"required"`
+	Amount   int64                       `json:"amount" api:"required"`
+	Currency Union1                      `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string                       `json:"display" api:"required"`
 	JSON    publicWorkerCompensationJSON `json:"-"`
@@ -128,8 +97,8 @@ func (r PublicWorkerCompensationPer) IsKnown() bool {
 }
 
 type PublicMoneyAmount struct {
-	Amount   string `json:"amount" api:"required"`
-	Currency Union  `json:"currency" api:"required"`
+	Amount   int64  `json:"amount" api:"required"`
+	Currency Union1 `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                `json:"display" api:"required"`
 	JSON    publicMoneyAmountJSON `json:"-"`
@@ -415,39 +384,40 @@ func (r APINotEnabledEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union2 = string
-
-type Union3 string
+type Union2 string
 
 const (
-	Union3Text        Union3 = "text"
-	Union3Number      Union3 = "number"
-	Union3Date        Union3 = "date"
-	Union3Boolean     Union3 = "boolean"
-	Union3Currency    Union3 = "currency"
-	Union3Percentage  Union3 = "percentage"
-	Union3Select      Union3 = "select"
-	Union3MultiSelect Union3 = "multi_select"
+	Union2Infinity  Union2 = "Infinity"
+	Union2Infinity2 Union2 = "-Infinity"
+	Union2NaN       Union2 = "NaN"
 )
 
-func (r Union3) IsKnown() bool {
+func (r Union2) IsKnown() bool {
 	switch r {
-	case Union3Text, Union3Number, Union3Date, Union3Boolean, Union3Currency, Union3Percentage, Union3Select, Union3MultiSelect:
+	case Union2Infinity, Union2Infinity2, Union2NaN:
 		return true
 	}
 	return false
 }
 
+type Union3 = string
+
 type Union4 string
 
 const (
-	Union4Active   Union4 = "active"
-	Union4Archived Union4 = "archived"
+	Union4Text        Union4 = "text"
+	Union4Number      Union4 = "number"
+	Union4Date        Union4 = "date"
+	Union4Boolean     Union4 = "boolean"
+	Union4Currency    Union4 = "currency"
+	Union4Percentage  Union4 = "percentage"
+	Union4Select      Union4 = "select"
+	Union4MultiSelect Union4 = "multi_select"
 )
 
 func (r Union4) IsKnown() bool {
 	switch r {
-	case Union4Active, Union4Archived:
+	case Union4Text, Union4Number, Union4Date, Union4Boolean, Union4Currency, Union4Percentage, Union4Select, Union4MultiSelect:
 		return true
 	}
 	return false
@@ -456,17 +426,13 @@ func (r Union4) IsKnown() bool {
 type Union5 string
 
 const (
-	Union5Info         Union5 = "info"
-	Union5Pii          Union5 = "pii"
-	Union5Compensation Union5 = "compensation"
-	Union5Banking      Union5 = "banking"
-	Union5It           Union5 = "it"
-	Union5Compliance   Union5 = "compliance"
+	Union5Active   Union5 = "active"
+	Union5Archived Union5 = "archived"
 )
 
 func (r Union5) IsKnown() bool {
 	switch r {
-	case Union5Info, Union5Pii, Union5Compensation, Union5Banking, Union5It, Union5Compliance:
+	case Union5Active, Union5Archived:
 		return true
 	}
 	return false
@@ -475,14 +441,17 @@ func (r Union5) IsKnown() bool {
 type Union6 string
 
 const (
-	Union6Admins  Union6 = "admins"
-	Union6Manager Union6 = "manager"
-	Union6Worker  Union6 = "worker"
+	Union6Info         Union6 = "info"
+	Union6Pii          Union6 = "pii"
+	Union6Compensation Union6 = "compensation"
+	Union6Banking      Union6 = "banking"
+	Union6It           Union6 = "it"
+	Union6Compliance   Union6 = "compliance"
 )
 
 func (r Union6) IsKnown() bool {
 	switch r {
-	case Union6Admins, Union6Manager, Union6Worker:
+	case Union6Info, Union6Pii, Union6Compensation, Union6Banking, Union6It, Union6Compliance:
 		return true
 	}
 	return false
@@ -491,30 +460,44 @@ func (r Union6) IsKnown() bool {
 type Union7 string
 
 const (
-	Union7Admin  Union7 = "admin"
-	Union7Worker Union7 = "worker"
+	Union7Admins  Union7 = "admins"
+	Union7Manager Union7 = "manager"
+	Union7Worker  Union7 = "worker"
 )
 
 func (r Union7) IsKnown() bool {
 	switch r {
-	case Union7Admin, Union7Worker:
+	case Union7Admins, Union7Manager, Union7Worker:
 		return true
 	}
 	return false
 }
 
-type Union8 = bool
+type Union8 string
+
+const (
+	Union8Admin  Union8 = "admin"
+	Union8Worker Union8 = "worker"
+)
+
+func (r Union8) IsKnown() bool {
+	switch r {
+	case Union8Admin, Union8Worker:
+		return true
+	}
+	return false
+}
 
 type Objects struct {
 	ID          string      `json:"id" api:"required"`
 	Name        string      `json:"name" api:"required"`
 	Description string      `json:"description" api:"required,nullable"`
-	Type        Union3      `json:"type" api:"required"`
+	Type        Union4      `json:"type" api:"required"`
 	Config      interface{} `json:"config" api:"required"`
-	Status      Union4      `json:"status" api:"required"`
-	Category    Union5      `json:"category" api:"required"`
-	AccessLevel Union6      `json:"accessLevel" api:"required"`
-	InputBy     Union7      `json:"inputBy" api:"required"`
+	Status      Union5      `json:"status" api:"required"`
+	Category    Union6      `json:"category" api:"required"`
+	AccessLevel Union7      `json:"accessLevel" api:"required"`
+	InputBy     Union8      `json:"inputBy" api:"required"`
 	CanWrite    bool        `json:"canWrite" api:"required"`
 	CreatedAt   string      `json:"createdAt" api:"required"`
 	Required    bool        `json:"required" api:"nullable"`
@@ -742,6 +725,8 @@ func (r CustomFieldOptionNotFoundErrorEncodedTag) IsKnown() bool {
 	return false
 }
 
+type Union12 = string
+
 type DepartmentNotFoundEncoded struct {
 	Tag     DepartmentNotFoundEncodedTag  `json:"_tag" api:"required"`
 	ID      string                        `json:"id" api:"required"`
@@ -780,34 +765,18 @@ func (r DepartmentNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union12 string
-
-const (
-	Union12Draft    Union12 = "draft"
-	Union12Sent     Union12 = "sent"
-	Union12Accepted Union12 = "accepted"
-	Union12Void     Union12 = "void"
-)
-
-func (r Union12) IsKnown() bool {
-	switch r {
-	case Union12Draft, Union12Sent, Union12Accepted, Union12Void:
-		return true
-	}
-	return false
-}
-
 type Union13 string
 
 const (
-	Union13Employee         Union13 = "employee"
-	Union13UsContractor     Union13 = "us_contractor"
-	Union13GlobalContractor Union13 = "global_contractor"
+	Union13Draft    Union13 = "draft"
+	Union13Sent     Union13 = "sent"
+	Union13Accepted Union13 = "accepted"
+	Union13Void     Union13 = "void"
 )
 
 func (r Union13) IsKnown() bool {
 	switch r {
-	case Union13Employee, Union13UsContractor, Union13GlobalContractor:
+	case Union13Draft, Union13Sent, Union13Accepted, Union13Void:
 		return true
 	}
 	return false
@@ -815,8 +784,8 @@ func (r Union13) IsKnown() bool {
 
 type Objects5 struct {
 	ID         string             `json:"id" api:"required"`
-	Status     Union12            `json:"status" api:"required"`
-	WorkerType Union13            `json:"workerType" api:"required"`
+	Status     Union13            `json:"status" api:"required"`
+	WorkerType Objects5WorkerType `json:"workerType" api:"required"`
 	Candidate  Objects5Candidate  `json:"candidate" api:"required"`
 	Position   Objects5Position   `json:"position" api:"required"`
 	Department Objects5Department `json:"department" api:"required,nullable"`
@@ -865,7 +834,7 @@ func (r objects5JSON) RawJSON() string {
 type Objects5Candidate struct {
 	FirstName         string                             `json:"firstName" api:"required"`
 	LastName          string                             `json:"lastName" api:"required"`
-	Email             string                             `json:"email" api:"required"`
+	Email             string                             `json:"email" api:"required" format:"email"`
 	ContractorDetails Objects5CandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              objects5CandidateJSON              `json:"-"`
 }
@@ -1352,9 +1321,9 @@ func (r Objects5CompensationBasePayType) IsKnown() bool {
 }
 
 type Objects5CompensationStock struct {
-	Options               string                        `json:"options" api:"required"`
-	VestingScheduleMonths string                        `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                        `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                         `json:"options" api:"required"`
+	VestingScheduleMonths int64                         `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                         `json:"cliffMonths" api:"required,nullable"`
 	JSON                  objects5CompensationStockJSON `json:"-"`
 }
 
@@ -1373,6 +1342,22 @@ func (r *Objects5CompensationStock) UnmarshalJSON(data []byte) (err error) {
 
 func (r objects5CompensationStockJSON) RawJSON() string {
 	return r.raw
+}
+
+type Objects5WorkerType string
+
+const (
+	Objects5WorkerTypeEmployee         Objects5WorkerType = "employee"
+	Objects5WorkerTypeUsContractor     Objects5WorkerType = "us_contractor"
+	Objects5WorkerTypeGlobalContractor Objects5WorkerType = "global_contractor"
+)
+
+func (r Objects5WorkerType) IsKnown() bool {
+	switch r {
+	case Objects5WorkerTypeEmployee, Objects5WorkerTypeUsContractor, Objects5WorkerTypeGlobalContractor:
+		return true
+	}
+	return false
 }
 
 type WorkplaceNotFoundEncoded struct {
@@ -1492,7 +1477,7 @@ func (r OfferNotFoundErrorEncodedTag) IsKnown() bool {
 type InvalidOfferStatusErrorEncoded struct {
 	Tag     InvalidOfferStatusErrorEncodedTag  `json:"_tag" api:"required"`
 	ID      string                             `json:"id" api:"required"`
-	Status  Union12                            `json:"status" api:"required"`
+	Status  Union13                            `json:"status" api:"required"`
 	Message string                             `json:"message" api:"required"`
 	JSON    invalidOfferStatusErrorEncodedJSON `json:"-"`
 }
@@ -1524,6 +1509,24 @@ const (
 func (r InvalidOfferStatusErrorEncodedTag) IsKnown() bool {
 	switch r {
 	case InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError:
+		return true
+	}
+	return false
+}
+
+type Union20 = string
+
+type Union21 string
+
+const (
+	Union21UsW2             Union21 = "us_w2"
+	Union21Us1099           Union21 = "us_1099"
+	Union21GlobalContractor Union21 = "global_contractor"
+)
+
+func (r Union21) IsKnown() bool {
+	switch r {
+	case Union21UsW2, Union21Us1099, Union21GlobalContractor:
 		return true
 	}
 	return false
@@ -1567,49 +1570,71 @@ func (r TimeOffPolicyNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union21 = string
+type Union23 = string
 
-type Union23 string
+type Union24 = string
+
+type Union25 string
 
 const (
-	Union23Draft       Union23 = "draft"
-	Union23Invited     Union23 = "invited"
-	Union23Onboarding  Union23 = "onboarding"
-	Union23Active      Union23 = "active"
-	Union23Offboarding Union23 = "offboarding"
-	Union23Inactive    Union23 = "inactive"
+	Union25Pending  Union25 = "pending"
+	Union25Approved Union25 = "approved"
+	Union25Denied   Union25 = "denied"
 )
 
-func (r Union23) IsKnown() bool {
+func (r Union25) IsKnown() bool {
 	switch r {
-	case Union23Draft, Union23Invited, Union23Onboarding, Union23Active, Union23Offboarding, Union23Inactive:
+	case Union25Pending, Union25Approved, Union25Denied:
 		return true
 	}
 	return false
 }
 
-type Union24 string
+type Union26 string
 
 const (
-	Union24Employee   Union24 = "employee"
-	Union24Contractor Union24 = "contractor"
+	Union26Draft       Union26 = "draft"
+	Union26Invited     Union26 = "invited"
+	Union26Onboarding  Union26 = "onboarding"
+	Union26Active      Union26 = "active"
+	Union26Offboarding Union26 = "offboarding"
+	Union26Inactive    Union26 = "inactive"
 )
 
-func (r Union24) IsKnown() bool {
+func (r Union26) IsKnown() bool {
 	switch r {
-	case Union24Employee, Union24Contractor:
+	case Union26Draft, Union26Invited, Union26Onboarding, Union26Active, Union26Offboarding, Union26Inactive:
 		return true
 	}
 	return false
 }
 
-type Union26 = bool
+type Union27 string
 
-type Union27 = string
+const (
+	Union27Employee   Union27 = "employee"
+	Union27Contractor Union27 = "contractor"
+)
 
-type Union29 = string
+func (r Union27) IsKnown() bool {
+	switch r {
+	case Union27Employee, Union27Contractor:
+		return true
+	}
+	return false
+}
+
+type Union28 = string
+
+type Union29 = bool
 
 type Union30 = string
+
+type Union31 = string
+
+type Union32 = string
+
+type Union33 = string
 
 type WorkerNotFoundErrorEncoded struct {
 	Tag     WorkerNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
@@ -1644,36 +1669,6 @@ const (
 func (r WorkerNotFoundErrorEncodedTag) IsKnown() bool {
 	switch r {
 	case WorkerNotFoundErrorEncodedTagWorkerNotFoundError:
-		return true
-	}
-	return false
-}
-
-type Union34 string
-
-const (
-	Union34Remote Union34 = "remote"
-	Union34Office Union34 = "office"
-)
-
-func (r Union34) IsKnown() bool {
-	switch r {
-	case Union34Remote, Union34Office:
-		return true
-	}
-	return false
-}
-
-type Union35 string
-
-const (
-	Union35Active   Union35 = "active"
-	Union35Archived Union35 = "archived"
-)
-
-func (r Union35) IsKnown() bool {
-	switch r {
-	case Union35Active, Union35Archived:
 		return true
 	}
 	return false

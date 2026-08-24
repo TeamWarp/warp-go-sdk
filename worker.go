@@ -77,7 +77,7 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 //
 // Example:
 //
-//	worker, err := client.Workers.Get(context.Background(), "id")
+//	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -108,7 +108,7 @@ func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.Reque
 //
 // Example:
 //
-//	err := client.Workers.Delete(context.Background(), "id")
+//	err := client.Workers.Delete(context.Background(), "wrk_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -140,17 +140,17 @@ func (r *WorkerService) Delete(ctx context.Context, id string, opts ...option.Re
 //
 //	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 //		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
-//			Amount: sdk.F[interface{}](map[string]interface{}{}),
+//			Amount: sdk.F[float64](0),
 //		}),
-//		DepartmentID: sdk.F[string](map[string]interface{}{}),
-//		Email:        sdk.F[string](map[string]interface{}{}),
-//		FirstName:    sdk.F[interface{}](map[string]interface{}{}),
-//		LastName:     sdk.F[interface{}](map[string]interface{}{}),
-//		ManagerID:    sdk.F[string](map[string]interface{}{}),
-//		Position:     sdk.F[interface{}](map[string]interface{}{}),
-//		StartDate:    sdk.F[string](map[string]interface{}{}),
+//		DepartmentID: sdk.F[string]("dpt_1234"),
+//		Email:        sdk.F[string]("john@joinwarp.com"),
+//		FirstName:    sdk.F[string]("Jonathan"),
+//		LastName:     sdk.F[string]("Galt"),
+//		ManagerID:    sdk.F[string]("wrk_1234"),
+//		Position:     sdk.F[string]("Software Engineer"),
+//		StartDate:    sdk.F[string](""),
 //		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
-//			WorkplaceID: sdk.F[interface{}](map[string]interface{}{}),
+//			WorkplaceID: sdk.F[string]("wkp_1234"),
 //		}),
 //	})
 //	if err != nil {
@@ -180,13 +180,13 @@ func (r *WorkerService) NewEmployee(ctx context.Context, body WorkerNewEmployeeP
 // Example:
 //
 //	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
-//		DepartmentID: sdk.F[string](map[string]interface{}{}),
-//		Email:        sdk.F[string](map[string]interface{}{}),
-//		FirstName:    sdk.F[interface{}](map[string]interface{}{}),
-//		LastName:     sdk.F[interface{}](map[string]interface{}{}),
-//		ManagerID:    sdk.F[string](map[string]interface{}{}),
-//		Position:     sdk.F[interface{}](map[string]interface{}{}),
-//		StartDate:    sdk.F[string](map[string]interface{}{}),
+//		DepartmentID: sdk.F[string]("dpt_1234"),
+//		Email:        sdk.F[string]("john@joinwarp.com"),
+//		FirstName:    sdk.F[string]("Melissa"),
+//		LastName:     sdk.F[string]("Jones"),
+//		ManagerID:    sdk.F[string]("wrk_1234"),
+//		Position:     sdk.F[string]("Design Consultant"),
+//		StartDate:    sdk.F[string](""),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -214,7 +214,7 @@ func (r *WorkerService) NewContractor(ctx context.Context, body WorkerNewContrac
 //
 // Example:
 //
-//	worker, err := client.Workers.Invite(context.Background(), "id")
+//	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -345,16 +345,16 @@ func (r RemoteWorkLocationState) IsKnown() bool {
 type Objects10 struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union24 `json:"type" api:"required"`
-	Status        Union23 `json:"status" api:"required"`
+	Type          Union27 `json:"type" api:"required"`
+	Status        Union26 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
 	BusinessName  string  `json:"businessName" api:"required,nullable"`
 	FirstName     string  `json:"firstName" api:"required"`
 	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	Email         string  `json:"email" api:"required" format:"email"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -404,16 +404,16 @@ func (r objects10JSON) RawJSON() string {
 type WorkerGetResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union24 `json:"type" api:"required"`
-	Status        Union23 `json:"status" api:"required"`
+	Type          Union27 `json:"type" api:"required"`
+	Status        Union26 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
 	BusinessName  string  `json:"businessName" api:"required,nullable"`
 	FirstName     string  `json:"firstName" api:"required"`
 	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	Email         string  `json:"email" api:"required" format:"email"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -498,8 +498,8 @@ type WorkerListParams struct {
 	Limit     param.Field[string]    `query:"limit" api:"required"`
 	AfterID   param.Field[string]    `query:"afterId"`
 	BeforeID  param.Field[string]    `query:"beforeId"`
-	Statuses  param.Field[[]Union23] `query:"statuses"`
-	Types     param.Field[[]Union24] `query:"types"`
+	Statuses  param.Field[[]Union26] `query:"statuses"`
+	Types     param.Field[[]Union27] `query:"types"`
 	WorkEmail param.Field[string]    `query:"workEmail"`
 }
 
@@ -515,11 +515,11 @@ type WorkerNewEmployeeParams struct {
 	// The employee's base compensation.
 	Compensation param.Field[WorkerNewEmployeeParamsCompensation] `json:"compensation" api:"required"`
 	DepartmentID param.Field[string]                              `json:"departmentId" api:"required"`
-	Email        param.Field[string]                              `json:"email" api:"required"`
-	FirstName    param.Field[interface{}]                         `json:"firstName" api:"required"`
-	LastName     param.Field[interface{}]                         `json:"lastName" api:"required"`
+	Email        param.Field[string]                              `json:"email" api:"required" format:"email"`
+	FirstName    param.Field[string]                              `json:"firstName" api:"required"`
+	LastName     param.Field[string]                              `json:"lastName" api:"required"`
 	ManagerID    param.Field[string]                              `json:"managerId" api:"required"`
-	Position     param.Field[interface{}]                         `json:"position" api:"required"`
+	Position     param.Field[string]                              `json:"position" api:"required"`
 	StartDate    param.Field[string]                              `json:"startDate" api:"required"`
 	// Where the employee will work. Either an existing company workplace or a remote
 	// US state.
@@ -528,7 +528,7 @@ type WorkerNewEmployeeParams struct {
 	RequireI9         param.Field[bool]                                     `json:"requireI9"`
 	StateRegistration param.Field[WorkerNewEmployeeParamsStateRegistration] `json:"stateRegistration"`
 	StockOptions      param.Field[interface{}]                              `json:"stockOptions"`
-	WorkEmail         param.Field[string]                                   `json:"workEmail"`
+	WorkEmail         param.Field[string]                                   `json:"workEmail" format:"email"`
 }
 
 func (r WorkerNewEmployeeParams) MarshalJSON() (data []byte, err error) {
@@ -673,7 +673,7 @@ func (r WorkerNewEmployeeParamsWorkLocationRemoteWorkLocationState) IsKnown() bo
 }
 
 type WorkerNewEmployeeParamsCompensation struct {
-	Amount param.Field[interface{}] `json:"amount" api:"required"`
+	Amount param.Field[float64] `json:"amount" api:"required"`
 	// Whether the amount is per hour or per year.
 	Per param.Field[WorkerNewEmployeeParamsCompensationPer] `json:"per" api:"required"`
 }
@@ -718,20 +718,20 @@ func (r WorkerNewEmployeeParamsPaySchedule) IsKnown() bool {
 
 type WorkerNewContractorParams struct {
 	DepartmentID param.Field[string] `json:"departmentId" api:"required"`
-	Email        param.Field[string] `json:"email" api:"required"`
+	Email        param.Field[string] `json:"email" api:"required" format:"email"`
 	// Whether the contractor is an individual person or a business entity.
 	EntityType   param.Field[WorkerNewContractorParamsEntityType]   `json:"entityType" api:"required"`
-	FirstName    param.Field[interface{}]                           `json:"firstName" api:"required"`
-	LastName     param.Field[interface{}]                           `json:"lastName" api:"required"`
+	FirstName    param.Field[string]                                `json:"firstName" api:"required"`
+	LastName     param.Field[string]                                `json:"lastName" api:"required"`
 	ManagerID    param.Field[string]                                `json:"managerId" api:"required"`
-	Position     param.Field[interface{}]                           `json:"position" api:"required"`
+	Position     param.Field[string]                                `json:"position" api:"required"`
 	StartDate    param.Field[string]                                `json:"startDate" api:"required"`
 	WorkCountry  param.Field[WorkerNewContractorParamsWorkCountry]  `json:"workCountry" api:"required"`
-	BusinessName param.Field[interface{}]                           `json:"businessName"`
+	BusinessName param.Field[string]                                `json:"businessName"`
 	Compensation param.Field[WorkerNewContractorParamsCompensation] `json:"compensation"`
 	PaySchedule  param.Field[WorkerNewContractorParamsPaySchedule]  `json:"paySchedule"`
 	ScopeOfWork  param.Field[string]                                `json:"scopeOfWork"`
-	WorkEmail    param.Field[string]                                `json:"workEmail"`
+	WorkEmail    param.Field[string]                                `json:"workEmail" format:"email"`
 }
 
 func (r WorkerNewContractorParams) MarshalJSON() (data []byte, err error) {
@@ -1017,7 +1017,7 @@ func (r WorkerNewContractorParamsWorkCountry) IsKnown() bool {
 }
 
 type WorkerNewContractorParamsCompensation struct {
-	Amount   param.Field[interface{}]                                   `json:"amount" api:"required"`
+	Amount   param.Field[float64]                                       `json:"amount" api:"required"`
 	Currency param.Field[WorkerNewContractorParamsCompensationCurrency] `json:"currency" api:"required"`
 	// The pay period for the compensation amount.
 	Per param.Field[WorkerNewContractorParamsCompensationPer] `json:"per" api:"required"`
@@ -1186,16 +1186,16 @@ func (r workerGetResponseDepartmentJSON) RawJSON() string {
 type WorkerNewEmployeeResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union24 `json:"type" api:"required"`
-	Status        Union23 `json:"status" api:"required"`
+	Type          Union27 `json:"type" api:"required"`
+	Status        Union26 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
 	BusinessName  string  `json:"businessName" api:"required,nullable"`
 	FirstName     string  `json:"firstName" api:"required"`
 	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	Email         string  `json:"email" api:"required" format:"email"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1245,16 +1245,16 @@ func (r workerNewEmployeeResponseJSON) RawJSON() string {
 type WorkerNewContractorResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union24 `json:"type" api:"required"`
-	Status        Union23 `json:"status" api:"required"`
+	Type          Union27 `json:"type" api:"required"`
+	Status        Union26 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
 	BusinessName  string  `json:"businessName" api:"required,nullable"`
 	FirstName     string  `json:"firstName" api:"required"`
 	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	Email         string  `json:"email" api:"required" format:"email"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1304,16 +1304,16 @@ func (r workerNewContractorResponseJSON) RawJSON() string {
 type WorkerInviteResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union24 `json:"type" api:"required"`
-	Status        Union23 `json:"status" api:"required"`
+	Type          Union27 `json:"type" api:"required"`
+	Status        Union26 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
 	BusinessName  string  `json:"businessName" api:"required,nullable"`
 	FirstName     string  `json:"firstName" api:"required"`
 	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable"`
+	Email         string  `json:"email" api:"required" format:"email"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string  `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.

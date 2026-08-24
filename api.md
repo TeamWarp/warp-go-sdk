@@ -108,7 +108,7 @@ Get a publicly visible company health plan by id.
 | Response | [`BenefitHealthPlanGetResponse`](./benefithealthplan.go) |
 
 ```go
-healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "id")
+healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
 if err != nil {
 	panic(err)
 }
@@ -150,7 +150,7 @@ Get a company retirement plan by id, regardless of status.
 | Response | [`BenefitRetirementPlanGetResponse`](./benefitretirementplan.go) |
 
 ```go
-retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "id")
+retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
 if err != nil {
 	panic(err)
 }
@@ -192,7 +192,7 @@ Get the current version of a company benefit deduction by id.
 | Response | [`BenefitDeductionGetResponse`](./benefitdeduction.go) |
 
 ```go
-deduction, err := client.Benefits.Deductions.Get(context.Background(), "id")
+deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
 if err != nil {
 	panic(err)
 }
@@ -232,7 +232,7 @@ Create a custom worker field definition. The field type is immutable after creat
 
 ```go
 customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
-	Name: sdk.F[interface{}](map[string]interface{}{}),
+	Name: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)
@@ -250,7 +250,7 @@ Get a custom worker field definition, including its select options. Archived opt
 | Response | [`CustomFieldGetResponse`](./customfield.go) |
 
 ```go
-customField, err := client.CustomFields.Get(context.Background(), "id")
+customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 if err != nil {
 	panic(err)
 }
@@ -268,7 +268,7 @@ Update a custom worker field definition. The field type cannot be changed; creat
 | Response | [`Objects`](./shared/shared.go) |
 
 ```go
-customField, err := client.CustomFields.Update(context.Background(), "id", sdk.CustomFieldUpdateParams{})
+customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
 if err != nil {
 	panic(err)
 }
@@ -285,7 +285,7 @@ Archive a custom worker field. Archived fields keep their existing worker values
 | Response | [`Objects`](./shared/shared.go) |
 
 ```go
-customField, err := client.CustomFields.Archive(context.Background(), "id")
+customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 if err != nil {
 	panic(err)
 }
@@ -303,10 +303,10 @@ Add an option to a select or multi_select custom worker field. The option value 
 | Response | [`CustomFieldNewOptionResponse`](./customfield.go) |
 
 ```go
-customField, err := client.CustomFields.NewOption(context.Background(), "id", sdk.CustomFieldNewOptionParams{
+customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
 	Objects2: sdk.Objects2Param{
-		Label: sdk.F[interface{}](map[string]interface{}{}),
-		Value: sdk.F[interface{}](map[string]interface{}{}),
+		Label: sdk.F[string]("x"),
+		Value: sdk.F[string]("x"),
 	},
 })
 if err != nil {
@@ -326,7 +326,7 @@ Update the label or sort order of a custom worker field option. Options of archi
 | Response | [`Objects3`](./shared/shared.go) |
 
 ```go
-customField, err := client.CustomFields.UpdateOption(context.Background(), "id", sdk.CustomFieldUpdateOptionParams{})
+customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
 if err != nil {
 	panic(err)
 }
@@ -339,7 +339,7 @@ fmt.Println(customField)
 Delete a custom worker field option that is not applied to any worker. Options in use must be archived instead. Requires the workers:custom_fields permission at the manage level.
 
 ```go
-err := client.CustomFields.DeleteOption(context.Background(), "id")
+err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
 if err != nil {
 	panic(err)
 }
@@ -354,7 +354,7 @@ Archive a custom worker field option. Archived options remain on existing worker
 | Response | [`Objects3`](./shared/shared.go) |
 
 ```go
-customField, err := client.CustomFields.ArchiveOption(context.Background(), "id")
+customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
 if err != nil {
 	panic(err)
 }
@@ -391,9 +391,9 @@ Create or replace a worker's value for a custom field. The value shape must matc
 
 ```go
 customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
-	FieldID:  sdk.F[string](map[string]interface{}{}),
+	FieldID:  sdk.F[string]("cf_1234"),
 	Value:    sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
-	WorkerID: sdk.F[string](map[string]interface{}{}),
+	WorkerID: sdk.F[string]("wrk_1234"),
 })
 if err != nil {
 	panic(err)
@@ -412,8 +412,8 @@ Remove a worker's value for a custom field. Your API key must hold write on the 
 
 ```go
 err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
-	FieldID:  sdk.F[string](map[string]interface{}{}),
-	WorkerID: sdk.F[string](map[string]interface{}{}),
+	FieldID:  sdk.F[string]("cf_1234"),
+	WorkerID: sdk.F[string]("wrk_1234"),
 })
 if err != nil {
 	panic(err)
@@ -455,7 +455,7 @@ Create a new department.
 
 ```go
 department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-	Name: sdk.F[interface{}](map[string]interface{}{}),
+	Name: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)
@@ -474,7 +474,7 @@ Update an existing department.
 | Response | [`DepartmentUpdateResponse`](./department.go) |
 
 ```go
-department, err := client.Departments.Update(context.Background(), "id", sdk.DepartmentUpdateParams{})
+department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
 if err != nil {
 	panic(err)
 }
@@ -518,16 +518,16 @@ Create and send a candidate offer. The candidate receives an email with a link t
 ```go
 offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 	Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
-		FirstName: sdk.F[interface{}](map[string]interface{}{}),
-		LastName:  sdk.F[interface{}](map[string]interface{}{}),
-		Email:     sdk.F[interface{}](map[string]interface{}{}),
+		FirstName: sdk.F[string]("x"),
+		LastName:  sdk.F[string]("x"),
+		Email:     sdk.F[string]("john@joinwarp.com"),
 	}),
 	Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
-		PayRate: sdk.F[interface{}](map[string]interface{}{}),
+		PayRate: sdk.F[float64](0),
 	}),
 	Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
-		Title:     sdk.F[interface{}](map[string]interface{}{}),
-		StartDate: sdk.F[interface{}](map[string]interface{}{}),
+		Title:     sdk.F[string]("x"),
+		StartDate: sdk.F[string](""),
 	}),
 })
 if err != nil {
@@ -547,7 +547,7 @@ Void a previously sent offer. Only sent offers can be voided.
 | Response | [`Objects5`](./shared/shared.go) |
 
 ```go
-offer, err := client.Offers.Void(context.Background(), "id", sdk.OfferVoidParams{})
+offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{})
 if err != nil {
 	panic(err)
 }
@@ -565,7 +565,7 @@ Extend the expiration deadline of a sent offer.
 | Response | [`Objects5`](./shared/shared.go) |
 
 ```go
-offer, err := client.Offers.ExtendDeadline(context.Background(), "id", sdk.OfferExtendDeadlineParams{
+offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
 	ExpirationTime: sdk.F[string](""),
 })
 if err != nil {
@@ -584,7 +584,7 @@ Resend the offer email to the candidate for a sent offer.
 | Response | [`Objects5`](./shared/shared.go) |
 
 ```go
-offer, err := client.Offers.Resend(context.Background(), "id")
+offer, err := client.Offers.Resend(context.Background(), "offr_1234")
 if err != nil {
 	panic(err)
 }
@@ -625,7 +625,7 @@ Get a specific pay rate by id. The API key must have the compensation read scope
 | Response | [`PayRateGetResponse`](./payrate.go) |
 
 ```go
-payRate, err := client.PayRates.Get(context.Background(), "id")
+payRate, err := client.PayRates.Get(context.Background(), "pyr_1234")
 if err != nil {
 	panic(err)
 }
@@ -730,7 +730,7 @@ Get a specific time off policy by id
 | Response | [`TimeOffPolicyGetResponse`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.Get(context.Background(), "id")
+policy, err := client.TimeOff.Policies.Get(context.Background(), "top_1234")
 if err != nil {
 	panic(err)
 }
@@ -771,7 +771,7 @@ Get a specific worker by id.
 | Response | [`WorkerGetResponse`](./worker.go) |
 
 ```go
-worker, err := client.Workers.Get(context.Background(), "id")
+worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
@@ -784,7 +784,7 @@ fmt.Println(worker)
 Delete a worker. Only workers who have not yet completed onboarding can be deleted. Active workers must be properly offboarded.
 
 ```go
-err := client.Workers.Delete(context.Background(), "id")
+err := client.Workers.Delete(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
@@ -802,17 +802,17 @@ Create a new US employee. The worker will be created in draft status and must be
 ```go
 worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 	Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
-		Amount: sdk.F[interface{}](map[string]interface{}{}),
+		Amount: sdk.F[float64](0),
 	}),
-	DepartmentID: sdk.F[string](map[string]interface{}{}),
-	Email:        sdk.F[string](map[string]interface{}{}),
-	FirstName:    sdk.F[interface{}](map[string]interface{}{}),
-	LastName:     sdk.F[interface{}](map[string]interface{}{}),
-	ManagerID:    sdk.F[string](map[string]interface{}{}),
-	Position:     sdk.F[interface{}](map[string]interface{}{}),
-	StartDate:    sdk.F[string](map[string]interface{}{}),
+	DepartmentID: sdk.F[string]("dpt_1234"),
+	Email:        sdk.F[string]("john@joinwarp.com"),
+	FirstName:    sdk.F[string]("Jonathan"),
+	LastName:     sdk.F[string]("Galt"),
+	ManagerID:    sdk.F[string]("wrk_1234"),
+	Position:     sdk.F[string]("Software Engineer"),
+	StartDate:    sdk.F[string](""),
 	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
-		WorkplaceID: sdk.F[interface{}](map[string]interface{}{}),
+		WorkplaceID: sdk.F[string]("wkp_1234"),
 	}),
 })
 if err != nil {
@@ -833,13 +833,13 @@ Create a new contractor. The worker will be created in draft status and must be 
 
 ```go
 worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
-	DepartmentID: sdk.F[string](map[string]interface{}{}),
-	Email:        sdk.F[string](map[string]interface{}{}),
-	FirstName:    sdk.F[interface{}](map[string]interface{}{}),
-	LastName:     sdk.F[interface{}](map[string]interface{}{}),
-	ManagerID:    sdk.F[string](map[string]interface{}{}),
-	Position:     sdk.F[interface{}](map[string]interface{}{}),
-	StartDate:    sdk.F[string](map[string]interface{}{}),
+	DepartmentID: sdk.F[string]("dpt_1234"),
+	Email:        sdk.F[string]("john@joinwarp.com"),
+	FirstName:    sdk.F[string]("Melissa"),
+	LastName:     sdk.F[string]("Jones"),
+	ManagerID:    sdk.F[string]("wrk_1234"),
+	Position:     sdk.F[string]("Design Consultant"),
+	StartDate:    sdk.F[string](""),
 })
 if err != nil {
 	panic(err)
@@ -857,7 +857,7 @@ Send or resend the worker invite so they can accept and complete onboarding to W
 | Response | [`WorkerInviteResponse`](./worker.go) |
 
 ```go
-worker, err := client.Workers.Invite(context.Background(), "id")
+worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 if err != nil {
 	panic(err)
 }
@@ -901,11 +901,11 @@ Create a new workplace.
 ```go
 workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 	Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
-		Line1:      sdk.F[interface{}](map[string]interface{}{}),
+		Line1:      sdk.F[string]("x"),
 		City:       sdk.F[string](""),
 		PostalCode: sdk.F[string](""),
 	}),
-	Name: sdk.F[interface{}](map[string]interface{}{}),
+	Name: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)
@@ -924,7 +924,7 @@ Update an existing workplace.
 | Response | [`WorkplaceUpdateResponse`](./workplace.go) |
 
 ```go
-workplace, err := client.Workplaces.Update(context.Background(), "id", sdk.WorkplaceUpdateParams{})
+workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
 if err != nil {
 	panic(err)
 }

@@ -588,8 +588,8 @@ type WorkerCreatedWebhookEventPayload struct {
 	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
 	FirstName     string                                 `json:"firstName" api:"required"`
 	LastName      string                                 `json:"lastName" api:"required"`
-	Email         string                                 `json:"email" api:"required"`
-	WorkEmail     string                                 `json:"workEmail" api:"required,nullable"`
+	Email         string                                 `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                 `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -746,8 +746,8 @@ type WorkerUpdatedWebhookEventPayload struct {
 	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
 	FirstName     string                                 `json:"firstName" api:"required"`
 	LastName      string                                 `json:"lastName" api:"required"`
-	Email         string                                 `json:"email" api:"required"`
-	WorkEmail     string                                 `json:"workEmail" api:"required,nullable"`
+	Email         string                                 `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                 `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -904,8 +904,8 @@ type WorkerDeletedWebhookEventPayload struct {
 	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
 	FirstName     string                                 `json:"firstName" api:"required"`
 	LastName      string                                 `json:"lastName" api:"required"`
-	Email         string                                 `json:"email" api:"required"`
-	WorkEmail     string                                 `json:"workEmail" api:"required,nullable"`
+	Email         string                                 `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                 `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1062,8 +1062,8 @@ type WorkerInviteSentWebhookEventPayload struct {
 	BusinessName  string                                    `json:"businessName" api:"required,nullable"`
 	FirstName     string                                    `json:"firstName" api:"required"`
 	LastName      string                                    `json:"lastName" api:"required"`
-	Email         string                                    `json:"email" api:"required"`
-	WorkEmail     string                                    `json:"workEmail" api:"required,nullable"`
+	Email         string                                    `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                    `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                    `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1220,8 +1220,8 @@ type WorkerInviteAcceptedWebhookEventPayload struct {
 	BusinessName  string                                        `json:"businessName" api:"required,nullable"`
 	FirstName     string                                        `json:"firstName" api:"required"`
 	LastName      string                                        `json:"lastName" api:"required"`
-	Email         string                                        `json:"email" api:"required"`
-	WorkEmail     string                                        `json:"workEmail" api:"required,nullable"`
+	Email         string                                        `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                        `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                        `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1378,8 +1378,8 @@ type WorkerOnboardingCompletedWebhookEventPayload struct {
 	BusinessName  string                                             `json:"businessName" api:"required,nullable"`
 	FirstName     string                                             `json:"firstName" api:"required"`
 	LastName      string                                             `json:"lastName" api:"required"`
-	Email         string                                             `json:"email" api:"required"`
-	WorkEmail     string                                             `json:"workEmail" api:"required,nullable"`
+	Email         string                                             `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                             `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                             `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1536,8 +1536,8 @@ type WorkerOffboardingStartedWebhookEventPayload struct {
 	BusinessName  string                                            `json:"businessName" api:"required,nullable"`
 	FirstName     string                                            `json:"firstName" api:"required"`
 	LastName      string                                            `json:"lastName" api:"required"`
-	Email         string                                            `json:"email" api:"required"`
-	WorkEmail     string                                            `json:"workEmail" api:"required,nullable"`
+	Email         string                                            `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                            `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                            `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1694,8 +1694,8 @@ type WorkerOffboardedWebhookEventPayload struct {
 	BusinessName  string                                    `json:"businessName" api:"required,nullable"`
 	FirstName     string                                    `json:"firstName" api:"required"`
 	LastName      string                                    `json:"lastName" api:"required"`
-	Email         string                                    `json:"email" api:"required"`
-	WorkEmail     string                                    `json:"workEmail" api:"required,nullable"`
+	Email         string                                    `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                    `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                    `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -1852,8 +1852,8 @@ type WorkerReactivatedWebhookEventPayload struct {
 	BusinessName  string                                     `json:"businessName" api:"required,nullable"`
 	FirstName     string                                     `json:"firstName" api:"required"`
 	LastName      string                                     `json:"lastName" api:"required"`
-	Email         string                                     `json:"email" api:"required"`
-	WorkEmail     string                                     `json:"workEmail" api:"required,nullable"`
+	Email         string                                     `json:"email" api:"required" format:"email"`
+	WorkEmail     string                                     `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string                                     `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
@@ -2084,7 +2084,7 @@ func (r OfferCreatedWebhookEventPayloadWorkerType) IsKnown() bool {
 type OfferCreatedWebhookEventPayloadCandidate struct {
 	FirstName         string                                                    `json:"firstName" api:"required"`
 	LastName          string                                                    `json:"lastName" api:"required"`
-	Email             string                                                    `json:"email" api:"required"`
+	Email             string                                                    `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferCreatedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerCreatedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
@@ -2571,9 +2571,9 @@ func (r OfferCreatedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayloadCompensationStock struct {
-	Options               string                                               `json:"options" api:"required"`
-	VestingScheduleMonths string                                               `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                                               `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                                                `json:"options" api:"required"`
+	VestingScheduleMonths int64                                                `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                                `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerCreatedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -2722,7 +2722,7 @@ func (r OfferSentWebhookEventPayloadWorkerType) IsKnown() bool {
 type OfferSentWebhookEventPayloadCandidate struct {
 	FirstName         string                                                 `json:"firstName" api:"required"`
 	LastName          string                                                 `json:"lastName" api:"required"`
-	Email             string                                                 `json:"email" api:"required"`
+	Email             string                                                 `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferSentWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerSentWebhookEventPayloadCandidateJSON              `json:"-"`
 }
@@ -3209,9 +3209,9 @@ func (r OfferSentWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayloadCompensationStock struct {
-	Options               string                                            `json:"options" api:"required"`
-	VestingScheduleMonths string                                            `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                                            `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                                             `json:"options" api:"required"`
+	VestingScheduleMonths int64                                             `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                             `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerSentWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -3360,7 +3360,7 @@ func (r OfferViewedWebhookEventPayloadWorkerType) IsKnown() bool {
 type OfferViewedWebhookEventPayloadCandidate struct {
 	FirstName         string                                                   `json:"firstName" api:"required"`
 	LastName          string                                                   `json:"lastName" api:"required"`
-	Email             string                                                   `json:"email" api:"required"`
+	Email             string                                                   `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferViewedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerViewedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
@@ -3847,9 +3847,9 @@ func (r OfferViewedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayloadCompensationStock struct {
-	Options               string                                              `json:"options" api:"required"`
-	VestingScheduleMonths string                                              `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                                              `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                                               `json:"options" api:"required"`
+	VestingScheduleMonths int64                                               `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                               `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerViewedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -3998,7 +3998,7 @@ func (r OfferAcceptedWebhookEventPayloadWorkerType) IsKnown() bool {
 type OfferAcceptedWebhookEventPayloadCandidate struct {
 	FirstName         string                                                     `json:"firstName" api:"required"`
 	LastName          string                                                     `json:"lastName" api:"required"`
-	Email             string                                                     `json:"email" api:"required"`
+	Email             string                                                     `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferAcceptedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerAcceptedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
@@ -4485,9 +4485,9 @@ func (r OfferAcceptedWebhookEventPayloadCompensationBasePayType) IsKnown() bool 
 }
 
 type OfferAcceptedWebhookEventPayloadCompensationStock struct {
-	Options               string                                                `json:"options" api:"required"`
-	VestingScheduleMonths string                                                `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                                                `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                                                 `json:"options" api:"required"`
+	VestingScheduleMonths int64                                                 `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                                 `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerAcceptedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 
@@ -4636,7 +4636,7 @@ func (r OfferVoidedWebhookEventPayloadWorkerType) IsKnown() bool {
 type OfferVoidedWebhookEventPayloadCandidate struct {
 	FirstName         string                                                   `json:"firstName" api:"required"`
 	LastName          string                                                   `json:"lastName" api:"required"`
-	Email             string                                                   `json:"email" api:"required"`
+	Email             string                                                   `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferVoidedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerVoidedWebhookEventPayloadCandidateJSON              `json:"-"`
 }
@@ -5123,9 +5123,9 @@ func (r OfferVoidedWebhookEventPayloadCompensationBasePayType) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayloadCompensationStock struct {
-	Options               string                                              `json:"options" api:"required"`
-	VestingScheduleMonths string                                              `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                                              `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                                               `json:"options" api:"required"`
+	VestingScheduleMonths int64                                               `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                               `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerVoidedWebhookEventPayloadCompensationStockJSON `json:"-"`
 }
 

@@ -77,7 +77,7 @@ func (r *BenefitRetirementPlanService) List(ctx context.Context, query BenefitRe
 //
 // Example:
 //
-//	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "id")
+//	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
 //	if err != nil {
 //		panic(err)
 //	}

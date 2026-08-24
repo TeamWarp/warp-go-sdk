@@ -12,67 +12,36 @@ type Error = apierror.Error
 type Union = shared.Union
 
 const (
-	UnionUsd = shared.UnionUsd
-	UnionAud = shared.UnionAud
-	UnionBgn = shared.UnionBgn
-	UnionBrl = shared.UnionBrl
-	UnionCad = shared.UnionCad
-	UnionChf = shared.UnionChf
-	UnionCzk = shared.UnionCzk
-	UnionDkk = shared.UnionDkk
-	UnionEur = shared.UnionEur
-	UnionGbp = shared.UnionGbp
-	UnionHkd = shared.UnionHkd
-	UnionHuf = shared.UnionHuf
-	UnionIdr = shared.UnionIdr
-	UnionInr = shared.UnionInr
-	UnionJpy = shared.UnionJpy
-	UnionMyr = shared.UnionMyr
-	UnionNok = shared.UnionNok
-	UnionNzd = shared.UnionNzd
-	UnionCny = shared.UnionCny
-	UnionPln = shared.UnionPln
-	UnionRon = shared.UnionRon
-	UnionTry = shared.UnionTry
-	UnionSek = shared.UnionSek
-	UnionSgd = shared.UnionSgd
-	UnionAed = shared.UnionAed
-	UnionArs = shared.UnionArs
-	UnionBdt = shared.UnionBdt
-	UnionBwp = shared.UnionBwp
-	UnionClp = shared.UnionClp
-	UnionCop = shared.UnionCop
-	UnionCrc = shared.UnionCrc
-	UnionEgp = shared.UnionEgp
-	UnionFjd = shared.UnionFjd
-	UnionGel = shared.UnionGel
-	UnionGhs = shared.UnionGhs
-	UnionIls = shared.UnionIls
-	UnionKes = shared.UnionKes
-	UnionKrw = shared.UnionKrw
-	UnionLkr = shared.UnionLkr
-	UnionMad = shared.UnionMad
-	UnionMxn = shared.UnionMxn
-	UnionNpr = shared.UnionNpr
-	UnionPhp = shared.UnionPhp
-	UnionPkr = shared.UnionPkr
-	UnionThb = shared.UnionThb
-	UnionUah = shared.UnionUah
-	UnionUgx = shared.UnionUgx
-	UnionUyu = shared.UnionUyu
-	UnionVnd = shared.UnionVnd
-	UnionZar = shared.UnionZar
-	UnionZmw = shared.UnionZmw
-	UnionTnd = shared.UnionTnd
-	UnionNgn = shared.UnionNgn
-	UnionRsd = shared.UnionRsd
-	UnionTwd = shared.UnionTwd
-	UnionGtq = shared.UnionGtq
-	UnionHnl = shared.UnionHnl
-	UnionDop = shared.UnionDop
-	UnionSar = shared.UnionSar
-	UnionXaf = shared.UnionXaf
-	UnionPen = shared.UnionPen
+	UnionMedical             = shared.UnionMedical
+	UnionDental              = shared.UnionDental
+	UnionVision              = shared.UnionVision
+	UnionLife                = shared.UnionLife
+	UnionShortTermDisability = shared.UnionShortTermDisability
+	UnionLongTermDisability  = shared.UnionLongTermDisability
+	Union401k                = shared.Union401k
+	UnionRoth401k            = shared.UnionRoth401k
+	Union403b                = shared.Union403b
+	UnionRoth403b            = shared.UnionRoth403b
+	Union457                 = shared.Union457
+	UnionRoth457             = shared.UnionRoth457
+	UnionHsa                 = shared.UnionHsa
+	UnionFsaMedical          = shared.UnionFsaMedical
+	UnionFsaDependentCare    = shared.UnionFsaDependentCare
+	UnionTransit             = shared.UnionTransit
+	UnionParking             = shared.UnionParking
+	UnionAccident            = shared.UnionAccident
+	UnionCancer              = shared.UnionCancer
+	UnionCriticalIllness     = shared.UnionCriticalIllness
+	UnionHospital            = shared.UnionHospital
+	UnionMedicalOther        = shared.UnionMedicalOther
+	UnionSimpleIra           = shared.UnionSimpleIra
+	UnionRothSimpleIra       = shared.UnionRothSimpleIra
+	UnionNqdc                = shared.UnionNqdc
+	UnionNontaxableFringe    = shared.UnionNontaxableFringe
+	UnionPucc                = shared.UnionPucc
+	UnionVoluntary           = shared.UnionVoluntary
+	UnionPostTax             = shared.UnionPostTax
+	UnionOther               = shared.UnionOther
 )
 
 type PublicWorkerCompensation = shared.PublicWorkerCompensation
@@ -175,53 +144,59 @@ const (
 
 type Union2 = shared.Union2
 
-type Union3 = shared.Union3
-
 const (
-	Union3Text        = shared.Union3Text
-	Union3Number      = shared.Union3Number
-	Union3Date        = shared.Union3Date
-	Union3Boolean     = shared.Union3Boolean
-	Union3Currency    = shared.Union3Currency
-	Union3Percentage  = shared.Union3Percentage
-	Union3Select      = shared.Union3Select
-	Union3MultiSelect = shared.Union3MultiSelect
+	Union2Infinity  = shared.Union2Infinity
+	Union2Infinity2 = shared.Union2Infinity2
+	Union2NaN       = shared.Union2NaN
 )
+
+type Union3 = shared.Union3
 
 type Union4 = shared.Union4
 
 const (
-	Union4Active   = shared.Union4Active
-	Union4Archived = shared.Union4Archived
+	Union4Text        = shared.Union4Text
+	Union4Number      = shared.Union4Number
+	Union4Date        = shared.Union4Date
+	Union4Boolean     = shared.Union4Boolean
+	Union4Currency    = shared.Union4Currency
+	Union4Percentage  = shared.Union4Percentage
+	Union4Select      = shared.Union4Select
+	Union4MultiSelect = shared.Union4MultiSelect
 )
 
 type Union5 = shared.Union5
 
 const (
-	Union5Info         = shared.Union5Info
-	Union5Pii          = shared.Union5Pii
-	Union5Compensation = shared.Union5Compensation
-	Union5Banking      = shared.Union5Banking
-	Union5It           = shared.Union5It
-	Union5Compliance   = shared.Union5Compliance
+	Union5Active   = shared.Union5Active
+	Union5Archived = shared.Union5Archived
 )
 
 type Union6 = shared.Union6
 
 const (
-	Union6Admins  = shared.Union6Admins
-	Union6Manager = shared.Union6Manager
-	Union6Worker  = shared.Union6Worker
+	Union6Info         = shared.Union6Info
+	Union6Pii          = shared.Union6Pii
+	Union6Compensation = shared.Union6Compensation
+	Union6Banking      = shared.Union6Banking
+	Union6It           = shared.Union6It
+	Union6Compliance   = shared.Union6Compliance
 )
 
 type Union7 = shared.Union7
 
 const (
-	Union7Admin  = shared.Union7Admin
-	Union7Worker = shared.Union7Worker
+	Union7Admins  = shared.Union7Admins
+	Union7Manager = shared.Union7Manager
+	Union7Worker  = shared.Union7Worker
 )
 
 type Union8 = shared.Union8
+
+const (
+	Union8Admin  = shared.Union8Admin
+	Union8Worker = shared.Union8Worker
+)
 
 type Objects = shared.Objects
 
@@ -266,6 +241,8 @@ const (
 	CustomFieldOptionNotFoundErrorEncodedTagCustomFieldOptionNotFoundError = shared.CustomFieldOptionNotFoundErrorEncodedTagCustomFieldOptionNotFoundError
 )
 
+type Union12 = shared.Union12
+
 type DepartmentNotFoundEncoded = shared.DepartmentNotFoundEncoded
 
 type DepartmentNotFoundEncodedTag = shared.DepartmentNotFoundEncodedTag
@@ -274,21 +251,13 @@ const (
 	DepartmentNotFoundEncodedTagDepartmentNotFound = shared.DepartmentNotFoundEncodedTagDepartmentNotFound
 )
 
-type Union12 = shared.Union12
-
-const (
-	Union12Draft    = shared.Union12Draft
-	Union12Sent     = shared.Union12Sent
-	Union12Accepted = shared.Union12Accepted
-	Union12Void     = shared.Union12Void
-)
-
 type Union13 = shared.Union13
 
 const (
-	Union13Employee         = shared.Union13Employee
-	Union13UsContractor     = shared.Union13UsContractor
-	Union13GlobalContractor = shared.Union13GlobalContractor
+	Union13Draft    = shared.Union13Draft
+	Union13Sent     = shared.Union13Sent
+	Union13Accepted = shared.Union13Accepted
+	Union13Void     = shared.Union13Void
 )
 
 type Objects5 = shared.Objects5
@@ -583,6 +552,14 @@ const (
 
 type Objects5CompensationStock = shared.Objects5CompensationStock
 
+type Objects5WorkerType = shared.Objects5WorkerType
+
+const (
+	Objects5WorkerTypeEmployee         = shared.Objects5WorkerTypeEmployee
+	Objects5WorkerTypeUsContractor     = shared.Objects5WorkerTypeUsContractor
+	Objects5WorkerTypeGlobalContractor = shared.Objects5WorkerTypeGlobalContractor
+)
+
 type WorkplaceNotFoundEncoded = shared.WorkplaceNotFoundEncoded
 
 type WorkplaceNotFoundEncodedTag = shared.WorkplaceNotFoundEncodedTag
@@ -615,6 +592,16 @@ const (
 	InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError = shared.InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError
 )
 
+type Union20 = shared.Union20
+
+type Union21 = shared.Union21
+
+const (
+	Union21UsW2             = shared.Union21UsW2
+	Union21Us1099           = shared.Union21Us1099
+	Union21GlobalContractor = shared.Union21GlobalContractor
+)
+
 type TimeOffPolicyNotFoundEncoded = shared.TimeOffPolicyNotFoundEncoded
 
 type TimeOffPolicyNotFoundEncodedTag = shared.TimeOffPolicyNotFoundEncodedTag
@@ -623,33 +610,47 @@ const (
 	TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound = shared.TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound
 )
 
-type Union21 = shared.Union21
-
 type Union23 = shared.Union23
-
-const (
-	Union23Draft       = shared.Union23Draft
-	Union23Invited     = shared.Union23Invited
-	Union23Onboarding  = shared.Union23Onboarding
-	Union23Active      = shared.Union23Active
-	Union23Offboarding = shared.Union23Offboarding
-	Union23Inactive    = shared.Union23Inactive
-)
 
 type Union24 = shared.Union24
 
+type Union25 = shared.Union25
+
 const (
-	Union24Employee   = shared.Union24Employee
-	Union24Contractor = shared.Union24Contractor
+	Union25Pending  = shared.Union25Pending
+	Union25Approved = shared.Union25Approved
+	Union25Denied   = shared.Union25Denied
 )
 
 type Union26 = shared.Union26
 
+const (
+	Union26Draft       = shared.Union26Draft
+	Union26Invited     = shared.Union26Invited
+	Union26Onboarding  = shared.Union26Onboarding
+	Union26Active      = shared.Union26Active
+	Union26Offboarding = shared.Union26Offboarding
+	Union26Inactive    = shared.Union26Inactive
+)
+
 type Union27 = shared.Union27
+
+const (
+	Union27Employee   = shared.Union27Employee
+	Union27Contractor = shared.Union27Contractor
+)
+
+type Union28 = shared.Union28
 
 type Union29 = shared.Union29
 
 type Union30 = shared.Union30
+
+type Union31 = shared.Union31
+
+type Union32 = shared.Union32
+
+type Union33 = shared.Union33
 
 type WorkerNotFoundErrorEncoded = shared.WorkerNotFoundErrorEncoded
 
@@ -657,18 +658,4 @@ type WorkerNotFoundErrorEncodedTag = shared.WorkerNotFoundErrorEncodedTag
 
 const (
 	WorkerNotFoundErrorEncodedTagWorkerNotFoundError = shared.WorkerNotFoundErrorEncodedTagWorkerNotFoundError
-)
-
-type Union34 = shared.Union34
-
-const (
-	Union34Remote = shared.Union34Remote
-	Union34Office = shared.Union34Office
-)
-
-type Union35 = shared.Union35
-
-const (
-	Union35Active   = shared.Union35Active
-	Union35Archived = shared.Union35Archived
 )

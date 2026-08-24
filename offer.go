@@ -79,16 +79,16 @@ func (r *OfferService) List(ctx context.Context, query OfferListParams, opts ...
 //
 //	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 //		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
-//			FirstName: sdk.F[interface{}](map[string]interface{}{}),
-//			LastName:  sdk.F[interface{}](map[string]interface{}{}),
-//			Email:     sdk.F[interface{}](map[string]interface{}{}),
+//			FirstName: sdk.F[string]("x"),
+//			LastName:  sdk.F[string]("x"),
+//			Email:     sdk.F[string]("john@joinwarp.com"),
 //		}),
 //		Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
-//			PayRate: sdk.F[interface{}](map[string]interface{}{}),
+//			PayRate: sdk.F[float64](0),
 //		}),
 //		Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
-//			Title:     sdk.F[interface{}](map[string]interface{}{}),
-//			StartDate: sdk.F[interface{}](map[string]interface{}{}),
+//			Title:     sdk.F[string]("x"),
+//			StartDate: sdk.F[string](""),
 //		}),
 //	})
 //	if err != nil {
@@ -118,7 +118,7 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 //
 // Example:
 //
-//	offer, err := client.Offers.Void(context.Background(), "id", sdk.OfferVoidParams{})
+//	offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -150,7 +150,7 @@ func (r *OfferService) Void(ctx context.Context, id string, body OfferVoidParams
 //
 // Example:
 //
-//	offer, err := client.Offers.ExtendDeadline(context.Background(), "id", sdk.OfferExtendDeadlineParams{
+//	offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
 //		ExpirationTime: sdk.F[string](""),
 //	})
 //	if err != nil {
@@ -183,7 +183,7 @@ func (r *OfferService) ExtendDeadline(ctx context.Context, id string, body Offer
 //
 // Example:
 //
-//	offer, err := client.Offers.Resend(context.Background(), "id")
+//	offer, err := client.Offers.Resend(context.Background(), "offr_1234")
 //	if err != nil {
 //		panic(err)
 //	}
@@ -201,12 +201,12 @@ func (r *OfferService) Resend(ctx context.Context, id string, opts ...option.Req
 }
 
 type OfferListParams struct {
-	Limit          param.Field[string]    `query:"limit" api:"required"`
-	AfterID        param.Field[string]    `query:"afterId"`
-	BeforeID       param.Field[string]    `query:"beforeId"`
-	CandidateEmail param.Field[string]    `query:"candidateEmail"`
-	Statuses       param.Field[[]Union12] `query:"statuses"`
-	WorkerTypes    param.Field[[]Union13] `query:"workerTypes"`
+	Limit          param.Field[string]                      `query:"limit" api:"required"`
+	AfterID        param.Field[string]                      `query:"afterId"`
+	BeforeID       param.Field[string]                      `query:"beforeId"`
+	CandidateEmail param.Field[string]                      `query:"candidateEmail" format:"email"`
+	Statuses       param.Field[[]Union13]                   `query:"statuses"`
+	WorkerTypes    param.Field[[]OfferListParamsWorkerType] `query:"workerTypes"`
 }
 
 // URLQuery serializes [OfferListParams]'s query parameters as `url.Values`.
@@ -215,6 +215,22 @@ func (r OfferListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
+}
+
+type OfferListParamsWorkerType string
+
+const (
+	OfferListParamsWorkerTypeEmployee         OfferListParamsWorkerType = "employee"
+	OfferListParamsWorkerTypeUsContractor     OfferListParamsWorkerType = "us_contractor"
+	OfferListParamsWorkerTypeGlobalContractor OfferListParamsWorkerType = "global_contractor"
+)
+
+func (r OfferListParamsWorkerType) IsKnown() bool {
+	switch r {
+	case OfferListParamsWorkerTypeEmployee, OfferListParamsWorkerTypeUsContractor, OfferListParamsWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
 }
 
 type OfferNewParams struct {
@@ -234,9 +250,9 @@ func (r OfferNewParams) MarshalJSON() (data []byte, err error) {
 }
 
 type OfferNewParamsCandidate struct {
-	Email             param.Field[string]                                   `json:"email" api:"required"`
-	FirstName         param.Field[interface{}]                              `json:"firstName" api:"required"`
-	LastName          param.Field[interface{}]                              `json:"lastName" api:"required"`
+	Email             param.Field[string]                                   `json:"email" api:"required" format:"email"`
+	FirstName         param.Field[string]                                   `json:"firstName" api:"required"`
+	LastName          param.Field[string]                                   `json:"lastName" api:"required"`
 	ContractorDetails param.Field[OfferNewParamsCandidateContractorDetails] `json:"contractorDetails"`
 }
 
@@ -255,7 +271,7 @@ func (r OfferNewParamsCandidateContractorDetails) MarshalJSON() (data []byte, er
 
 type OfferNewParamsPosition struct {
 	StartDate   param.Field[string]                        `json:"startDate" api:"required"`
-	Title       param.Field[interface{}]                   `json:"title" api:"required"`
+	Title       param.Field[string]                        `json:"title" api:"required"`
 	Country     param.Field[OfferNewParamsPositionCountry] `json:"country"`
 	ScopeOfWork param.Field[string]                        `json:"scopeOfWork"`
 }
@@ -546,14 +562,14 @@ func (r OfferNewParamsWorkerType) IsKnown() bool {
 type OfferNewParamsCompensation struct {
 	PayBasis              param.Field[OfferNewParamsCompensationPayBasis]    `json:"payBasis" api:"required"`
 	PayCurrency           param.Field[OfferNewParamsCompensationPayCurrency] `json:"payCurrency" api:"required"`
-	PayRate               param.Field[interface{}]                           `json:"payRate" api:"required"`
-	CliffMonths           param.Field[string]                                `json:"cliffMonths"`
+	PayRate               param.Field[float64]                               `json:"payRate" api:"required"`
+	CliffMonths           param.Field[int64]                                 `json:"cliffMonths"`
 	PayType               param.Field[OfferNewParamsCompensationPayType]     `json:"payType"`
-	PayVariableRate       param.Field[interface{}]                           `json:"payVariableRate"`
-	RelocationBonus       param.Field[interface{}]                           `json:"relocationBonus"`
-	SignOnBonus           param.Field[interface{}]                           `json:"signOnBonus"`
-	StockOptions          param.Field[string]                                `json:"stockOptions"`
-	VestingScheduleMonths param.Field[string]                                `json:"vestingScheduleMonths"`
+	PayVariableRate       param.Field[float64]                               `json:"payVariableRate"`
+	RelocationBonus       param.Field[float64]                               `json:"relocationBonus"`
+	SignOnBonus           param.Field[float64]                               `json:"signOnBonus"`
+	StockOptions          param.Field[int64]                                 `json:"stockOptions"`
+	VestingScheduleMonths param.Field[int64]                                 `json:"vestingScheduleMonths"`
 }
 
 func (r OfferNewParamsCompensation) MarshalJSON() (data []byte, err error) {
@@ -735,8 +751,8 @@ func (r offerListResponseJSON) RawJSON() string {
 
 type OfferNewResponse struct {
 	ID         string                     `json:"id" api:"required"`
-	Status     Union12                    `json:"status" api:"required"`
-	WorkerType Union13                    `json:"workerType" api:"required"`
+	Status     Union13                    `json:"status" api:"required"`
+	WorkerType OfferNewResponseWorkerType `json:"workerType" api:"required"`
 	Candidate  OfferNewResponseCandidate  `json:"candidate" api:"required"`
 	Position   OfferNewResponsePosition   `json:"position" api:"required"`
 	Department OfferNewResponseDepartment `json:"department" api:"required,nullable"`
@@ -782,10 +798,26 @@ func (r offerNewResponseJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferNewResponseWorkerType string
+
+const (
+	OfferNewResponseWorkerTypeEmployee         OfferNewResponseWorkerType = "employee"
+	OfferNewResponseWorkerTypeUsContractor     OfferNewResponseWorkerType = "us_contractor"
+	OfferNewResponseWorkerTypeGlobalContractor OfferNewResponseWorkerType = "global_contractor"
+)
+
+func (r OfferNewResponseWorkerType) IsKnown() bool {
+	switch r {
+	case OfferNewResponseWorkerTypeEmployee, OfferNewResponseWorkerTypeUsContractor, OfferNewResponseWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
+}
+
 type OfferNewResponseCandidate struct {
 	FirstName         string                                     `json:"firstName" api:"required"`
 	LastName          string                                     `json:"lastName" api:"required"`
-	Email             string                                     `json:"email" api:"required"`
+	Email             string                                     `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferNewResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerNewResponseCandidateJSON              `json:"-"`
 }
@@ -1239,9 +1271,9 @@ func (r offerNewResponseCompensationBasePayJSON) RawJSON() string {
 }
 
 type OfferNewResponseCompensationStock struct {
-	Options               string                                `json:"options" api:"required"`
-	VestingScheduleMonths string                                `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           string                                `json:"cliffMonths" api:"required,nullable"`
+	Options               int64                                 `json:"options" api:"required"`
+	VestingScheduleMonths int64                                 `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                 `json:"cliffMonths" api:"required,nullable"`
 	JSON                  offerNewResponseCompensationStockJSON `json:"-"`
 }
 
