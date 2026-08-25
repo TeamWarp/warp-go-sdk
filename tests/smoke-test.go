@@ -24,15 +24,19 @@ type smokeResult struct {
 	Operation  string `json:"operation"`
 	Method     string `json:"method"`
 	Path       string `json:"path"`
+	Label      string `json:"label,omitempty"`
 	Status     string `json:"status"`
 	DurationMs int64  `json:"durationMs"`
 	Error      string `json:"error,omitempty"`
 }
 
+// Label says which of an operation's two calls this is — "required params" or "all params".
+// It is empty when the operation contributed a single case.
 type smokeCase struct {
 	Operation string
 	Method    string
 	Path      string
+	Label     string
 	Run       func()
 }
 
@@ -49,7 +53,14 @@ func _smokeCase0() {
 }
 
 func _smokeCase1() {
-	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
+	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+		Limit:      sdk.F[string]("limit"),
+		Statuses:   sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+		AfterID:    sdk.F[string]("chpl_1234"),
+		BeforeID:   sdk.F[string]("chpl_1234"),
+		CarrierIDs: sdk.F[[]string]([]string{"car_1234"}),
+		Types:      sdk.F[[]sdk.BenefitHealthPlanListParamsType]([]sdk.BenefitHealthPlanListParamsType{"medical"}),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -58,6 +69,15 @@ func _smokeCase1() {
 }
 
 func _smokeCase2() {
+	healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(healthPlan)
+}
+
+func _smokeCase3() {
 	retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
 		Limit:    sdk.F[string]("limit"),
 		Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
@@ -69,7 +89,22 @@ func _smokeCase2() {
 	fmt.Println(retirementPlan)
 }
 
-func _smokeCase3() {
+func _smokeCase4() {
+	retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
+		Limit:    sdk.F[string]("limit"),
+		Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
+		AfterID:  sdk.F[string]("crpl_1234"),
+		BeforeID: sdk.F[string]("crpl_1234"),
+		Types:    sdk.F[[]sdk.BenefitRetirementPlanListParamsType]([]sdk.BenefitRetirementPlanListParamsType{"401k"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(retirementPlan)
+}
+
+func _smokeCase5() {
 	retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
 	if err != nil {
 		panic(err)
@@ -78,7 +113,7 @@ func _smokeCase3() {
 	fmt.Println(retirementPlan)
 }
 
-func _smokeCase4() {
+func _smokeCase6() {
 	deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
 		Limit:    sdk.F[string]("limit"),
 		Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
@@ -90,7 +125,26 @@ func _smokeCase4() {
 	fmt.Println(deduction)
 }
 
-func _smokeCase5() {
+func _smokeCase7() {
+	deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
+		Limit:             sdk.F[string]("limit"),
+		Statuses:          sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
+		AfterID:           sdk.F[string]("pbdg_1234"),
+		BeforeID:          sdk.F[string]("pbdg_1234"),
+		Categories:        sdk.F[[]sdk.BenefitDeductionListParamsCategory]([]sdk.BenefitDeductionListParamsCategory{"health"}),
+		HealthPlanIDs:     sdk.F[[]string]([]string{"chpl_1234"}),
+		RetirementPlanIDs: sdk.F[[]string]([]string{"crpl_1234"}),
+		Types:             sdk.F[[]sdk.Union]([]sdk.Union{"medical"}),
+		WorkerIDs:         sdk.F[[]string]([]string{"wrk_1234"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(deduction)
+}
+
+func _smokeCase8() {
 	deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
 	if err != nil {
 		panic(err)
@@ -99,7 +153,7 @@ func _smokeCase5() {
 	fmt.Println(deduction)
 }
 
-func _smokeCase6() {
+func _smokeCase9() {
 	customField, err := client.CustomFields.List(context.Background())
 	if err != nil {
 		panic(err)
@@ -108,7 +162,7 @@ func _smokeCase6() {
 	fmt.Println(customField)
 }
 
-func _smokeCase7() {
+func _smokeCase10() {
 	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
 		Name: sdk.F[string]("x"),
 	})
@@ -119,7 +173,25 @@ func _smokeCase7() {
 	fmt.Println(customField)
 }
 
-func _smokeCase8() {
+func _smokeCase11() {
+	customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
+		Name:        sdk.F[string]("x"),
+		Config:      sdk.F[interface{}](map[string]interface{}{}),
+		Description: sdk.F[string](""),
+		Options: sdk.F[[]sdk.Objects2Param]([]sdk.Objects2Param{sdk.Objects2Param{
+			Label: sdk.F[string]("x"),
+			Value: sdk.F[string]("x"),
+		}}),
+		Required: sdk.F[bool](false),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(customField)
+}
+
+func _smokeCase12() {
 	customField, err := client.CustomFields.Get(context.Background(), "cf_1234")
 	if err != nil {
 		panic(err)
@@ -128,7 +200,7 @@ func _smokeCase8() {
 	fmt.Println(customField)
 }
 
-func _smokeCase9() {
+func _smokeCase13() {
 	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
 	if err != nil {
 		panic(err)
@@ -137,7 +209,21 @@ func _smokeCase9() {
 	fmt.Println(customField)
 }
 
-func _smokeCase10() {
+func _smokeCase14() {
+	customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{
+		Config:      sdk.F[interface{}](map[string]interface{}{}),
+		Description: sdk.F[string](""),
+		Name:        sdk.F[string]("x"),
+		Required:    sdk.F[bool](false),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(customField)
+}
+
+func _smokeCase15() {
 	customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
 	if err != nil {
 		panic(err)
@@ -146,7 +232,7 @@ func _smokeCase10() {
 	fmt.Println(customField)
 }
 
-func _smokeCase11() {
+func _smokeCase16() {
 	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
 		Objects2: sdk.Objects2Param{
 			Label: sdk.F[string]("x"),
@@ -160,7 +246,22 @@ func _smokeCase11() {
 	fmt.Println(customField)
 }
 
-func _smokeCase12() {
+func _smokeCase17() {
+	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
+		Objects2: sdk.Objects2Param{
+			Label:     sdk.F[string]("x"),
+			Value:     sdk.F[string]("x"),
+			SortOrder: sdk.F[interface{}](0),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(customField)
+}
+
+func _smokeCase18() {
 	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
 	if err != nil {
 		panic(err)
@@ -169,14 +270,26 @@ func _smokeCase12() {
 	fmt.Println(customField)
 }
 
-func _smokeCase13() {
+func _smokeCase19() {
+	customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{
+		Label:     sdk.F[string]("x"),
+		SortOrder: sdk.F[interface{}](0),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(customField)
+}
+
+func _smokeCase20() {
 	err := client.CustomFields.DeleteOption(context.Background(), "cfo_1234")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func _smokeCase14() {
+func _smokeCase21() {
 	customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
 	if err != nil {
 		panic(err)
@@ -185,7 +298,7 @@ func _smokeCase14() {
 	fmt.Println(customField)
 }
 
-func _smokeCase15() {
+func _smokeCase22() {
 	customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
 	if err != nil {
 		panic(err)
@@ -194,7 +307,19 @@ func _smokeCase15() {
 	fmt.Println(customField)
 }
 
-func _smokeCase16() {
+func _smokeCase23() {
+	customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{
+		FieldIDs:  sdk.F[[]string]([]string{"cf_1234"}),
+		WorkerIDs: sdk.F[[]string]([]string{"wrk_1234"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(customField)
+}
+
+func _smokeCase24() {
 	customField, err := client.CustomFields.UpsertValue(context.Background(), sdk.CustomFieldUpsertValueParams{
 		FieldID:  sdk.F[string]("cf_1234"),
 		Value:    sdk.F[sdk.CustomFieldUpsertValueParamsValueUnion](sdk.CustomFieldUpsertValueParamsValueUnion{}),
@@ -207,7 +332,7 @@ func _smokeCase16() {
 	fmt.Println(customField)
 }
 
-func _smokeCase17() {
+func _smokeCase25() {
 	err := client.CustomFields.ClearValue(context.Background(), sdk.CustomFieldClearValueParams{
 		FieldID:  sdk.F[string]("cf_1234"),
 		WorkerID: sdk.F[string]("wrk_1234"),
@@ -217,7 +342,7 @@ func _smokeCase17() {
 	}
 }
 
-func _smokeCase18() {
+func _smokeCase26() {
 	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -228,7 +353,20 @@ func _smokeCase18() {
 	fmt.Println(department)
 }
 
-func _smokeCase19() {
+func _smokeCase27() {
+	department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{
+		Limit:    sdk.F[string]("limit"),
+		AfterID:  sdk.F[string]("dpt_1234"),
+		BeforeID: sdk.F[string]("dpt_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(department)
+}
+
+func _smokeCase28() {
 	department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
 		Name: sdk.F[string]("x"),
 	})
@@ -239,7 +377,7 @@ func _smokeCase19() {
 	fmt.Println(department)
 }
 
-func _smokeCase20() {
+func _smokeCase29() {
 	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{})
 	if err != nil {
 		panic(err)
@@ -248,7 +386,18 @@ func _smokeCase20() {
 	fmt.Println(department)
 }
 
-func _smokeCase21() {
+func _smokeCase30() {
+	department, err := client.Departments.Update(context.Background(), "dpt_1234", sdk.DepartmentUpdateParams{
+		Name: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(department)
+}
+
+func _smokeCase31() {
 	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -259,7 +408,23 @@ func _smokeCase21() {
 	fmt.Println(offer)
 }
 
-func _smokeCase22() {
+func _smokeCase32() {
+	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{
+		Limit:          sdk.F[string]("limit"),
+		AfterID:        sdk.F[string]("offr_1234"),
+		BeforeID:       sdk.F[string]("offr_1234"),
+		CandidateEmail: sdk.F[string]("john@joinwarp.com"),
+		Statuses:       sdk.F[[]sdk.Union13]([]sdk.Union13{"draft"}),
+		WorkerTypes:    sdk.F[[]sdk.OfferListParamsWorkerType]([]sdk.OfferListParamsWorkerType{"employee"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(offer)
+}
+
+func _smokeCase33() {
 	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
 			FirstName: sdk.F[string]("x"),
@@ -281,7 +446,38 @@ func _smokeCase22() {
 	fmt.Println(offer)
 }
 
-func _smokeCase23() {
+func _smokeCase34() {
+	offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
+		Candidate: sdk.F[sdk.OfferNewParamsCandidate](sdk.OfferNewParamsCandidate{
+			FirstName: sdk.F[string]("x"),
+			LastName:  sdk.F[string]("x"),
+			Email:     sdk.F[string]("john@joinwarp.com"),
+		}),
+		Compensation: sdk.F[sdk.OfferNewParamsCompensation](sdk.OfferNewParamsCompensation{
+			PayRate: sdk.F[float64](0),
+		}),
+		Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
+			Title:     sdk.F[string]("x"),
+			StartDate: sdk.F[string](""),
+		}),
+		BackgroundCheckWorkLocation: sdk.F[sdk.OfferNewParamsBackgroundCheckWorkLocation](sdk.OfferNewParamsBackgroundCheckWorkLocation{
+			Country: sdk.F[string](""),
+			State:   sdk.F[string](""),
+			City:    sdk.F[string](""),
+		}),
+		DepartmentID:   sdk.F[string]("dpt_1234"),
+		ExpirationTime: sdk.F[string](""),
+		ManagerID:      sdk.F[string]("wrk_1234"),
+		WorkplaceID:    sdk.F[string]("wkp_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(offer)
+}
+
+func _smokeCase35() {
 	offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{})
 	if err != nil {
 		panic(err)
@@ -290,7 +486,18 @@ func _smokeCase23() {
 	fmt.Println(offer)
 }
 
-func _smokeCase24() {
+func _smokeCase36() {
+	offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{
+		VoidNotes: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(offer)
+}
+
+func _smokeCase37() {
 	offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
 		ExpirationTime: sdk.F[string](""),
 	})
@@ -301,7 +508,7 @@ func _smokeCase24() {
 	fmt.Println(offer)
 }
 
-func _smokeCase25() {
+func _smokeCase38() {
 	offer, err := client.Offers.Resend(context.Background(), "offr_1234")
 	if err != nil {
 		panic(err)
@@ -310,7 +517,7 @@ func _smokeCase25() {
 	fmt.Println(offer)
 }
 
-func _smokeCase26() {
+func _smokeCase39() {
 	payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -321,7 +528,24 @@ func _smokeCase26() {
 	fmt.Println(payRate)
 }
 
-func _smokeCase27() {
+func _smokeCase40() {
+	payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
+		Limit:              sdk.F[string]("limit"),
+		AfterID:            sdk.F[string]("pyr_1234"),
+		BeforeID:           sdk.F[string]("pyr_1234"),
+		EffectiveBefore:    sdk.F[string](""),
+		EffectiveOnOrAfter: sdk.F[string](""),
+		Type:               sdk.F[sdk.PayRateListParamsType](sdk.PayRateListParamsType("regular")),
+		WorkerID:           sdk.F[string]("wrk_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payRate)
+}
+
+func _smokeCase41() {
 	payRate, err := client.PayRates.Get(context.Background(), "pyr_1234")
 	if err != nil {
 		panic(err)
@@ -330,7 +554,7 @@ func _smokeCase27() {
 	fmt.Println(payRate)
 }
 
-func _smokeCase28() {
+func _smokeCase42() {
 	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -341,7 +565,22 @@ func _smokeCase28() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase29() {
+func _smokeCase43() {
+	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{
+		Limit:     sdk.F[string]("limit"),
+		AfterID:   sdk.F[string]("wrkasn_1234"),
+		BeforeID:  sdk.F[string]("wrkasn_1234"),
+		PolicyIDs: sdk.F[[]string]([]string{"top_1234"}),
+		WorkerIDs: sdk.F[[]string]([]string{"wrk_1234"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(timeOff)
+}
+
+func _smokeCase44() {
 	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -352,7 +591,24 @@ func _smokeCase29() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase30() {
+func _smokeCase45() {
+	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{
+		Limit:     sdk.F[string]("limit"),
+		AfterID:   sdk.F[string]("wrkasn_1234"),
+		BeforeID:  sdk.F[string]("wrkasn_1234"),
+		EndDate:   sdk.F[string](""),
+		PolicyIDs: sdk.F[[]string]([]string{"top_1234"}),
+		StartDate: sdk.F[string](""),
+		WorkerIDs: sdk.F[[]string]([]string{"wrk_1234"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(timeOff)
+}
+
+func _smokeCase46() {
 	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -363,7 +619,27 @@ func _smokeCase30() {
 	fmt.Println(timeOff)
 }
 
-func _smokeCase31() {
+func _smokeCase47() {
+	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{
+		Limit:           sdk.F[string]("limit"),
+		AfterID:         sdk.F[string](""),
+		BeforeID:        sdk.F[string](""),
+		EndsBefore:      sdk.F[string](""),
+		EndsOnOrAfter:   sdk.F[string](""),
+		PolicyIDs:       sdk.F[[]string]([]string{"top_1234"}),
+		StartsBefore:    sdk.F[string](""),
+		StartsOnOrAfter: sdk.F[string](""),
+		Statuses:        sdk.F[[]sdk.Union25]([]sdk.Union25{"pending"}),
+		WorkerIDs:       sdk.F[[]string]([]string{"wrk_1234"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(timeOff)
+}
+
+func _smokeCase48() {
 	policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -374,7 +650,20 @@ func _smokeCase31() {
 	fmt.Println(policy)
 }
 
-func _smokeCase32() {
+func _smokeCase49() {
+	policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
+		Limit:    sdk.F[string]("limit"),
+		AfterID:  sdk.F[string]("top_1234"),
+		BeforeID: sdk.F[string]("top_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(policy)
+}
+
+func _smokeCase50() {
 	policy, err := client.TimeOff.Policies.Get(context.Background(), "top_1234")
 	if err != nil {
 		panic(err)
@@ -383,7 +672,7 @@ func _smokeCase32() {
 	fmt.Println(policy)
 }
 
-func _smokeCase33() {
+func _smokeCase51() {
 	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -394,7 +683,23 @@ func _smokeCase33() {
 	fmt.Println(worker)
 }
 
-func _smokeCase34() {
+func _smokeCase52() {
+	worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{
+		Limit:     sdk.F[string]("limit"),
+		AfterID:   sdk.F[string]("wrk_1234"),
+		BeforeID:  sdk.F[string]("wrk_1234"),
+		Statuses:  sdk.F[[]sdk.Union26]([]sdk.Union26{"draft"}),
+		Types:     sdk.F[[]sdk.Union27]([]sdk.Union27{"employee"}),
+		WorkEmail: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(worker)
+}
+
+func _smokeCase53() {
 	worker, err := client.Workers.Get(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
@@ -403,14 +708,14 @@ func _smokeCase34() {
 	fmt.Println(worker)
 }
 
-func _smokeCase35() {
+func _smokeCase54() {
 	err := client.Workers.Delete(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func _smokeCase36() {
+func _smokeCase55() {
 	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
 		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
 			Amount: sdk.F[float64](0),
@@ -433,7 +738,33 @@ func _smokeCase36() {
 	fmt.Println(worker)
 }
 
-func _smokeCase37() {
+func _smokeCase56() {
+	worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmployeeParams{
+		Compensation: sdk.F[sdk.WorkerNewEmployeeParamsCompensation](sdk.WorkerNewEmployeeParamsCompensation{
+			Amount: sdk.F[float64](0),
+		}),
+		DepartmentID: sdk.F[string]("dpt_1234"),
+		Email:        sdk.F[string]("john@joinwarp.com"),
+		FirstName:    sdk.F[string]("Jonathan"),
+		LastName:     sdk.F[string]("Galt"),
+		ManagerID:    sdk.F[string]("wrk_1234"),
+		Position:     sdk.F[string]("Software Engineer"),
+		StartDate:    sdk.F[string](""),
+		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
+			WorkplaceID: sdk.F[string]("wkp_1234"),
+		}),
+		RequireI9:    sdk.F[bool](false),
+		StockOptions: sdk.F[interface{}](0),
+		WorkEmail:    sdk.F[string]("john@joinwarp.com"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(worker)
+}
+
+func _smokeCase57() {
 	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
 		DepartmentID: sdk.F[string]("dpt_1234"),
 		Email:        sdk.F[string]("john@joinwarp.com"),
@@ -450,7 +781,30 @@ func _smokeCase37() {
 	fmt.Println(worker)
 }
 
-func _smokeCase38() {
+func _smokeCase58() {
+	worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
+		DepartmentID: sdk.F[string]("dpt_1234"),
+		Email:        sdk.F[string]("john@joinwarp.com"),
+		FirstName:    sdk.F[string]("Melissa"),
+		LastName:     sdk.F[string]("Jones"),
+		ManagerID:    sdk.F[string]("wrk_1234"),
+		Position:     sdk.F[string]("Design Consultant"),
+		StartDate:    sdk.F[string](""),
+		BusinessName: sdk.F[string]("Galt Enterprises, LLC"),
+		Compensation: sdk.F[sdk.WorkerNewContractorParamsCompensation](sdk.WorkerNewContractorParamsCompensation{
+			Amount: sdk.F[float64](0),
+		}),
+		ScopeOfWork: sdk.F[string](""),
+		WorkEmail:   sdk.F[string]("john@joinwarp.com"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(worker)
+}
+
+func _smokeCase59() {
 	worker, err := client.Workers.Invite(context.Background(), "wrk_1234")
 	if err != nil {
 		panic(err)
@@ -459,7 +813,7 @@ func _smokeCase38() {
 	fmt.Println(worker)
 }
 
-func _smokeCase39() {
+func _smokeCase60() {
 	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -470,7 +824,20 @@ func _smokeCase39() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase40() {
+func _smokeCase61() {
+	workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{
+		Limit:    sdk.F[string]("limit"),
+		AfterID:  sdk.F[string]("wkp_1234"),
+		BeforeID: sdk.F[string]("wkp_1234"),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(workplace)
+}
+
+func _smokeCase62() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
 		Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
 			Line1:      sdk.F[string]("x"),
@@ -486,7 +853,7 @@ func _smokeCase40() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase41() {
+func _smokeCase63() {
 	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{})
 	if err != nil {
 		panic(err)
@@ -495,7 +862,18 @@ func _smokeCase41() {
 	fmt.Println(workplace)
 }
 
-func _smokeCase42() {
+func _smokeCase64() {
+	workplace, err := client.Workplaces.Update(context.Background(), "wkp_1234", sdk.WorkplaceUpdateParams{
+		Name: sdk.F[string](""),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(workplace)
+}
+
+func _smokeCase65() {
 	payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -506,7 +884,30 @@ func _smokeCase42() {
 	fmt.Println(payroll)
 }
 
-func _smokeCase43() {
+func _smokeCase66() {
+	payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
+		Limit:                  sdk.F[string]("limit"),
+		AfterID:                sdk.F[string]("pyc_1234"),
+		BeforeID:               sdk.F[string]("pyc_1234"),
+		CompensationCurrencies: sdk.F[[]sdk.PublicPayrollCurrency]([]sdk.PublicPayrollCurrency{"USD"}),
+		PayFrequencies:         sdk.F[[]sdk.PublicPayFrequency]([]sdk.PublicPayFrequency{"semimonthly"}),
+		PaydayBefore:           sdk.F[string](""),
+		PaydayOnOrAfter:        sdk.F[string](""),
+		PaymentMethods:         sdk.F[[]sdk.PublicPaycheckPaymentMethod]([]sdk.PublicPaycheckPaymentMethod{"direct_deposit"}),
+		PayrollIDs:             sdk.F[[]string]([]string{"pay_1234"}),
+		PayrollTypes:           sdk.F[[]sdk.PublicPayrollType]([]sdk.PublicPayrollType{"us"}),
+		Statuses:               sdk.F[[]sdk.PublicPaycheckStatus]([]sdk.PublicPaycheckStatus{"processing"}),
+		WorkerIDs:              sdk.F[[]string]([]string{"wrk_1234"}),
+		WorkerTypes:            sdk.F[[]sdk.Union21]([]sdk.Union21{"us_w2"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payroll)
+}
+
+func _smokeCase67() {
 	payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
 	if err != nil {
 		panic(err)
@@ -515,7 +916,7 @@ func _smokeCase43() {
 	fmt.Println(payroll)
 }
 
-func _smokeCase44() {
+func _smokeCase68() {
 	payroll, err := client.Payroll.List(context.Background(), sdk.PayrollListParams{
 		Limit: sdk.F[string]("limit"),
 	})
@@ -526,7 +927,28 @@ func _smokeCase44() {
 	fmt.Println(payroll)
 }
 
-func _smokeCase45() {
+func _smokeCase69() {
+	payroll, err := client.Payroll.List(context.Background(), sdk.PayrollListParams{
+		Limit:                 sdk.F[string]("limit"),
+		AfterID:               sdk.F[string]("pay_1234"),
+		BeforeID:              sdk.F[string]("pay_1234"),
+		PayFrequencies:        sdk.F[[]sdk.PublicPayFrequency]([]sdk.PublicPayFrequency{"semimonthly"}),
+		PayPeriodEndBefore:    sdk.F[string](""),
+		PayPeriodEndOnOrAfter: sdk.F[string](""),
+		PaydayBefore:          sdk.F[string](""),
+		PaydayOnOrAfter:       sdk.F[string](""),
+		Statuses:              sdk.F[[]sdk.PublicPayrollStatus]([]sdk.PublicPayrollStatus{"processing"}),
+		Subtypes:              sdk.F[[]sdk.PublicPayrollSubtype]([]sdk.PublicPayrollSubtype{"regular"}),
+		Types:                 sdk.F[[]sdk.PublicPayrollType]([]sdk.PublicPayrollType{"us"}),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(payroll)
+}
+
+func _smokeCase70() {
 	payroll, err := client.Payroll.Get(context.Background(), "pay_1234")
 	if err != nil {
 		panic(err)
@@ -540,322 +962,547 @@ var cases = []smokeCase{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/benefits/health_plans",
+		Label:     "required params",
 		Run:       _smokeCase0,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/benefits/health_plans",
+		Label:     "all params",
+		Run:       _smokeCase1,
 	},
 
 	{
 		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/benefits/health_plans/{id}",
-		Run:       _smokeCase1,
+		Run:       _smokeCase2,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/benefits/retirement_plans",
-		Run:       _smokeCase2,
-	},
-
-	{
-		Operation: "get",
-		Method:    "GET",
-		Path:      "/v1/benefits/retirement_plans/{id}",
+		Label:     "required params",
 		Run:       _smokeCase3,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/benefits/deductions",
+		Path:      "/v1/benefits/retirement_plans",
+		Label:     "all params",
 		Run:       _smokeCase4,
 	},
 
 	{
 		Operation: "get",
 		Method:    "GET",
-		Path:      "/v1/benefits/deductions/{id}",
+		Path:      "/v1/benefits/retirement_plans/{id}",
 		Run:       _smokeCase5,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/custom_fields",
+		Path:      "/v1/benefits/deductions",
+		Label:     "required params",
 		Run:       _smokeCase6,
 	},
 
 	{
-		Operation: "create",
-		Method:    "POST",
-		Path:      "/v1/custom_fields",
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/benefits/deductions",
+		Label:     "all params",
 		Run:       _smokeCase7,
 	},
 
 	{
 		Operation: "get",
 		Method:    "GET",
-		Path:      "/v1/custom_fields/{id}",
+		Path:      "/v1/benefits/deductions/{id}",
 		Run:       _smokeCase8,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/custom_fields",
+		Run:       _smokeCase9,
+	},
+
+	{
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/custom_fields",
+		Label:     "required params",
+		Run:       _smokeCase10,
+	},
+
+	{
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/custom_fields",
+		Label:     "all params",
+		Run:       _smokeCase11,
+	},
+
+	{
+		Operation: "get",
+		Method:    "GET",
+		Path:      "/v1/custom_fields/{id}",
+		Run:       _smokeCase12,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/custom_fields/{id}",
-		Run:       _smokeCase9,
+		Label:     "required params",
+		Run:       _smokeCase13,
+	},
+
+	{
+		Operation: "update",
+		Method:    "PATCH",
+		Path:      "/v1/custom_fields/{id}",
+		Label:     "all params",
+		Run:       _smokeCase14,
 	},
 
 	{
 		Operation: "archive",
 		Method:    "POST",
 		Path:      "/v1/custom_fields/{id}/archive",
-		Run:       _smokeCase10,
+		Run:       _smokeCase15,
 	},
 
 	{
 		Operation: "createOption",
 		Method:    "POST",
 		Path:      "/v1/custom_fields/{id}/options",
-		Run:       _smokeCase11,
+		Label:     "required params",
+		Run:       _smokeCase16,
+	},
+
+	{
+		Operation: "createOption",
+		Method:    "POST",
+		Path:      "/v1/custom_fields/{id}/options",
+		Label:     "all params",
+		Run:       _smokeCase17,
 	},
 
 	{
 		Operation: "updateOption",
 		Method:    "PATCH",
 		Path:      "/v1/custom_field_options/{id}",
-		Run:       _smokeCase12,
+		Label:     "required params",
+		Run:       _smokeCase18,
+	},
+
+	{
+		Operation: "updateOption",
+		Method:    "PATCH",
+		Path:      "/v1/custom_field_options/{id}",
+		Label:     "all params",
+		Run:       _smokeCase19,
 	},
 
 	{
 		Operation: "deleteOption",
 		Method:    "DELETE",
 		Path:      "/v1/custom_field_options/{id}",
-		Run:       _smokeCase13,
+		Run:       _smokeCase20,
 	},
 
 	{
 		Operation: "archiveOption",
 		Method:    "POST",
 		Path:      "/v1/custom_field_options/{id}/archive",
-		Run:       _smokeCase14,
+		Run:       _smokeCase21,
 	},
 
 	{
 		Operation: "listValues",
 		Method:    "GET",
 		Path:      "/v1/custom_field_values",
-		Run:       _smokeCase15,
+		Label:     "required params",
+		Run:       _smokeCase22,
+	},
+
+	{
+		Operation: "listValues",
+		Method:    "GET",
+		Path:      "/v1/custom_field_values",
+		Label:     "all params",
+		Run:       _smokeCase23,
 	},
 
 	{
 		Operation: "upsertValue",
 		Method:    "PUT",
 		Path:      "/v1/custom_field_values",
-		Run:       _smokeCase16,
+		Run:       _smokeCase24,
 	},
 
 	{
 		Operation: "clearValue",
 		Method:    "DELETE",
 		Path:      "/v1/custom_field_values",
-		Run:       _smokeCase17,
-	},
-
-	{
-		Operation: "list",
-		Method:    "GET",
-		Path:      "/v1/departments",
-		Run:       _smokeCase18,
-	},
-
-	{
-		Operation: "create",
-		Method:    "POST",
-		Path:      "/v1/departments",
-		Run:       _smokeCase19,
-	},
-
-	{
-		Operation: "update",
-		Method:    "PATCH",
-		Path:      "/v1/departments/{id}",
-		Run:       _smokeCase20,
-	},
-
-	{
-		Operation: "list",
-		Method:    "GET",
-		Path:      "/v1/offers",
-		Run:       _smokeCase21,
-	},
-
-	{
-		Operation: "create",
-		Method:    "POST",
-		Path:      "/v1/offers",
-		Run:       _smokeCase22,
-	},
-
-	{
-		Operation: "void",
-		Method:    "POST",
-		Path:      "/v1/offers/{id}/void",
-		Run:       _smokeCase23,
-	},
-
-	{
-		Operation: "extendDeadline",
-		Method:    "POST",
-		Path:      "/v1/offers/{id}/extend-deadline",
-		Run:       _smokeCase24,
-	},
-
-	{
-		Operation: "resend",
-		Method:    "POST",
-		Path:      "/v1/offers/{id}/resend",
 		Run:       _smokeCase25,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/pay_rates",
+		Path:      "/v1/departments",
+		Label:     "required params",
 		Run:       _smokeCase26,
 	},
 
 	{
-		Operation: "get",
+		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/pay_rates/{id}",
+		Path:      "/v1/departments",
+		Label:     "all params",
 		Run:       _smokeCase27,
 	},
 
 	{
-		Operation: "listAssignments",
-		Method:    "GET",
-		Path:      "/v1/time_off/assignments",
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/departments",
 		Run:       _smokeCase28,
 	},
 
 	{
-		Operation: "listBalances",
-		Method:    "GET",
-		Path:      "/v1/time_off/balances",
+		Operation: "update",
+		Method:    "PATCH",
+		Path:      "/v1/departments/{id}",
+		Label:     "required params",
 		Run:       _smokeCase29,
 	},
 
 	{
-		Operation: "listRequests",
-		Method:    "GET",
-		Path:      "/v1/time_off/requests",
+		Operation: "update",
+		Method:    "PATCH",
+		Path:      "/v1/departments/{id}",
+		Label:     "all params",
 		Run:       _smokeCase30,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/time_off/policies",
+		Path:      "/v1/offers",
+		Label:     "required params",
 		Run:       _smokeCase31,
-	},
-
-	{
-		Operation: "get",
-		Method:    "GET",
-		Path:      "/v1/time_off/policies/{id}",
-		Run:       _smokeCase32,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/workers",
+		Path:      "/v1/offers",
+		Label:     "all params",
+		Run:       _smokeCase32,
+	},
+
+	{
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/offers",
+		Label:     "required params",
 		Run:       _smokeCase33,
 	},
 
 	{
-		Operation: "get",
-		Method:    "GET",
-		Path:      "/v1/workers/{id}",
+		Operation: "create",
+		Method:    "POST",
+		Path:      "/v1/offers",
+		Label:     "all params",
 		Run:       _smokeCase34,
 	},
 
 	{
-		Operation: "delete",
-		Method:    "DELETE",
-		Path:      "/v1/workers/{id}",
+		Operation: "void",
+		Method:    "POST",
+		Path:      "/v1/offers/{id}/void",
+		Label:     "required params",
 		Run:       _smokeCase35,
 	},
 
 	{
-		Operation: "createEmployee",
+		Operation: "void",
 		Method:    "POST",
-		Path:      "/v1/workers/employee",
+		Path:      "/v1/offers/{id}/void",
+		Label:     "all params",
 		Run:       _smokeCase36,
 	},
 
 	{
-		Operation: "createContractor",
+		Operation: "extendDeadline",
 		Method:    "POST",
-		Path:      "/v1/workers/contractor",
+		Path:      "/v1/offers/{id}/extend-deadline",
 		Run:       _smokeCase37,
 	},
 
 	{
-		Operation: "invite",
+		Operation: "resend",
 		Method:    "POST",
-		Path:      "/v1/workers/{id}/invite",
+		Path:      "/v1/offers/{id}/resend",
 		Run:       _smokeCase38,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
-		Path:      "/v1/workplaces",
+		Path:      "/v1/pay_rates",
+		Label:     "required params",
 		Run:       _smokeCase39,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/pay_rates",
+		Label:     "all params",
+		Run:       _smokeCase40,
+	},
+
+	{
+		Operation: "get",
+		Method:    "GET",
+		Path:      "/v1/pay_rates/{id}",
+		Run:       _smokeCase41,
+	},
+
+	{
+		Operation: "listAssignments",
+		Method:    "GET",
+		Path:      "/v1/time_off/assignments",
+		Label:     "required params",
+		Run:       _smokeCase42,
+	},
+
+	{
+		Operation: "listAssignments",
+		Method:    "GET",
+		Path:      "/v1/time_off/assignments",
+		Label:     "all params",
+		Run:       _smokeCase43,
+	},
+
+	{
+		Operation: "listBalances",
+		Method:    "GET",
+		Path:      "/v1/time_off/balances",
+		Label:     "required params",
+		Run:       _smokeCase44,
+	},
+
+	{
+		Operation: "listBalances",
+		Method:    "GET",
+		Path:      "/v1/time_off/balances",
+		Label:     "all params",
+		Run:       _smokeCase45,
+	},
+
+	{
+		Operation: "listRequests",
+		Method:    "GET",
+		Path:      "/v1/time_off/requests",
+		Label:     "required params",
+		Run:       _smokeCase46,
+	},
+
+	{
+		Operation: "listRequests",
+		Method:    "GET",
+		Path:      "/v1/time_off/requests",
+		Label:     "all params",
+		Run:       _smokeCase47,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies",
+		Label:     "required params",
+		Run:       _smokeCase48,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies",
+		Label:     "all params",
+		Run:       _smokeCase49,
+	},
+
+	{
+		Operation: "get",
+		Method:    "GET",
+		Path:      "/v1/time_off/policies/{id}",
+		Run:       _smokeCase50,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/workers",
+		Label:     "required params",
+		Run:       _smokeCase51,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/workers",
+		Label:     "all params",
+		Run:       _smokeCase52,
+	},
+
+	{
+		Operation: "get",
+		Method:    "GET",
+		Path:      "/v1/workers/{id}",
+		Run:       _smokeCase53,
+	},
+
+	{
+		Operation: "delete",
+		Method:    "DELETE",
+		Path:      "/v1/workers/{id}",
+		Run:       _smokeCase54,
+	},
+
+	{
+		Operation: "createEmployee",
+		Method:    "POST",
+		Path:      "/v1/workers/employee",
+		Label:     "required params",
+		Run:       _smokeCase55,
+	},
+
+	{
+		Operation: "createEmployee",
+		Method:    "POST",
+		Path:      "/v1/workers/employee",
+		Label:     "all params",
+		Run:       _smokeCase56,
+	},
+
+	{
+		Operation: "createContractor",
+		Method:    "POST",
+		Path:      "/v1/workers/contractor",
+		Label:     "required params",
+		Run:       _smokeCase57,
+	},
+
+	{
+		Operation: "createContractor",
+		Method:    "POST",
+		Path:      "/v1/workers/contractor",
+		Label:     "all params",
+		Run:       _smokeCase58,
+	},
+
+	{
+		Operation: "invite",
+		Method:    "POST",
+		Path:      "/v1/workers/{id}/invite",
+		Run:       _smokeCase59,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/workplaces",
+		Label:     "required params",
+		Run:       _smokeCase60,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/workplaces",
+		Label:     "all params",
+		Run:       _smokeCase61,
 	},
 
 	{
 		Operation: "create",
 		Method:    "POST",
 		Path:      "/v1/workplaces",
-		Run:       _smokeCase40,
+		Run:       _smokeCase62,
 	},
 
 	{
 		Operation: "update",
 		Method:    "PATCH",
 		Path:      "/v1/workplaces/{id}",
-		Run:       _smokeCase41,
+		Label:     "required params",
+		Run:       _smokeCase63,
+	},
+
+	{
+		Operation: "update",
+		Method:    "PATCH",
+		Path:      "/v1/workplaces/{id}",
+		Label:     "all params",
+		Run:       _smokeCase64,
 	},
 
 	{
 		Operation: "listPaychecks",
 		Method:    "GET",
 		Path:      "/v1/paychecks",
-		Run:       _smokeCase42,
+		Label:     "required params",
+		Run:       _smokeCase65,
+	},
+
+	{
+		Operation: "listPaychecks",
+		Method:    "GET",
+		Path:      "/v1/paychecks",
+		Label:     "all params",
+		Run:       _smokeCase66,
 	},
 
 	{
 		Operation: "getPaycheck",
 		Method:    "GET",
 		Path:      "/v1/paychecks/{id}",
-		Run:       _smokeCase43,
+		Run:       _smokeCase67,
 	},
 
 	{
 		Operation: "list",
 		Method:    "GET",
 		Path:      "/v1/payrolls",
-		Run:       _smokeCase44,
+		Label:     "required params",
+		Run:       _smokeCase68,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/payrolls",
+		Label:     "all params",
+		Run:       _smokeCase69,
 	},
 
 	{
 		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/payrolls/{id}",
-		Run:       _smokeCase45,
+		Run:       _smokeCase70,
 	},
 }
 
@@ -887,6 +1534,7 @@ func runCase(testCase smokeCase) (result smokeResult) {
 		Operation: testCase.Operation,
 		Method:    testCase.Method,
 		Path:      testCase.Path,
+		Label:     testCase.Label,
 		Status:    "passed",
 	}
 	defer func() {
@@ -931,10 +1579,14 @@ func main() {
 		}
 	} else {
 		for _, result := range results {
+			suffix := ""
+			if result.Label != "" {
+				suffix = " [" + result.Label + "]"
+			}
 			if result.Status == "passed" {
-				fmt.Printf("PASS %s (%s %s) %dms\n", result.Operation, result.Method, result.Path, result.DurationMs)
+				fmt.Printf("PASS %s%s (%s %s) %dms\n", result.Operation, suffix, result.Method, result.Path, result.DurationMs)
 			} else {
-				fmt.Fprintf(os.Stderr, "FAIL %s (%s %s)\n%s\n", result.Operation, result.Method, result.Path, result.Error)
+				fmt.Fprintf(os.Stderr, "FAIL %s%s (%s %s)\n%s\n", result.Operation, suffix, result.Method, result.Path, result.Error)
 			}
 		}
 		if len(results) == 0 {
