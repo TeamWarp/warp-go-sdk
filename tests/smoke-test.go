@@ -838,7 +838,7 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "retrievePaycheck",
+		Operation: "getPaycheck",
 		Method:    "GET",
 		Path:      "/v1/paychecks/{id}",
 		Run:       _smokeCase43,
@@ -852,7 +852,7 @@ var cases = []smokeCase{
 	},
 
 	{
-		Operation: "retrieve",
+		Operation: "get",
 		Method:    "GET",
 		Path:      "/v1/payrolls/{id}",
 		Run:       _smokeCase45,
