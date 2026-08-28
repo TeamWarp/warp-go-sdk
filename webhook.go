@@ -601,8 +601,9 @@ type WorkerCreatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation      `json:"compensation" api:"required,nullable"`
-	JSON         workerCreatedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerCreatedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayload]
@@ -624,6 +625,7 @@ type workerCreatedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -690,6 +692,868 @@ func (r *WorkerCreatedWebhookEventPayloadDepartment) UnmarshalJSON(data []byte) 
 
 func (r workerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadCustomField struct {
+	ID   string                                           `json:"id" api:"required"`
+	Name string                                           `json:"name" api:"required"`
+	Type WorkerCreatedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerCreatedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                            `json:"redacted" api:"required"`
+	JSON     workerCreatedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomField]
+type workerCreatedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeText        WorkerCreatedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeNumber      WorkerCreatedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeDate        WorkerCreatedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerCreatedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerCreatedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypePercentage  WorkerCreatedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeSelect      WorkerCreatedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerCreatedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerCreatedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsTypeText, WorkerCreatedWebhookEventPayloadCustomFieldsTypeNumber, WorkerCreatedWebhookEventPayloadCustomFieldsTypeDate, WorkerCreatedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerCreatedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerCreatedWebhookEventPayloadCustomFieldsTypePercentage, WorkerCreatedWebhookEventPayloadCustomFieldsTypeSelect, WorkerCreatedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerCreatedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                `json:"value"`
+	Amount       Union1                                                `json:"amount"`
+	CurrencyCode Union                                                 `json:"currencyCode"`
+	Option       shared.Objects                                        `json:"option"`
+	Options      interface{}                                           `json:"options"`
+	JSON         workerCreatedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerCreatedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValue]
+type workerCreatedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerCreatedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerCreatedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerCreatedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                        `json:"value" api:"required"`
+	JSON  workerCreatedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                        `json:"value" api:"required"`
+	JSON  workerCreatedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                        `json:"value" api:"required"`
+	JSON  workerCreatedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                          `json:"value" api:"required"`
+	JSON  workerCreatedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                        `json:"amount" api:"required"`
+	CurrencyCode Union                                                         `json:"currencyCode" api:"required"`
+	JSON         workerCreatedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                        `json:"value" api:"required"`
+	JSON  workerCreatedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                `json:"option" api:"required"`
+	JSON   workerCreatedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                              `json:"options" api:"required"`
+	JSON    workerCreatedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerCreatedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerCreatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeText        WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerCreatedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeText, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerCreatedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountAud WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCad WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountChf WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountEur WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountInr WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNok WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCny WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPln WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountRon WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountTry WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountSek WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountAed WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountArs WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountClp WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCop WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGel WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountIls WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountKes WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountMad WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountThb WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUah WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountZar WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountDop WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountSar WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPen WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerCreatedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerCreatedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerUpdatedWebhookEvent struct {
@@ -759,8 +1623,9 @@ type WorkerUpdatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation      `json:"compensation" api:"required,nullable"`
-	JSON         workerUpdatedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerUpdatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerUpdatedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerUpdatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayload]
@@ -782,6 +1647,7 @@ type workerUpdatedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -848,6 +1714,868 @@ func (r *WorkerUpdatedWebhookEventPayloadDepartment) UnmarshalJSON(data []byte) 
 
 func (r workerUpdatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomField struct {
+	ID   string                                           `json:"id" api:"required"`
+	Name string                                           `json:"name" api:"required"`
+	Type WorkerUpdatedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerUpdatedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                            `json:"redacted" api:"required"`
+	JSON     workerUpdatedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomField]
+type workerUpdatedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeText        WorkerUpdatedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeNumber      WorkerUpdatedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeDate        WorkerUpdatedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerUpdatedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerUpdatedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypePercentage  WorkerUpdatedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeSelect      WorkerUpdatedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerUpdatedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsTypeText, WorkerUpdatedWebhookEventPayloadCustomFieldsTypeNumber, WorkerUpdatedWebhookEventPayloadCustomFieldsTypeDate, WorkerUpdatedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerUpdatedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerUpdatedWebhookEventPayloadCustomFieldsTypePercentage, WorkerUpdatedWebhookEventPayloadCustomFieldsTypeSelect, WorkerUpdatedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerUpdatedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                `json:"value"`
+	Amount       Union1                                                `json:"amount"`
+	CurrencyCode Union                                                 `json:"currencyCode"`
+	Option       shared.Objects                                        `json:"option"`
+	Options      interface{}                                           `json:"options"`
+	JSON         workerUpdatedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerUpdatedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValue]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerUpdatedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerUpdatedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerUpdatedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                        `json:"value" api:"required"`
+	JSON  workerUpdatedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                        `json:"value" api:"required"`
+	JSON  workerUpdatedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                        `json:"value" api:"required"`
+	JSON  workerUpdatedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                          `json:"value" api:"required"`
+	JSON  workerUpdatedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                        `json:"amount" api:"required"`
+	CurrencyCode Union                                                         `json:"currencyCode" api:"required"`
+	JSON         workerUpdatedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                        `json:"value" api:"required"`
+	JSON  workerUpdatedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                `json:"option" api:"required"`
+	JSON   workerUpdatedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                              `json:"options" api:"required"`
+	JSON    workerUpdatedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerUpdatedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerUpdatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeText        WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerUpdatedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeText, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerUpdatedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountAud WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCad WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountChf WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountEur WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountInr WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNok WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCny WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPln WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountRon WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountTry WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountSek WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountAed WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountArs WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountClp WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCop WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGel WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountIls WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountKes WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountMad WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountThb WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUah WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountZar WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountDop WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountSar WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPen WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerUpdatedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerUpdatedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerDeletedWebhookEvent struct {
@@ -917,8 +2645,9 @@ type WorkerDeletedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation      `json:"compensation" api:"required,nullable"`
-	JSON         workerDeletedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerDeletedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerDeletedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerDeletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayload]
@@ -940,6 +2669,7 @@ type workerDeletedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1006,6 +2736,868 @@ func (r *WorkerDeletedWebhookEventPayloadDepartment) UnmarshalJSON(data []byte) 
 
 func (r workerDeletedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerDeletedWebhookEventPayloadCustomField struct {
+	ID   string                                           `json:"id" api:"required"`
+	Name string                                           `json:"name" api:"required"`
+	Type WorkerDeletedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerDeletedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                            `json:"redacted" api:"required"`
+	JSON     workerDeletedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomField]
+type workerDeletedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeText        WorkerDeletedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeNumber      WorkerDeletedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeDate        WorkerDeletedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerDeletedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerDeletedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypePercentage  WorkerDeletedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeSelect      WorkerDeletedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerDeletedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerDeletedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsTypeText, WorkerDeletedWebhookEventPayloadCustomFieldsTypeNumber, WorkerDeletedWebhookEventPayloadCustomFieldsTypeDate, WorkerDeletedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerDeletedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerDeletedWebhookEventPayloadCustomFieldsTypePercentage, WorkerDeletedWebhookEventPayloadCustomFieldsTypeSelect, WorkerDeletedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerDeletedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                `json:"value"`
+	Amount       Union1                                                `json:"amount"`
+	CurrencyCode Union                                                 `json:"currencyCode"`
+	Option       shared.Objects                                        `json:"option"`
+	Options      interface{}                                           `json:"options"`
+	JSON         workerDeletedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerDeletedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValue]
+type workerDeletedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerDeletedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerDeletedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerDeletedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                        `json:"value" api:"required"`
+	JSON  workerDeletedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                        `json:"value" api:"required"`
+	JSON  workerDeletedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                        `json:"value" api:"required"`
+	JSON  workerDeletedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                          `json:"value" api:"required"`
+	JSON  workerDeletedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                        `json:"amount" api:"required"`
+	CurrencyCode Union                                                         `json:"currencyCode" api:"required"`
+	JSON         workerDeletedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                        `json:"value" api:"required"`
+	JSON  workerDeletedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                `json:"option" api:"required"`
+	JSON   workerDeletedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                              `json:"options" api:"required"`
+	JSON    workerDeletedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerDeletedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerDeletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeText        WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerDeletedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeText, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerDeletedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountAud WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCad WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountChf WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountEur WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountInr WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNok WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCny WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPln WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountRon WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountTry WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountSek WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountAed WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountArs WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountClp WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCop WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGel WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountIls WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountKes WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountMad WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountThb WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUah WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountZar WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountDop WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountSar WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPen WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerDeletedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerDeletedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerInviteSentWebhookEvent struct {
@@ -1075,8 +3667,9 @@ type WorkerInviteSentWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation         `json:"compensation" api:"required,nullable"`
-	JSON         workerInviteSentWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation                  `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerInviteSentWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerInviteSentWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerInviteSentWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayload]
@@ -1098,6 +3691,7 @@ type workerInviteSentWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1164,6 +3758,868 @@ func (r *WorkerInviteSentWebhookEventPayloadDepartment) UnmarshalJSON(data []byt
 
 func (r workerInviteSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomField struct {
+	ID   string                                              `json:"id" api:"required"`
+	Name string                                              `json:"name" api:"required"`
+	Type WorkerInviteSentWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerInviteSentWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                               `json:"redacted" api:"required"`
+	JSON     workerInviteSentWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomField]
+type workerInviteSentWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeText        WorkerInviteSentWebhookEventPayloadCustomFieldsType = "text"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeNumber      WorkerInviteSentWebhookEventPayloadCustomFieldsType = "number"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeDate        WorkerInviteSentWebhookEventPayloadCustomFieldsType = "date"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeBoolean     WorkerInviteSentWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeCurrency    WorkerInviteSentWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypePercentage  WorkerInviteSentWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeSelect      WorkerInviteSentWebhookEventPayloadCustomFieldsType = "select"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerInviteSentWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsTypeText, WorkerInviteSentWebhookEventPayloadCustomFieldsTypeNumber, WorkerInviteSentWebhookEventPayloadCustomFieldsTypeDate, WorkerInviteSentWebhookEventPayloadCustomFieldsTypeBoolean, WorkerInviteSentWebhookEventPayloadCustomFieldsTypeCurrency, WorkerInviteSentWebhookEventPayloadCustomFieldsTypePercentage, WorkerInviteSentWebhookEventPayloadCustomFieldsTypeSelect, WorkerInviteSentWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerInviteSentWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                   `json:"value"`
+	Amount       Union1                                                   `json:"amount"`
+	CurrencyCode Union                                                    `json:"currencyCode"`
+	Option       shared.Objects                                           `json:"option"`
+	Options      interface{}                                              `json:"options"`
+	JSON         workerInviteSentWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerInviteSentWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValue]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerInviteSentWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerInviteSentWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerInviteSentWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                           `json:"value" api:"required"`
+	JSON  workerInviteSentWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                           `json:"value" api:"required"`
+	JSON  workerInviteSentWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                           `json:"value" api:"required"`
+	JSON  workerInviteSentWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                             `json:"value" api:"required"`
+	JSON  workerInviteSentWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                           `json:"amount" api:"required"`
+	CurrencyCode Union                                                            `json:"currencyCode" api:"required"`
+	JSON         workerInviteSentWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                           `json:"value" api:"required"`
+	JSON  workerInviteSentWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                   `json:"option" api:"required"`
+	JSON   workerInviteSentWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                                 `json:"options" api:"required"`
+	JSON    workerInviteSentWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7]
+type workerInviteSentWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerInviteSentWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeText        WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeDate        WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerInviteSentWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeText, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeDate, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerInviteSentWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountAud WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBrl WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCad WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountChf WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCzk WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountDkk WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountEur WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGbp WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountHkd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountHuf WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountIdr WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountInr WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountJpy WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountMyr WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNok WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNzd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCny WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPln WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountRon WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountTry WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountSek WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountSgd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountAed WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountArs WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBdt WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBwp WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountClp WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCop WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCrc WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountEgp WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountFjd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGel WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGhs WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountIls WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountKes WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountKrw WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountLkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountMad WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountMxn WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNpr WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPhp WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPkr WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountThb WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUah WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUgx WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUyu WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountVnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountZar WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountZmw WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountTnd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNgn WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountRsd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountTwd WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGtq WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountHnl WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountDop WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountSar WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountXaf WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPen WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountAud, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountChf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountEur, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountInr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNok, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCny, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPln, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountRon, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountTry, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountSek, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountAed, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountArs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountClp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGel, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountIls, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountKes, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountMad, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountThb, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUah, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountZar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountDop, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountSar, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerInviteSentWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerInviteSentWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerInviteAcceptedWebhookEvent struct {
@@ -1233,8 +4689,9 @@ type WorkerInviteAcceptedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation             `json:"compensation" api:"required,nullable"`
-	JSON         workerInviteAcceptedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation                      `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerInviteAcceptedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerInviteAcceptedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayload]
@@ -1256,6 +4713,7 @@ type workerInviteAcceptedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1322,6 +4780,868 @@ func (r *WorkerInviteAcceptedWebhookEventPayloadDepartment) UnmarshalJSON(data [
 
 func (r workerInviteAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomField struct {
+	ID   string                                                  `json:"id" api:"required"`
+	Name string                                                  `json:"name" api:"required"`
+	Type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                                   `json:"redacted" api:"required"`
+	JSON     workerInviteAcceptedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomField]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeText        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeNumber      WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeDate        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypePercentage  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeSelect      WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeText, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeNumber, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeDate, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypePercentage, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeSelect, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                       `json:"value"`
+	Amount       Union1                                                       `json:"amount"`
+	CurrencyCode Union                                                        `json:"currencyCode"`
+	Option       shared.Objects                                               `json:"option"`
+	Options      interface{}                                                  `json:"options"`
+	JSON         workerInviteAcceptedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                               `json:"value" api:"required"`
+	JSON  workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                               `json:"value" api:"required"`
+	JSON  workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                               `json:"value" api:"required"`
+	JSON  workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                                 `json:"value" api:"required"`
+	JSON  workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                               `json:"amount" api:"required"`
+	CurrencyCode Union                                                                `json:"currencyCode" api:"required"`
+	JSON         workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                               `json:"value" api:"required"`
+	JSON  workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                       `json:"option" api:"required"`
+	JSON   workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                                     `json:"options" api:"required"`
+	JSON    workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerInviteAcceptedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeText        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeText, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountAud WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountChf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountEur WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountInr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNok WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCny WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPln WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountRon WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountTry WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountSek WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountAed WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountArs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountClp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGel WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountIls WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountKes WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountMad WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountThb WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUah WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountZar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountDop WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountSar WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPen WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerInviteAcceptedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerOnboardingCompletedWebhookEvent struct {
@@ -1391,8 +5711,9 @@ type WorkerOnboardingCompletedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation                  `json:"compensation" api:"required,nullable"`
-	JSON         workerOnboardingCompletedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation                           `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerOnboardingCompletedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerOnboardingCompletedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayload]
@@ -1414,6 +5735,7 @@ type workerOnboardingCompletedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1480,6 +5802,868 @@ func (r *WorkerOnboardingCompletedWebhookEventPayloadDepartment) UnmarshalJSON(d
 
 func (r workerOnboardingCompletedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomField struct {
+	ID   string                                                       `json:"id" api:"required"`
+	Name string                                                       `json:"name" api:"required"`
+	Type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                                        `json:"redacted" api:"required"`
+	JSON     workerOnboardingCompletedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomField]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeText        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeNumber      WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeDate        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypePercentage  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeSelect      WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeText, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeNumber, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeDate, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypePercentage, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeSelect, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                            `json:"value"`
+	Amount       Union1                                                            `json:"amount"`
+	CurrencyCode Union                                                             `json:"currencyCode"`
+	Option       shared.Objects                                                    `json:"option"`
+	Options      interface{}                                                       `json:"options"`
+	JSON         workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                                    `json:"value" api:"required"`
+	JSON  workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                                    `json:"value" api:"required"`
+	JSON  workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                                    `json:"value" api:"required"`
+	JSON  workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                                      `json:"value" api:"required"`
+	JSON  workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                                    `json:"amount" api:"required"`
+	CurrencyCode Union                                                                     `json:"currencyCode" api:"required"`
+	JSON         workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                                    `json:"value" api:"required"`
+	JSON  workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                            `json:"option" api:"required"`
+	JSON   workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                                          `json:"options" api:"required"`
+	JSON    workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeText        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeText, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountAud WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountChf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountEur WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountInr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNok WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCny WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPln WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountRon WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountTry WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountSek WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountAed WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountArs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountClp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGel WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountIls WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountKes WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountMad WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountThb WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUah WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountZar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountDop WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountSar WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPen WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerOnboardingCompletedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerOffboardingStartedWebhookEvent struct {
@@ -1549,8 +6733,9 @@ type WorkerOffboardingStartedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation                 `json:"compensation" api:"required,nullable"`
-	JSON         workerOffboardingStartedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation                          `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerOffboardingStartedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerOffboardingStartedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayload]
@@ -1572,6 +6757,7 @@ type workerOffboardingStartedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1638,6 +6824,868 @@ func (r *WorkerOffboardingStartedWebhookEventPayloadDepartment) UnmarshalJSON(da
 
 func (r workerOffboardingStartedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomField struct {
+	ID   string                                                      `json:"id" api:"required"`
+	Name string                                                      `json:"name" api:"required"`
+	Type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                                       `json:"redacted" api:"required"`
+	JSON     workerOffboardingStartedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomField]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeText        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeNumber      WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeDate        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypePercentage  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeSelect      WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeText, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeNumber, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeDate, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypePercentage, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeSelect, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                           `json:"value"`
+	Amount       Union1                                                           `json:"amount"`
+	CurrencyCode Union                                                            `json:"currencyCode"`
+	Option       shared.Objects                                                   `json:"option"`
+	Options      interface{}                                                      `json:"options"`
+	JSON         workerOffboardingStartedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                                   `json:"value" api:"required"`
+	JSON  workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                                   `json:"value" api:"required"`
+	JSON  workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                                   `json:"value" api:"required"`
+	JSON  workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                                     `json:"value" api:"required"`
+	JSON  workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                                   `json:"amount" api:"required"`
+	CurrencyCode Union                                                                    `json:"currencyCode" api:"required"`
+	JSON         workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                                   `json:"value" api:"required"`
+	JSON  workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                           `json:"option" api:"required"`
+	JSON   workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                                         `json:"options" api:"required"`
+	JSON    workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerOffboardingStartedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeText        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeText, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountAud WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountChf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountEur WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountInr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNok WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCny WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPln WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountRon WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountTry WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountSek WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountAed WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountArs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountClp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGel WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountIls WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountKes WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountMad WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountThb WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUah WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountZar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountDop WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountSar WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPen WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerOffboardingStartedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerOffboardedWebhookEvent struct {
@@ -1707,8 +7755,9 @@ type WorkerOffboardedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation         `json:"compensation" api:"required,nullable"`
-	JSON         workerOffboardedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation                  `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerOffboardedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerOffboardedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerOffboardedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayload]
@@ -1730,6 +7779,7 @@ type workerOffboardedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1796,6 +7846,868 @@ func (r *WorkerOffboardedWebhookEventPayloadDepartment) UnmarshalJSON(data []byt
 
 func (r workerOffboardedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomField struct {
+	ID   string                                              `json:"id" api:"required"`
+	Name string                                              `json:"name" api:"required"`
+	Type WorkerOffboardedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerOffboardedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                               `json:"redacted" api:"required"`
+	JSON     workerOffboardedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomField]
+type workerOffboardedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeText        WorkerOffboardedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeNumber      WorkerOffboardedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeDate        WorkerOffboardedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerOffboardedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerOffboardedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypePercentage  WorkerOffboardedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeSelect      WorkerOffboardedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerOffboardedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsTypeText, WorkerOffboardedWebhookEventPayloadCustomFieldsTypeNumber, WorkerOffboardedWebhookEventPayloadCustomFieldsTypeDate, WorkerOffboardedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerOffboardedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerOffboardedWebhookEventPayloadCustomFieldsTypePercentage, WorkerOffboardedWebhookEventPayloadCustomFieldsTypeSelect, WorkerOffboardedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerOffboardedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                   `json:"value"`
+	Amount       Union1                                                   `json:"amount"`
+	CurrencyCode Union                                                    `json:"currencyCode"`
+	Option       shared.Objects                                           `json:"option"`
+	Options      interface{}                                              `json:"options"`
+	JSON         workerOffboardedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerOffboardedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValue]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerOffboardedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerOffboardedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerOffboardedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                           `json:"value" api:"required"`
+	JSON  workerOffboardedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                           `json:"value" api:"required"`
+	JSON  workerOffboardedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                           `json:"value" api:"required"`
+	JSON  workerOffboardedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                             `json:"value" api:"required"`
+	JSON  workerOffboardedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                           `json:"amount" api:"required"`
+	CurrencyCode Union                                                            `json:"currencyCode" api:"required"`
+	JSON         workerOffboardedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                           `json:"value" api:"required"`
+	JSON  workerOffboardedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                   `json:"option" api:"required"`
+	JSON   workerOffboardedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                                 `json:"options" api:"required"`
+	JSON    workerOffboardedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerOffboardedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerOffboardedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeText        WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerOffboardedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeText, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerOffboardedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountAud WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCad WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountChf WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountEur WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountInr WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNok WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCny WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPln WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountRon WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountTry WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountSek WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountAed WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountArs WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountClp WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCop WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGel WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountIls WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountKes WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountMad WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountThb WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUah WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountZar WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountDop WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountSar WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPen WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerOffboardedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerOffboardedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type WorkerReactivatedWebhookEvent struct {
@@ -1865,8 +8777,9 @@ type WorkerReactivatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation          `json:"compensation" api:"required,nullable"`
-	JSON         workerReactivatedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation                   `json:"compensation" api:"required,nullable"`
+	CustomFields []WorkerReactivatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
+	JSON         workerReactivatedWebhookEventPayloadJSON          `json:"-"`
 }
 
 // workerReactivatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayload]
@@ -1888,6 +8801,7 @@ type workerReactivatedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
 }
@@ -1954,6 +8868,868 @@ func (r *WorkerReactivatedWebhookEventPayloadDepartment) UnmarshalJSON(data []by
 
 func (r workerReactivatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomField struct {
+	ID   string                                               `json:"id" api:"required"`
+	Name string                                               `json:"name" api:"required"`
+	Type WorkerReactivatedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
+	// The worker’s value; null when unset or when the field is redacted for this API
+	// key.
+	Value WorkerReactivatedWebhookEventPayloadCustomFieldsValue `json:"value" api:"required,nullable"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value is withheld, not absent — absence of a value does not imply the worker has
+	// none.
+	Redacted bool                                                `json:"redacted" api:"required"`
+	JSON     workerReactivatedWebhookEventPayloadCustomFieldJSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomField]
+type workerReactivatedWebhookEventPayloadCustomFieldJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	Value       apijson.Field
+	Redacted    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsType string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeText        WorkerReactivatedWebhookEventPayloadCustomFieldsType = "text"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeNumber      WorkerReactivatedWebhookEventPayloadCustomFieldsType = "number"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeDate        WorkerReactivatedWebhookEventPayloadCustomFieldsType = "date"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerReactivatedWebhookEventPayloadCustomFieldsType = "boolean"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerReactivatedWebhookEventPayloadCustomFieldsType = "currency"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypePercentage  WorkerReactivatedWebhookEventPayloadCustomFieldsType = "percentage"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeSelect      WorkerReactivatedWebhookEventPayloadCustomFieldsType = "select"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerReactivatedWebhookEventPayloadCustomFieldsType = "multi_select"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsTypeText, WorkerReactivatedWebhookEventPayloadCustomFieldsTypeNumber, WorkerReactivatedWebhookEventPayloadCustomFieldsTypeDate, WorkerReactivatedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerReactivatedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerReactivatedWebhookEventPayloadCustomFieldsTypePercentage, WorkerReactivatedWebhookEventPayloadCustomFieldsTypeSelect, WorkerReactivatedWebhookEventPayloadCustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValue struct {
+	Type         WorkerReactivatedWebhookEventPayloadCustomFieldsValueType `json:"type" api:"required"`
+	Value        string                                                    `json:"value"`
+	Amount       Union1                                                    `json:"amount"`
+	CurrencyCode Union                                                     `json:"currencyCode"`
+	Option       shared.Objects                                            `json:"option"`
+	Options      interface{}                                               `json:"options"`
+	JSON         workerReactivatedWebhookEventPayloadCustomFieldsValueJSON `json:"-"`
+	union        WorkerReactivatedWebhookEventPayloadCustomFieldsValueUnion
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValue]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValue) UnmarshalJSON(data []byte) (err error) {
+	*r = WorkerReactivatedWebhookEventPayloadCustomFieldsValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValue) AsUnion() WorkerReactivatedWebhookEventPayloadCustomFieldsValueUnion {
+	return r.union
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueUnion interface {
+	implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*WorkerReactivatedWebhookEventPayloadCustomFieldsValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0 struct {
+	Type  WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0Type `json:"type" api:"required"`
+	Value string                                                            `json:"value" api:"required"`
+	JSON  workerReactivatedWebhookEventPayloadCustomFieldsValueVariant0JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant0JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0TypeText WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0Type = "text"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant0TypeText:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1 struct {
+	Type  WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Type `json:"type" api:"required"`
+	Value Union1                                                            `json:"value" api:"required"`
+	JSON  workerReactivatedWebhookEventPayloadCustomFieldsValueVariant1JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant1JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Type = "number"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "USD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueAud WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "AUD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BRL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCad WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueChf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CHF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CZK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "DKK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueEur WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "EUR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GBP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HKD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HUF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "IDR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueInr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "INR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "JPY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MYR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNok WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NOK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NZD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCny WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CNY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePln WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PLN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueRon WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "RON"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueTry WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TRY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueSek WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SEK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SGD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueAed WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "AED"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueArs WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ARS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BDT"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "BWP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueClp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CLP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCop WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "COP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "CRC"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "EGP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "FJD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGel WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GEL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GHS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueIls WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ILS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueKes WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "KES"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "KRW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "LKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueMad WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "MXN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NPR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PHP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueThb WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "THB"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUah WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UAH"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UGX"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "UYU"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "VND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueZar WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "ZMW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "NGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "RSD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "TWD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "GTQ"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "HNL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueDop WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "DOP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueSar WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "SAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "XAF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePen WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value = "PEN"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1Value) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueAud, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBrl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueChf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCzk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueDkk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueEur, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGbp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueHkd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueHuf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueIdr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueInr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueJpy, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueMyr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNok, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNzd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCny, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePln, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueRon, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueTry, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueSek, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueSgd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueAed, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueArs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBdt, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueBwp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueClp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueCrc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueEgp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueFjd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGel, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGhs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueIls, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueKes, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueKrw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueLkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueMad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueMxn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNpr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePhp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueThb, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUah, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUgx, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueUyu, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueVnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueZar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueZmw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueTnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueNgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueRsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueTwd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueGtq, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueHnl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueDop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueSar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValueXaf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant1ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2 struct {
+	Type  WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2Type `json:"type" api:"required"`
+	Value string                                                            `json:"value" api:"required"`
+	JSON  workerReactivatedWebhookEventPayloadCustomFieldsValueVariant2JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant2JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2TypeDate WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2Type = "date"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3 struct {
+	Type  WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3Type `json:"type" api:"required"`
+	Value bool                                                              `json:"value" api:"required"`
+	JSON  workerReactivatedWebhookEventPayloadCustomFieldsValueVariant3JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant3JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3Type = "boolean"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4 struct {
+	Type         WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Type `json:"type" api:"required"`
+	Amount       Union1                                                            `json:"amount" api:"required"`
+	CurrencyCode Union                                                             `json:"currencyCode" api:"required"`
+	JSON         workerReactivatedWebhookEventPayloadCustomFieldsValueVariant4JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant4JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Type = "currency"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "USD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountAud WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AUD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BRL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCad WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountChf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CHF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CZK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DKK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountEur WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EUR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GBP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HKD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HUF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "IDR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountInr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "INR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "JPY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MYR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNok WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NOK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NZD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCny WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CNY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPln WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PLN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountRon WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RON"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountTry WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TRY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountSek WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SEK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SGD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountAed WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "AED"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountArs WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ARS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BDT"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "BWP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountClp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CLP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCop WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "COP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "CRC"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "EGP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "FJD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGel WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GEL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GHS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountIls WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ILS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountKes WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KES"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "KRW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "LKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountMad WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "MXN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NPR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PHP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountThb WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "THB"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUah WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UAH"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UGX"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "UYU"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "VND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountZar WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "ZMW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "NGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "RSD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "TWD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "GTQ"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "HNL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountDop WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "DOP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountSar WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "SAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "XAF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPen WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount = "PEN"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4Amount) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountAud, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBrl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountChf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCzk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountDkk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountEur, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGbp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountHkd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountHuf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountIdr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountInr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountJpy, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountMyr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNok, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNzd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCny, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPln, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountRon, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountTry, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountSek, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountSgd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountAed, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountArs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBdt, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountBwp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountClp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountCrc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountEgp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountFjd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGel, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGhs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountIls, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountKes, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountKrw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountLkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountMad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountMxn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNpr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPhp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountThb, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUah, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUgx, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountUyu, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountVnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountZar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountZmw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountTnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountNgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountRsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountTwd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountGtq, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountHnl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountDop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountSar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountXaf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4AmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical             WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental              WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "dental"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision              WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "vision"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife                WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "life"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "short_term_disability"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability  WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "long_term_disability"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k                WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "401k"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k            WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_401k"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b                WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "403b"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b            WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_403b"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457                 WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "457"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457             WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_457"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa                 WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hsa"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical          WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_medical"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare    WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "fsa_dependent_care"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit             WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "transit"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking             WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "parking"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident            WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "accident"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer              WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "cancer"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness     WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "critical_illness"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital            WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "hospital"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther        WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "medical_other"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra           WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "simple_ira"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra       WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "roth_simple_ira"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc                WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nqdc"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe    WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "nontaxable_fringe"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc                WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "pucc"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary           WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "voluntary"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax             WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "post_tax"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther               WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode = "other"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedical, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeDental, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVision, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLife, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeShortTermDisability, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeLongTermDisability, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode401k, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth401k, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode403b, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth403b, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCode457, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRoth457, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHsa, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaMedical, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeFsaDependentCare, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeTransit, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeParking, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeAccident, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCancer, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeCriticalIllness, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeHospital, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeMedicalOther, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeSimpleIra, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeRothSimpleIra, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNqdc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeNontaxableFringe, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePucc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeVoluntary, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodePostTax, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant4CurrencyCodeOther:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5 struct {
+	Type  WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Type `json:"type" api:"required"`
+	Value Union1                                                            `json:"value" api:"required"`
+	JSON  workerReactivatedWebhookEventPayloadCustomFieldsValueVariant5JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant5JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Type = "percentage"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "USD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueAud WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "AUD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BRL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCad WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueChf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CHF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CZK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "DKK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueEur WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "EUR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GBP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HKD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HUF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "IDR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueInr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "INR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "JPY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MYR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNok WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NOK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NZD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCny WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CNY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePln WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PLN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueRon WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "RON"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueTry WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TRY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueSek WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SEK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SGD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueAed WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "AED"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueArs WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ARS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BDT"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "BWP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueClp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CLP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCop WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "COP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "CRC"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "EGP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "FJD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGel WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GEL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GHS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueIls WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ILS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueKes WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "KES"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "KRW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "LKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueMad WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "MXN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NPR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PHP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueThb WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "THB"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUah WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UAH"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UGX"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "UYU"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "VND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueZar WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "ZMW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "NGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "RSD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "TWD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "GTQ"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "HNL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueDop WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "DOP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueSar WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "SAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "XAF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePen WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value = "PEN"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5Value) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueAud, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBrl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueChf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCzk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueDkk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueEur, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGbp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueHkd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueHuf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueIdr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueInr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueJpy, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueMyr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNok, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNzd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCny, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePln, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueRon, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueTry, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueSek, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueSgd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueAed, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueArs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBdt, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueBwp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueClp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueCrc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueEgp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueFjd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGel, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGhs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueIls, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueKes, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueKrw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueLkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueMad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueMxn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNpr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePhp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueThb, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUah, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUgx, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueUyu, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueVnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueZar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueZmw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueTnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueNgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueRsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueTwd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueGtq, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueHnl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueDop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueSar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValueXaf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant5ValuePen:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6 struct {
+	Type   WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6Type `json:"type" api:"required"`
+	Option shared.Objects                                                    `json:"option" api:"required"`
+	JSON   workerReactivatedWebhookEventPayloadCustomFieldsValueVariant6JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant6JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6Type = "select"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7 struct {
+	Type    WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7Type `json:"type" api:"required"`
+	Options []shared.Objects                                                  `json:"options" api:"required"`
+	JSON    workerReactivatedWebhookEventPayloadCustomFieldsValueVariant7JSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadCustomFieldsValueVariant7JSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7]
+type workerReactivatedWebhookEventPayloadCustomFieldsValueVariant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadCustomFieldsValueVariant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7) implementsWorkerReactivatedWebhookEventPayloadCustomFieldsValue() {
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7Type string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7Type = "multi_select"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7Type) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueVariant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueType string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeText        WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "text"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeNumber      WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "number"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeDate        WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "date"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeBoolean     WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "boolean"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeCurrency    WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "currency"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypePercentage  WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "percentage"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeSelect      WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "select"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeMultiSelect WorkerReactivatedWebhookEventPayloadCustomFieldsValueType = "multi_select"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueType) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeText, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeNumber, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeDate, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeBoolean, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeCurrency, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypePercentage, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeSelect, WorkerReactivatedWebhookEventPayloadCustomFieldsValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "USD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountAud WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "AUD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "BGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBrl WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "BRL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCad WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "CAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountChf WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "CHF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCzk WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "CZK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountDkk WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "DKK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountEur WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "EUR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGbp WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "GBP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountHkd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "HKD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountHuf WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "HUF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountIdr WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "IDR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountInr WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "INR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountJpy WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "JPY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountMyr WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "MYR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNok WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "NOK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNzd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "NZD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCny WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "CNY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPln WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "PLN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountRon WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "RON"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountTry WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "TRY"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountSek WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "SEK"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountSgd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "SGD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountAed WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "AED"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountArs WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "ARS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBdt WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "BDT"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBwp WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "BWP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountClp WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "CLP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCop WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "COP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCrc WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "CRC"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountEgp WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "EGP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountFjd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "FJD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGel WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "GEL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGhs WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "GHS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountIls WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "ILS"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountKes WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "KES"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountKrw WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "KRW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountLkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "LKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountMad WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "MAD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountMxn WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "MXN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNpr WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "NPR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPhp WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "PHP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPkr WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "PKR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountThb WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "THB"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUah WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "UAH"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUgx WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "UGX"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUyu WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "UYU"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountVnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "VND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountZar WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "ZAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountZmw WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "ZMW"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountTnd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "TND"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNgn WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "NGN"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountRsd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "RSD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountTwd WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "TWD"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGtq WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "GTQ"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountHnl WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "HNL"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountDop WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "DOP"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountSar WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "SAR"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountXaf WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "XAF"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPen WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount = "PEN"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmount) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountAud, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBrl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountChf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCzk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountDkk, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountEur, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGbp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountHkd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountHuf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountIdr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountInr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountJpy, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountMyr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNok, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNzd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCny, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPln, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountRon, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountTry, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountSek, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountSgd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountAed, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountArs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBdt, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountBwp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountClp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountCrc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountEgp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountFjd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGel, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGhs, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountIls, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountKes, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountKrw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountLkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountMad, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountMxn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNpr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPhp, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPkr, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountThb, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUah, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUgx, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountUyu, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountVnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountZar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountZmw, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountTnd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountNgn, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountRsd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountTwd, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountGtq, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountHnl, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountDop, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountSar, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountXaf, WorkerReactivatedWebhookEventPayloadCustomFieldsValueAmountPen:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode string
+
+const (
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical             WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental              WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "dental"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision              WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "vision"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife                WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "life"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "short_term_disability"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability  WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "long_term_disability"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode401k                WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "401k"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k            WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_401k"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode403b                WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "403b"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b            WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_403b"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode457                 WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "457"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457             WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_457"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa                 WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hsa"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical          WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_medical"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare    WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "fsa_dependent_care"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit             WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "transit"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking             WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "parking"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident            WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "accident"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer              WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "cancer"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness     WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "critical_illness"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital            WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "hospital"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther        WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "medical_other"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra           WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "simple_ira"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra       WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "roth_simple_ira"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc                WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nqdc"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe    WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "nontaxable_fringe"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc                WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "pucc"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary           WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "voluntary"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax             WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "post_tax"
+	WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther               WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode = "other"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedical, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeDental, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVision, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLife, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeShortTermDisability, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeLongTermDisability, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode401k, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth401k, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode403b, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth403b, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCode457, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRoth457, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHsa, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaMedical, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeFsaDependentCare, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeTransit, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeParking, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeAccident, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCancer, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeCriticalIllness, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeHospital, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeMedicalOther, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeSimpleIra, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeRothSimpleIra, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNqdc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeNontaxableFringe, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodePucc, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeVoluntary, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodePostTax, WorkerReactivatedWebhookEventPayloadCustomFieldsValueCurrencyCodeOther:
+		return true
+	}
+	return false
 }
 
 type OfferCreatedWebhookEvent struct {

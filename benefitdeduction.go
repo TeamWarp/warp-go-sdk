@@ -536,23 +536,6 @@ func (r BenefitDeductionGetResponsePlan) AsUnion() BenefitDeductionGetResponsePl
 	return r.union
 }
 
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*BenefitDeductionGetResponsePlanUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponsePlanHealthPlanReference{}),
-			DiscriminatorValue: "health_plan",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponsePlanRetirementPlanReference{}),
-			DiscriminatorValue: "retirement_plan",
-		},
-	)
-}
-
 type BenefitDeductionGetResponseCalculation struct {
 	Type BenefitDeductionGetResponseCalculationType `json:"type" api:"required"`
 	// A monetary amount with its currency and server-formatted display value.
@@ -590,23 +573,6 @@ func (r *BenefitDeductionGetResponseCalculation) UnmarshalJSON(data []byte) (err
 
 func (r BenefitDeductionGetResponseCalculation) AsUnion() BenefitDeductionGetResponseCalculationUnion {
 	return r.union
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*BenefitDeductionGetResponseCalculationUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation{}),
-			DiscriminatorValue: "fixed_amount",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponseCalculationPercentageBenefitCalculation{}),
-			DiscriminatorValue: "percentage",
-		},
-	)
 }
 
 type PublicBenefitDeductionWorker struct {
@@ -674,6 +640,97 @@ func (r PublicBenefitDeductionCalculation) AsUnion() PublicBenefitDeductionCalcu
 	return r.union
 }
 
+type BenefitDeductionGetResponsePlanUnion interface {
+	implementsBenefitDeductionGetResponsePlan()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*BenefitDeductionGetResponsePlanUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(BenefitDeductionGetResponsePlanHealthPlanReference{}),
+			DiscriminatorValue: "health_plan",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(BenefitDeductionGetResponsePlanRetirementPlanReference{}),
+			DiscriminatorValue: "retirement_plan",
+		},
+	)
+}
+
+type BenefitDeductionGetResponsePlanType string
+
+const (
+	BenefitDeductionGetResponsePlanTypeHealthPlan     BenefitDeductionGetResponsePlanType = "health_plan"
+	BenefitDeductionGetResponsePlanTypeRetirementPlan BenefitDeductionGetResponsePlanType = "retirement_plan"
+)
+
+func (r BenefitDeductionGetResponsePlanType) IsKnown() bool {
+	switch r {
+	case BenefitDeductionGetResponsePlanTypeHealthPlan, BenefitDeductionGetResponsePlanTypeRetirementPlan:
+		return true
+	}
+	return false
+}
+
+type BenefitDeductionGetResponseCalculationUnion interface {
+	implementsBenefitDeductionGetResponseCalculation()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*BenefitDeductionGetResponseCalculationUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation{}),
+			DiscriminatorValue: "fixed_amount",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(BenefitDeductionGetResponseCalculationPercentageBenefitCalculation{}),
+			DiscriminatorValue: "percentage",
+		},
+	)
+}
+
+type BenefitDeductionGetResponseCalculationType string
+
+const (
+	BenefitDeductionGetResponseCalculationTypeFixedAmount BenefitDeductionGetResponseCalculationType = "fixed_amount"
+	BenefitDeductionGetResponseCalculationTypePercentage  BenefitDeductionGetResponseCalculationType = "percentage"
+)
+
+func (r BenefitDeductionGetResponseCalculationType) IsKnown() bool {
+	switch r {
+	case BenefitDeductionGetResponseCalculationTypeFixedAmount, BenefitDeductionGetResponseCalculationTypePercentage:
+		return true
+	}
+	return false
+}
+
+type BenefitDeductionGetResponseCalculationFrequency string
+
+const (
+	BenefitDeductionGetResponseCalculationFrequencyPerPaycheck BenefitDeductionGetResponseCalculationFrequency = "per_paycheck"
+	BenefitDeductionGetResponseCalculationFrequencyMonthly     BenefitDeductionGetResponseCalculationFrequency = "monthly"
+)
+
+func (r BenefitDeductionGetResponseCalculationFrequency) IsKnown() bool {
+	switch r {
+	case BenefitDeductionGetResponseCalculationFrequencyPerPaycheck, BenefitDeductionGetResponseCalculationFrequencyMonthly:
+		return true
+	}
+	return false
+}
+
+type PublicBenefitDeductionCalculationUnion interface {
+	implementsPublicBenefitDeductionCalculation()
+}
+
 func init() {
 	apijson.RegisterUnion(
 		reflect.TypeOf((*PublicBenefitDeductionCalculationUnion)(nil)).Elem(),
@@ -691,8 +748,34 @@ func init() {
 	)
 }
 
-type BenefitDeductionGetResponsePlanUnion interface {
-	implementsBenefitDeductionGetResponsePlan()
+type PublicBenefitDeductionCalculationType string
+
+const (
+	PublicBenefitDeductionCalculationTypeFixedAmount PublicBenefitDeductionCalculationType = "fixed_amount"
+	PublicBenefitDeductionCalculationTypePercentage  PublicBenefitDeductionCalculationType = "percentage"
+)
+
+func (r PublicBenefitDeductionCalculationType) IsKnown() bool {
+	switch r {
+	case PublicBenefitDeductionCalculationTypeFixedAmount, PublicBenefitDeductionCalculationTypePercentage:
+		return true
+	}
+	return false
+}
+
+type PublicBenefitDeductionCalculationFrequency string
+
+const (
+	PublicBenefitDeductionCalculationFrequencyPerPaycheck PublicBenefitDeductionCalculationFrequency = "per_paycheck"
+	PublicBenefitDeductionCalculationFrequencyMonthly     PublicBenefitDeductionCalculationFrequency = "monthly"
+)
+
+func (r PublicBenefitDeductionCalculationFrequency) IsKnown() bool {
+	switch r {
+	case PublicBenefitDeductionCalculationFrequencyPerPaycheck, PublicBenefitDeductionCalculationFrequencyMonthly:
+		return true
+	}
+	return false
 }
 
 type BenefitDeductionGetResponsePlanHealthPlanReference struct {
@@ -749,25 +832,6 @@ func (r benefitDeductionGetResponsePlanRetirementPlanReferenceJSON) RawJSON() st
 }
 
 func (r BenefitDeductionGetResponsePlanRetirementPlanReference) implementsBenefitDeductionGetResponsePlan() {
-}
-
-type BenefitDeductionGetResponsePlanType string
-
-const (
-	BenefitDeductionGetResponsePlanTypeHealthPlan     BenefitDeductionGetResponsePlanType = "health_plan"
-	BenefitDeductionGetResponsePlanTypeRetirementPlan BenefitDeductionGetResponsePlanType = "retirement_plan"
-)
-
-func (r BenefitDeductionGetResponsePlanType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponsePlanTypeHealthPlan, BenefitDeductionGetResponsePlanTypeRetirementPlan:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionGetResponseCalculationUnion interface {
-	implementsBenefitDeductionGetResponseCalculation()
 }
 
 type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation struct {
@@ -831,40 +895,6 @@ func (r benefitDeductionGetResponseCalculationPercentageBenefitCalculationJSON) 
 func (r BenefitDeductionGetResponseCalculationPercentageBenefitCalculation) implementsBenefitDeductionGetResponseCalculation() {
 }
 
-type BenefitDeductionGetResponseCalculationType string
-
-const (
-	BenefitDeductionGetResponseCalculationTypeFixedAmount BenefitDeductionGetResponseCalculationType = "fixed_amount"
-	BenefitDeductionGetResponseCalculationTypePercentage  BenefitDeductionGetResponseCalculationType = "percentage"
-)
-
-func (r BenefitDeductionGetResponseCalculationType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationTypeFixedAmount, BenefitDeductionGetResponseCalculationTypePercentage:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionGetResponseCalculationFrequency string
-
-const (
-	BenefitDeductionGetResponseCalculationFrequencyPerPaycheck BenefitDeductionGetResponseCalculationFrequency = "per_paycheck"
-	BenefitDeductionGetResponseCalculationFrequencyMonthly     BenefitDeductionGetResponseCalculationFrequency = "monthly"
-)
-
-func (r BenefitDeductionGetResponseCalculationFrequency) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationFrequencyPerPaycheck, BenefitDeductionGetResponseCalculationFrequencyMonthly:
-		return true
-	}
-	return false
-}
-
-type PublicBenefitDeductionCalculationUnion interface {
-	implementsPublicBenefitDeductionCalculation()
-}
-
 type PublicBenefitDeductionCalculationFixedAmountBenefitCalculation struct {
 	Type PublicBenefitDeductionCalculationFixedAmountBenefitCalculationType `json:"type" api:"required"`
 	// The fixed-amount expression frequency. Null for a one-time deduction.
@@ -924,36 +954,6 @@ func (r publicBenefitDeductionCalculationPercentageBenefitCalculationJSON) RawJS
 }
 
 func (r PublicBenefitDeductionCalculationPercentageBenefitCalculation) implementsPublicBenefitDeductionCalculation() {
-}
-
-type PublicBenefitDeductionCalculationType string
-
-const (
-	PublicBenefitDeductionCalculationTypeFixedAmount PublicBenefitDeductionCalculationType = "fixed_amount"
-	PublicBenefitDeductionCalculationTypePercentage  PublicBenefitDeductionCalculationType = "percentage"
-)
-
-func (r PublicBenefitDeductionCalculationType) IsKnown() bool {
-	switch r {
-	case PublicBenefitDeductionCalculationTypeFixedAmount, PublicBenefitDeductionCalculationTypePercentage:
-		return true
-	}
-	return false
-}
-
-type PublicBenefitDeductionCalculationFrequency string
-
-const (
-	PublicBenefitDeductionCalculationFrequencyPerPaycheck PublicBenefitDeductionCalculationFrequency = "per_paycheck"
-	PublicBenefitDeductionCalculationFrequencyMonthly     PublicBenefitDeductionCalculationFrequency = "monthly"
-)
-
-func (r PublicBenefitDeductionCalculationFrequency) IsKnown() bool {
-	switch r {
-	case PublicBenefitDeductionCalculationFrequencyPerPaycheck, PublicBenefitDeductionCalculationFrequencyMonthly:
-		return true
-	}
-	return false
 }
 
 type BenefitDeductionGetResponsePlanHealthPlanReferenceType string
