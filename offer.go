@@ -205,7 +205,7 @@ type OfferListParams struct {
 	AfterID        param.Field[string]                      `query:"afterId"`
 	BeforeID       param.Field[string]                      `query:"beforeId"`
 	CandidateEmail param.Field[string]                      `query:"candidateEmail" format:"email"`
-	Statuses       param.Field[[]Union13]                   `query:"statuses"`
+	Statuses       param.Field[[]OfferListParamsStatus]     `query:"statuses"`
 	WorkerTypes    param.Field[[]OfferListParamsWorkerType] `query:"workerTypes"`
 }
 
@@ -215,6 +215,23 @@ func (r OfferListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
+}
+
+type OfferListParamsStatus string
+
+const (
+	OfferListParamsStatusDraft    OfferListParamsStatus = "draft"
+	OfferListParamsStatusSent     OfferListParamsStatus = "sent"
+	OfferListParamsStatusAccepted OfferListParamsStatus = "accepted"
+	OfferListParamsStatusVoid     OfferListParamsStatus = "void"
+)
+
+func (r OfferListParamsStatus) IsKnown() bool {
+	switch r {
+	case OfferListParamsStatusDraft, OfferListParamsStatusSent, OfferListParamsStatusAccepted, OfferListParamsStatusVoid:
+		return true
+	}
+	return false
 }
 
 type OfferListParamsWorkerType string
@@ -751,7 +768,7 @@ func (r offerListResponseJSON) RawJSON() string {
 
 type OfferNewResponse struct {
 	ID         string                     `json:"id" api:"required"`
-	Status     Union13                    `json:"status" api:"required"`
+	Status     OfferNewResponseStatus     `json:"status" api:"required"`
 	WorkerType OfferNewResponseWorkerType `json:"workerType" api:"required"`
 	Candidate  OfferNewResponseCandidate  `json:"candidate" api:"required"`
 	Position   OfferNewResponsePosition   `json:"position" api:"required"`
@@ -796,6 +813,23 @@ func (r *OfferNewResponse) UnmarshalJSON(data []byte) (err error) {
 
 func (r offerNewResponseJSON) RawJSON() string {
 	return r.raw
+}
+
+type OfferNewResponseStatus string
+
+const (
+	OfferNewResponseStatusDraft    OfferNewResponseStatus = "draft"
+	OfferNewResponseStatusSent     OfferNewResponseStatus = "sent"
+	OfferNewResponseStatusAccepted OfferNewResponseStatus = "accepted"
+	OfferNewResponseStatusVoid     OfferNewResponseStatus = "void"
+)
+
+func (r OfferNewResponseStatus) IsKnown() bool {
+	switch r {
+	case OfferNewResponseStatusDraft, OfferNewResponseStatusSent, OfferNewResponseStatusAccepted, OfferNewResponseStatusVoid:
+		return true
+	}
+	return false
 }
 
 type OfferNewResponseWorkerType string

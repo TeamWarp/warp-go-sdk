@@ -3,6 +3,10 @@
 package shared
 
 import (
+	"reflect"
+
+	"github.com/tidwall/gjson"
+
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 )
 
@@ -94,6 +98,48 @@ func (r PublicWorkerCompensationPer) IsKnown() bool {
 		return true
 	}
 	return false
+}
+
+type Objects struct {
+	ID          string      `json:"id" api:"required"`
+	Name        string      `json:"name" api:"required"`
+	Description string      `json:"description" api:"required,nullable"`
+	Type        Union4      `json:"type" api:"required"`
+	Config      interface{} `json:"config" api:"required"`
+	Status      Union5      `json:"status" api:"required"`
+	Category    Union6      `json:"category" api:"required"`
+	AccessLevel Union7      `json:"accessLevel" api:"required"`
+	InputBy     Union8      `json:"inputBy" api:"required"`
+	CanWrite    bool        `json:"canWrite" api:"required"`
+	CreatedAt   string      `json:"createdAt" api:"required"`
+	Required    bool        `json:"required" api:"nullable"`
+	JSON        objectsJSON `json:"-"`
+}
+
+// objectsJSON contains the JSON metadata for the struct [Objects]
+type objectsJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Description apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
+	AccessLevel apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objectsJSON) RawJSON() string {
+	return r.raw
 }
 
 type PublicMoneyAmount struct {
@@ -488,48 +534,6 @@ func (r Union8) IsKnown() bool {
 	return false
 }
 
-type Objects struct {
-	ID          string      `json:"id" api:"required"`
-	Name        string      `json:"name" api:"required"`
-	Description string      `json:"description" api:"required,nullable"`
-	Type        Union4      `json:"type" api:"required"`
-	Config      interface{} `json:"config" api:"required"`
-	Status      Union5      `json:"status" api:"required"`
-	Category    Union6      `json:"category" api:"required"`
-	AccessLevel Union7      `json:"accessLevel" api:"required"`
-	InputBy     Union8      `json:"inputBy" api:"required"`
-	CanWrite    bool        `json:"canWrite" api:"required"`
-	CreatedAt   string      `json:"createdAt" api:"required"`
-	Required    bool        `json:"required" api:"nullable"`
-	JSON        objectsJSON `json:"-"`
-}
-
-// objectsJSON contains the JSON metadata for the struct [Objects]
-type objectsJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	Description apijson.Field
-	Type        apijson.Field
-	Config      apijson.Field
-	Status      apijson.Field
-	Category    apijson.Field
-	AccessLevel apijson.Field
-	InputBy     apijson.Field
-	CanWrite    apijson.Field
-	CreatedAt   apijson.Field
-	Required    apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objectsJSON) RawJSON() string {
-	return r.raw
-}
-
 type CustomFieldOptionAlreadyExistsErrorEncoded struct {
 	Tag     CustomFieldOptionAlreadyExistsErrorEncodedTag  `json:"_tag" api:"required"`
 	Value   string                                         `json:"value" api:"required"`
@@ -725,7 +729,526 @@ func (r CustomFieldOptionNotFoundErrorEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union12 = string
+type Union122 struct {
+	Type         Union122Type `json:"type" api:"required"`
+	Value        interface{}  `json:"value"`
+	Amount       interface{}  `json:"amount"`
+	CurrencyCode Union1       `json:"currencyCode"`
+	Option       Objects3     `json:"option"`
+	Options      interface{}  `json:"options"`
+	JSON         union122JSON `json:"-"`
+	union        Union122Union
+}
+
+// union122JSON contains the JSON metadata for the struct [Union122]
+type union122JSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r union122JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *Union122) UnmarshalJSON(data []byte) (err error) {
+	*r = Union122{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r Union122) AsUnion() Union122Union {
+	return r.union
+}
+
+type Union122Union interface {
+	implementsUnion122()
+}
+
+type Union122Variant0 struct {
+	Type  Union122Variant0Type `json:"type" api:"required"`
+	Value string               `json:"value" api:"required"`
+	JSON  union122Variant0JSON `json:"-"`
+}
+
+// union122Variant0JSON contains the JSON metadata for the struct [Union122Variant0]
+type union122Variant0JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant0) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant0JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant0) implementsUnion122() {}
+
+type Union122Variant0Type string
+
+const (
+	Union122Variant0TypeText Union122Variant0Type = "text"
+)
+
+func (r Union122Variant0Type) IsKnown() bool {
+	switch r {
+	case Union122Variant0TypeText:
+		return true
+	}
+	return false
+}
+
+type Union122Variant1 struct {
+	Type  Union122Variant1Type `json:"type" api:"required"`
+	Value interface{}          `json:"value" api:"required"`
+	JSON  union122Variant1JSON `json:"-"`
+}
+
+// union122Variant1JSON contains the JSON metadata for the struct [Union122Variant1]
+type union122Variant1JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant1JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant1) implementsUnion122() {}
+
+type Union122Variant1Type string
+
+const (
+	Union122Variant1TypeNumber Union122Variant1Type = "number"
+)
+
+func (r Union122Variant1Type) IsKnown() bool {
+	switch r {
+	case Union122Variant1TypeNumber:
+		return true
+	}
+	return false
+}
+
+type Union122Variant2 struct {
+	Type  Union122Variant2Type `json:"type" api:"required"`
+	Value string               `json:"value" api:"required"`
+	JSON  union122Variant2JSON `json:"-"`
+}
+
+// union122Variant2JSON contains the JSON metadata for the struct [Union122Variant2]
+type union122Variant2JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant2) implementsUnion122() {}
+
+type Union122Variant2Type string
+
+const (
+	Union122Variant2TypeDate Union122Variant2Type = "date"
+)
+
+func (r Union122Variant2Type) IsKnown() bool {
+	switch r {
+	case Union122Variant2TypeDate:
+		return true
+	}
+	return false
+}
+
+type Union122Variant3 struct {
+	Type  Union122Variant3Type `json:"type" api:"required"`
+	Value bool                 `json:"value" api:"required"`
+	JSON  union122Variant3JSON `json:"-"`
+}
+
+// union122Variant3JSON contains the JSON metadata for the struct [Union122Variant3]
+type union122Variant3JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant3JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant3) implementsUnion122() {}
+
+type Union122Variant3Type string
+
+const (
+	Union122Variant3TypeBoolean Union122Variant3Type = "boolean"
+)
+
+func (r Union122Variant3Type) IsKnown() bool {
+	switch r {
+	case Union122Variant3TypeBoolean:
+		return true
+	}
+	return false
+}
+
+type Union122Variant4 struct {
+	Type         Union122Variant4Type `json:"type" api:"required"`
+	Amount       interface{}          `json:"amount" api:"required"`
+	CurrencyCode Union1               `json:"currencyCode" api:"required"`
+	JSON         union122Variant4JSON `json:"-"`
+}
+
+// union122Variant4JSON contains the JSON metadata for the struct [Union122Variant4]
+type union122Variant4JSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *Union122Variant4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant4JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant4) implementsUnion122() {}
+
+type Union122Variant4Type string
+
+const (
+	Union122Variant4TypeCurrency Union122Variant4Type = "currency"
+)
+
+func (r Union122Variant4Type) IsKnown() bool {
+	switch r {
+	case Union122Variant4TypeCurrency:
+		return true
+	}
+	return false
+}
+
+type Union122Variant4CurrencyCode string
+
+const (
+	Union122Variant4CurrencyCodeUsd Union122Variant4CurrencyCode = "USD"
+	Union122Variant4CurrencyCodeAud Union122Variant4CurrencyCode = "AUD"
+	Union122Variant4CurrencyCodeBgn Union122Variant4CurrencyCode = "BGN"
+	Union122Variant4CurrencyCodeBrl Union122Variant4CurrencyCode = "BRL"
+	Union122Variant4CurrencyCodeCad Union122Variant4CurrencyCode = "CAD"
+	Union122Variant4CurrencyCodeChf Union122Variant4CurrencyCode = "CHF"
+	Union122Variant4CurrencyCodeCzk Union122Variant4CurrencyCode = "CZK"
+	Union122Variant4CurrencyCodeDkk Union122Variant4CurrencyCode = "DKK"
+	Union122Variant4CurrencyCodeEur Union122Variant4CurrencyCode = "EUR"
+	Union122Variant4CurrencyCodeGbp Union122Variant4CurrencyCode = "GBP"
+	Union122Variant4CurrencyCodeHkd Union122Variant4CurrencyCode = "HKD"
+	Union122Variant4CurrencyCodeHuf Union122Variant4CurrencyCode = "HUF"
+	Union122Variant4CurrencyCodeIdr Union122Variant4CurrencyCode = "IDR"
+	Union122Variant4CurrencyCodeInr Union122Variant4CurrencyCode = "INR"
+	Union122Variant4CurrencyCodeJpy Union122Variant4CurrencyCode = "JPY"
+	Union122Variant4CurrencyCodeMyr Union122Variant4CurrencyCode = "MYR"
+	Union122Variant4CurrencyCodeNok Union122Variant4CurrencyCode = "NOK"
+	Union122Variant4CurrencyCodeNzd Union122Variant4CurrencyCode = "NZD"
+	Union122Variant4CurrencyCodeCny Union122Variant4CurrencyCode = "CNY"
+	Union122Variant4CurrencyCodePln Union122Variant4CurrencyCode = "PLN"
+	Union122Variant4CurrencyCodeRon Union122Variant4CurrencyCode = "RON"
+	Union122Variant4CurrencyCodeTry Union122Variant4CurrencyCode = "TRY"
+	Union122Variant4CurrencyCodeSek Union122Variant4CurrencyCode = "SEK"
+	Union122Variant4CurrencyCodeSgd Union122Variant4CurrencyCode = "SGD"
+	Union122Variant4CurrencyCodeAed Union122Variant4CurrencyCode = "AED"
+	Union122Variant4CurrencyCodeArs Union122Variant4CurrencyCode = "ARS"
+	Union122Variant4CurrencyCodeBdt Union122Variant4CurrencyCode = "BDT"
+	Union122Variant4CurrencyCodeBwp Union122Variant4CurrencyCode = "BWP"
+	Union122Variant4CurrencyCodeClp Union122Variant4CurrencyCode = "CLP"
+	Union122Variant4CurrencyCodeCop Union122Variant4CurrencyCode = "COP"
+	Union122Variant4CurrencyCodeCrc Union122Variant4CurrencyCode = "CRC"
+	Union122Variant4CurrencyCodeEgp Union122Variant4CurrencyCode = "EGP"
+	Union122Variant4CurrencyCodeFjd Union122Variant4CurrencyCode = "FJD"
+	Union122Variant4CurrencyCodeGel Union122Variant4CurrencyCode = "GEL"
+	Union122Variant4CurrencyCodeGhs Union122Variant4CurrencyCode = "GHS"
+	Union122Variant4CurrencyCodeIls Union122Variant4CurrencyCode = "ILS"
+	Union122Variant4CurrencyCodeKes Union122Variant4CurrencyCode = "KES"
+	Union122Variant4CurrencyCodeKrw Union122Variant4CurrencyCode = "KRW"
+	Union122Variant4CurrencyCodeLkr Union122Variant4CurrencyCode = "LKR"
+	Union122Variant4CurrencyCodeMad Union122Variant4CurrencyCode = "MAD"
+	Union122Variant4CurrencyCodeMxn Union122Variant4CurrencyCode = "MXN"
+	Union122Variant4CurrencyCodeNpr Union122Variant4CurrencyCode = "NPR"
+	Union122Variant4CurrencyCodePhp Union122Variant4CurrencyCode = "PHP"
+	Union122Variant4CurrencyCodePkr Union122Variant4CurrencyCode = "PKR"
+	Union122Variant4CurrencyCodeThb Union122Variant4CurrencyCode = "THB"
+	Union122Variant4CurrencyCodeUah Union122Variant4CurrencyCode = "UAH"
+	Union122Variant4CurrencyCodeUgx Union122Variant4CurrencyCode = "UGX"
+	Union122Variant4CurrencyCodeUyu Union122Variant4CurrencyCode = "UYU"
+	Union122Variant4CurrencyCodeVnd Union122Variant4CurrencyCode = "VND"
+	Union122Variant4CurrencyCodeZar Union122Variant4CurrencyCode = "ZAR"
+	Union122Variant4CurrencyCodeZmw Union122Variant4CurrencyCode = "ZMW"
+	Union122Variant4CurrencyCodeTnd Union122Variant4CurrencyCode = "TND"
+	Union122Variant4CurrencyCodeNgn Union122Variant4CurrencyCode = "NGN"
+	Union122Variant4CurrencyCodeRsd Union122Variant4CurrencyCode = "RSD"
+	Union122Variant4CurrencyCodeTwd Union122Variant4CurrencyCode = "TWD"
+	Union122Variant4CurrencyCodeGtq Union122Variant4CurrencyCode = "GTQ"
+	Union122Variant4CurrencyCodeHnl Union122Variant4CurrencyCode = "HNL"
+	Union122Variant4CurrencyCodeDop Union122Variant4CurrencyCode = "DOP"
+	Union122Variant4CurrencyCodeSar Union122Variant4CurrencyCode = "SAR"
+	Union122Variant4CurrencyCodeXaf Union122Variant4CurrencyCode = "XAF"
+	Union122Variant4CurrencyCodePen Union122Variant4CurrencyCode = "PEN"
+)
+
+func (r Union122Variant4CurrencyCode) IsKnown() bool {
+	switch r {
+	case Union122Variant4CurrencyCodeUsd, Union122Variant4CurrencyCodeAud, Union122Variant4CurrencyCodeBgn, Union122Variant4CurrencyCodeBrl, Union122Variant4CurrencyCodeCad, Union122Variant4CurrencyCodeChf, Union122Variant4CurrencyCodeCzk, Union122Variant4CurrencyCodeDkk, Union122Variant4CurrencyCodeEur, Union122Variant4CurrencyCodeGbp, Union122Variant4CurrencyCodeHkd, Union122Variant4CurrencyCodeHuf, Union122Variant4CurrencyCodeIdr, Union122Variant4CurrencyCodeInr, Union122Variant4CurrencyCodeJpy, Union122Variant4CurrencyCodeMyr, Union122Variant4CurrencyCodeNok, Union122Variant4CurrencyCodeNzd, Union122Variant4CurrencyCodeCny, Union122Variant4CurrencyCodePln, Union122Variant4CurrencyCodeRon, Union122Variant4CurrencyCodeTry, Union122Variant4CurrencyCodeSek, Union122Variant4CurrencyCodeSgd, Union122Variant4CurrencyCodeAed, Union122Variant4CurrencyCodeArs, Union122Variant4CurrencyCodeBdt, Union122Variant4CurrencyCodeBwp, Union122Variant4CurrencyCodeClp, Union122Variant4CurrencyCodeCop, Union122Variant4CurrencyCodeCrc, Union122Variant4CurrencyCodeEgp, Union122Variant4CurrencyCodeFjd, Union122Variant4CurrencyCodeGel, Union122Variant4CurrencyCodeGhs, Union122Variant4CurrencyCodeIls, Union122Variant4CurrencyCodeKes, Union122Variant4CurrencyCodeKrw, Union122Variant4CurrencyCodeLkr, Union122Variant4CurrencyCodeMad, Union122Variant4CurrencyCodeMxn, Union122Variant4CurrencyCodeNpr, Union122Variant4CurrencyCodePhp, Union122Variant4CurrencyCodePkr, Union122Variant4CurrencyCodeThb, Union122Variant4CurrencyCodeUah, Union122Variant4CurrencyCodeUgx, Union122Variant4CurrencyCodeUyu, Union122Variant4CurrencyCodeVnd, Union122Variant4CurrencyCodeZar, Union122Variant4CurrencyCodeZmw, Union122Variant4CurrencyCodeTnd, Union122Variant4CurrencyCodeNgn, Union122Variant4CurrencyCodeRsd, Union122Variant4CurrencyCodeTwd, Union122Variant4CurrencyCodeGtq, Union122Variant4CurrencyCodeHnl, Union122Variant4CurrencyCodeDop, Union122Variant4CurrencyCodeSar, Union122Variant4CurrencyCodeXaf, Union122Variant4CurrencyCodePen:
+		return true
+	}
+	return false
+}
+
+type Union122Variant5 struct {
+	Type  Union122Variant5Type `json:"type" api:"required"`
+	Value interface{}          `json:"value" api:"required"`
+	JSON  union122Variant5JSON `json:"-"`
+}
+
+// union122Variant5JSON contains the JSON metadata for the struct [Union122Variant5]
+type union122Variant5JSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant5JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant5) implementsUnion122() {}
+
+type Union122Variant5Type string
+
+const (
+	Union122Variant5TypePercentage Union122Variant5Type = "percentage"
+)
+
+func (r Union122Variant5Type) IsKnown() bool {
+	switch r {
+	case Union122Variant5TypePercentage:
+		return true
+	}
+	return false
+}
+
+type Union122Variant6 struct {
+	Type   Union122Variant6Type `json:"type" api:"required"`
+	Option Objects3             `json:"option" api:"required"`
+	JSON   union122Variant6JSON `json:"-"`
+}
+
+// union122Variant6JSON contains the JSON metadata for the struct [Union122Variant6]
+type union122Variant6JSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant6JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant6) implementsUnion122() {}
+
+type Union122Variant6Type string
+
+const (
+	Union122Variant6TypeSelect Union122Variant6Type = "select"
+)
+
+func (r Union122Variant6Type) IsKnown() bool {
+	switch r {
+	case Union122Variant6TypeSelect:
+		return true
+	}
+	return false
+}
+
+type Union122Variant7 struct {
+	Type    Union122Variant7Type `json:"type" api:"required"`
+	Options []Objects3           `json:"options" api:"required"`
+	JSON    union122Variant7JSON `json:"-"`
+}
+
+// union122Variant7JSON contains the JSON metadata for the struct [Union122Variant7]
+type union122Variant7JSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Union122Variant7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r union122Variant7JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Union122Variant7) implementsUnion122() {}
+
+type Union122Variant7Type string
+
+const (
+	Union122Variant7TypeMultiSelect Union122Variant7Type = "multi_select"
+)
+
+func (r Union122Variant7Type) IsKnown() bool {
+	switch r {
+	case Union122Variant7TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type Union122Type string
+
+const (
+	Union122TypeText        Union122Type = "text"
+	Union122TypeNumber      Union122Type = "number"
+	Union122TypeDate        Union122Type = "date"
+	Union122TypeBoolean     Union122Type = "boolean"
+	Union122TypeCurrency    Union122Type = "currency"
+	Union122TypePercentage  Union122Type = "percentage"
+	Union122TypeSelect      Union122Type = "select"
+	Union122TypeMultiSelect Union122Type = "multi_select"
+)
+
+func (r Union122Type) IsKnown() bool {
+	switch r {
+	case Union122TypeText, Union122TypeNumber, Union122TypeDate, Union122TypeBoolean, Union122TypeCurrency, Union122TypePercentage, Union122TypeSelect, Union122TypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type Union122CurrencyCode string
+
+const (
+	Union122CurrencyCodeUsd Union122CurrencyCode = "USD"
+	Union122CurrencyCodeAud Union122CurrencyCode = "AUD"
+	Union122CurrencyCodeBgn Union122CurrencyCode = "BGN"
+	Union122CurrencyCodeBrl Union122CurrencyCode = "BRL"
+	Union122CurrencyCodeCad Union122CurrencyCode = "CAD"
+	Union122CurrencyCodeChf Union122CurrencyCode = "CHF"
+	Union122CurrencyCodeCzk Union122CurrencyCode = "CZK"
+	Union122CurrencyCodeDkk Union122CurrencyCode = "DKK"
+	Union122CurrencyCodeEur Union122CurrencyCode = "EUR"
+	Union122CurrencyCodeGbp Union122CurrencyCode = "GBP"
+	Union122CurrencyCodeHkd Union122CurrencyCode = "HKD"
+	Union122CurrencyCodeHuf Union122CurrencyCode = "HUF"
+	Union122CurrencyCodeIdr Union122CurrencyCode = "IDR"
+	Union122CurrencyCodeInr Union122CurrencyCode = "INR"
+	Union122CurrencyCodeJpy Union122CurrencyCode = "JPY"
+	Union122CurrencyCodeMyr Union122CurrencyCode = "MYR"
+	Union122CurrencyCodeNok Union122CurrencyCode = "NOK"
+	Union122CurrencyCodeNzd Union122CurrencyCode = "NZD"
+	Union122CurrencyCodeCny Union122CurrencyCode = "CNY"
+	Union122CurrencyCodePln Union122CurrencyCode = "PLN"
+	Union122CurrencyCodeRon Union122CurrencyCode = "RON"
+	Union122CurrencyCodeTry Union122CurrencyCode = "TRY"
+	Union122CurrencyCodeSek Union122CurrencyCode = "SEK"
+	Union122CurrencyCodeSgd Union122CurrencyCode = "SGD"
+	Union122CurrencyCodeAed Union122CurrencyCode = "AED"
+	Union122CurrencyCodeArs Union122CurrencyCode = "ARS"
+	Union122CurrencyCodeBdt Union122CurrencyCode = "BDT"
+	Union122CurrencyCodeBwp Union122CurrencyCode = "BWP"
+	Union122CurrencyCodeClp Union122CurrencyCode = "CLP"
+	Union122CurrencyCodeCop Union122CurrencyCode = "COP"
+	Union122CurrencyCodeCrc Union122CurrencyCode = "CRC"
+	Union122CurrencyCodeEgp Union122CurrencyCode = "EGP"
+	Union122CurrencyCodeFjd Union122CurrencyCode = "FJD"
+	Union122CurrencyCodeGel Union122CurrencyCode = "GEL"
+	Union122CurrencyCodeGhs Union122CurrencyCode = "GHS"
+	Union122CurrencyCodeIls Union122CurrencyCode = "ILS"
+	Union122CurrencyCodeKes Union122CurrencyCode = "KES"
+	Union122CurrencyCodeKrw Union122CurrencyCode = "KRW"
+	Union122CurrencyCodeLkr Union122CurrencyCode = "LKR"
+	Union122CurrencyCodeMad Union122CurrencyCode = "MAD"
+	Union122CurrencyCodeMxn Union122CurrencyCode = "MXN"
+	Union122CurrencyCodeNpr Union122CurrencyCode = "NPR"
+	Union122CurrencyCodePhp Union122CurrencyCode = "PHP"
+	Union122CurrencyCodePkr Union122CurrencyCode = "PKR"
+	Union122CurrencyCodeThb Union122CurrencyCode = "THB"
+	Union122CurrencyCodeUah Union122CurrencyCode = "UAH"
+	Union122CurrencyCodeUgx Union122CurrencyCode = "UGX"
+	Union122CurrencyCodeUyu Union122CurrencyCode = "UYU"
+	Union122CurrencyCodeVnd Union122CurrencyCode = "VND"
+	Union122CurrencyCodeZar Union122CurrencyCode = "ZAR"
+	Union122CurrencyCodeZmw Union122CurrencyCode = "ZMW"
+	Union122CurrencyCodeTnd Union122CurrencyCode = "TND"
+	Union122CurrencyCodeNgn Union122CurrencyCode = "NGN"
+	Union122CurrencyCodeRsd Union122CurrencyCode = "RSD"
+	Union122CurrencyCodeTwd Union122CurrencyCode = "TWD"
+	Union122CurrencyCodeGtq Union122CurrencyCode = "GTQ"
+	Union122CurrencyCodeHnl Union122CurrencyCode = "HNL"
+	Union122CurrencyCodeDop Union122CurrencyCode = "DOP"
+	Union122CurrencyCodeSar Union122CurrencyCode = "SAR"
+	Union122CurrencyCodeXaf Union122CurrencyCode = "XAF"
+	Union122CurrencyCodePen Union122CurrencyCode = "PEN"
+)
+
+func (r Union122CurrencyCode) IsKnown() bool {
+	switch r {
+	case Union122CurrencyCodeUsd, Union122CurrencyCodeAud, Union122CurrencyCodeBgn, Union122CurrencyCodeBrl, Union122CurrencyCodeCad, Union122CurrencyCodeChf, Union122CurrencyCodeCzk, Union122CurrencyCodeDkk, Union122CurrencyCodeEur, Union122CurrencyCodeGbp, Union122CurrencyCodeHkd, Union122CurrencyCodeHuf, Union122CurrencyCodeIdr, Union122CurrencyCodeInr, Union122CurrencyCodeJpy, Union122CurrencyCodeMyr, Union122CurrencyCodeNok, Union122CurrencyCodeNzd, Union122CurrencyCodeCny, Union122CurrencyCodePln, Union122CurrencyCodeRon, Union122CurrencyCodeTry, Union122CurrencyCodeSek, Union122CurrencyCodeSgd, Union122CurrencyCodeAed, Union122CurrencyCodeArs, Union122CurrencyCodeBdt, Union122CurrencyCodeBwp, Union122CurrencyCodeClp, Union122CurrencyCodeCop, Union122CurrencyCodeCrc, Union122CurrencyCodeEgp, Union122CurrencyCodeFjd, Union122CurrencyCodeGel, Union122CurrencyCodeGhs, Union122CurrencyCodeIls, Union122CurrencyCodeKes, Union122CurrencyCodeKrw, Union122CurrencyCodeLkr, Union122CurrencyCodeMad, Union122CurrencyCodeMxn, Union122CurrencyCodeNpr, Union122CurrencyCodePhp, Union122CurrencyCodePkr, Union122CurrencyCodeThb, Union122CurrencyCodeUah, Union122CurrencyCodeUgx, Union122CurrencyCodeUyu, Union122CurrencyCodeVnd, Union122CurrencyCodeZar, Union122CurrencyCodeZmw, Union122CurrencyCodeTnd, Union122CurrencyCodeNgn, Union122CurrencyCodeRsd, Union122CurrencyCodeTwd, Union122CurrencyCodeGtq, Union122CurrencyCodeHnl, Union122CurrencyCodeDop, Union122CurrencyCodeSar, Union122CurrencyCodeXaf, Union122CurrencyCodePen:
+		return true
+	}
+	return false
+}
+
+type Union13 = string
 
 type DepartmentNotFoundEncoded struct {
 	Tag     DepartmentNotFoundEncodedTag  `json:"_tag" api:"required"`
@@ -765,26 +1288,9 @@ func (r DepartmentNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union13 string
-
-const (
-	Union13Draft    Union13 = "draft"
-	Union13Sent     Union13 = "sent"
-	Union13Accepted Union13 = "accepted"
-	Union13Void     Union13 = "void"
-)
-
-func (r Union13) IsKnown() bool {
-	switch r {
-	case Union13Draft, Union13Sent, Union13Accepted, Union13Void:
-		return true
-	}
-	return false
-}
-
 type Objects5 struct {
 	ID         string             `json:"id" api:"required"`
-	Status     Union13            `json:"status" api:"required"`
+	Status     Objects5Status     `json:"status" api:"required"`
 	WorkerType Objects5WorkerType `json:"workerType" api:"required"`
 	Candidate  Objects5Candidate  `json:"candidate" api:"required"`
 	Position   Objects5Position   `json:"position" api:"required"`
@@ -1344,6 +1850,23 @@ func (r objects5CompensationStockJSON) RawJSON() string {
 	return r.raw
 }
 
+type Objects5Status string
+
+const (
+	Objects5StatusDraft    Objects5Status = "draft"
+	Objects5StatusSent     Objects5Status = "sent"
+	Objects5StatusAccepted Objects5Status = "accepted"
+	Objects5StatusVoid     Objects5Status = "void"
+)
+
+func (r Objects5Status) IsKnown() bool {
+	switch r {
+	case Objects5StatusDraft, Objects5StatusSent, Objects5StatusAccepted, Objects5StatusVoid:
+		return true
+	}
+	return false
+}
+
 type Objects5WorkerType string
 
 const (
@@ -1475,11 +1998,11 @@ func (r OfferNotFoundErrorEncodedTag) IsKnown() bool {
 }
 
 type InvalidOfferStatusErrorEncoded struct {
-	Tag     InvalidOfferStatusErrorEncodedTag  `json:"_tag" api:"required"`
-	ID      string                             `json:"id" api:"required"`
-	Status  Union13                            `json:"status" api:"required"`
-	Message string                             `json:"message" api:"required"`
-	JSON    invalidOfferStatusErrorEncodedJSON `json:"-"`
+	Tag     InvalidOfferStatusErrorEncodedTag    `json:"_tag" api:"required"`
+	ID      string                               `json:"id" api:"required"`
+	Status  InvalidOfferStatusErrorEncodedStatus `json:"status" api:"required"`
+	Message string                               `json:"message" api:"required"`
+	JSON    invalidOfferStatusErrorEncodedJSON   `json:"-"`
 }
 
 // invalidOfferStatusErrorEncodedJSON contains the JSON metadata for the struct [InvalidOfferStatusErrorEncoded]
@@ -1509,6 +2032,23 @@ const (
 func (r InvalidOfferStatusErrorEncodedTag) IsKnown() bool {
 	switch r {
 	case InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError:
+		return true
+	}
+	return false
+}
+
+type InvalidOfferStatusErrorEncodedStatus string
+
+const (
+	InvalidOfferStatusErrorEncodedStatusDraft    InvalidOfferStatusErrorEncodedStatus = "draft"
+	InvalidOfferStatusErrorEncodedStatusSent     InvalidOfferStatusErrorEncodedStatus = "sent"
+	InvalidOfferStatusErrorEncodedStatusAccepted InvalidOfferStatusErrorEncodedStatus = "accepted"
+	InvalidOfferStatusErrorEncodedStatusVoid     InvalidOfferStatusErrorEncodedStatus = "void"
+)
+
+func (r InvalidOfferStatusErrorEncodedStatus) IsKnown() bool {
+	switch r {
+	case InvalidOfferStatusErrorEncodedStatusDraft, InvalidOfferStatusErrorEncodedStatusSent, InvalidOfferStatusErrorEncodedStatusAccepted, InvalidOfferStatusErrorEncodedStatusVoid:
 		return true
 	}
 	return false
@@ -1589,7 +2129,7 @@ func (r PublicPayFrequency) IsKnown() bool {
 	return false
 }
 
-type Union20 = string
+type Union21 = string
 
 type PublicPayrollCurrency string
 
@@ -1688,22 +2228,6 @@ func (r publicPayPeriodJSON) RawJSON() string {
 	return r.raw
 }
 
-type Union21 string
-
-const (
-	Union21UsW2             Union21 = "us_w2"
-	Union21Us1099           Union21 = "us_1099"
-	Union21GlobalContractor Union21 = "global_contractor"
-)
-
-func (r Union21) IsKnown() bool {
-	switch r {
-	case Union21UsW2, Union21Us1099, Union21GlobalContractor:
-		return true
-	}
-	return false
-}
-
 type PublicPaycheckStatus string
 
 const (
@@ -1779,40 +2303,21 @@ func (r TimeOffPolicyNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union23 = string
-
 type Union24 = string
 
-type Union25 string
-
-const (
-	Union25Pending  Union25 = "pending"
-	Union25Approved Union25 = "approved"
-	Union25Denied   Union25 = "denied"
-)
-
-func (r Union25) IsKnown() bool {
-	switch r {
-	case Union25Pending, Union25Approved, Union25Denied:
-		return true
-	}
-	return false
-}
+type Union25 = string
 
 type Union26 string
 
 const (
-	Union26Draft       Union26 = "draft"
-	Union26Invited     Union26 = "invited"
-	Union26Onboarding  Union26 = "onboarding"
-	Union26Active      Union26 = "active"
-	Union26Offboarding Union26 = "offboarding"
-	Union26Inactive    Union26 = "inactive"
+	Union26Pending  Union26 = "pending"
+	Union26Approved Union26 = "approved"
+	Union26Denied   Union26 = "denied"
 )
 
 func (r Union26) IsKnown() bool {
 	switch r {
-	case Union26Draft, Union26Invited, Union26Onboarding, Union26Active, Union26Offboarding, Union26Inactive:
+	case Union26Pending, Union26Approved, Union26Denied:
 		return true
 	}
 	return false
@@ -1821,29 +2326,48 @@ func (r Union26) IsKnown() bool {
 type Union27 string
 
 const (
-	Union27Employee   Union27 = "employee"
-	Union27Contractor Union27 = "contractor"
+	Union27Draft       Union27 = "draft"
+	Union27Invited     Union27 = "invited"
+	Union27Onboarding  Union27 = "onboarding"
+	Union27Active      Union27 = "active"
+	Union27Offboarding Union27 = "offboarding"
+	Union27Inactive    Union27 = "inactive"
 )
 
 func (r Union27) IsKnown() bool {
 	switch r {
-	case Union27Employee, Union27Contractor:
+	case Union27Draft, Union27Invited, Union27Onboarding, Union27Active, Union27Offboarding, Union27Inactive:
 		return true
 	}
 	return false
 }
 
-type Union28 = string
+type Union28 string
 
-type Union29 = bool
+const (
+	Union28Employee   Union28 = "employee"
+	Union28Contractor Union28 = "contractor"
+)
 
-type Union30 = string
+func (r Union28) IsKnown() bool {
+	switch r {
+	case Union28Employee, Union28Contractor:
+		return true
+	}
+	return false
+}
+
+type Union29 = string
+
+type Union30 = bool
 
 type Union31 = string
 
 type Union32 = string
 
 type Union33 = string
+
+type Union34 = string
 
 type WorkerNotFoundErrorEncoded struct {
 	Tag     WorkerNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
@@ -1881,4 +2405,51 @@ func (r WorkerNotFoundErrorEncodedTag) IsKnown() bool {
 		return true
 	}
 	return false
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*Union122Union)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant0{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant1{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant2{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant3{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant4{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant5{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant6{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Union122Variant7{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
 }

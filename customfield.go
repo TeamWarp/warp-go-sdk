@@ -1181,6 +1181,25 @@ func (r CustomFieldUpsertValueResponseValue) AsUnion() CustomFieldUpsertValueRes
 	return r.union
 }
 
+type CustomFieldNewOptionResponseStatus string
+
+const (
+	CustomFieldNewOptionResponseStatusActive   CustomFieldNewOptionResponseStatus = "active"
+	CustomFieldNewOptionResponseStatusArchived CustomFieldNewOptionResponseStatus = "archived"
+)
+
+func (r CustomFieldNewOptionResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldNewOptionResponseStatusActive, CustomFieldNewOptionResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpsertValueResponseValueUnion interface {
+	implementsCustomFieldUpsertValueResponseValue()
+}
+
 func init() {
 	apijson.RegisterUnion(
 		reflect.TypeOf((*CustomFieldUpsertValueResponseValueUnion)(nil)).Elem(),
@@ -1228,23 +1247,25 @@ func init() {
 	)
 }
 
-type CustomFieldNewOptionResponseStatus string
+type CustomFieldUpsertValueResponseValueType string
 
 const (
-	CustomFieldNewOptionResponseStatusActive   CustomFieldNewOptionResponseStatus = "active"
-	CustomFieldNewOptionResponseStatusArchived CustomFieldNewOptionResponseStatus = "archived"
+	CustomFieldUpsertValueResponseValueTypeText        CustomFieldUpsertValueResponseValueType = "text"
+	CustomFieldUpsertValueResponseValueTypeNumber      CustomFieldUpsertValueResponseValueType = "number"
+	CustomFieldUpsertValueResponseValueTypeDate        CustomFieldUpsertValueResponseValueType = "date"
+	CustomFieldUpsertValueResponseValueTypeBoolean     CustomFieldUpsertValueResponseValueType = "boolean"
+	CustomFieldUpsertValueResponseValueTypeCurrency    CustomFieldUpsertValueResponseValueType = "currency"
+	CustomFieldUpsertValueResponseValueTypePercentage  CustomFieldUpsertValueResponseValueType = "percentage"
+	CustomFieldUpsertValueResponseValueTypeSelect      CustomFieldUpsertValueResponseValueType = "select"
+	CustomFieldUpsertValueResponseValueTypeMultiSelect CustomFieldUpsertValueResponseValueType = "multi_select"
 )
 
-func (r CustomFieldNewOptionResponseStatus) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldNewOptionResponseStatusActive, CustomFieldNewOptionResponseStatusArchived:
+	case CustomFieldUpsertValueResponseValueTypeText, CustomFieldUpsertValueResponseValueTypeNumber, CustomFieldUpsertValueResponseValueTypeDate, CustomFieldUpsertValueResponseValueTypeBoolean, CustomFieldUpsertValueResponseValueTypeCurrency, CustomFieldUpsertValueResponseValueTypePercentage, CustomFieldUpsertValueResponseValueTypeSelect, CustomFieldUpsertValueResponseValueTypeMultiSelect:
 		return true
 	}
 	return false
-}
-
-type CustomFieldUpsertValueResponseValueUnion interface {
-	implementsCustomFieldUpsertValueResponseValue()
 }
 
 type CustomFieldUpsertValueResponseValueVariant0 struct {
@@ -1447,27 +1468,6 @@ func (r customFieldUpsertValueResponseValueVariant7JSON) RawJSON() string {
 }
 
 func (r CustomFieldUpsertValueResponseValueVariant7) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueTypeText        CustomFieldUpsertValueResponseValueType = "text"
-	CustomFieldUpsertValueResponseValueTypeNumber      CustomFieldUpsertValueResponseValueType = "number"
-	CustomFieldUpsertValueResponseValueTypeDate        CustomFieldUpsertValueResponseValueType = "date"
-	CustomFieldUpsertValueResponseValueTypeBoolean     CustomFieldUpsertValueResponseValueType = "boolean"
-	CustomFieldUpsertValueResponseValueTypeCurrency    CustomFieldUpsertValueResponseValueType = "currency"
-	CustomFieldUpsertValueResponseValueTypePercentage  CustomFieldUpsertValueResponseValueType = "percentage"
-	CustomFieldUpsertValueResponseValueTypeSelect      CustomFieldUpsertValueResponseValueType = "select"
-	CustomFieldUpsertValueResponseValueTypeMultiSelect CustomFieldUpsertValueResponseValueType = "multi_select"
-)
-
-func (r CustomFieldUpsertValueResponseValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueTypeText, CustomFieldUpsertValueResponseValueTypeNumber, CustomFieldUpsertValueResponseValueTypeDate, CustomFieldUpsertValueResponseValueTypeBoolean, CustomFieldUpsertValueResponseValueTypeCurrency, CustomFieldUpsertValueResponseValueTypePercentage, CustomFieldUpsertValueResponseValueTypeSelect, CustomFieldUpsertValueResponseValueTypeMultiSelect:
-		return true
-	}
-	return false
 }
 
 type CustomFieldUpsertValueResponseValueVariant0Type string
