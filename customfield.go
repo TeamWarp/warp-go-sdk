@@ -488,12 +488,12 @@ func (r Union1) IsKnown() bool {
 }
 
 type Objects4 struct {
-	ID        string                              `json:"id" api:"required"`
-	WorkerID  string                              `json:"workerId" api:"required"`
-	FieldID   string                              `json:"fieldId" api:"required"`
-	Value     CustomFieldUpsertValueResponseValue `json:"value" api:"required"`
-	UpdatedAt string                              `json:"updatedAt" api:"required"`
-	JSON      objects4JSON                        `json:"-"`
+	ID        string        `json:"id" api:"required"`
+	WorkerID  string        `json:"workerId" api:"required"`
+	FieldID   string        `json:"fieldId" api:"required"`
+	Value     Objects4Value `json:"value" api:"required"`
+	UpdatedAt string        `json:"updatedAt" api:"required"`
+	JSON      objects4JSON  `json:"-"`
 }
 
 // objects4JSON contains the JSON metadata for the struct [Objects4]
@@ -790,7 +790,7 @@ func (r CustomFieldUpsertValueParamsValueVariant3) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant4 struct {
-	Amount       param.Field[interface{}]                                           `json:"amount" api:"required"`
+	Amount       param.Field[int64]                                                 `json:"amount" api:"required"`
 	CurrencyCode param.Field[CustomFieldUpsertValueParamsValueVariant4CurrencyCode] `json:"currencyCode" api:"required"`
 	Type         param.Field[CustomFieldUpsertValueParamsValueVariant4Type]         `json:"type" api:"required"`
 }
@@ -1144,7 +1144,7 @@ func (r customFieldNewOptionResponseJSON) RawJSON() string {
 type CustomFieldUpsertValueResponseValue struct {
 	Type         CustomFieldUpsertValueResponseValueType `json:"type" api:"required"`
 	Value        interface{}                             `json:"value"`
-	Amount       interface{}                             `json:"amount"`
+	Amount       int64                                   `json:"amount"`
 	CurrencyCode Union1                                  `json:"currencyCode"`
 	Option       shared.Objects3                         `json:"option"`
 	Options      interface{}                             `json:"options"`
@@ -1181,6 +1181,46 @@ func (r CustomFieldUpsertValueResponseValue) AsUnion() CustomFieldUpsertValueRes
 	return r.union
 }
 
+type Objects4Value struct {
+	Type         Objects4ValueType `json:"type" api:"required"`
+	Value        interface{}       `json:"value"`
+	Amount       int64             `json:"amount"`
+	CurrencyCode Union1            `json:"currencyCode"`
+	Option       shared.Objects3   `json:"option"`
+	Options      interface{}       `json:"options"`
+	JSON         objects4ValueJSON `json:"-"`
+	union        Objects4ValueUnion
+}
+
+// objects4ValueJSON contains the JSON metadata for the struct [Objects4Value]
+type objects4ValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r objects4ValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *Objects4Value) UnmarshalJSON(data []byte) (err error) {
+	*r = Objects4Value{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r Objects4Value) AsUnion() Objects4ValueUnion {
+	return r.union
+}
+
 type CustomFieldNewOptionResponseStatus string
 
 const (
@@ -1206,42 +1246,42 @@ func init() {
 		"type",
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant0{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueTextCustomFieldValue{}),
 			DiscriminatorValue: "text",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant1{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueNumberCustomFieldValue{}),
 			DiscriminatorValue: "number",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant2{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueDateCustomFieldValue{}),
 			DiscriminatorValue: "date",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant3{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueBooleanCustomFieldValue{}),
 			DiscriminatorValue: "boolean",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant4{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue{}),
 			DiscriminatorValue: "currency",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant5{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValuePercentageCustomFieldValue{}),
 			DiscriminatorValue: "percentage",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant6{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueSelectCustomFieldValue{}),
 			DiscriminatorValue: "select",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueVariant7{}),
+			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue{}),
 			DiscriminatorValue: "multi_select",
 		},
 	)
@@ -1268,115 +1308,187 @@ func (r CustomFieldUpsertValueResponseValueType) IsKnown() bool {
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant0 struct {
-	Type  CustomFieldUpsertValueResponseValueVariant0Type `json:"type" api:"required"`
-	Value string                                          `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueVariant0JSON `json:"-"`
+type Objects4ValueUnion interface {
+	implementsObjects4Value()
 }
 
-// customFieldUpsertValueResponseValueVariant0JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant0]
-type customFieldUpsertValueResponseValueVariant0JSON struct {
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*Objects4ValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueTextCustomFieldValue{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueNumberCustomFieldValue{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueDateCustomFieldValue{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueBooleanCustomFieldValue{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueCurrencyCustomFieldValue{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValuePercentageCustomFieldValue{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueSelectCustomFieldValue{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects4ValueMultiSelectCustomFieldValue{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type Objects4ValueType string
+
+const (
+	Objects4ValueTypeText        Objects4ValueType = "text"
+	Objects4ValueTypeNumber      Objects4ValueType = "number"
+	Objects4ValueTypeDate        Objects4ValueType = "date"
+	Objects4ValueTypeBoolean     Objects4ValueType = "boolean"
+	Objects4ValueTypeCurrency    Objects4ValueType = "currency"
+	Objects4ValueTypePercentage  Objects4ValueType = "percentage"
+	Objects4ValueTypeSelect      Objects4ValueType = "select"
+	Objects4ValueTypeMultiSelect Objects4ValueType = "multi_select"
+)
+
+func (r Objects4ValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueTypeText, Objects4ValueTypeNumber, Objects4ValueTypeDate, Objects4ValueTypeBoolean, Objects4ValueTypeCurrency, Objects4ValueTypePercentage, Objects4ValueTypeSelect, Objects4ValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpsertValueResponseValueTextCustomFieldValue struct {
+	Type  CustomFieldUpsertValueResponseValueTextCustomFieldValueType `json:"type" api:"required"`
+	Value string                                                      `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueTextCustomFieldValueJSON `json:"-"`
+}
+
+// customFieldUpsertValueResponseValueTextCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueTextCustomFieldValue]
+type customFieldUpsertValueResponseValueTextCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant0) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueTextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant0JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueTextCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant0) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueTextCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant1 struct {
-	Type  CustomFieldUpsertValueResponseValueVariant1Type `json:"type" api:"required"`
-	Value interface{}                                     `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueVariant1JSON `json:"-"`
+type CustomFieldUpsertValueResponseValueNumberCustomFieldValue struct {
+	Type  CustomFieldUpsertValueResponseValueNumberCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                                                   `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueNumberCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant1JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant1]
-type customFieldUpsertValueResponseValueVariant1JSON struct {
+// customFieldUpsertValueResponseValueNumberCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueNumberCustomFieldValue]
+type customFieldUpsertValueResponseValueNumberCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant1) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueNumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant1JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueNumberCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant1) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueNumberCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant2 struct {
-	Type  CustomFieldUpsertValueResponseValueVariant2Type `json:"type" api:"required"`
-	Value string                                          `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueVariant2JSON `json:"-"`
+type CustomFieldUpsertValueResponseValueDateCustomFieldValue struct {
+	Type  CustomFieldUpsertValueResponseValueDateCustomFieldValueType `json:"type" api:"required"`
+	Value string                                                      `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueDateCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant2JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant2]
-type customFieldUpsertValueResponseValueVariant2JSON struct {
+// customFieldUpsertValueResponseValueDateCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueDateCustomFieldValue]
+type customFieldUpsertValueResponseValueDateCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant2) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueDateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant2JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueDateCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant2) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueDateCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant3 struct {
-	Type  CustomFieldUpsertValueResponseValueVariant3Type `json:"type" api:"required"`
-	Value bool                                            `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueVariant3JSON `json:"-"`
+type CustomFieldUpsertValueResponseValueBooleanCustomFieldValue struct {
+	Type  CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType `json:"type" api:"required"`
+	Value bool                                                           `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant3JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant3]
-type customFieldUpsertValueResponseValueVariant3JSON struct {
+// customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueBooleanCustomFieldValue]
+type customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant3) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueBooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant3JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant3) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueBooleanCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant4 struct {
-	Type         CustomFieldUpsertValueResponseValueVariant4Type `json:"type" api:"required"`
-	Amount       interface{}                                     `json:"amount" api:"required"`
-	CurrencyCode Union1                                          `json:"currencyCode" api:"required"`
-	JSON         customFieldUpsertValueResponseValueVariant4JSON `json:"-"`
+type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue struct {
+	Type         CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType `json:"type" api:"required"`
+	Amount       int64                                                           `json:"amount" api:"required"`
+	CurrencyCode Union1                                                          `json:"currencyCode" api:"required"`
+	JSON         customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant4JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant4]
-type customFieldUpsertValueResponseValueVariant4JSON struct {
+// customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue]
+type customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON struct {
 	Type         apijson.Field
 	Amount       apijson.Field
 	CurrencyCode apijson.Field
@@ -1384,199 +1496,505 @@ type customFieldUpsertValueResponseValueVariant4JSON struct {
 	ExtraFields  map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant4) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant4JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant4) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant5 struct {
-	Type  CustomFieldUpsertValueResponseValueVariant5Type `json:"type" api:"required"`
-	Value interface{}                                     `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueVariant5JSON `json:"-"`
+type CustomFieldUpsertValueResponseValuePercentageCustomFieldValue struct {
+	Type  CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                                                       `json:"value" api:"required"`
+	JSON  customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant5JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant5]
-type customFieldUpsertValueResponseValueVariant5JSON struct {
+// customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValuePercentageCustomFieldValue]
+type customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Value       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant5) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValuePercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant5JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant5) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValuePercentageCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant6 struct {
-	Type   CustomFieldUpsertValueResponseValueVariant6Type `json:"type" api:"required"`
-	Option shared.Objects3                                 `json:"option" api:"required"`
-	JSON   customFieldUpsertValueResponseValueVariant6JSON `json:"-"`
+type CustomFieldUpsertValueResponseValueSelectCustomFieldValue struct {
+	Type   CustomFieldUpsertValueResponseValueSelectCustomFieldValueType `json:"type" api:"required"`
+	Option shared.Objects3                                               `json:"option" api:"required"`
+	JSON   customFieldUpsertValueResponseValueSelectCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant6JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant6]
-type customFieldUpsertValueResponseValueVariant6JSON struct {
+// customFieldUpsertValueResponseValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueSelectCustomFieldValue]
+type customFieldUpsertValueResponseValueSelectCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Option      apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant6) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant6JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueSelectCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant6) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant7 struct {
-	Type    CustomFieldUpsertValueResponseValueVariant7Type `json:"type" api:"required"`
-	Options []shared.Objects3                               `json:"options" api:"required"`
-	JSON    customFieldUpsertValueResponseValueVariant7JSON `json:"-"`
+type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue struct {
+	Type    CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType `json:"type" api:"required"`
+	Options []shared.Objects3                                                  `json:"options" api:"required"`
+	JSON    customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON `json:"-"`
 }
 
-// customFieldUpsertValueResponseValueVariant7JSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueVariant7]
-type customFieldUpsertValueResponseValueVariant7JSON struct {
+// customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue]
+type customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON struct {
 	Type        apijson.Field
 	Options     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *CustomFieldUpsertValueResponseValueVariant7) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r customFieldUpsertValueResponseValueVariant7JSON) RawJSON() string {
+func (r customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r CustomFieldUpsertValueResponseValueVariant7) implementsCustomFieldUpsertValueResponseValue() {
+func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type CustomFieldUpsertValueResponseValueVariant0Type string
+type Objects4ValueTextCustomFieldValue struct {
+	Type  Objects4ValueTextCustomFieldValueType `json:"type" api:"required"`
+	Value string                                `json:"value" api:"required"`
+	JSON  objects4ValueTextCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueTextCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueTextCustomFieldValue]
+type objects4ValueTextCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValueTextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueTextCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueTextCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValueNumberCustomFieldValue struct {
+	Type  Objects4ValueNumberCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                             `json:"value" api:"required"`
+	JSON  objects4ValueNumberCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueNumberCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueNumberCustomFieldValue]
+type objects4ValueNumberCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValueNumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueNumberCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueNumberCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValueDateCustomFieldValue struct {
+	Type  Objects4ValueDateCustomFieldValueType `json:"type" api:"required"`
+	Value string                                `json:"value" api:"required"`
+	JSON  objects4ValueDateCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueDateCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueDateCustomFieldValue]
+type objects4ValueDateCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValueDateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueDateCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueDateCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValueBooleanCustomFieldValue struct {
+	Type  Objects4ValueBooleanCustomFieldValueType `json:"type" api:"required"`
+	Value bool                                     `json:"value" api:"required"`
+	JSON  objects4ValueBooleanCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueBooleanCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueBooleanCustomFieldValue]
+type objects4ValueBooleanCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValueBooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueBooleanCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueBooleanCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValueCurrencyCustomFieldValue struct {
+	Type         Objects4ValueCurrencyCustomFieldValueType `json:"type" api:"required"`
+	Amount       int64                                     `json:"amount" api:"required"`
+	CurrencyCode Union1                                    `json:"currencyCode" api:"required"`
+	JSON         objects4ValueCurrencyCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueCurrencyCustomFieldValue]
+type objects4ValueCurrencyCustomFieldValueJSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *Objects4ValueCurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueCurrencyCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueCurrencyCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValuePercentageCustomFieldValue struct {
+	Type  Objects4ValuePercentageCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                                 `json:"value" api:"required"`
+	JSON  objects4ValuePercentageCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValuePercentageCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValuePercentageCustomFieldValue]
+type objects4ValuePercentageCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValuePercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValuePercentageCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValuePercentageCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValueSelectCustomFieldValue struct {
+	Type   Objects4ValueSelectCustomFieldValueType `json:"type" api:"required"`
+	Option shared.Objects3                         `json:"option" api:"required"`
+	JSON   objects4ValueSelectCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueSelectCustomFieldValue]
+type objects4ValueSelectCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValueSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueSelectCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueSelectCustomFieldValue) implementsObjects4Value() {}
+
+type Objects4ValueMultiSelectCustomFieldValue struct {
+	Type    Objects4ValueMultiSelectCustomFieldValueType `json:"type" api:"required"`
+	Options []shared.Objects3                            `json:"options" api:"required"`
+	JSON    objects4ValueMultiSelectCustomFieldValueJSON `json:"-"`
+}
+
+// objects4ValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueMultiSelectCustomFieldValue]
+type objects4ValueMultiSelectCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects4ValueMultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects4ValueMultiSelectCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects4ValueMultiSelectCustomFieldValue) implementsObjects4Value() {}
+
+type CustomFieldUpsertValueResponseValueTextCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant0TypeText CustomFieldUpsertValueResponseValueVariant0Type = "text"
+	CustomFieldUpsertValueResponseValueTextCustomFieldValueTypeText CustomFieldUpsertValueResponseValueTextCustomFieldValueType = "text"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant0Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueTextCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant0TypeText:
+	case CustomFieldUpsertValueResponseValueTextCustomFieldValueTypeText:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant1Type string
+type CustomFieldUpsertValueResponseValueNumberCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant1TypeNumber CustomFieldUpsertValueResponseValueVariant1Type = "number"
+	CustomFieldUpsertValueResponseValueNumberCustomFieldValueTypeNumber CustomFieldUpsertValueResponseValueNumberCustomFieldValueType = "number"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant1Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueNumberCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant1TypeNumber:
+	case CustomFieldUpsertValueResponseValueNumberCustomFieldValueTypeNumber:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant2Type string
+type CustomFieldUpsertValueResponseValueDateCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant2TypeDate CustomFieldUpsertValueResponseValueVariant2Type = "date"
+	CustomFieldUpsertValueResponseValueDateCustomFieldValueTypeDate CustomFieldUpsertValueResponseValueDateCustomFieldValueType = "date"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant2Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueDateCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant2TypeDate:
+	case CustomFieldUpsertValueResponseValueDateCustomFieldValueTypeDate:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant3Type string
+type CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant3TypeBoolean CustomFieldUpsertValueResponseValueVariant3Type = "boolean"
+	CustomFieldUpsertValueResponseValueBooleanCustomFieldValueTypeBoolean CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType = "boolean"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant3Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant3TypeBoolean:
+	case CustomFieldUpsertValueResponseValueBooleanCustomFieldValueTypeBoolean:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant4Type string
+type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant4TypeCurrency CustomFieldUpsertValueResponseValueVariant4Type = "currency"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueTypeCurrency CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType = "currency"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant4Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant4TypeCurrency:
+	case CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueTypeCurrency:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant5Type string
+type CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant5TypePercentage CustomFieldUpsertValueResponseValueVariant5Type = "percentage"
+	CustomFieldUpsertValueResponseValuePercentageCustomFieldValueTypePercentage CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType = "percentage"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant5Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant5TypePercentage:
+	case CustomFieldUpsertValueResponseValuePercentageCustomFieldValueTypePercentage:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant6Type string
+type CustomFieldUpsertValueResponseValueSelectCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant6TypeSelect CustomFieldUpsertValueResponseValueVariant6Type = "select"
+	CustomFieldUpsertValueResponseValueSelectCustomFieldValueTypeSelect CustomFieldUpsertValueResponseValueSelectCustomFieldValueType = "select"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant6Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant6TypeSelect:
+	case CustomFieldUpsertValueResponseValueSelectCustomFieldValueTypeSelect:
 		return true
 	}
 	return false
 }
 
-type CustomFieldUpsertValueResponseValueVariant7Type string
+type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType string
 
 const (
-	CustomFieldUpsertValueResponseValueVariant7TypeMultiSelect CustomFieldUpsertValueResponseValueVariant7Type = "multi_select"
+	CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueTypeMultiSelect CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType = "multi_select"
 )
 
-func (r CustomFieldUpsertValueResponseValueVariant7Type) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType) IsKnown() bool {
 	switch r {
-	case CustomFieldUpsertValueResponseValueVariant7TypeMultiSelect:
+	case CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueTextCustomFieldValueType string
+
+const (
+	Objects4ValueTextCustomFieldValueTypeText Objects4ValueTextCustomFieldValueType = "text"
+)
+
+func (r Objects4ValueTextCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueTextCustomFieldValueTypeText:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueNumberCustomFieldValueType string
+
+const (
+	Objects4ValueNumberCustomFieldValueTypeNumber Objects4ValueNumberCustomFieldValueType = "number"
+)
+
+func (r Objects4ValueNumberCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueNumberCustomFieldValueTypeNumber:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueDateCustomFieldValueType string
+
+const (
+	Objects4ValueDateCustomFieldValueTypeDate Objects4ValueDateCustomFieldValueType = "date"
+)
+
+func (r Objects4ValueDateCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueDateCustomFieldValueTypeDate:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueBooleanCustomFieldValueType string
+
+const (
+	Objects4ValueBooleanCustomFieldValueTypeBoolean Objects4ValueBooleanCustomFieldValueType = "boolean"
+)
+
+func (r Objects4ValueBooleanCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueBooleanCustomFieldValueTypeBoolean:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueCurrencyCustomFieldValueType string
+
+const (
+	Objects4ValueCurrencyCustomFieldValueTypeCurrency Objects4ValueCurrencyCustomFieldValueType = "currency"
+)
+
+func (r Objects4ValueCurrencyCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueCurrencyCustomFieldValueTypeCurrency:
+		return true
+	}
+	return false
+}
+
+type Objects4ValuePercentageCustomFieldValueType string
+
+const (
+	Objects4ValuePercentageCustomFieldValueTypePercentage Objects4ValuePercentageCustomFieldValueType = "percentage"
+)
+
+func (r Objects4ValuePercentageCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValuePercentageCustomFieldValueTypePercentage:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueSelectCustomFieldValueType string
+
+const (
+	Objects4ValueSelectCustomFieldValueTypeSelect Objects4ValueSelectCustomFieldValueType = "select"
+)
+
+func (r Objects4ValueSelectCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueSelectCustomFieldValueTypeSelect:
+		return true
+	}
+	return false
+}
+
+type Objects4ValueMultiSelectCustomFieldValueType string
+
+const (
+	Objects4ValueMultiSelectCustomFieldValueTypeMultiSelect Objects4ValueMultiSelectCustomFieldValueType = "multi_select"
+)
+
+func (r Objects4ValueMultiSelectCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case Objects4ValueMultiSelectCustomFieldValueTypeMultiSelect:
 		return true
 	}
 	return false
