@@ -265,7 +265,7 @@ func WithWebhookSecret(value string) RequestOption {
 
 // WithEnvironmentProduction sets the default base URL to the "production" environment.
 func WithEnvironmentProduction() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://api.joinwarp.com/")
+	return requestconfig.WithDefaultBaseURL("https://api.joinwarp.com/public/")
 }
 
 // WithAPIKey returns a RequestOption that sets the client setting "apiKey".
