@@ -163,7 +163,7 @@ type TimeOffListRequestsParams struct {
 	PolicyIDs       param.Field[[]string]  `query:"policyIds"`
 	StartsBefore    param.Field[string]    `query:"startsBefore"`
 	StartsOnOrAfter param.Field[string]    `query:"startsOnOrAfter"`
-	Statuses        param.Field[[]Union26] `query:"statuses"`
+	Statuses        param.Field[[]Union25] `query:"statuses"`
 	WorkerIDs       param.Field[[]string]  `query:"workerIds"`
 }
 
@@ -311,7 +311,7 @@ type TimeOffListRequestsResponseData struct {
 	ID               string                                        `json:"id" api:"required"`
 	TimeOffPolicyID  string                                        `json:"timeOffPolicyId" api:"required"`
 	WorkerID         string                                        `json:"workerId" api:"required"`
-	Status           Union26                                       `json:"status" api:"required"`
+	Status           Union25                                       `json:"status" api:"required"`
 	StartAt          string                                        `json:"startAt" api:"required"`
 	StartRangeType   TimeOffListRequestsResponseDataStartRangeType `json:"startRangeType" api:"required"`
 	EndAt            string                                        `json:"endAt" api:"required"`

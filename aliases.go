@@ -55,6 +55,14 @@ const (
 	PublicWorkerCompensationPerHour  = shared.PublicWorkerCompensationPerHour
 )
 
+type Union2 = shared.Union2
+
+const (
+	Union2Infinity  = shared.Union2Infinity
+	Union2Infinity2 = shared.Union2Infinity2
+	Union2NaN       = shared.Union2NaN
+)
+
 type Objects = shared.Objects
 
 type PublicMoneyAmount = shared.PublicMoneyAmount
@@ -142,14 +150,6 @@ type APINotEnabledEncodedTag = shared.APINotEnabledEncodedTag
 
 const (
 	APINotEnabledEncodedTagAPINotEnabled = shared.APINotEnabledEncodedTagAPINotEnabled
-)
-
-type Union2 = shared.Union2
-
-const (
-	Union2Infinity  = shared.Union2Infinity
-	Union2Infinity2 = shared.Union2Infinity2
-	Union2NaN       = shared.Union2NaN
 )
 
 type Union3 = shared.Union3
@@ -241,220 +241,7 @@ const (
 	CustomFieldOptionNotFoundErrorEncodedTagCustomFieldOptionNotFoundError = shared.CustomFieldOptionNotFoundErrorEncodedTagCustomFieldOptionNotFoundError
 )
 
-type Union122 = shared.Union122
-
-type Union122Union = shared.Union122Union
-
-type Union122Variant0 = shared.Union122Variant0
-
-type Union122Variant0Type = shared.Union122Variant0Type
-
-const (
-	Union122Variant0TypeText = shared.Union122Variant0TypeText
-)
-
-type Union122Variant1 = shared.Union122Variant1
-
-type Union122Variant1Type = shared.Union122Variant1Type
-
-const (
-	Union122Variant1TypeNumber = shared.Union122Variant1TypeNumber
-)
-
-type Union122Variant2 = shared.Union122Variant2
-
-type Union122Variant2Type = shared.Union122Variant2Type
-
-const (
-	Union122Variant2TypeDate = shared.Union122Variant2TypeDate
-)
-
-type Union122Variant3 = shared.Union122Variant3
-
-type Union122Variant3Type = shared.Union122Variant3Type
-
-const (
-	Union122Variant3TypeBoolean = shared.Union122Variant3TypeBoolean
-)
-
-type Union122Variant4 = shared.Union122Variant4
-
-type Union122Variant4Type = shared.Union122Variant4Type
-
-const (
-	Union122Variant4TypeCurrency = shared.Union122Variant4TypeCurrency
-)
-
-type Union122Variant4CurrencyCode = shared.Union122Variant4CurrencyCode
-
-const (
-	Union122Variant4CurrencyCodeUsd = shared.Union122Variant4CurrencyCodeUsd
-	Union122Variant4CurrencyCodeAud = shared.Union122Variant4CurrencyCodeAud
-	Union122Variant4CurrencyCodeBgn = shared.Union122Variant4CurrencyCodeBgn
-	Union122Variant4CurrencyCodeBrl = shared.Union122Variant4CurrencyCodeBrl
-	Union122Variant4CurrencyCodeCad = shared.Union122Variant4CurrencyCodeCad
-	Union122Variant4CurrencyCodeChf = shared.Union122Variant4CurrencyCodeChf
-	Union122Variant4CurrencyCodeCzk = shared.Union122Variant4CurrencyCodeCzk
-	Union122Variant4CurrencyCodeDkk = shared.Union122Variant4CurrencyCodeDkk
-	Union122Variant4CurrencyCodeEur = shared.Union122Variant4CurrencyCodeEur
-	Union122Variant4CurrencyCodeGbp = shared.Union122Variant4CurrencyCodeGbp
-	Union122Variant4CurrencyCodeHkd = shared.Union122Variant4CurrencyCodeHkd
-	Union122Variant4CurrencyCodeHuf = shared.Union122Variant4CurrencyCodeHuf
-	Union122Variant4CurrencyCodeIdr = shared.Union122Variant4CurrencyCodeIdr
-	Union122Variant4CurrencyCodeInr = shared.Union122Variant4CurrencyCodeInr
-	Union122Variant4CurrencyCodeJpy = shared.Union122Variant4CurrencyCodeJpy
-	Union122Variant4CurrencyCodeMyr = shared.Union122Variant4CurrencyCodeMyr
-	Union122Variant4CurrencyCodeNok = shared.Union122Variant4CurrencyCodeNok
-	Union122Variant4CurrencyCodeNzd = shared.Union122Variant4CurrencyCodeNzd
-	Union122Variant4CurrencyCodeCny = shared.Union122Variant4CurrencyCodeCny
-	Union122Variant4CurrencyCodePln = shared.Union122Variant4CurrencyCodePln
-	Union122Variant4CurrencyCodeRon = shared.Union122Variant4CurrencyCodeRon
-	Union122Variant4CurrencyCodeTry = shared.Union122Variant4CurrencyCodeTry
-	Union122Variant4CurrencyCodeSek = shared.Union122Variant4CurrencyCodeSek
-	Union122Variant4CurrencyCodeSgd = shared.Union122Variant4CurrencyCodeSgd
-	Union122Variant4CurrencyCodeAed = shared.Union122Variant4CurrencyCodeAed
-	Union122Variant4CurrencyCodeArs = shared.Union122Variant4CurrencyCodeArs
-	Union122Variant4CurrencyCodeBdt = shared.Union122Variant4CurrencyCodeBdt
-	Union122Variant4CurrencyCodeBwp = shared.Union122Variant4CurrencyCodeBwp
-	Union122Variant4CurrencyCodeClp = shared.Union122Variant4CurrencyCodeClp
-	Union122Variant4CurrencyCodeCop = shared.Union122Variant4CurrencyCodeCop
-	Union122Variant4CurrencyCodeCrc = shared.Union122Variant4CurrencyCodeCrc
-	Union122Variant4CurrencyCodeEgp = shared.Union122Variant4CurrencyCodeEgp
-	Union122Variant4CurrencyCodeFjd = shared.Union122Variant4CurrencyCodeFjd
-	Union122Variant4CurrencyCodeGel = shared.Union122Variant4CurrencyCodeGel
-	Union122Variant4CurrencyCodeGhs = shared.Union122Variant4CurrencyCodeGhs
-	Union122Variant4CurrencyCodeIls = shared.Union122Variant4CurrencyCodeIls
-	Union122Variant4CurrencyCodeKes = shared.Union122Variant4CurrencyCodeKes
-	Union122Variant4CurrencyCodeKrw = shared.Union122Variant4CurrencyCodeKrw
-	Union122Variant4CurrencyCodeLkr = shared.Union122Variant4CurrencyCodeLkr
-	Union122Variant4CurrencyCodeMad = shared.Union122Variant4CurrencyCodeMad
-	Union122Variant4CurrencyCodeMxn = shared.Union122Variant4CurrencyCodeMxn
-	Union122Variant4CurrencyCodeNpr = shared.Union122Variant4CurrencyCodeNpr
-	Union122Variant4CurrencyCodePhp = shared.Union122Variant4CurrencyCodePhp
-	Union122Variant4CurrencyCodePkr = shared.Union122Variant4CurrencyCodePkr
-	Union122Variant4CurrencyCodeThb = shared.Union122Variant4CurrencyCodeThb
-	Union122Variant4CurrencyCodeUah = shared.Union122Variant4CurrencyCodeUah
-	Union122Variant4CurrencyCodeUgx = shared.Union122Variant4CurrencyCodeUgx
-	Union122Variant4CurrencyCodeUyu = shared.Union122Variant4CurrencyCodeUyu
-	Union122Variant4CurrencyCodeVnd = shared.Union122Variant4CurrencyCodeVnd
-	Union122Variant4CurrencyCodeZar = shared.Union122Variant4CurrencyCodeZar
-	Union122Variant4CurrencyCodeZmw = shared.Union122Variant4CurrencyCodeZmw
-	Union122Variant4CurrencyCodeTnd = shared.Union122Variant4CurrencyCodeTnd
-	Union122Variant4CurrencyCodeNgn = shared.Union122Variant4CurrencyCodeNgn
-	Union122Variant4CurrencyCodeRsd = shared.Union122Variant4CurrencyCodeRsd
-	Union122Variant4CurrencyCodeTwd = shared.Union122Variant4CurrencyCodeTwd
-	Union122Variant4CurrencyCodeGtq = shared.Union122Variant4CurrencyCodeGtq
-	Union122Variant4CurrencyCodeHnl = shared.Union122Variant4CurrencyCodeHnl
-	Union122Variant4CurrencyCodeDop = shared.Union122Variant4CurrencyCodeDop
-	Union122Variant4CurrencyCodeSar = shared.Union122Variant4CurrencyCodeSar
-	Union122Variant4CurrencyCodeXaf = shared.Union122Variant4CurrencyCodeXaf
-	Union122Variant4CurrencyCodePen = shared.Union122Variant4CurrencyCodePen
-)
-
-type Union122Variant5 = shared.Union122Variant5
-
-type Union122Variant5Type = shared.Union122Variant5Type
-
-const (
-	Union122Variant5TypePercentage = shared.Union122Variant5TypePercentage
-)
-
-type Union122Variant6 = shared.Union122Variant6
-
-type Union122Variant6Type = shared.Union122Variant6Type
-
-const (
-	Union122Variant6TypeSelect = shared.Union122Variant6TypeSelect
-)
-
-type Union122Variant7 = shared.Union122Variant7
-
-type Union122Variant7Type = shared.Union122Variant7Type
-
-const (
-	Union122Variant7TypeMultiSelect = shared.Union122Variant7TypeMultiSelect
-)
-
-type Union122Type = shared.Union122Type
-
-const (
-	Union122TypeText        = shared.Union122TypeText
-	Union122TypeNumber      = shared.Union122TypeNumber
-	Union122TypeDate        = shared.Union122TypeDate
-	Union122TypeBoolean     = shared.Union122TypeBoolean
-	Union122TypeCurrency    = shared.Union122TypeCurrency
-	Union122TypePercentage  = shared.Union122TypePercentage
-	Union122TypeSelect      = shared.Union122TypeSelect
-	Union122TypeMultiSelect = shared.Union122TypeMultiSelect
-)
-
-type Union122CurrencyCode = shared.Union122CurrencyCode
-
-const (
-	Union122CurrencyCodeUsd = shared.Union122CurrencyCodeUsd
-	Union122CurrencyCodeAud = shared.Union122CurrencyCodeAud
-	Union122CurrencyCodeBgn = shared.Union122CurrencyCodeBgn
-	Union122CurrencyCodeBrl = shared.Union122CurrencyCodeBrl
-	Union122CurrencyCodeCad = shared.Union122CurrencyCodeCad
-	Union122CurrencyCodeChf = shared.Union122CurrencyCodeChf
-	Union122CurrencyCodeCzk = shared.Union122CurrencyCodeCzk
-	Union122CurrencyCodeDkk = shared.Union122CurrencyCodeDkk
-	Union122CurrencyCodeEur = shared.Union122CurrencyCodeEur
-	Union122CurrencyCodeGbp = shared.Union122CurrencyCodeGbp
-	Union122CurrencyCodeHkd = shared.Union122CurrencyCodeHkd
-	Union122CurrencyCodeHuf = shared.Union122CurrencyCodeHuf
-	Union122CurrencyCodeIdr = shared.Union122CurrencyCodeIdr
-	Union122CurrencyCodeInr = shared.Union122CurrencyCodeInr
-	Union122CurrencyCodeJpy = shared.Union122CurrencyCodeJpy
-	Union122CurrencyCodeMyr = shared.Union122CurrencyCodeMyr
-	Union122CurrencyCodeNok = shared.Union122CurrencyCodeNok
-	Union122CurrencyCodeNzd = shared.Union122CurrencyCodeNzd
-	Union122CurrencyCodeCny = shared.Union122CurrencyCodeCny
-	Union122CurrencyCodePln = shared.Union122CurrencyCodePln
-	Union122CurrencyCodeRon = shared.Union122CurrencyCodeRon
-	Union122CurrencyCodeTry = shared.Union122CurrencyCodeTry
-	Union122CurrencyCodeSek = shared.Union122CurrencyCodeSek
-	Union122CurrencyCodeSgd = shared.Union122CurrencyCodeSgd
-	Union122CurrencyCodeAed = shared.Union122CurrencyCodeAed
-	Union122CurrencyCodeArs = shared.Union122CurrencyCodeArs
-	Union122CurrencyCodeBdt = shared.Union122CurrencyCodeBdt
-	Union122CurrencyCodeBwp = shared.Union122CurrencyCodeBwp
-	Union122CurrencyCodeClp = shared.Union122CurrencyCodeClp
-	Union122CurrencyCodeCop = shared.Union122CurrencyCodeCop
-	Union122CurrencyCodeCrc = shared.Union122CurrencyCodeCrc
-	Union122CurrencyCodeEgp = shared.Union122CurrencyCodeEgp
-	Union122CurrencyCodeFjd = shared.Union122CurrencyCodeFjd
-	Union122CurrencyCodeGel = shared.Union122CurrencyCodeGel
-	Union122CurrencyCodeGhs = shared.Union122CurrencyCodeGhs
-	Union122CurrencyCodeIls = shared.Union122CurrencyCodeIls
-	Union122CurrencyCodeKes = shared.Union122CurrencyCodeKes
-	Union122CurrencyCodeKrw = shared.Union122CurrencyCodeKrw
-	Union122CurrencyCodeLkr = shared.Union122CurrencyCodeLkr
-	Union122CurrencyCodeMad = shared.Union122CurrencyCodeMad
-	Union122CurrencyCodeMxn = shared.Union122CurrencyCodeMxn
-	Union122CurrencyCodeNpr = shared.Union122CurrencyCodeNpr
-	Union122CurrencyCodePhp = shared.Union122CurrencyCodePhp
-	Union122CurrencyCodePkr = shared.Union122CurrencyCodePkr
-	Union122CurrencyCodeThb = shared.Union122CurrencyCodeThb
-	Union122CurrencyCodeUah = shared.Union122CurrencyCodeUah
-	Union122CurrencyCodeUgx = shared.Union122CurrencyCodeUgx
-	Union122CurrencyCodeUyu = shared.Union122CurrencyCodeUyu
-	Union122CurrencyCodeVnd = shared.Union122CurrencyCodeVnd
-	Union122CurrencyCodeZar = shared.Union122CurrencyCodeZar
-	Union122CurrencyCodeZmw = shared.Union122CurrencyCodeZmw
-	Union122CurrencyCodeTnd = shared.Union122CurrencyCodeTnd
-	Union122CurrencyCodeNgn = shared.Union122CurrencyCodeNgn
-	Union122CurrencyCodeRsd = shared.Union122CurrencyCodeRsd
-	Union122CurrencyCodeTwd = shared.Union122CurrencyCodeTwd
-	Union122CurrencyCodeGtq = shared.Union122CurrencyCodeGtq
-	Union122CurrencyCodeHnl = shared.Union122CurrencyCodeHnl
-	Union122CurrencyCodeDop = shared.Union122CurrencyCodeDop
-	Union122CurrencyCodeSar = shared.Union122CurrencyCodeSar
-	Union122CurrencyCodeXaf = shared.Union122CurrencyCodeXaf
-	Union122CurrencyCodePen = shared.Union122CurrencyCodePen
-)
-
-type Union13 = shared.Union13
+type Union12 = shared.Union12
 
 type DepartmentNotFoundEncoded = shared.DepartmentNotFoundEncoded
 
@@ -462,6 +249,15 @@ type DepartmentNotFoundEncodedTag = shared.DepartmentNotFoundEncodedTag
 
 const (
 	DepartmentNotFoundEncodedTagDepartmentNotFound = shared.DepartmentNotFoundEncodedTagDepartmentNotFound
+)
+
+type Union13 = shared.Union13
+
+const (
+	Union13Draft    = shared.Union13Draft
+	Union13Sent     = shared.Union13Sent
+	Union13Accepted = shared.Union13Accepted
+	Union13Void     = shared.Union13Void
 )
 
 type Objects5 = shared.Objects5
@@ -756,15 +552,6 @@ const (
 
 type Objects5CompensationStock = shared.Objects5CompensationStock
 
-type Objects5Status = shared.Objects5Status
-
-const (
-	Objects5StatusDraft    = shared.Objects5StatusDraft
-	Objects5StatusSent     = shared.Objects5StatusSent
-	Objects5StatusAccepted = shared.Objects5StatusAccepted
-	Objects5StatusVoid     = shared.Objects5StatusVoid
-)
-
 type Objects5WorkerType = shared.Objects5WorkerType
 
 const (
@@ -803,15 +590,6 @@ type InvalidOfferStatusErrorEncodedTag = shared.InvalidOfferStatusErrorEncodedTa
 
 const (
 	InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError = shared.InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError
-)
-
-type InvalidOfferStatusErrorEncodedStatus = shared.InvalidOfferStatusErrorEncodedStatus
-
-const (
-	InvalidOfferStatusErrorEncodedStatusDraft    = shared.InvalidOfferStatusErrorEncodedStatusDraft
-	InvalidOfferStatusErrorEncodedStatusSent     = shared.InvalidOfferStatusErrorEncodedStatusSent
-	InvalidOfferStatusErrorEncodedStatusAccepted = shared.InvalidOfferStatusErrorEncodedStatusAccepted
-	InvalidOfferStatusErrorEncodedStatusVoid     = shared.InvalidOfferStatusErrorEncodedStatusVoid
 )
 
 type PublicPayrollType = shared.PublicPayrollType
@@ -857,7 +635,7 @@ const (
 	PublicPayFrequencyAnnually    = shared.PublicPayFrequencyAnnually
 )
 
-type Union21 = shared.Union21
+type Union20 = shared.Union20
 
 type PublicPayrollCurrency = shared.PublicPayrollCurrency
 
@@ -928,6 +706,14 @@ const (
 
 type PublicPayPeriod = shared.PublicPayPeriod
 
+type Union21 = shared.Union21
+
+const (
+	Union21UsW2             = shared.Union21UsW2
+	Union21Us1099           = shared.Union21Us1099
+	Union21GlobalContractor = shared.Union21GlobalContractor
+)
+
 type PublicPaycheckStatus = shared.PublicPaycheckStatus
 
 const (
@@ -957,35 +743,37 @@ const (
 	TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound = shared.TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound
 )
 
+type Union23 = shared.Union23
+
 type Union24 = shared.Union24
 
 type Union25 = shared.Union25
 
+const (
+	Union25Pending  = shared.Union25Pending
+	Union25Approved = shared.Union25Approved
+	Union25Denied   = shared.Union25Denied
+)
+
 type Union26 = shared.Union26
 
 const (
-	Union26Pending  = shared.Union26Pending
-	Union26Approved = shared.Union26Approved
-	Union26Denied   = shared.Union26Denied
+	Union26Draft       = shared.Union26Draft
+	Union26Invited     = shared.Union26Invited
+	Union26Onboarding  = shared.Union26Onboarding
+	Union26Active      = shared.Union26Active
+	Union26Offboarding = shared.Union26Offboarding
+	Union26Inactive    = shared.Union26Inactive
 )
 
 type Union27 = shared.Union27
 
 const (
-	Union27Draft       = shared.Union27Draft
-	Union27Invited     = shared.Union27Invited
-	Union27Onboarding  = shared.Union27Onboarding
-	Union27Active      = shared.Union27Active
-	Union27Offboarding = shared.Union27Offboarding
-	Union27Inactive    = shared.Union27Inactive
+	Union27Employee   = shared.Union27Employee
+	Union27Contractor = shared.Union27Contractor
 )
 
 type Union28 = shared.Union28
-
-const (
-	Union28Employee   = shared.Union28Employee
-	Union28Contractor = shared.Union28Contractor
-)
 
 type Union29 = shared.Union29
 
@@ -996,8 +784,6 @@ type Union31 = shared.Union31
 type Union32 = shared.Union32
 
 type Union33 = shared.Union33
-
-type Union34 = shared.Union34
 
 type WorkerNotFoundErrorEncoded = shared.WorkerNotFoundErrorEncoded
 

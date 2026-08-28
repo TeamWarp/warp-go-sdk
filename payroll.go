@@ -562,7 +562,7 @@ type PayrollListPaychecksParams struct {
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 	// Worker classifications in effect for the paycheck to include. Omit to include
 	// every worker type visible to the API key.
-	WorkerTypes param.Field[[]PayrollListPaychecksParamsWorkerType] `query:"workerTypes"`
+	WorkerTypes param.Field[[]Union21] `query:"workerTypes"`
 }
 
 // URLQuery serializes [PayrollListPaychecksParams]'s query parameters as `url.Values`.
@@ -571,22 +571,6 @@ func (r PayrollListPaychecksParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
-}
-
-type PayrollListPaychecksParamsWorkerType string
-
-const (
-	PayrollListPaychecksParamsWorkerTypeUsW2             PayrollListPaychecksParamsWorkerType = "us_w2"
-	PayrollListPaychecksParamsWorkerTypeUs1099           PayrollListPaychecksParamsWorkerType = "us_1099"
-	PayrollListPaychecksParamsWorkerTypeGlobalContractor PayrollListPaychecksParamsWorkerType = "global_contractor"
-)
-
-func (r PayrollListPaychecksParamsWorkerType) IsKnown() bool {
-	switch r {
-	case PayrollListPaychecksParamsWorkerTypeUsW2, PayrollListPaychecksParamsWorkerTypeUs1099, PayrollListPaychecksParamsWorkerTypeGlobalContractor:
-		return true
-	}
-	return false
 }
 
 type PayrollListParams struct {

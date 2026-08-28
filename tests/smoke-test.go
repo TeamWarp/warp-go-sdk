@@ -414,7 +414,7 @@ func _smokeCase32() {
 		AfterID:        sdk.F[string]("offr_1234"),
 		BeforeID:       sdk.F[string]("offr_1234"),
 		CandidateEmail: sdk.F[string]("john@joinwarp.com"),
-		Statuses:       sdk.F[[]sdk.OfferListParamsStatus]([]sdk.OfferListParamsStatus{"draft"}),
+		Statuses:       sdk.F[[]sdk.Union13]([]sdk.Union13{"draft"}),
 		WorkerTypes:    sdk.F[[]sdk.OfferListParamsWorkerType]([]sdk.OfferListParamsWorkerType{"employee"}),
 	})
 	if err != nil {
@@ -629,7 +629,7 @@ func _smokeCase47() {
 		PolicyIDs:       sdk.F[[]string]([]string{"top_1234"}),
 		StartsBefore:    sdk.F[string](""),
 		StartsOnOrAfter: sdk.F[string](""),
-		Statuses:        sdk.F[[]sdk.Union26]([]sdk.Union26{"pending"}),
+		Statuses:        sdk.F[[]sdk.Union25]([]sdk.Union25{"pending"}),
 		WorkerIDs:       sdk.F[[]string]([]string{"wrk_1234"}),
 	})
 	if err != nil {
@@ -688,8 +688,8 @@ func _smokeCase52() {
 		Limit:     sdk.F[string]("limit"),
 		AfterID:   sdk.F[string]("wrk_1234"),
 		BeforeID:  sdk.F[string]("wrk_1234"),
-		Statuses:  sdk.F[[]sdk.Union27]([]sdk.Union27{"draft"}),
-		Types:     sdk.F[[]sdk.Union28]([]sdk.Union28{"employee"}),
+		Statuses:  sdk.F[[]sdk.Union26]([]sdk.Union26{"draft"}),
+		Types:     sdk.F[[]sdk.Union27]([]sdk.Union27{"employee"}),
 		WorkEmail: sdk.F[string](""),
 	})
 	if err != nil {
@@ -898,7 +898,7 @@ func _smokeCase66() {
 		PayrollTypes:           sdk.F[[]sdk.PublicPayrollType]([]sdk.PublicPayrollType{"us"}),
 		Statuses:               sdk.F[[]sdk.PublicPaycheckStatus]([]sdk.PublicPaycheckStatus{"processing"}),
 		WorkerIDs:              sdk.F[[]string]([]string{"wrk_1234"}),
-		WorkerTypes:            sdk.F[[]sdk.PayrollListPaychecksParamsWorkerType]([]sdk.PayrollListPaychecksParamsWorkerType{"us_w2"}),
+		WorkerTypes:            sdk.F[[]sdk.Union21]([]sdk.Union21{"us_w2"}),
 	})
 	if err != nil {
 		panic(err)
