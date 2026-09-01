@@ -114,6 +114,7 @@ const (
 	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeOffers                    = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeOffers
 	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeDepartments               = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeDepartments
 	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeLevels                    = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeLevels
+	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopePerformance               = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopePerformance
 	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeWorkplaces                = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeWorkplaces
 	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeTimeOff                   = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeTimeOff
 	MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeTimeTracking              = shared.MissingRequiredCompanyPermissionsEncodedRequiredPermissionsScopeTimeTracking
