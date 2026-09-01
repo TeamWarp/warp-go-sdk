@@ -1,11 +1,11 @@
 ---
-name: warp-api-go-sdk
-description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the github.com/TeamWarp/warp-go-sdk package: installing it, constructing and authenticating the client, and calling API operations."
+name: warp-go-sdk
+description: "Go SDK for warp API. Use when writing Go code that calls warp API with the github.com/TeamWarp/warp-go-sdk package: installing it, constructing and authenticating the client, and calling API operations."
 ---
 
-# Warp API Go SDK
+# warp Go SDK
 
-Generated Go client for Warp API, published as `github.com/TeamWarp/warp-go-sdk`. Use the generated client instead of hand-writing HTTP requests.
+Generated Go client for warp API, published as `github.com/TeamWarp/warp-go-sdk`. Use the generated client instead of hand-writing HTTP requests.
 
 ## Install
 
