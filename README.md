@@ -1,6 +1,6 @@
-# Warp API
+# warp
 
-This library provides convenient access to the Warp API from Go.
+This library provides convenient access to the warp REST API from Go.
 
 The full API of this library can be found in [api.md](./api.md).
 
