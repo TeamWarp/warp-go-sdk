@@ -549,7 +549,7 @@ Void a previously sent offer. Only sent offers can be voided.
 | Direction | Type |
 | --- | --- |
 | Request | [`OfferVoidParams`](./offer.go) |
-| Response | [`Objects5`](./shared/shared.go) |
+| Response | [`OfferVoidResponse`](./offer.go) |
 
 ```go
 offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{})
@@ -567,7 +567,7 @@ Extend the expiration deadline of a sent offer.
 | Direction | Type |
 | --- | --- |
 | Request | [`OfferExtendDeadlineParams`](./offer.go) |
-| Response | [`Objects5`](./shared/shared.go) |
+| Response | [`OfferExtendDeadlineResponse`](./offer.go) |
 
 ```go
 offer, err := client.Offers.ExtendDeadline(context.Background(), "offr_1234", sdk.OfferExtendDeadlineParams{
@@ -586,7 +586,7 @@ Resend the offer email to the candidate for a sent offer.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`Objects5`](./shared/shared.go) |
+| Response | [`OfferResendResponse`](./offer.go) |
 
 ```go
 offer, err := client.Offers.Resend(context.Background(), "offr_1234")
@@ -773,7 +773,7 @@ Get a specific worker by id.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`WorkerGetResponse`](./worker.go) |
+| Response | [`Objects11`](./workplace.go) |
 
 ```go
 worker, err := client.Workers.Get(context.Background(), "wrk_1234")
@@ -905,7 +905,7 @@ Create a new workplace.
 
 ```go
 workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-	Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
+	Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 		Line1:      sdk.F[string]("x"),
 		City:       sdk.F[string](""),
 		PostalCode: sdk.F[string](""),

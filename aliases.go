@@ -252,6 +252,16 @@ const (
 	DepartmentNotFoundEncodedTagDepartmentNotFound = shared.DepartmentNotFoundEncodedTagDepartmentNotFound
 )
 
+type Objects5 = shared.Objects5
+
+type Objects5Track = shared.Objects5Track
+
+const (
+	Objects5TrackIc        = shared.Objects5TrackIc
+	Objects5TrackManager   = shared.Objects5TrackManager
+	Objects5TrackExecutive = shared.Objects5TrackExecutive
+)
+
 type Union13 = shared.Union13
 
 const (
@@ -259,306 +269,6 @@ const (
 	Union13Sent     = shared.Union13Sent
 	Union13Accepted = shared.Union13Accepted
 	Union13Void     = shared.Union13Void
-)
-
-type Objects5 = shared.Objects5
-
-type Objects5Candidate = shared.Objects5Candidate
-
-type Objects5CandidateContractorDetails = shared.Objects5CandidateContractorDetails
-
-type Objects5Position = shared.Objects5Position
-
-type Objects5PositionCountry = shared.Objects5PositionCountry
-
-const (
-	Objects5PositionCountryAd = shared.Objects5PositionCountryAd
-	Objects5PositionCountryAe = shared.Objects5PositionCountryAe
-	Objects5PositionCountryAf = shared.Objects5PositionCountryAf
-	Objects5PositionCountryAg = shared.Objects5PositionCountryAg
-	Objects5PositionCountryAI = shared.Objects5PositionCountryAI
-	Objects5PositionCountryAl = shared.Objects5PositionCountryAl
-	Objects5PositionCountryAm = shared.Objects5PositionCountryAm
-	Objects5PositionCountryAo = shared.Objects5PositionCountryAo
-	Objects5PositionCountryAq = shared.Objects5PositionCountryAq
-	Objects5PositionCountryAr = shared.Objects5PositionCountryAr
-	Objects5PositionCountryAs = shared.Objects5PositionCountryAs
-	Objects5PositionCountryAt = shared.Objects5PositionCountryAt
-	Objects5PositionCountryAu = shared.Objects5PositionCountryAu
-	Objects5PositionCountryAw = shared.Objects5PositionCountryAw
-	Objects5PositionCountryAx = shared.Objects5PositionCountryAx
-	Objects5PositionCountryAz = shared.Objects5PositionCountryAz
-	Objects5PositionCountryBa = shared.Objects5PositionCountryBa
-	Objects5PositionCountryBb = shared.Objects5PositionCountryBb
-	Objects5PositionCountryBd = shared.Objects5PositionCountryBd
-	Objects5PositionCountryBe = shared.Objects5PositionCountryBe
-	Objects5PositionCountryBf = shared.Objects5PositionCountryBf
-	Objects5PositionCountryBg = shared.Objects5PositionCountryBg
-	Objects5PositionCountryBh = shared.Objects5PositionCountryBh
-	Objects5PositionCountryBi = shared.Objects5PositionCountryBi
-	Objects5PositionCountryBj = shared.Objects5PositionCountryBj
-	Objects5PositionCountryBl = shared.Objects5PositionCountryBl
-	Objects5PositionCountryBm = shared.Objects5PositionCountryBm
-	Objects5PositionCountryBn = shared.Objects5PositionCountryBn
-	Objects5PositionCountryBo = shared.Objects5PositionCountryBo
-	Objects5PositionCountryBq = shared.Objects5PositionCountryBq
-	Objects5PositionCountryBr = shared.Objects5PositionCountryBr
-	Objects5PositionCountryBs = shared.Objects5PositionCountryBs
-	Objects5PositionCountryBt = shared.Objects5PositionCountryBt
-	Objects5PositionCountryBv = shared.Objects5PositionCountryBv
-	Objects5PositionCountryBw = shared.Objects5PositionCountryBw
-	Objects5PositionCountryBy = shared.Objects5PositionCountryBy
-	Objects5PositionCountryBz = shared.Objects5PositionCountryBz
-	Objects5PositionCountryCa = shared.Objects5PositionCountryCa
-	Objects5PositionCountryCc = shared.Objects5PositionCountryCc
-	Objects5PositionCountryCd = shared.Objects5PositionCountryCd
-	Objects5PositionCountryCf = shared.Objects5PositionCountryCf
-	Objects5PositionCountryCg = shared.Objects5PositionCountryCg
-	Objects5PositionCountryCh = shared.Objects5PositionCountryCh
-	Objects5PositionCountryCi = shared.Objects5PositionCountryCi
-	Objects5PositionCountryCk = shared.Objects5PositionCountryCk
-	Objects5PositionCountryCl = shared.Objects5PositionCountryCl
-	Objects5PositionCountryCm = shared.Objects5PositionCountryCm
-	Objects5PositionCountryCn = shared.Objects5PositionCountryCn
-	Objects5PositionCountryCo = shared.Objects5PositionCountryCo
-	Objects5PositionCountryCr = shared.Objects5PositionCountryCr
-	Objects5PositionCountryCu = shared.Objects5PositionCountryCu
-	Objects5PositionCountryCv = shared.Objects5PositionCountryCv
-	Objects5PositionCountryCw = shared.Objects5PositionCountryCw
-	Objects5PositionCountryCx = shared.Objects5PositionCountryCx
-	Objects5PositionCountryCy = shared.Objects5PositionCountryCy
-	Objects5PositionCountryCz = shared.Objects5PositionCountryCz
-	Objects5PositionCountryDe = shared.Objects5PositionCountryDe
-	Objects5PositionCountryDj = shared.Objects5PositionCountryDj
-	Objects5PositionCountryDk = shared.Objects5PositionCountryDk
-	Objects5PositionCountryDm = shared.Objects5PositionCountryDm
-	Objects5PositionCountryDo = shared.Objects5PositionCountryDo
-	Objects5PositionCountryDz = shared.Objects5PositionCountryDz
-	Objects5PositionCountryEc = shared.Objects5PositionCountryEc
-	Objects5PositionCountryEe = shared.Objects5PositionCountryEe
-	Objects5PositionCountryEg = shared.Objects5PositionCountryEg
-	Objects5PositionCountryEh = shared.Objects5PositionCountryEh
-	Objects5PositionCountryEr = shared.Objects5PositionCountryEr
-	Objects5PositionCountryEs = shared.Objects5PositionCountryEs
-	Objects5PositionCountryEt = shared.Objects5PositionCountryEt
-	Objects5PositionCountryFi = shared.Objects5PositionCountryFi
-	Objects5PositionCountryFj = shared.Objects5PositionCountryFj
-	Objects5PositionCountryFk = shared.Objects5PositionCountryFk
-	Objects5PositionCountryFm = shared.Objects5PositionCountryFm
-	Objects5PositionCountryFo = shared.Objects5PositionCountryFo
-	Objects5PositionCountryFr = shared.Objects5PositionCountryFr
-	Objects5PositionCountryGa = shared.Objects5PositionCountryGa
-	Objects5PositionCountryGB = shared.Objects5PositionCountryGB
-	Objects5PositionCountryGd = shared.Objects5PositionCountryGd
-	Objects5PositionCountryGe = shared.Objects5PositionCountryGe
-	Objects5PositionCountryGf = shared.Objects5PositionCountryGf
-	Objects5PositionCountryGg = shared.Objects5PositionCountryGg
-	Objects5PositionCountryGh = shared.Objects5PositionCountryGh
-	Objects5PositionCountryGi = shared.Objects5PositionCountryGi
-	Objects5PositionCountryGl = shared.Objects5PositionCountryGl
-	Objects5PositionCountryGm = shared.Objects5PositionCountryGm
-	Objects5PositionCountryGn = shared.Objects5PositionCountryGn
-	Objects5PositionCountryGp = shared.Objects5PositionCountryGp
-	Objects5PositionCountryGq = shared.Objects5PositionCountryGq
-	Objects5PositionCountryGr = shared.Objects5PositionCountryGr
-	Objects5PositionCountryGs = shared.Objects5PositionCountryGs
-	Objects5PositionCountryGt = shared.Objects5PositionCountryGt
-	Objects5PositionCountryGu = shared.Objects5PositionCountryGu
-	Objects5PositionCountryGw = shared.Objects5PositionCountryGw
-	Objects5PositionCountryGy = shared.Objects5PositionCountryGy
-	Objects5PositionCountryHk = shared.Objects5PositionCountryHk
-	Objects5PositionCountryHm = shared.Objects5PositionCountryHm
-	Objects5PositionCountryHn = shared.Objects5PositionCountryHn
-	Objects5PositionCountryHr = shared.Objects5PositionCountryHr
-	Objects5PositionCountryHt = shared.Objects5PositionCountryHt
-	Objects5PositionCountryHu = shared.Objects5PositionCountryHu
-	Objects5PositionCountryID = shared.Objects5PositionCountryID
-	Objects5PositionCountryIe = shared.Objects5PositionCountryIe
-	Objects5PositionCountryIl = shared.Objects5PositionCountryIl
-	Objects5PositionCountryIm = shared.Objects5PositionCountryIm
-	Objects5PositionCountryIn = shared.Objects5PositionCountryIn
-	Objects5PositionCountryIo = shared.Objects5PositionCountryIo
-	Objects5PositionCountryIq = shared.Objects5PositionCountryIq
-	Objects5PositionCountryIr = shared.Objects5PositionCountryIr
-	Objects5PositionCountryIs = shared.Objects5PositionCountryIs
-	Objects5PositionCountryIt = shared.Objects5PositionCountryIt
-	Objects5PositionCountryJe = shared.Objects5PositionCountryJe
-	Objects5PositionCountryJm = shared.Objects5PositionCountryJm
-	Objects5PositionCountryJo = shared.Objects5PositionCountryJo
-	Objects5PositionCountryJp = shared.Objects5PositionCountryJp
-	Objects5PositionCountryKe = shared.Objects5PositionCountryKe
-	Objects5PositionCountryKg = shared.Objects5PositionCountryKg
-	Objects5PositionCountryKh = shared.Objects5PositionCountryKh
-	Objects5PositionCountryKi = shared.Objects5PositionCountryKi
-	Objects5PositionCountryKm = shared.Objects5PositionCountryKm
-	Objects5PositionCountryKn = shared.Objects5PositionCountryKn
-	Objects5PositionCountryKp = shared.Objects5PositionCountryKp
-	Objects5PositionCountryKr = shared.Objects5PositionCountryKr
-	Objects5PositionCountryKw = shared.Objects5PositionCountryKw
-	Objects5PositionCountryKy = shared.Objects5PositionCountryKy
-	Objects5PositionCountryKz = shared.Objects5PositionCountryKz
-	Objects5PositionCountryLa = shared.Objects5PositionCountryLa
-	Objects5PositionCountryLb = shared.Objects5PositionCountryLb
-	Objects5PositionCountryLc = shared.Objects5PositionCountryLc
-	Objects5PositionCountryLi = shared.Objects5PositionCountryLi
-	Objects5PositionCountryLk = shared.Objects5PositionCountryLk
-	Objects5PositionCountryLr = shared.Objects5PositionCountryLr
-	Objects5PositionCountryLs = shared.Objects5PositionCountryLs
-	Objects5PositionCountryLt = shared.Objects5PositionCountryLt
-	Objects5PositionCountryLu = shared.Objects5PositionCountryLu
-	Objects5PositionCountryLv = shared.Objects5PositionCountryLv
-	Objects5PositionCountryLy = shared.Objects5PositionCountryLy
-	Objects5PositionCountryMa = shared.Objects5PositionCountryMa
-	Objects5PositionCountryMc = shared.Objects5PositionCountryMc
-	Objects5PositionCountryMd = shared.Objects5PositionCountryMd
-	Objects5PositionCountryMe = shared.Objects5PositionCountryMe
-	Objects5PositionCountryMf = shared.Objects5PositionCountryMf
-	Objects5PositionCountryMg = shared.Objects5PositionCountryMg
-	Objects5PositionCountryMh = shared.Objects5PositionCountryMh
-	Objects5PositionCountryMk = shared.Objects5PositionCountryMk
-	Objects5PositionCountryMl = shared.Objects5PositionCountryMl
-	Objects5PositionCountryMm = shared.Objects5PositionCountryMm
-	Objects5PositionCountryMn = shared.Objects5PositionCountryMn
-	Objects5PositionCountryMo = shared.Objects5PositionCountryMo
-	Objects5PositionCountryMp = shared.Objects5PositionCountryMp
-	Objects5PositionCountryMq = shared.Objects5PositionCountryMq
-	Objects5PositionCountryMr = shared.Objects5PositionCountryMr
-	Objects5PositionCountryMs = shared.Objects5PositionCountryMs
-	Objects5PositionCountryMt = shared.Objects5PositionCountryMt
-	Objects5PositionCountryMu = shared.Objects5PositionCountryMu
-	Objects5PositionCountryMv = shared.Objects5PositionCountryMv
-	Objects5PositionCountryMw = shared.Objects5PositionCountryMw
-	Objects5PositionCountryMx = shared.Objects5PositionCountryMx
-	Objects5PositionCountryMy = shared.Objects5PositionCountryMy
-	Objects5PositionCountryMz = shared.Objects5PositionCountryMz
-	Objects5PositionCountryNa = shared.Objects5PositionCountryNa
-	Objects5PositionCountryNc = shared.Objects5PositionCountryNc
-	Objects5PositionCountryNe = shared.Objects5PositionCountryNe
-	Objects5PositionCountryNf = shared.Objects5PositionCountryNf
-	Objects5PositionCountryNg = shared.Objects5PositionCountryNg
-	Objects5PositionCountryNi = shared.Objects5PositionCountryNi
-	Objects5PositionCountryNl = shared.Objects5PositionCountryNl
-	Objects5PositionCountryNo = shared.Objects5PositionCountryNo
-	Objects5PositionCountryNp = shared.Objects5PositionCountryNp
-	Objects5PositionCountryNr = shared.Objects5PositionCountryNr
-	Objects5PositionCountryNu = shared.Objects5PositionCountryNu
-	Objects5PositionCountryNz = shared.Objects5PositionCountryNz
-	Objects5PositionCountryOm = shared.Objects5PositionCountryOm
-	Objects5PositionCountryPa = shared.Objects5PositionCountryPa
-	Objects5PositionCountryPe = shared.Objects5PositionCountryPe
-	Objects5PositionCountryPf = shared.Objects5PositionCountryPf
-	Objects5PositionCountryPg = shared.Objects5PositionCountryPg
-	Objects5PositionCountryPh = shared.Objects5PositionCountryPh
-	Objects5PositionCountryPk = shared.Objects5PositionCountryPk
-	Objects5PositionCountryPl = shared.Objects5PositionCountryPl
-	Objects5PositionCountryPm = shared.Objects5PositionCountryPm
-	Objects5PositionCountryPn = shared.Objects5PositionCountryPn
-	Objects5PositionCountryPr = shared.Objects5PositionCountryPr
-	Objects5PositionCountryPs = shared.Objects5PositionCountryPs
-	Objects5PositionCountryPt = shared.Objects5PositionCountryPt
-	Objects5PositionCountryPw = shared.Objects5PositionCountryPw
-	Objects5PositionCountryPy = shared.Objects5PositionCountryPy
-	Objects5PositionCountryQa = shared.Objects5PositionCountryQa
-	Objects5PositionCountryRe = shared.Objects5PositionCountryRe
-	Objects5PositionCountryRo = shared.Objects5PositionCountryRo
-	Objects5PositionCountryRs = shared.Objects5PositionCountryRs
-	Objects5PositionCountryRu = shared.Objects5PositionCountryRu
-	Objects5PositionCountryRw = shared.Objects5PositionCountryRw
-	Objects5PositionCountrySa = shared.Objects5PositionCountrySa
-	Objects5PositionCountrySb = shared.Objects5PositionCountrySb
-	Objects5PositionCountrySc = shared.Objects5PositionCountrySc
-	Objects5PositionCountrySd = shared.Objects5PositionCountrySd
-	Objects5PositionCountrySe = shared.Objects5PositionCountrySe
-	Objects5PositionCountrySg = shared.Objects5PositionCountrySg
-	Objects5PositionCountrySh = shared.Objects5PositionCountrySh
-	Objects5PositionCountrySi = shared.Objects5PositionCountrySi
-	Objects5PositionCountrySj = shared.Objects5PositionCountrySj
-	Objects5PositionCountrySk = shared.Objects5PositionCountrySk
-	Objects5PositionCountrySl = shared.Objects5PositionCountrySl
-	Objects5PositionCountrySm = shared.Objects5PositionCountrySm
-	Objects5PositionCountrySn = shared.Objects5PositionCountrySn
-	Objects5PositionCountrySo = shared.Objects5PositionCountrySo
-	Objects5PositionCountrySr = shared.Objects5PositionCountrySr
-	Objects5PositionCountrySS = shared.Objects5PositionCountrySS
-	Objects5PositionCountrySt = shared.Objects5PositionCountrySt
-	Objects5PositionCountrySv = shared.Objects5PositionCountrySv
-	Objects5PositionCountrySx = shared.Objects5PositionCountrySx
-	Objects5PositionCountrySy = shared.Objects5PositionCountrySy
-	Objects5PositionCountrySz = shared.Objects5PositionCountrySz
-	Objects5PositionCountryTc = shared.Objects5PositionCountryTc
-	Objects5PositionCountryTd = shared.Objects5PositionCountryTd
-	Objects5PositionCountryTf = shared.Objects5PositionCountryTf
-	Objects5PositionCountryTg = shared.Objects5PositionCountryTg
-	Objects5PositionCountryTh = shared.Objects5PositionCountryTh
-	Objects5PositionCountryTj = shared.Objects5PositionCountryTj
-	Objects5PositionCountryTk = shared.Objects5PositionCountryTk
-	Objects5PositionCountryTl = shared.Objects5PositionCountryTl
-	Objects5PositionCountryTm = shared.Objects5PositionCountryTm
-	Objects5PositionCountryTn = shared.Objects5PositionCountryTn
-	Objects5PositionCountryTo = shared.Objects5PositionCountryTo
-	Objects5PositionCountryTr = shared.Objects5PositionCountryTr
-	Objects5PositionCountryTt = shared.Objects5PositionCountryTt
-	Objects5PositionCountryTv = shared.Objects5PositionCountryTv
-	Objects5PositionCountryTw = shared.Objects5PositionCountryTw
-	Objects5PositionCountryTz = shared.Objects5PositionCountryTz
-	Objects5PositionCountryUa = shared.Objects5PositionCountryUa
-	Objects5PositionCountryUg = shared.Objects5PositionCountryUg
-	Objects5PositionCountryUm = shared.Objects5PositionCountryUm
-	Objects5PositionCountryUs = shared.Objects5PositionCountryUs
-	Objects5PositionCountryUy = shared.Objects5PositionCountryUy
-	Objects5PositionCountryUz = shared.Objects5PositionCountryUz
-	Objects5PositionCountryVa = shared.Objects5PositionCountryVa
-	Objects5PositionCountryVc = shared.Objects5PositionCountryVc
-	Objects5PositionCountryVe = shared.Objects5PositionCountryVe
-	Objects5PositionCountryVg = shared.Objects5PositionCountryVg
-	Objects5PositionCountryVi = shared.Objects5PositionCountryVi
-	Objects5PositionCountryVn = shared.Objects5PositionCountryVn
-	Objects5PositionCountryVu = shared.Objects5PositionCountryVu
-	Objects5PositionCountryWf = shared.Objects5PositionCountryWf
-	Objects5PositionCountryWs = shared.Objects5PositionCountryWs
-	Objects5PositionCountryXk = shared.Objects5PositionCountryXk
-	Objects5PositionCountryYe = shared.Objects5PositionCountryYe
-	Objects5PositionCountryYt = shared.Objects5PositionCountryYt
-	Objects5PositionCountryZa = shared.Objects5PositionCountryZa
-	Objects5PositionCountryZm = shared.Objects5PositionCountryZm
-	Objects5PositionCountryZw = shared.Objects5PositionCountryZw
-)
-
-type Objects5Department = shared.Objects5Department
-
-type Objects5Workplace = shared.Objects5Workplace
-
-type Objects5Manager = shared.Objects5Manager
-
-type Objects5Compensation = shared.Objects5Compensation
-
-type Objects5CompensationBasePay = shared.Objects5CompensationBasePay
-
-type Objects5CompensationBasePayBasis = shared.Objects5CompensationBasePayBasis
-
-const (
-	Objects5CompensationBasePayBasisYear     = shared.Objects5CompensationBasePayBasisYear
-	Objects5CompensationBasePayBasisMonth    = shared.Objects5CompensationBasePayBasisMonth
-	Objects5CompensationBasePayBasisWeek     = shared.Objects5CompensationBasePayBasisWeek
-	Objects5CompensationBasePayBasisHour     = shared.Objects5CompensationBasePayBasisHour
-	Objects5CompensationBasePayBasisVariable = shared.Objects5CompensationBasePayBasisVariable
-)
-
-type Objects5CompensationBasePayType = shared.Objects5CompensationBasePayType
-
-const (
-	Objects5CompensationBasePayTypeFixed      = shared.Objects5CompensationBasePayTypeFixed
-	Objects5CompensationBasePayTypePayAsYouGo = shared.Objects5CompensationBasePayTypePayAsYouGo
-)
-
-type Objects5CompensationStock = shared.Objects5CompensationStock
-
-type Objects5WorkerType = shared.Objects5WorkerType
-
-const (
-	Objects5WorkerTypeEmployee         = shared.Objects5WorkerTypeEmployee
-	Objects5WorkerTypeUsContractor     = shared.Objects5WorkerTypeUsContractor
-	Objects5WorkerTypeGlobalContractor = shared.Objects5WorkerTypeGlobalContractor
 )
 
 type WorkplaceNotFoundEncoded = shared.WorkplaceNotFoundEncoded
@@ -636,7 +346,7 @@ const (
 	PublicPayFrequencyAnnually    = shared.PublicPayFrequencyAnnually
 )
 
-type Union20 = shared.Union20
+type Union21 = shared.Union21
 
 type PublicPayrollCurrency = shared.PublicPayrollCurrency
 
@@ -707,14 +417,6 @@ const (
 
 type PublicPayPeriod = shared.PublicPayPeriod
 
-type Union21 = shared.Union21
-
-const (
-	Union21UsW2             = shared.Union21UsW2
-	Union21Us1099           = shared.Union21Us1099
-	Union21GlobalContractor = shared.Union21GlobalContractor
-)
-
 type PublicPaycheckStatus = shared.PublicPaycheckStatus
 
 const (
@@ -744,37 +446,35 @@ const (
 	TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound = shared.TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound
 )
 
-type Union23 = shared.Union23
-
 type Union24 = shared.Union24
 
 type Union25 = shared.Union25
 
-const (
-	Union25Pending  = shared.Union25Pending
-	Union25Approved = shared.Union25Approved
-	Union25Denied   = shared.Union25Denied
-)
-
 type Union26 = shared.Union26
 
 const (
-	Union26Draft       = shared.Union26Draft
-	Union26Invited     = shared.Union26Invited
-	Union26Onboarding  = shared.Union26Onboarding
-	Union26Active      = shared.Union26Active
-	Union26Offboarding = shared.Union26Offboarding
-	Union26Inactive    = shared.Union26Inactive
+	Union26Pending  = shared.Union26Pending
+	Union26Approved = shared.Union26Approved
+	Union26Denied   = shared.Union26Denied
 )
 
 type Union27 = shared.Union27
 
 const (
-	Union27Employee   = shared.Union27Employee
-	Union27Contractor = shared.Union27Contractor
+	Union27Draft       = shared.Union27Draft
+	Union27Invited     = shared.Union27Invited
+	Union27Onboarding  = shared.Union27Onboarding
+	Union27Active      = shared.Union27Active
+	Union27Offboarding = shared.Union27Offboarding
+	Union27Inactive    = shared.Union27Inactive
 )
 
 type Union28 = shared.Union28
+
+const (
+	Union28Employee   = shared.Union28Employee
+	Union28Contractor = shared.Union28Contractor
+)
 
 type Union29 = shared.Union29
 
@@ -785,6 +485,8 @@ type Union31 = shared.Union31
 type Union32 = shared.Union32
 
 type Union33 = shared.Union33
+
+type Union34 = shared.Union34
 
 type WorkerNotFoundErrorEncoded = shared.WorkerNotFoundErrorEncoded
 

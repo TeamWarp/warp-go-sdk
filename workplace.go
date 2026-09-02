@@ -8,13 +8,17 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"slices"
+
+	"github.com/tidwall/gjson"
 
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 	"github.com/TeamWarp/warp-go-sdk/internal/apiquery"
 	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
+	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // WorkplaceService contains methods and other services that help with interacting
@@ -77,7 +81,7 @@ func (r *WorkplaceService) List(ctx context.Context, query WorkplaceListParams, 
 // Example:
 //
 //	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-//		Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
+//		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 //			Line1:      sdk.F[string]("x"),
 //			City:       sdk.F[string](""),
 //			PostalCode: sdk.F[string](""),
@@ -129,25 +133,60 @@ func (r *WorkplaceService) Update(ctx context.Context, id string, body Workplace
 }
 
 type Objects11 struct {
-	Line1      string           `json:"line1" api:"required"`
-	City       string           `json:"city" api:"required"`
-	PostalCode string           `json:"postalCode" api:"required"`
-	State      Objects11State   `json:"state" api:"required"`
-	Country    Objects11Country `json:"country" api:"required"`
-	Line2      string           `json:"line2" api:"nullable"`
-	JSON       objects11JSON    `json:"-"`
+	ID            string  `json:"id" api:"required"`
+	Position      string  `json:"position" api:"required"`
+	Type          Union28 `json:"type" api:"required"`
+	Status        Union27 `json:"status" api:"required"`
+	StartDate     string  `json:"startDate" api:"required"`
+	EndDate       string  `json:"endDate" api:"required,nullable"`
+	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
+	BusinessName  string  `json:"businessName" api:"required,nullable"`
+	FirstName     string  `json:"firstName" api:"required"`
+	LastName      string  `json:"lastName" api:"required"`
+	Email         string  `json:"email" api:"required" format:"email"`
+	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string  `json:"preferredName" api:"required,nullable"`
+	// The "ui" name of a worker. If it's a business contractor business name is used.
+	// Otherwise we default to preferred name, then first-last.
+	DisplayName string `json:"displayName" api:"required"`
+	// The IANA timezone of the worker (e.g., America/New_York).
+	TimeZone string `json:"timeZone" api:"required,nullable"`
+	// The department the worker belongs to, or null if unassigned.
+	Department Objects11Department `json:"department" api:"required,nullable"`
+	// The worker's current regular compensation, or the rate effective on a future
+	// start date. Null when the worker has no applicable regular pay rate or the API
+	// key lacks the corresponding compensation read scope.
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        shared.Objects5        `json:"level" api:"nullable"`
+	CustomFields []Objects11CustomField `json:"customFields" api:"nullable"`
+	JSON         objects11JSON          `json:"-"`
 }
 
 // objects11JSON contains the JSON metadata for the struct [Objects11]
 type objects11JSON struct {
-	Line1       apijson.Field
-	City        apijson.Field
-	PostalCode  apijson.Field
-	State       apijson.Field
-	Country     apijson.Field
-	Line2       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	ID            apijson.Field
+	Position      apijson.Field
+	Type          apijson.Field
+	Status        apijson.Field
+	StartDate     apijson.Field
+	EndDate       apijson.Field
+	IsBusiness    apijson.Field
+	BusinessName  apijson.Field
+	FirstName     apijson.Field
+	LastName      apijson.Field
+	Email         apijson.Field
+	WorkEmail     apijson.Field
+	PreferredName apijson.Field
+	DisplayName   apijson.Field
+	TimeZone      apijson.Field
+	Department    apijson.Field
+	Compensation  apijson.Field
+	Level         apijson.Field
+	CustomFields  apijson.Field
+	raw           string
+	ExtraFields   map[string]apijson.Field
 }
 
 func (r *Objects11) UnmarshalJSON(data []byte) (err error) {
@@ -156,97 +195,6 @@ func (r *Objects11) UnmarshalJSON(data []byte) (err error) {
 
 func (r objects11JSON) RawJSON() string {
 	return r.raw
-}
-
-type Objects11Param struct {
-	City       param.Field[string]           `json:"city" api:"required"`
-	Country    param.Field[Objects11Country] `json:"country" api:"required"`
-	Line1      param.Field[string]           `json:"line1" api:"required"`
-	PostalCode param.Field[string]           `json:"postalCode" api:"required"`
-	State      param.Field[Objects11State]   `json:"state" api:"required"`
-	Line2      param.Field[string]           `json:"line2"`
-}
-
-func (r Objects11Param) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type Objects11State string
-
-const (
-	Objects11StateAl Objects11State = "AL"
-	Objects11StateAk Objects11State = "AK"
-	Objects11StateAz Objects11State = "AZ"
-	Objects11StateAr Objects11State = "AR"
-	Objects11StateCa Objects11State = "CA"
-	Objects11StateCo Objects11State = "CO"
-	Objects11StateCt Objects11State = "CT"
-	Objects11StateDc Objects11State = "DC"
-	Objects11StateDe Objects11State = "DE"
-	Objects11StateFl Objects11State = "FL"
-	Objects11StateGa Objects11State = "GA"
-	Objects11StateHi Objects11State = "HI"
-	Objects11StateID Objects11State = "ID"
-	Objects11StateIl Objects11State = "IL"
-	Objects11StateIn Objects11State = "IN"
-	Objects11StateIa Objects11State = "IA"
-	Objects11StateKs Objects11State = "KS"
-	Objects11StateKy Objects11State = "KY"
-	Objects11StateLa Objects11State = "LA"
-	Objects11StateMe Objects11State = "ME"
-	Objects11StateMd Objects11State = "MD"
-	Objects11StateMa Objects11State = "MA"
-	Objects11StateMi Objects11State = "MI"
-	Objects11StateMn Objects11State = "MN"
-	Objects11StateMs Objects11State = "MS"
-	Objects11StateMo Objects11State = "MO"
-	Objects11StateMt Objects11State = "MT"
-	Objects11StateNe Objects11State = "NE"
-	Objects11StateNv Objects11State = "NV"
-	Objects11StateNh Objects11State = "NH"
-	Objects11StateNj Objects11State = "NJ"
-	Objects11StateNm Objects11State = "NM"
-	Objects11StateNy Objects11State = "NY"
-	Objects11StateNc Objects11State = "NC"
-	Objects11StateNd Objects11State = "ND"
-	Objects11StateOh Objects11State = "OH"
-	Objects11StateOk Objects11State = "OK"
-	Objects11StateOr Objects11State = "OR"
-	Objects11StatePa Objects11State = "PA"
-	Objects11StateRi Objects11State = "RI"
-	Objects11StateSc Objects11State = "SC"
-	Objects11StateSd Objects11State = "SD"
-	Objects11StateTn Objects11State = "TN"
-	Objects11StateTx Objects11State = "TX"
-	Objects11StateUt Objects11State = "UT"
-	Objects11StateVt Objects11State = "VT"
-	Objects11StateVa Objects11State = "VA"
-	Objects11StateWa Objects11State = "WA"
-	Objects11StateWv Objects11State = "WV"
-	Objects11StateWi Objects11State = "WI"
-	Objects11StateWy Objects11State = "WY"
-)
-
-func (r Objects11State) IsKnown() bool {
-	switch r {
-	case Objects11StateAl, Objects11StateAk, Objects11StateAz, Objects11StateAr, Objects11StateCa, Objects11StateCo, Objects11StateCt, Objects11StateDc, Objects11StateDe, Objects11StateFl, Objects11StateGa, Objects11StateHi, Objects11StateID, Objects11StateIl, Objects11StateIn, Objects11StateIa, Objects11StateKs, Objects11StateKy, Objects11StateLa, Objects11StateMe, Objects11StateMd, Objects11StateMa, Objects11StateMi, Objects11StateMn, Objects11StateMs, Objects11StateMo, Objects11StateMt, Objects11StateNe, Objects11StateNv, Objects11StateNh, Objects11StateNj, Objects11StateNm, Objects11StateNy, Objects11StateNc, Objects11StateNd, Objects11StateOh, Objects11StateOk, Objects11StateOr, Objects11StatePa, Objects11StateRi, Objects11StateSc, Objects11StateSd, Objects11StateTn, Objects11StateTx, Objects11StateUt, Objects11StateVt, Objects11StateVa, Objects11StateWa, Objects11StateWv, Objects11StateWi, Objects11StateWy:
-		return true
-	}
-	return false
-}
-
-type Objects11Country string
-
-const (
-	Objects11CountryUs Objects11Country = "US"
-)
-
-func (r Objects11Country) IsKnown() bool {
-	switch r {
-	case Objects11CountryUs:
-		return true
-	}
-	return false
 }
 
 type WorkplaceListParams struct {
@@ -265,9 +213,9 @@ func (r WorkplaceListParams) URLQuery() (v url.Values) {
 
 type WorkplaceNewParams struct {
 	// A valid US address
-	Address param.Field[Objects11Param]         `json:"address" api:"required"`
-	Name    param.Field[string]                 `json:"name" api:"required"`
-	Type    param.Field[WorkplaceNewParamsType] `json:"type" api:"required"`
+	Address param.Field[WorkplaceNewParamsAddress] `json:"address" api:"required"`
+	Name    param.Field[string]                    `json:"name" api:"required"`
+	Type    param.Field[WorkplaceNewParamsType]    `json:"type" api:"required"`
 }
 
 func (r WorkplaceNewParams) MarshalJSON() (data []byte, err error) {
@@ -284,6 +232,97 @@ const (
 func (r WorkplaceNewParamsType) IsKnown() bool {
 	switch r {
 	case WorkplaceNewParamsTypeRemote, WorkplaceNewParamsTypeOffice:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewParamsAddress struct {
+	City       param.Field[string]                           `json:"city" api:"required"`
+	Country    param.Field[WorkplaceNewParamsAddressCountry] `json:"country" api:"required"`
+	Line1      param.Field[string]                           `json:"line1" api:"required"`
+	PostalCode param.Field[string]                           `json:"postalCode" api:"required"`
+	State      param.Field[WorkplaceNewParamsAddressState]   `json:"state" api:"required"`
+	Line2      param.Field[string]                           `json:"line2"`
+}
+
+func (r WorkplaceNewParamsAddress) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type WorkplaceNewParamsAddressState string
+
+const (
+	WorkplaceNewParamsAddressStateAl WorkplaceNewParamsAddressState = "AL"
+	WorkplaceNewParamsAddressStateAk WorkplaceNewParamsAddressState = "AK"
+	WorkplaceNewParamsAddressStateAz WorkplaceNewParamsAddressState = "AZ"
+	WorkplaceNewParamsAddressStateAr WorkplaceNewParamsAddressState = "AR"
+	WorkplaceNewParamsAddressStateCa WorkplaceNewParamsAddressState = "CA"
+	WorkplaceNewParamsAddressStateCo WorkplaceNewParamsAddressState = "CO"
+	WorkplaceNewParamsAddressStateCt WorkplaceNewParamsAddressState = "CT"
+	WorkplaceNewParamsAddressStateDc WorkplaceNewParamsAddressState = "DC"
+	WorkplaceNewParamsAddressStateDe WorkplaceNewParamsAddressState = "DE"
+	WorkplaceNewParamsAddressStateFl WorkplaceNewParamsAddressState = "FL"
+	WorkplaceNewParamsAddressStateGa WorkplaceNewParamsAddressState = "GA"
+	WorkplaceNewParamsAddressStateHi WorkplaceNewParamsAddressState = "HI"
+	WorkplaceNewParamsAddressStateID WorkplaceNewParamsAddressState = "ID"
+	WorkplaceNewParamsAddressStateIl WorkplaceNewParamsAddressState = "IL"
+	WorkplaceNewParamsAddressStateIn WorkplaceNewParamsAddressState = "IN"
+	WorkplaceNewParamsAddressStateIa WorkplaceNewParamsAddressState = "IA"
+	WorkplaceNewParamsAddressStateKs WorkplaceNewParamsAddressState = "KS"
+	WorkplaceNewParamsAddressStateKy WorkplaceNewParamsAddressState = "KY"
+	WorkplaceNewParamsAddressStateLa WorkplaceNewParamsAddressState = "LA"
+	WorkplaceNewParamsAddressStateMe WorkplaceNewParamsAddressState = "ME"
+	WorkplaceNewParamsAddressStateMd WorkplaceNewParamsAddressState = "MD"
+	WorkplaceNewParamsAddressStateMa WorkplaceNewParamsAddressState = "MA"
+	WorkplaceNewParamsAddressStateMi WorkplaceNewParamsAddressState = "MI"
+	WorkplaceNewParamsAddressStateMn WorkplaceNewParamsAddressState = "MN"
+	WorkplaceNewParamsAddressStateMs WorkplaceNewParamsAddressState = "MS"
+	WorkplaceNewParamsAddressStateMo WorkplaceNewParamsAddressState = "MO"
+	WorkplaceNewParamsAddressStateMt WorkplaceNewParamsAddressState = "MT"
+	WorkplaceNewParamsAddressStateNe WorkplaceNewParamsAddressState = "NE"
+	WorkplaceNewParamsAddressStateNv WorkplaceNewParamsAddressState = "NV"
+	WorkplaceNewParamsAddressStateNh WorkplaceNewParamsAddressState = "NH"
+	WorkplaceNewParamsAddressStateNj WorkplaceNewParamsAddressState = "NJ"
+	WorkplaceNewParamsAddressStateNm WorkplaceNewParamsAddressState = "NM"
+	WorkplaceNewParamsAddressStateNy WorkplaceNewParamsAddressState = "NY"
+	WorkplaceNewParamsAddressStateNc WorkplaceNewParamsAddressState = "NC"
+	WorkplaceNewParamsAddressStateNd WorkplaceNewParamsAddressState = "ND"
+	WorkplaceNewParamsAddressStateOh WorkplaceNewParamsAddressState = "OH"
+	WorkplaceNewParamsAddressStateOk WorkplaceNewParamsAddressState = "OK"
+	WorkplaceNewParamsAddressStateOr WorkplaceNewParamsAddressState = "OR"
+	WorkplaceNewParamsAddressStatePa WorkplaceNewParamsAddressState = "PA"
+	WorkplaceNewParamsAddressStateRi WorkplaceNewParamsAddressState = "RI"
+	WorkplaceNewParamsAddressStateSc WorkplaceNewParamsAddressState = "SC"
+	WorkplaceNewParamsAddressStateSd WorkplaceNewParamsAddressState = "SD"
+	WorkplaceNewParamsAddressStateTn WorkplaceNewParamsAddressState = "TN"
+	WorkplaceNewParamsAddressStateTx WorkplaceNewParamsAddressState = "TX"
+	WorkplaceNewParamsAddressStateUt WorkplaceNewParamsAddressState = "UT"
+	WorkplaceNewParamsAddressStateVt WorkplaceNewParamsAddressState = "VT"
+	WorkplaceNewParamsAddressStateVa WorkplaceNewParamsAddressState = "VA"
+	WorkplaceNewParamsAddressStateWa WorkplaceNewParamsAddressState = "WA"
+	WorkplaceNewParamsAddressStateWv WorkplaceNewParamsAddressState = "WV"
+	WorkplaceNewParamsAddressStateWi WorkplaceNewParamsAddressState = "WI"
+	WorkplaceNewParamsAddressStateWy WorkplaceNewParamsAddressState = "WY"
+)
+
+func (r WorkplaceNewParamsAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceNewParamsAddressStateAl, WorkplaceNewParamsAddressStateAk, WorkplaceNewParamsAddressStateAz, WorkplaceNewParamsAddressStateAr, WorkplaceNewParamsAddressStateCa, WorkplaceNewParamsAddressStateCo, WorkplaceNewParamsAddressStateCt, WorkplaceNewParamsAddressStateDc, WorkplaceNewParamsAddressStateDe, WorkplaceNewParamsAddressStateFl, WorkplaceNewParamsAddressStateGa, WorkplaceNewParamsAddressStateHi, WorkplaceNewParamsAddressStateID, WorkplaceNewParamsAddressStateIl, WorkplaceNewParamsAddressStateIn, WorkplaceNewParamsAddressStateIa, WorkplaceNewParamsAddressStateKs, WorkplaceNewParamsAddressStateKy, WorkplaceNewParamsAddressStateLa, WorkplaceNewParamsAddressStateMe, WorkplaceNewParamsAddressStateMd, WorkplaceNewParamsAddressStateMa, WorkplaceNewParamsAddressStateMi, WorkplaceNewParamsAddressStateMn, WorkplaceNewParamsAddressStateMs, WorkplaceNewParamsAddressStateMo, WorkplaceNewParamsAddressStateMt, WorkplaceNewParamsAddressStateNe, WorkplaceNewParamsAddressStateNv, WorkplaceNewParamsAddressStateNh, WorkplaceNewParamsAddressStateNj, WorkplaceNewParamsAddressStateNm, WorkplaceNewParamsAddressStateNy, WorkplaceNewParamsAddressStateNc, WorkplaceNewParamsAddressStateNd, WorkplaceNewParamsAddressStateOh, WorkplaceNewParamsAddressStateOk, WorkplaceNewParamsAddressStateOr, WorkplaceNewParamsAddressStatePa, WorkplaceNewParamsAddressStateRi, WorkplaceNewParamsAddressStateSc, WorkplaceNewParamsAddressStateSd, WorkplaceNewParamsAddressStateTn, WorkplaceNewParamsAddressStateTx, WorkplaceNewParamsAddressStateUt, WorkplaceNewParamsAddressStateVt, WorkplaceNewParamsAddressStateVa, WorkplaceNewParamsAddressStateWa, WorkplaceNewParamsAddressStateWv, WorkplaceNewParamsAddressStateWi, WorkplaceNewParamsAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewParamsAddressCountry string
+
+const (
+	WorkplaceNewParamsAddressCountryUs WorkplaceNewParamsAddressCountry = "US"
+)
+
+func (r WorkplaceNewParamsAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceNewParamsAddressCountryUs:
 		return true
 	}
 	return false
@@ -327,9 +366,9 @@ type WorkplaceNewResponse struct {
 	Type   WorkplaceNewResponseType   `json:"type" api:"required"`
 	Status WorkplaceNewResponseStatus `json:"status" api:"required"`
 	// A valid US address
-	Address   Objects11                `json:"address" api:"required"`
-	CreatedAt string                   `json:"createdAt" api:"required"`
-	JSON      workplaceNewResponseJSON `json:"-"`
+	Address   WorkplaceNewResponseAddress `json:"address" api:"required"`
+	CreatedAt string                      `json:"createdAt" api:"required"`
+	JSON      workplaceNewResponseJSON    `json:"-"`
 }
 
 // workplaceNewResponseJSON contains the JSON metadata for the struct [WorkplaceNewResponse]
@@ -358,9 +397,9 @@ type WorkplaceUpdateResponse struct {
 	Type   WorkplaceUpdateResponseType   `json:"type" api:"required"`
 	Status WorkplaceUpdateResponseStatus `json:"status" api:"required"`
 	// A valid US address
-	Address   Objects11                   `json:"address" api:"required"`
-	CreatedAt string                      `json:"createdAt" api:"required"`
-	JSON      workplaceUpdateResponseJSON `json:"-"`
+	Address   WorkplaceUpdateResponseAddress `json:"address" api:"required"`
+	CreatedAt string                         `json:"createdAt" api:"required"`
+	JSON      workplaceUpdateResponseJSON    `json:"-"`
 }
 
 // workplaceUpdateResponseJSON contains the JSON metadata for the struct [WorkplaceUpdateResponse]
@@ -383,15 +422,100 @@ func (r workplaceUpdateResponseJSON) RawJSON() string {
 	return r.raw
 }
 
+type Objects11Department struct {
+	ID   string                  `json:"id" api:"required"`
+	Name string                  `json:"name" api:"required"`
+	JSON objects11DepartmentJSON `json:"-"`
+}
+
+// objects11DepartmentJSON contains the JSON metadata for the struct [Objects11Department]
+type objects11DepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11Department) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11DepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type Objects11CustomField struct {
+	Type Objects11CustomFieldsType `json:"type" api:"required"`
+	ID   string                    `json:"id" api:"required"`
+	Name string                    `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s text; null when unset or when the field is redacted for this API
+	// key.
+	Value interface{} `json:"value" api:"nullable"`
+	// The amount in integer base units of currencyCode (e.g. cents); null when unset
+	// or when the field is redacted for this API key.
+	Amount int64 `json:"amount" api:"nullable"`
+	// The amount’s currency; null when unset or when the field is redacted for this
+	// API key.
+	CurrencyCode Union1 `json:"currencyCode" api:"nullable"`
+	// The selected option; null when unset or when the field is redacted for this API
+	// key.
+	Option shared.Objects3 `json:"option" api:"nullable"`
+	// The selected options; null when unset or when the field is redacted for this API
+	// key.
+	Options interface{}              `json:"options" api:"nullable"`
+	JSON    objects11CustomFieldJSON `json:"-"`
+	union   Objects11CustomFieldsUnion
+}
+
+// objects11CustomFieldJSON contains the JSON metadata for the struct [Objects11CustomField]
+type objects11CustomFieldJSON struct {
+	Type         apijson.Field
+	ID           apijson.Field
+	Name         apijson.Field
+	Redacted     apijson.Field
+	Display      apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r objects11CustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *Objects11CustomField) UnmarshalJSON(data []byte) (err error) {
+	*r = Objects11CustomField{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r Objects11CustomField) AsUnion() Objects11CustomFieldsUnion {
+	return r.union
+}
+
 type WorkplaceListResponseData struct {
 	ID     string                          `json:"id" api:"required"`
 	Name   string                          `json:"name" api:"required"`
 	Type   WorkplaceListResponseDataType   `json:"type" api:"required"`
 	Status WorkplaceListResponseDataStatus `json:"status" api:"required"`
 	// A valid US address
-	Address   Objects11                     `json:"address" api:"required"`
-	CreatedAt string                        `json:"createdAt" api:"required"`
-	JSON      workplaceListResponseDataJSON `json:"-"`
+	Address   WorkplaceListResponseDataAddress `json:"address" api:"required"`
+	CreatedAt string                           `json:"createdAt" api:"required"`
+	JSON      workplaceListResponseDataJSON    `json:"-"`
 }
 
 // workplaceListResponseDataJSON contains the JSON metadata for the struct [WorkplaceListResponseData]
@@ -444,6 +568,36 @@ func (r WorkplaceNewResponseStatus) IsKnown() bool {
 	return false
 }
 
+type WorkplaceNewResponseAddress struct {
+	Line1      string                             `json:"line1" api:"required"`
+	City       string                             `json:"city" api:"required"`
+	PostalCode string                             `json:"postalCode" api:"required"`
+	State      WorkplaceNewResponseAddressState   `json:"state" api:"required"`
+	Country    WorkplaceNewResponseAddressCountry `json:"country" api:"required"`
+	Line2      string                             `json:"line2" api:"nullable"`
+	JSON       workplaceNewResponseAddressJSON    `json:"-"`
+}
+
+// workplaceNewResponseAddressJSON contains the JSON metadata for the struct [WorkplaceNewResponseAddress]
+type workplaceNewResponseAddressJSON struct {
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceNewResponseAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceNewResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
 type WorkplaceUpdateResponseType string
 
 const (
@@ -474,6 +628,108 @@ func (r WorkplaceUpdateResponseStatus) IsKnown() bool {
 	return false
 }
 
+type WorkplaceUpdateResponseAddress struct {
+	Line1      string                                `json:"line1" api:"required"`
+	City       string                                `json:"city" api:"required"`
+	PostalCode string                                `json:"postalCode" api:"required"`
+	State      WorkplaceUpdateResponseAddressState   `json:"state" api:"required"`
+	Country    WorkplaceUpdateResponseAddressCountry `json:"country" api:"required"`
+	Line2      string                                `json:"line2" api:"nullable"`
+	JSON       workplaceUpdateResponseAddressJSON    `json:"-"`
+}
+
+// workplaceUpdateResponseAddressJSON contains the JSON metadata for the struct [WorkplaceUpdateResponseAddress]
+type workplaceUpdateResponseAddressJSON struct {
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceUpdateResponseAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceUpdateResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type Objects11CustomFieldsUnion interface {
+	implementsObjects11CustomField()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*Objects11CustomFieldsUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicTextWorkerCustomField{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicNumberWorkerCustomField{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicDateWorkerCustomField{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicBooleanWorkerCustomField{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicCurrencyWorkerCustomField{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicPercentageWorkerCustomField{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicSelectWorkerCustomField{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(Objects11CustomFieldsPublicMultiSelectWorkerCustomField{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type Objects11CustomFieldsType string
+
+const (
+	Objects11CustomFieldsTypeText        Objects11CustomFieldsType = "text"
+	Objects11CustomFieldsTypeNumber      Objects11CustomFieldsType = "number"
+	Objects11CustomFieldsTypeDate        Objects11CustomFieldsType = "date"
+	Objects11CustomFieldsTypeBoolean     Objects11CustomFieldsType = "boolean"
+	Objects11CustomFieldsTypeCurrency    Objects11CustomFieldsType = "currency"
+	Objects11CustomFieldsTypePercentage  Objects11CustomFieldsType = "percentage"
+	Objects11CustomFieldsTypeSelect      Objects11CustomFieldsType = "select"
+	Objects11CustomFieldsTypeMultiSelect Objects11CustomFieldsType = "multi_select"
+)
+
+func (r Objects11CustomFieldsType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsTypeText, Objects11CustomFieldsTypeNumber, Objects11CustomFieldsTypeDate, Objects11CustomFieldsTypeBoolean, Objects11CustomFieldsTypeCurrency, Objects11CustomFieldsTypePercentage, Objects11CustomFieldsTypeSelect, Objects11CustomFieldsTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
 type WorkplaceListResponseDataType string
 
 const (
@@ -499,6 +755,698 @@ const (
 func (r WorkplaceListResponseDataStatus) IsKnown() bool {
 	switch r {
 	case WorkplaceListResponseDataStatusActive, WorkplaceListResponseDataStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddress struct {
+	Line1      string                                  `json:"line1" api:"required"`
+	City       string                                  `json:"city" api:"required"`
+	PostalCode string                                  `json:"postalCode" api:"required"`
+	State      WorkplaceListResponseDataAddressState   `json:"state" api:"required"`
+	Country    WorkplaceListResponseDataAddressCountry `json:"country" api:"required"`
+	Line2      string                                  `json:"line2" api:"nullable"`
+	JSON       workplaceListResponseDataAddressJSON    `json:"-"`
+}
+
+// workplaceListResponseDataAddressJSON contains the JSON metadata for the struct [WorkplaceListResponseDataAddress]
+type workplaceListResponseDataAddressJSON struct {
+	Line1       apijson.Field
+	City        apijson.Field
+	PostalCode  apijson.Field
+	State       apijson.Field
+	Country     apijson.Field
+	Line2       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkplaceListResponseDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workplaceListResponseDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkplaceNewResponseAddressState string
+
+const (
+	WorkplaceNewResponseAddressStateAl WorkplaceNewResponseAddressState = "AL"
+	WorkplaceNewResponseAddressStateAk WorkplaceNewResponseAddressState = "AK"
+	WorkplaceNewResponseAddressStateAz WorkplaceNewResponseAddressState = "AZ"
+	WorkplaceNewResponseAddressStateAr WorkplaceNewResponseAddressState = "AR"
+	WorkplaceNewResponseAddressStateCa WorkplaceNewResponseAddressState = "CA"
+	WorkplaceNewResponseAddressStateCo WorkplaceNewResponseAddressState = "CO"
+	WorkplaceNewResponseAddressStateCt WorkplaceNewResponseAddressState = "CT"
+	WorkplaceNewResponseAddressStateDc WorkplaceNewResponseAddressState = "DC"
+	WorkplaceNewResponseAddressStateDe WorkplaceNewResponseAddressState = "DE"
+	WorkplaceNewResponseAddressStateFl WorkplaceNewResponseAddressState = "FL"
+	WorkplaceNewResponseAddressStateGa WorkplaceNewResponseAddressState = "GA"
+	WorkplaceNewResponseAddressStateHi WorkplaceNewResponseAddressState = "HI"
+	WorkplaceNewResponseAddressStateID WorkplaceNewResponseAddressState = "ID"
+	WorkplaceNewResponseAddressStateIl WorkplaceNewResponseAddressState = "IL"
+	WorkplaceNewResponseAddressStateIn WorkplaceNewResponseAddressState = "IN"
+	WorkplaceNewResponseAddressStateIa WorkplaceNewResponseAddressState = "IA"
+	WorkplaceNewResponseAddressStateKs WorkplaceNewResponseAddressState = "KS"
+	WorkplaceNewResponseAddressStateKy WorkplaceNewResponseAddressState = "KY"
+	WorkplaceNewResponseAddressStateLa WorkplaceNewResponseAddressState = "LA"
+	WorkplaceNewResponseAddressStateMe WorkplaceNewResponseAddressState = "ME"
+	WorkplaceNewResponseAddressStateMd WorkplaceNewResponseAddressState = "MD"
+	WorkplaceNewResponseAddressStateMa WorkplaceNewResponseAddressState = "MA"
+	WorkplaceNewResponseAddressStateMi WorkplaceNewResponseAddressState = "MI"
+	WorkplaceNewResponseAddressStateMn WorkplaceNewResponseAddressState = "MN"
+	WorkplaceNewResponseAddressStateMs WorkplaceNewResponseAddressState = "MS"
+	WorkplaceNewResponseAddressStateMo WorkplaceNewResponseAddressState = "MO"
+	WorkplaceNewResponseAddressStateMt WorkplaceNewResponseAddressState = "MT"
+	WorkplaceNewResponseAddressStateNe WorkplaceNewResponseAddressState = "NE"
+	WorkplaceNewResponseAddressStateNv WorkplaceNewResponseAddressState = "NV"
+	WorkplaceNewResponseAddressStateNh WorkplaceNewResponseAddressState = "NH"
+	WorkplaceNewResponseAddressStateNj WorkplaceNewResponseAddressState = "NJ"
+	WorkplaceNewResponseAddressStateNm WorkplaceNewResponseAddressState = "NM"
+	WorkplaceNewResponseAddressStateNy WorkplaceNewResponseAddressState = "NY"
+	WorkplaceNewResponseAddressStateNc WorkplaceNewResponseAddressState = "NC"
+	WorkplaceNewResponseAddressStateNd WorkplaceNewResponseAddressState = "ND"
+	WorkplaceNewResponseAddressStateOh WorkplaceNewResponseAddressState = "OH"
+	WorkplaceNewResponseAddressStateOk WorkplaceNewResponseAddressState = "OK"
+	WorkplaceNewResponseAddressStateOr WorkplaceNewResponseAddressState = "OR"
+	WorkplaceNewResponseAddressStatePa WorkplaceNewResponseAddressState = "PA"
+	WorkplaceNewResponseAddressStateRi WorkplaceNewResponseAddressState = "RI"
+	WorkplaceNewResponseAddressStateSc WorkplaceNewResponseAddressState = "SC"
+	WorkplaceNewResponseAddressStateSd WorkplaceNewResponseAddressState = "SD"
+	WorkplaceNewResponseAddressStateTn WorkplaceNewResponseAddressState = "TN"
+	WorkplaceNewResponseAddressStateTx WorkplaceNewResponseAddressState = "TX"
+	WorkplaceNewResponseAddressStateUt WorkplaceNewResponseAddressState = "UT"
+	WorkplaceNewResponseAddressStateVt WorkplaceNewResponseAddressState = "VT"
+	WorkplaceNewResponseAddressStateVa WorkplaceNewResponseAddressState = "VA"
+	WorkplaceNewResponseAddressStateWa WorkplaceNewResponseAddressState = "WA"
+	WorkplaceNewResponseAddressStateWv WorkplaceNewResponseAddressState = "WV"
+	WorkplaceNewResponseAddressStateWi WorkplaceNewResponseAddressState = "WI"
+	WorkplaceNewResponseAddressStateWy WorkplaceNewResponseAddressState = "WY"
+)
+
+func (r WorkplaceNewResponseAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseAddressStateAl, WorkplaceNewResponseAddressStateAk, WorkplaceNewResponseAddressStateAz, WorkplaceNewResponseAddressStateAr, WorkplaceNewResponseAddressStateCa, WorkplaceNewResponseAddressStateCo, WorkplaceNewResponseAddressStateCt, WorkplaceNewResponseAddressStateDc, WorkplaceNewResponseAddressStateDe, WorkplaceNewResponseAddressStateFl, WorkplaceNewResponseAddressStateGa, WorkplaceNewResponseAddressStateHi, WorkplaceNewResponseAddressStateID, WorkplaceNewResponseAddressStateIl, WorkplaceNewResponseAddressStateIn, WorkplaceNewResponseAddressStateIa, WorkplaceNewResponseAddressStateKs, WorkplaceNewResponseAddressStateKy, WorkplaceNewResponseAddressStateLa, WorkplaceNewResponseAddressStateMe, WorkplaceNewResponseAddressStateMd, WorkplaceNewResponseAddressStateMa, WorkplaceNewResponseAddressStateMi, WorkplaceNewResponseAddressStateMn, WorkplaceNewResponseAddressStateMs, WorkplaceNewResponseAddressStateMo, WorkplaceNewResponseAddressStateMt, WorkplaceNewResponseAddressStateNe, WorkplaceNewResponseAddressStateNv, WorkplaceNewResponseAddressStateNh, WorkplaceNewResponseAddressStateNj, WorkplaceNewResponseAddressStateNm, WorkplaceNewResponseAddressStateNy, WorkplaceNewResponseAddressStateNc, WorkplaceNewResponseAddressStateNd, WorkplaceNewResponseAddressStateOh, WorkplaceNewResponseAddressStateOk, WorkplaceNewResponseAddressStateOr, WorkplaceNewResponseAddressStatePa, WorkplaceNewResponseAddressStateRi, WorkplaceNewResponseAddressStateSc, WorkplaceNewResponseAddressStateSd, WorkplaceNewResponseAddressStateTn, WorkplaceNewResponseAddressStateTx, WorkplaceNewResponseAddressStateUt, WorkplaceNewResponseAddressStateVt, WorkplaceNewResponseAddressStateVa, WorkplaceNewResponseAddressStateWa, WorkplaceNewResponseAddressStateWv, WorkplaceNewResponseAddressStateWi, WorkplaceNewResponseAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceNewResponseAddressCountry string
+
+const (
+	WorkplaceNewResponseAddressCountryUs WorkplaceNewResponseAddressCountry = "US"
+)
+
+func (r WorkplaceNewResponseAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceNewResponseAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddressState string
+
+const (
+	WorkplaceUpdateResponseAddressStateAl WorkplaceUpdateResponseAddressState = "AL"
+	WorkplaceUpdateResponseAddressStateAk WorkplaceUpdateResponseAddressState = "AK"
+	WorkplaceUpdateResponseAddressStateAz WorkplaceUpdateResponseAddressState = "AZ"
+	WorkplaceUpdateResponseAddressStateAr WorkplaceUpdateResponseAddressState = "AR"
+	WorkplaceUpdateResponseAddressStateCa WorkplaceUpdateResponseAddressState = "CA"
+	WorkplaceUpdateResponseAddressStateCo WorkplaceUpdateResponseAddressState = "CO"
+	WorkplaceUpdateResponseAddressStateCt WorkplaceUpdateResponseAddressState = "CT"
+	WorkplaceUpdateResponseAddressStateDc WorkplaceUpdateResponseAddressState = "DC"
+	WorkplaceUpdateResponseAddressStateDe WorkplaceUpdateResponseAddressState = "DE"
+	WorkplaceUpdateResponseAddressStateFl WorkplaceUpdateResponseAddressState = "FL"
+	WorkplaceUpdateResponseAddressStateGa WorkplaceUpdateResponseAddressState = "GA"
+	WorkplaceUpdateResponseAddressStateHi WorkplaceUpdateResponseAddressState = "HI"
+	WorkplaceUpdateResponseAddressStateID WorkplaceUpdateResponseAddressState = "ID"
+	WorkplaceUpdateResponseAddressStateIl WorkplaceUpdateResponseAddressState = "IL"
+	WorkplaceUpdateResponseAddressStateIn WorkplaceUpdateResponseAddressState = "IN"
+	WorkplaceUpdateResponseAddressStateIa WorkplaceUpdateResponseAddressState = "IA"
+	WorkplaceUpdateResponseAddressStateKs WorkplaceUpdateResponseAddressState = "KS"
+	WorkplaceUpdateResponseAddressStateKy WorkplaceUpdateResponseAddressState = "KY"
+	WorkplaceUpdateResponseAddressStateLa WorkplaceUpdateResponseAddressState = "LA"
+	WorkplaceUpdateResponseAddressStateMe WorkplaceUpdateResponseAddressState = "ME"
+	WorkplaceUpdateResponseAddressStateMd WorkplaceUpdateResponseAddressState = "MD"
+	WorkplaceUpdateResponseAddressStateMa WorkplaceUpdateResponseAddressState = "MA"
+	WorkplaceUpdateResponseAddressStateMi WorkplaceUpdateResponseAddressState = "MI"
+	WorkplaceUpdateResponseAddressStateMn WorkplaceUpdateResponseAddressState = "MN"
+	WorkplaceUpdateResponseAddressStateMs WorkplaceUpdateResponseAddressState = "MS"
+	WorkplaceUpdateResponseAddressStateMo WorkplaceUpdateResponseAddressState = "MO"
+	WorkplaceUpdateResponseAddressStateMt WorkplaceUpdateResponseAddressState = "MT"
+	WorkplaceUpdateResponseAddressStateNe WorkplaceUpdateResponseAddressState = "NE"
+	WorkplaceUpdateResponseAddressStateNv WorkplaceUpdateResponseAddressState = "NV"
+	WorkplaceUpdateResponseAddressStateNh WorkplaceUpdateResponseAddressState = "NH"
+	WorkplaceUpdateResponseAddressStateNj WorkplaceUpdateResponseAddressState = "NJ"
+	WorkplaceUpdateResponseAddressStateNm WorkplaceUpdateResponseAddressState = "NM"
+	WorkplaceUpdateResponseAddressStateNy WorkplaceUpdateResponseAddressState = "NY"
+	WorkplaceUpdateResponseAddressStateNc WorkplaceUpdateResponseAddressState = "NC"
+	WorkplaceUpdateResponseAddressStateNd WorkplaceUpdateResponseAddressState = "ND"
+	WorkplaceUpdateResponseAddressStateOh WorkplaceUpdateResponseAddressState = "OH"
+	WorkplaceUpdateResponseAddressStateOk WorkplaceUpdateResponseAddressState = "OK"
+	WorkplaceUpdateResponseAddressStateOr WorkplaceUpdateResponseAddressState = "OR"
+	WorkplaceUpdateResponseAddressStatePa WorkplaceUpdateResponseAddressState = "PA"
+	WorkplaceUpdateResponseAddressStateRi WorkplaceUpdateResponseAddressState = "RI"
+	WorkplaceUpdateResponseAddressStateSc WorkplaceUpdateResponseAddressState = "SC"
+	WorkplaceUpdateResponseAddressStateSd WorkplaceUpdateResponseAddressState = "SD"
+	WorkplaceUpdateResponseAddressStateTn WorkplaceUpdateResponseAddressState = "TN"
+	WorkplaceUpdateResponseAddressStateTx WorkplaceUpdateResponseAddressState = "TX"
+	WorkplaceUpdateResponseAddressStateUt WorkplaceUpdateResponseAddressState = "UT"
+	WorkplaceUpdateResponseAddressStateVt WorkplaceUpdateResponseAddressState = "VT"
+	WorkplaceUpdateResponseAddressStateVa WorkplaceUpdateResponseAddressState = "VA"
+	WorkplaceUpdateResponseAddressStateWa WorkplaceUpdateResponseAddressState = "WA"
+	WorkplaceUpdateResponseAddressStateWv WorkplaceUpdateResponseAddressState = "WV"
+	WorkplaceUpdateResponseAddressStateWi WorkplaceUpdateResponseAddressState = "WI"
+	WorkplaceUpdateResponseAddressStateWy WorkplaceUpdateResponseAddressState = "WY"
+)
+
+func (r WorkplaceUpdateResponseAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseAddressStateAl, WorkplaceUpdateResponseAddressStateAk, WorkplaceUpdateResponseAddressStateAz, WorkplaceUpdateResponseAddressStateAr, WorkplaceUpdateResponseAddressStateCa, WorkplaceUpdateResponseAddressStateCo, WorkplaceUpdateResponseAddressStateCt, WorkplaceUpdateResponseAddressStateDc, WorkplaceUpdateResponseAddressStateDe, WorkplaceUpdateResponseAddressStateFl, WorkplaceUpdateResponseAddressStateGa, WorkplaceUpdateResponseAddressStateHi, WorkplaceUpdateResponseAddressStateID, WorkplaceUpdateResponseAddressStateIl, WorkplaceUpdateResponseAddressStateIn, WorkplaceUpdateResponseAddressStateIa, WorkplaceUpdateResponseAddressStateKs, WorkplaceUpdateResponseAddressStateKy, WorkplaceUpdateResponseAddressStateLa, WorkplaceUpdateResponseAddressStateMe, WorkplaceUpdateResponseAddressStateMd, WorkplaceUpdateResponseAddressStateMa, WorkplaceUpdateResponseAddressStateMi, WorkplaceUpdateResponseAddressStateMn, WorkplaceUpdateResponseAddressStateMs, WorkplaceUpdateResponseAddressStateMo, WorkplaceUpdateResponseAddressStateMt, WorkplaceUpdateResponseAddressStateNe, WorkplaceUpdateResponseAddressStateNv, WorkplaceUpdateResponseAddressStateNh, WorkplaceUpdateResponseAddressStateNj, WorkplaceUpdateResponseAddressStateNm, WorkplaceUpdateResponseAddressStateNy, WorkplaceUpdateResponseAddressStateNc, WorkplaceUpdateResponseAddressStateNd, WorkplaceUpdateResponseAddressStateOh, WorkplaceUpdateResponseAddressStateOk, WorkplaceUpdateResponseAddressStateOr, WorkplaceUpdateResponseAddressStatePa, WorkplaceUpdateResponseAddressStateRi, WorkplaceUpdateResponseAddressStateSc, WorkplaceUpdateResponseAddressStateSd, WorkplaceUpdateResponseAddressStateTn, WorkplaceUpdateResponseAddressStateTx, WorkplaceUpdateResponseAddressStateUt, WorkplaceUpdateResponseAddressStateVt, WorkplaceUpdateResponseAddressStateVa, WorkplaceUpdateResponseAddressStateWa, WorkplaceUpdateResponseAddressStateWv, WorkplaceUpdateResponseAddressStateWi, WorkplaceUpdateResponseAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceUpdateResponseAddressCountry string
+
+const (
+	WorkplaceUpdateResponseAddressCountryUs WorkplaceUpdateResponseAddressCountry = "US"
+)
+
+func (r WorkplaceUpdateResponseAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceUpdateResponseAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicTextWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                               `json:"id" api:"required"`
+	Name string                                               `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s text; null when unset or when the field is redacted for this API
+	// key.
+	Value string                                               `json:"value" api:"required,nullable"`
+	JSON  objects11CustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicTextWorkerCustomField]
+type objects11CustomFieldsPublicTextWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicTextWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicNumberWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                                 `json:"id" api:"required"`
+	Name string                                                 `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s number; null when unset or when the field is redacted for this API
+	// key.
+	Value interface{}                                            `json:"value" api:"required,nullable"`
+	JSON  objects11CustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicNumberWorkerCustomField]
+type objects11CustomFieldsPublicNumberWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicNumberWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicDateWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                               `json:"id" api:"required"`
+	Name string                                               `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s date; null when unset or when the field is redacted for this API
+	// key.
+	Value string                                               `json:"value" api:"required,nullable"`
+	JSON  objects11CustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicDateWorkerCustomField]
+type objects11CustomFieldsPublicDateWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicDateWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicBooleanWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                                  `json:"id" api:"required"`
+	Name string                                                  `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s answer; null when unset or when the field is redacted for this API
+	// key.
+	Value bool                                                    `json:"value" api:"required,nullable"`
+	JSON  objects11CustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicBooleanWorkerCustomField]
+type objects11CustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicBooleanWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicCurrencyWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                                   `json:"id" api:"required"`
+	Name string                                                   `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The amount in integer base units of currencyCode (e.g. cents); null when unset
+	// or when the field is redacted for this API key.
+	Amount int64 `json:"amount" api:"required,nullable"`
+	// The amount’s currency; null when unset or when the field is redacted for this
+	// API key.
+	CurrencyCode Union1                                                   `json:"currencyCode" api:"required,nullable"`
+	JSON         objects11CustomFieldsPublicCurrencyWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicCurrencyWorkerCustomField]
+type objects11CustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
+	Type         apijson.Field
+	ID           apijson.Field
+	Name         apijson.Field
+	Redacted     apijson.Field
+	Display      apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicCurrencyWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicPercentageWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                                     `json:"id" api:"required"`
+	Name string                                                     `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s percentage; null when unset or when the field is redacted for this
+	// API key.
+	Value interface{}                                                `json:"value" api:"required,nullable"`
+	JSON  objects11CustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicPercentageWorkerCustomField]
+type objects11CustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicPercentageWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicSelectWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                                 `json:"id" api:"required"`
+	Name string                                                 `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The selected option; null when unset or when the field is redacted for this API
+	// key.
+	Option shared.Objects3                                        `json:"option" api:"required,nullable"`
+	JSON   objects11CustomFieldsPublicSelectWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicSelectWorkerCustomField]
+type objects11CustomFieldsPublicSelectWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicSelectWorkerCustomField) implementsObjects11CustomField() {}
+
+type Objects11CustomFieldsPublicMultiSelectWorkerCustomField struct {
+	Type Objects11CustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
+	ID   string                                                      `json:"id" api:"required"`
+	Name string                                                      `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The selected options; null when unset or when the field is redacted for this API
+	// key.
+	Options []shared.Objects3                                           `json:"options" api:"required,nullable"`
+	JSON    objects11CustomFieldsPublicMultiSelectWorkerCustomFieldJSON `json:"-"`
+}
+
+// objects11CustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects11CustomFieldsPublicMultiSelectWorkerCustomField]
+type objects11CustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects11CustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects11CustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r Objects11CustomFieldsPublicMultiSelectWorkerCustomField) implementsObjects11CustomField() {}
+
+type WorkplaceListResponseDataAddressState string
+
+const (
+	WorkplaceListResponseDataAddressStateAl WorkplaceListResponseDataAddressState = "AL"
+	WorkplaceListResponseDataAddressStateAk WorkplaceListResponseDataAddressState = "AK"
+	WorkplaceListResponseDataAddressStateAz WorkplaceListResponseDataAddressState = "AZ"
+	WorkplaceListResponseDataAddressStateAr WorkplaceListResponseDataAddressState = "AR"
+	WorkplaceListResponseDataAddressStateCa WorkplaceListResponseDataAddressState = "CA"
+	WorkplaceListResponseDataAddressStateCo WorkplaceListResponseDataAddressState = "CO"
+	WorkplaceListResponseDataAddressStateCt WorkplaceListResponseDataAddressState = "CT"
+	WorkplaceListResponseDataAddressStateDc WorkplaceListResponseDataAddressState = "DC"
+	WorkplaceListResponseDataAddressStateDe WorkplaceListResponseDataAddressState = "DE"
+	WorkplaceListResponseDataAddressStateFl WorkplaceListResponseDataAddressState = "FL"
+	WorkplaceListResponseDataAddressStateGa WorkplaceListResponseDataAddressState = "GA"
+	WorkplaceListResponseDataAddressStateHi WorkplaceListResponseDataAddressState = "HI"
+	WorkplaceListResponseDataAddressStateID WorkplaceListResponseDataAddressState = "ID"
+	WorkplaceListResponseDataAddressStateIl WorkplaceListResponseDataAddressState = "IL"
+	WorkplaceListResponseDataAddressStateIn WorkplaceListResponseDataAddressState = "IN"
+	WorkplaceListResponseDataAddressStateIa WorkplaceListResponseDataAddressState = "IA"
+	WorkplaceListResponseDataAddressStateKs WorkplaceListResponseDataAddressState = "KS"
+	WorkplaceListResponseDataAddressStateKy WorkplaceListResponseDataAddressState = "KY"
+	WorkplaceListResponseDataAddressStateLa WorkplaceListResponseDataAddressState = "LA"
+	WorkplaceListResponseDataAddressStateMe WorkplaceListResponseDataAddressState = "ME"
+	WorkplaceListResponseDataAddressStateMd WorkplaceListResponseDataAddressState = "MD"
+	WorkplaceListResponseDataAddressStateMa WorkplaceListResponseDataAddressState = "MA"
+	WorkplaceListResponseDataAddressStateMi WorkplaceListResponseDataAddressState = "MI"
+	WorkplaceListResponseDataAddressStateMn WorkplaceListResponseDataAddressState = "MN"
+	WorkplaceListResponseDataAddressStateMs WorkplaceListResponseDataAddressState = "MS"
+	WorkplaceListResponseDataAddressStateMo WorkplaceListResponseDataAddressState = "MO"
+	WorkplaceListResponseDataAddressStateMt WorkplaceListResponseDataAddressState = "MT"
+	WorkplaceListResponseDataAddressStateNe WorkplaceListResponseDataAddressState = "NE"
+	WorkplaceListResponseDataAddressStateNv WorkplaceListResponseDataAddressState = "NV"
+	WorkplaceListResponseDataAddressStateNh WorkplaceListResponseDataAddressState = "NH"
+	WorkplaceListResponseDataAddressStateNj WorkplaceListResponseDataAddressState = "NJ"
+	WorkplaceListResponseDataAddressStateNm WorkplaceListResponseDataAddressState = "NM"
+	WorkplaceListResponseDataAddressStateNy WorkplaceListResponseDataAddressState = "NY"
+	WorkplaceListResponseDataAddressStateNc WorkplaceListResponseDataAddressState = "NC"
+	WorkplaceListResponseDataAddressStateNd WorkplaceListResponseDataAddressState = "ND"
+	WorkplaceListResponseDataAddressStateOh WorkplaceListResponseDataAddressState = "OH"
+	WorkplaceListResponseDataAddressStateOk WorkplaceListResponseDataAddressState = "OK"
+	WorkplaceListResponseDataAddressStateOr WorkplaceListResponseDataAddressState = "OR"
+	WorkplaceListResponseDataAddressStatePa WorkplaceListResponseDataAddressState = "PA"
+	WorkplaceListResponseDataAddressStateRi WorkplaceListResponseDataAddressState = "RI"
+	WorkplaceListResponseDataAddressStateSc WorkplaceListResponseDataAddressState = "SC"
+	WorkplaceListResponseDataAddressStateSd WorkplaceListResponseDataAddressState = "SD"
+	WorkplaceListResponseDataAddressStateTn WorkplaceListResponseDataAddressState = "TN"
+	WorkplaceListResponseDataAddressStateTx WorkplaceListResponseDataAddressState = "TX"
+	WorkplaceListResponseDataAddressStateUt WorkplaceListResponseDataAddressState = "UT"
+	WorkplaceListResponseDataAddressStateVt WorkplaceListResponseDataAddressState = "VT"
+	WorkplaceListResponseDataAddressStateVa WorkplaceListResponseDataAddressState = "VA"
+	WorkplaceListResponseDataAddressStateWa WorkplaceListResponseDataAddressState = "WA"
+	WorkplaceListResponseDataAddressStateWv WorkplaceListResponseDataAddressState = "WV"
+	WorkplaceListResponseDataAddressStateWi WorkplaceListResponseDataAddressState = "WI"
+	WorkplaceListResponseDataAddressStateWy WorkplaceListResponseDataAddressState = "WY"
+)
+
+func (r WorkplaceListResponseDataAddressState) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataAddressStateAl, WorkplaceListResponseDataAddressStateAk, WorkplaceListResponseDataAddressStateAz, WorkplaceListResponseDataAddressStateAr, WorkplaceListResponseDataAddressStateCa, WorkplaceListResponseDataAddressStateCo, WorkplaceListResponseDataAddressStateCt, WorkplaceListResponseDataAddressStateDc, WorkplaceListResponseDataAddressStateDe, WorkplaceListResponseDataAddressStateFl, WorkplaceListResponseDataAddressStateGa, WorkplaceListResponseDataAddressStateHi, WorkplaceListResponseDataAddressStateID, WorkplaceListResponseDataAddressStateIl, WorkplaceListResponseDataAddressStateIn, WorkplaceListResponseDataAddressStateIa, WorkplaceListResponseDataAddressStateKs, WorkplaceListResponseDataAddressStateKy, WorkplaceListResponseDataAddressStateLa, WorkplaceListResponseDataAddressStateMe, WorkplaceListResponseDataAddressStateMd, WorkplaceListResponseDataAddressStateMa, WorkplaceListResponseDataAddressStateMi, WorkplaceListResponseDataAddressStateMn, WorkplaceListResponseDataAddressStateMs, WorkplaceListResponseDataAddressStateMo, WorkplaceListResponseDataAddressStateMt, WorkplaceListResponseDataAddressStateNe, WorkplaceListResponseDataAddressStateNv, WorkplaceListResponseDataAddressStateNh, WorkplaceListResponseDataAddressStateNj, WorkplaceListResponseDataAddressStateNm, WorkplaceListResponseDataAddressStateNy, WorkplaceListResponseDataAddressStateNc, WorkplaceListResponseDataAddressStateNd, WorkplaceListResponseDataAddressStateOh, WorkplaceListResponseDataAddressStateOk, WorkplaceListResponseDataAddressStateOr, WorkplaceListResponseDataAddressStatePa, WorkplaceListResponseDataAddressStateRi, WorkplaceListResponseDataAddressStateSc, WorkplaceListResponseDataAddressStateSd, WorkplaceListResponseDataAddressStateTn, WorkplaceListResponseDataAddressStateTx, WorkplaceListResponseDataAddressStateUt, WorkplaceListResponseDataAddressStateVt, WorkplaceListResponseDataAddressStateVa, WorkplaceListResponseDataAddressStateWa, WorkplaceListResponseDataAddressStateWv, WorkplaceListResponseDataAddressStateWi, WorkplaceListResponseDataAddressStateWy:
+		return true
+	}
+	return false
+}
+
+type WorkplaceListResponseDataAddressCountry string
+
+const (
+	WorkplaceListResponseDataAddressCountryUs WorkplaceListResponseDataAddressCountry = "US"
+)
+
+func (r WorkplaceListResponseDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkplaceListResponseDataAddressCountryUs:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicTextWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicTextWorkerCustomFieldTypeText Objects11CustomFieldsPublicTextWorkerCustomFieldType = "text"
+)
+
+func (r Objects11CustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicTextWorkerCustomFieldTypeText:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicNumberWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicNumberWorkerCustomFieldTypeNumber Objects11CustomFieldsPublicNumberWorkerCustomFieldType = "number"
+)
+
+func (r Objects11CustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicDateWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicDateWorkerCustomFieldTypeDate Objects11CustomFieldsPublicDateWorkerCustomFieldType = "date"
+)
+
+func (r Objects11CustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicDateWorkerCustomFieldTypeDate:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicBooleanWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean Objects11CustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
+)
+
+func (r Objects11CustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicCurrencyWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency Objects11CustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
+)
+
+func (r Objects11CustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicPercentageWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicPercentageWorkerCustomFieldTypePercentage Objects11CustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
+)
+
+func (r Objects11CustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicSelectWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicSelectWorkerCustomFieldTypeSelect Objects11CustomFieldsPublicSelectWorkerCustomFieldType = "select"
+)
+
+func (r Objects11CustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
+		return true
+	}
+	return false
+}
+
+type Objects11CustomFieldsPublicMultiSelectWorkerCustomFieldType string
+
+const (
+	Objects11CustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect Objects11CustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
+)
+
+func (r Objects11CustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case Objects11CustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
 		return true
 	}
 	return false
