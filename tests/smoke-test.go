@@ -960,6 +960,15 @@ func _smokeCase70() {
 	fmt.Println(payroll)
 }
 
+func _smokeCase71() {
+	level, err := client.Levels.List(context.Background())
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(level)
+}
+
 var cases = []smokeCase{
 	{
 		Operation: "list",
@@ -1506,6 +1515,13 @@ var cases = []smokeCase{
 		Method:    "GET",
 		Path:      "/v1/payrolls/{id}",
 		Run:       _smokeCase70,
+	},
+
+	{
+		Operation: "list",
+		Method:    "GET",
+		Path:      "/v1/levels",
+		Run:       _smokeCase71,
 	},
 }
 

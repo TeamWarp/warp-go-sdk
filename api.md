@@ -63,6 +63,8 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [Get Paycheck](#get-paycheck)
   - [List Payrolls](#list-payrolls)
   - [Get Payroll](#get-payroll)
+- [`Levels`](#levels)
+  - [List Job Levels](#list-job-levels)
 
 ## Setup
 
@@ -1013,4 +1015,25 @@ if err != nil {
 }
 
 fmt.Println(payroll)
+```
+
+## `Levels`
+
+Endpoints for reading the job-level framework configured for your company.
+
+### List Job Levels
+
+List the active standard job levels available to your company.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`[]Objects5`](./shared/shared.go) |
+
+```go
+level, err := client.Levels.List(context.Background())
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(level)
 ```
