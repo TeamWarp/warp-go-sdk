@@ -14,7 +14,6 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // WebhookService contains methods that help with parsing and verifying inbound
@@ -572,12 +571,12 @@ type WorkerCreatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerCreatedWebhookEventPayloadLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerCreatedWebhookEventPayloadJSON          `json:"-"`
+	Level        WorkerCreatedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField             `json:"customFields" api:"nullable"`
+	JSON         workerCreatedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayload]
@@ -713,826 +712,6 @@ func (r WorkerCreatedWebhookEventPayloadLevelTrack) IsKnown() bool {
 	return false
 }
 
-type WorkerCreatedWebhookEventPayloadCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option interface{} `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                                     `json:"options" api:"nullable"`
-	JSON    workerCreatedWebhookEventPayloadCustomFieldJSON `json:"-"`
-	union   WorkerCreatedWebhookEventPayloadCustomFieldsUnion
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerCreatedWebhookEventPayloadCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomField) AsUnion() WorkerCreatedWebhookEventPayloadCustomFieldsUnion {
-	return r.union
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsUnion interface {
-	implementsWorkerCreatedWebhookEventPayloadCustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerCreatedWebhookEventPayloadCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                                      `json:"value" api:"required,nullable"`
-	JSON  workerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                                   `json:"value" api:"required,nullable"`
-	JSON  workerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                                      `json:"value" api:"required,nullable"`
-	JSON  workerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                                           `json:"value" api:"required,nullable"`
-	JSON  workerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
-	JSON         workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf, WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                                       `json:"value" api:"required,nullable"`
-	JSON  workerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
-	JSON   workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
-	JSON    workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerCreatedWebhookEventPayloadCustomField() {
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsType string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeText        WorkerCreatedWebhookEventPayloadCustomFieldsType = "text"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeNumber      WorkerCreatedWebhookEventPayloadCustomFieldsType = "number"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeDate        WorkerCreatedWebhookEventPayloadCustomFieldsType = "date"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeBoolean     WorkerCreatedWebhookEventPayloadCustomFieldsType = "boolean"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeCurrency    WorkerCreatedWebhookEventPayloadCustomFieldsType = "currency"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypePercentage  WorkerCreatedWebhookEventPayloadCustomFieldsType = "percentage"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeSelect      WorkerCreatedWebhookEventPayloadCustomFieldsType = "select"
-	WorkerCreatedWebhookEventPayloadCustomFieldsTypeMultiSelect WorkerCreatedWebhookEventPayloadCustomFieldsType = "multi_select"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsTypeText, WorkerCreatedWebhookEventPayloadCustomFieldsTypeNumber, WorkerCreatedWebhookEventPayloadCustomFieldsTypeDate, WorkerCreatedWebhookEventPayloadCustomFieldsTypeBoolean, WorkerCreatedWebhookEventPayloadCustomFieldsTypeCurrency, WorkerCreatedWebhookEventPayloadCustomFieldsTypePercentage, WorkerCreatedWebhookEventPayloadCustomFieldsTypeSelect, WorkerCreatedWebhookEventPayloadCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUsd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "USD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeAud WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "AUD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBgn WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "BGN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBrl WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "BRL"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCad WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "CAD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeChf WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "CHF"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCzk WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "CZK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeDkk WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "DKK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeEur WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "EUR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGbp WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "GBP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeHkd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "HKD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeHuf WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "HUF"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeIdr WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "IDR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeInr WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "INR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeJpy WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "JPY"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeMyr WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "MYR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNok WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "NOK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNzd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "NZD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCny WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "CNY"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePln WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "PLN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeRon WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "RON"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeTry WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "TRY"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeSek WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "SEK"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeSgd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "SGD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeAed WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "AED"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeArs WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "ARS"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBdt WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "BDT"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBwp WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "BWP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeClp WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "CLP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCop WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "COP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCrc WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "CRC"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeEgp WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "EGP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeFjd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "FJD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGel WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "GEL"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGhs WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "GHS"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeIls WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "ILS"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeKes WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "KES"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeKrw WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "KRW"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeLkr WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "LKR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeMad WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "MAD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeMxn WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "MXN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNpr WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "NPR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePhp WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "PHP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePkr WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "PKR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeThb WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "THB"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUah WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "UAH"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUgx WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "UGX"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUyu WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "UYU"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeVnd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "VND"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeZar WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "ZAR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeZmw WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "ZMW"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeTnd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "TND"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNgn WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "NGN"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeRsd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "RSD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeTwd WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "TWD"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGtq WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "GTQ"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeHnl WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "HNL"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeDop WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "DOP"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeSar WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "SAR"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeXaf WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "XAF"
-	WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePen WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode = "PEN"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUsd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeAud, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBgn, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBrl, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCad, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeChf, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCzk, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeDkk, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeEur, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGbp, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeHkd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeHuf, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeIdr, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeInr, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeJpy, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeMyr, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNok, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNzd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCny, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePln, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeRon, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeTry, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeSek, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeSgd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeAed, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeArs, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBdt, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeBwp, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeClp, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCop, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeCrc, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeEgp, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeFjd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGel, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGhs, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeIls, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeKes, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeKrw, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeLkr, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeMad, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeMxn, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNpr, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePhp, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePkr, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeThb, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUah, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUgx, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeUyu, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeVnd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeZar, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeZmw, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeTnd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeNgn, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeRsd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeTwd, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeGtq, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeHnl, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeDop, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeSar, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodeXaf, WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                                `json:"id" api:"required"`
-	Label     string                                                                                `json:"label" api:"required"`
-	Value     string                                                                                `json:"value" api:"required"`
-	SortOrder interface{}                                                                           `json:"sortOrder" api:"required"`
-	Status    WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                                `json:"createdAt" api:"required"`
-	JSON      workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                                      `json:"id" api:"required"`
-	Label     string                                                                                      `json:"label" api:"required"`
-	Value     string                                                                                      `json:"value" api:"required"`
-	SortOrder interface{}                                                                                 `json:"sortOrder" api:"required"`
-	Status    WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                                      `json:"createdAt" api:"required"`
-	JSON      workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
-}
-
-// workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
-type workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
-
-const (
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
-	WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
-)
-
-func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
-	switch r {
-	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
-		return true
-	}
-	return false
-}
-
 type WorkerUpdatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1602,12 +781,12 @@ type WorkerUpdatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerUpdatedWebhookEventPayloadLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerUpdatedWebhookEventPayloadJSON          `json:"-"`
+	Level        WorkerUpdatedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField             `json:"customFields" api:"nullable"`
+	JSON         workerUpdatedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerUpdatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayload]
@@ -1812,12 +991,12 @@ type WorkerDeletedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerDeletedWebhookEventPayloadLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerDeletedWebhookEventPayloadJSON          `json:"-"`
+	Level        WorkerDeletedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField             `json:"customFields" api:"nullable"`
+	JSON         workerDeletedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerDeletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayload]
@@ -2022,12 +1201,12 @@ type WorkerInviteSentWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerInviteSentWebhookEventPayloadLevel      `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerInviteSentWebhookEventPayloadJSON       `json:"-"`
+	Level        WorkerInviteSentWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField                `json:"customFields" api:"nullable"`
+	JSON         workerInviteSentWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerInviteSentWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayload]
@@ -2232,12 +1411,12 @@ type WorkerInviteAcceptedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerInviteAcceptedWebhookEventPayloadLevel  `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerInviteAcceptedWebhookEventPayloadJSON   `json:"-"`
+	Level        WorkerInviteAcceptedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField                    `json:"customFields" api:"nullable"`
+	JSON         workerInviteAcceptedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayload]
@@ -2442,11 +1621,11 @@ type WorkerOnboardingCompletedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerOnboardingCompletedWebhookEventPayloadLevel `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField     `json:"customFields" api:"nullable"`
+	CustomFields []PublicWorkerCustomField                         `json:"customFields" api:"nullable"`
 	JSON         workerOnboardingCompletedWebhookEventPayloadJSON  `json:"-"`
 }
 
@@ -2652,11 +1831,11 @@ type WorkerOffboardingStartedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerOffboardingStartedWebhookEventPayloadLevel `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField    `json:"customFields" api:"nullable"`
+	CustomFields []PublicWorkerCustomField                        `json:"customFields" api:"nullable"`
 	JSON         workerOffboardingStartedWebhookEventPayloadJSON  `json:"-"`
 }
 
@@ -2862,12 +2041,12 @@ type WorkerOffboardedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerOffboardedWebhookEventPayloadLevel      `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerOffboardedWebhookEventPayloadJSON       `json:"-"`
+	Level        WorkerOffboardedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField                `json:"customFields" api:"nullable"`
+	JSON         workerOffboardedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerOffboardedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayload]
@@ -3072,12 +2251,12 @@ type WorkerReactivatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerReactivatedWebhookEventPayloadLevel     `json:"level" api:"nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
-	JSON         workerReactivatedWebhookEventPayloadJSON      `json:"-"`
+	Level        WorkerReactivatedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField                 `json:"customFields" api:"nullable"`
+	JSON         workerReactivatedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerReactivatedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayload]
@@ -3795,8 +2974,8 @@ func (r OfferCreatedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferCreatedWebhookEventPayloadCompensation struct {
 	BasePay         OfferCreatedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                           `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                           `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                                  `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                                  `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferCreatedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerCreatedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -3821,10 +3000,10 @@ func (r offerCreatedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferCreatedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                                `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                                       `json:"amount" api:"required"`
 	Basis        OfferCreatedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferCreatedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                                `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                       `json:"variableRate" api:"required,nullable"`
 	JSON         offerCreatedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -4485,8 +3664,8 @@ func (r OfferSentWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferSentWebhookEventPayloadCompensation struct {
 	BasePay         OfferSentWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                        `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                        `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                               `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                               `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferSentWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerSentWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -4511,10 +3690,10 @@ func (r offerSentWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferSentWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                             `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                                    `json:"amount" api:"required"`
 	Basis        OfferSentWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferSentWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                             `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                    `json:"variableRate" api:"required,nullable"`
 	JSON         offerSentWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -5175,8 +4354,8 @@ func (r OfferViewedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferViewedWebhookEventPayloadCompensation struct {
 	BasePay         OfferViewedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                          `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                          `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                                 `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                                 `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferViewedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerViewedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -5201,10 +4380,10 @@ func (r offerViewedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferViewedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                               `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                                      `json:"amount" api:"required"`
 	Basis        OfferViewedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferViewedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                               `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                      `json:"variableRate" api:"required,nullable"`
 	JSON         offerViewedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -5865,8 +5044,8 @@ func (r OfferAcceptedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferAcceptedWebhookEventPayloadCompensation struct {
 	BasePay         OfferAcceptedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                            `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                            `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                                   `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                                   `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferAcceptedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerAcceptedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -5891,10 +5070,10 @@ func (r offerAcceptedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferAcceptedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                                 `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                                        `json:"amount" api:"required"`
 	Basis        OfferAcceptedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferAcceptedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                                 `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                        `json:"variableRate" api:"required,nullable"`
 	JSON         offerAcceptedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -6555,8 +5734,8 @@ func (r OfferVoidedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferVoidedWebhookEventPayloadCompensation struct {
 	BasePay         OfferVoidedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                          `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                          `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                                 `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                                 `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferVoidedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerVoidedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -6581,10 +5760,10 @@ func (r offerVoidedWebhookEventPayloadCompensationJSON) RawJSON() string {
 
 type OfferVoidedWebhookEventPayloadCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                               `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                                      `json:"amount" api:"required"`
 	Basis        OfferVoidedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferVoidedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                               `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                      `json:"variableRate" api:"required,nullable"`
 	JSON         offerVoidedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 

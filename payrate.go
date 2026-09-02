@@ -72,7 +72,7 @@ func (r *PayRateService) List(ctx context.Context, query PayRateListParams, opts
 //
 // Returns:
 //
-//	*PayRateGetResponse: A regular or additional pay rate assigned to a worker.
+//	*PublicPayRate: A regular or additional pay rate assigned to a worker.
 //
 // Example:
 //
@@ -82,7 +82,7 @@ func (r *PayRateService) List(ctx context.Context, query PayRateListParams, opts
 //	}
 //
 //	fmt.Println(payRate)
-func (r *PayRateService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PayRateGetResponse, err error) {
+func (r *PayRateService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PublicPayRate, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -97,7 +97,7 @@ type PublicPayRate struct {
 	// The pay rate id.
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
-	Worker PublicPayRateWorker `json:"worker" api:"required"`
+	Worker PublicWorkerReference `json:"worker" api:"required"`
 	// Whether the rate is the worker's regular base compensation or an additional rate
 	// such as a bonus, commission, or stipend.
 	Type PublicPayRateType `json:"type" api:"required"`
@@ -141,38 +141,6 @@ func (r *PublicPayRate) UnmarshalJSON(data []byte) (err error) {
 
 func (r publicPayRateJSON) RawJSON() string {
 	return r.raw
-}
-
-type PublicPayRateType string
-
-const (
-	PublicPayRateTypeRegular    PublicPayRateType = "regular"
-	PublicPayRateTypeAdditional PublicPayRateType = "additional"
-)
-
-func (r PublicPayRateType) IsKnown() bool {
-	switch r {
-	case PublicPayRateTypeRegular, PublicPayRateTypeAdditional:
-		return true
-	}
-	return false
-}
-
-type PublicPayRatePer string
-
-const (
-	PublicPayRatePerYear  PublicPayRatePer = "year"
-	PublicPayRatePerMonth PublicPayRatePer = "month"
-	PublicPayRatePerWeek  PublicPayRatePer = "week"
-	PublicPayRatePerHour  PublicPayRatePer = "hour"
-)
-
-func (r PublicPayRatePer) IsKnown() bool {
-	switch r {
-	case PublicPayRatePerYear, PublicPayRatePerMonth, PublicPayRatePerWeek, PublicPayRatePerHour:
-		return true
-	}
-	return false
 }
 
 type PublicPayRateCurrency string
@@ -249,157 +217,33 @@ func (r PublicPayRateCurrency) IsKnown() bool {
 	return false
 }
 
-type PayRateGetResponse struct {
-	// The pay rate id.
-	ID string `json:"id" api:"required"`
-	// Basic identifying information for a worker associated with another resource.
-	Worker PayRateGetResponseWorker `json:"worker" api:"required"`
-	// Whether the rate is the worker's regular base compensation or an additional rate
-	// such as a bonus, commission, or stipend.
-	Type PayRateGetResponseType `json:"type" api:"required"`
-	// The period represented by the pay rate amount.
-	Per PayRateGetResponsePer `json:"per" api:"required"`
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                      `json:"amount" api:"required"`
-	Currency PayRateGetResponseCurrency `json:"currency" api:"required"`
-	// The server-formatted pay rate, including its period.
-	Display string `json:"display" api:"required"`
-	// The first date on which the rate applies. Additional rates may have no start
-	// date.
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required,nullable"`
-	// The first date on which the rate no longer applies, or null when it is
-	// open-ended.
-	EffectiveEndDate string `json:"effectiveEndDate" api:"required,nullable"`
-	// A human-readable label for the pay rate, when one is configured.
-	Description string                 `json:"description" api:"required,nullable"`
-	JSON        payRateGetResponseJSON `json:"-"`
-}
-
-// payRateGetResponseJSON contains the JSON metadata for the struct [PayRateGetResponse]
-type payRateGetResponseJSON struct {
-	ID                 apijson.Field
-	Worker             apijson.Field
-	Type               apijson.Field
-	Per                apijson.Field
-	Amount             apijson.Field
-	Currency           apijson.Field
-	Display            apijson.Field
-	EffectiveStartDate apijson.Field
-	EffectiveEndDate   apijson.Field
-	Description        apijson.Field
-	raw                string
-	ExtraFields        map[string]apijson.Field
-}
-
-func (r *PayRateGetResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r payRateGetResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type PayRateGetResponseType string
+type PublicPayRateType string
 
 const (
-	PayRateGetResponseTypeRegular    PayRateGetResponseType = "regular"
-	PayRateGetResponseTypeAdditional PayRateGetResponseType = "additional"
+	PublicPayRateTypeRegular    PublicPayRateType = "regular"
+	PublicPayRateTypeAdditional PublicPayRateType = "additional"
 )
 
-func (r PayRateGetResponseType) IsKnown() bool {
+func (r PublicPayRateType) IsKnown() bool {
 	switch r {
-	case PayRateGetResponseTypeRegular, PayRateGetResponseTypeAdditional:
+	case PublicPayRateTypeRegular, PublicPayRateTypeAdditional:
 		return true
 	}
 	return false
 }
 
-type PayRateGetResponsePer string
+type PublicPayRatePer string
 
 const (
-	PayRateGetResponsePerYear  PayRateGetResponsePer = "year"
-	PayRateGetResponsePerMonth PayRateGetResponsePer = "month"
-	PayRateGetResponsePerWeek  PayRateGetResponsePer = "week"
-	PayRateGetResponsePerHour  PayRateGetResponsePer = "hour"
+	PublicPayRatePerYear  PublicPayRatePer = "year"
+	PublicPayRatePerMonth PublicPayRatePer = "month"
+	PublicPayRatePerWeek  PublicPayRatePer = "week"
+	PublicPayRatePerHour  PublicPayRatePer = "hour"
 )
 
-func (r PayRateGetResponsePer) IsKnown() bool {
+func (r PublicPayRatePer) IsKnown() bool {
 	switch r {
-	case PayRateGetResponsePerYear, PayRateGetResponsePerMonth, PayRateGetResponsePerWeek, PayRateGetResponsePerHour:
-		return true
-	}
-	return false
-}
-
-type PayRateGetResponseCurrency string
-
-const (
-	PayRateGetResponseCurrencyUsd PayRateGetResponseCurrency = "USD"
-	PayRateGetResponseCurrencyAud PayRateGetResponseCurrency = "AUD"
-	PayRateGetResponseCurrencyBgn PayRateGetResponseCurrency = "BGN"
-	PayRateGetResponseCurrencyBrl PayRateGetResponseCurrency = "BRL"
-	PayRateGetResponseCurrencyCad PayRateGetResponseCurrency = "CAD"
-	PayRateGetResponseCurrencyChf PayRateGetResponseCurrency = "CHF"
-	PayRateGetResponseCurrencyCzk PayRateGetResponseCurrency = "CZK"
-	PayRateGetResponseCurrencyDkk PayRateGetResponseCurrency = "DKK"
-	PayRateGetResponseCurrencyEur PayRateGetResponseCurrency = "EUR"
-	PayRateGetResponseCurrencyGbp PayRateGetResponseCurrency = "GBP"
-	PayRateGetResponseCurrencyHkd PayRateGetResponseCurrency = "HKD"
-	PayRateGetResponseCurrencyHuf PayRateGetResponseCurrency = "HUF"
-	PayRateGetResponseCurrencyIdr PayRateGetResponseCurrency = "IDR"
-	PayRateGetResponseCurrencyInr PayRateGetResponseCurrency = "INR"
-	PayRateGetResponseCurrencyJpy PayRateGetResponseCurrency = "JPY"
-	PayRateGetResponseCurrencyMyr PayRateGetResponseCurrency = "MYR"
-	PayRateGetResponseCurrencyNok PayRateGetResponseCurrency = "NOK"
-	PayRateGetResponseCurrencyNzd PayRateGetResponseCurrency = "NZD"
-	PayRateGetResponseCurrencyCny PayRateGetResponseCurrency = "CNY"
-	PayRateGetResponseCurrencyPln PayRateGetResponseCurrency = "PLN"
-	PayRateGetResponseCurrencyRon PayRateGetResponseCurrency = "RON"
-	PayRateGetResponseCurrencyTry PayRateGetResponseCurrency = "TRY"
-	PayRateGetResponseCurrencySek PayRateGetResponseCurrency = "SEK"
-	PayRateGetResponseCurrencySgd PayRateGetResponseCurrency = "SGD"
-	PayRateGetResponseCurrencyAed PayRateGetResponseCurrency = "AED"
-	PayRateGetResponseCurrencyArs PayRateGetResponseCurrency = "ARS"
-	PayRateGetResponseCurrencyBdt PayRateGetResponseCurrency = "BDT"
-	PayRateGetResponseCurrencyBwp PayRateGetResponseCurrency = "BWP"
-	PayRateGetResponseCurrencyClp PayRateGetResponseCurrency = "CLP"
-	PayRateGetResponseCurrencyCop PayRateGetResponseCurrency = "COP"
-	PayRateGetResponseCurrencyCrc PayRateGetResponseCurrency = "CRC"
-	PayRateGetResponseCurrencyEgp PayRateGetResponseCurrency = "EGP"
-	PayRateGetResponseCurrencyFjd PayRateGetResponseCurrency = "FJD"
-	PayRateGetResponseCurrencyGel PayRateGetResponseCurrency = "GEL"
-	PayRateGetResponseCurrencyGhs PayRateGetResponseCurrency = "GHS"
-	PayRateGetResponseCurrencyIls PayRateGetResponseCurrency = "ILS"
-	PayRateGetResponseCurrencyKes PayRateGetResponseCurrency = "KES"
-	PayRateGetResponseCurrencyKrw PayRateGetResponseCurrency = "KRW"
-	PayRateGetResponseCurrencyLkr PayRateGetResponseCurrency = "LKR"
-	PayRateGetResponseCurrencyMad PayRateGetResponseCurrency = "MAD"
-	PayRateGetResponseCurrencyMxn PayRateGetResponseCurrency = "MXN"
-	PayRateGetResponseCurrencyNpr PayRateGetResponseCurrency = "NPR"
-	PayRateGetResponseCurrencyPhp PayRateGetResponseCurrency = "PHP"
-	PayRateGetResponseCurrencyPkr PayRateGetResponseCurrency = "PKR"
-	PayRateGetResponseCurrencyThb PayRateGetResponseCurrency = "THB"
-	PayRateGetResponseCurrencyUah PayRateGetResponseCurrency = "UAH"
-	PayRateGetResponseCurrencyUgx PayRateGetResponseCurrency = "UGX"
-	PayRateGetResponseCurrencyUyu PayRateGetResponseCurrency = "UYU"
-	PayRateGetResponseCurrencyVnd PayRateGetResponseCurrency = "VND"
-	PayRateGetResponseCurrencyZar PayRateGetResponseCurrency = "ZAR"
-	PayRateGetResponseCurrencyZmw PayRateGetResponseCurrency = "ZMW"
-	PayRateGetResponseCurrencyTnd PayRateGetResponseCurrency = "TND"
-	PayRateGetResponseCurrencyNgn PayRateGetResponseCurrency = "NGN"
-	PayRateGetResponseCurrencyRsd PayRateGetResponseCurrency = "RSD"
-	PayRateGetResponseCurrencyTwd PayRateGetResponseCurrency = "TWD"
-	PayRateGetResponseCurrencyGtq PayRateGetResponseCurrency = "GTQ"
-	PayRateGetResponseCurrencyHnl PayRateGetResponseCurrency = "HNL"
-	PayRateGetResponseCurrencyDop PayRateGetResponseCurrency = "DOP"
-	PayRateGetResponseCurrencySar PayRateGetResponseCurrency = "SAR"
-	PayRateGetResponseCurrencyXaf PayRateGetResponseCurrency = "XAF"
-	PayRateGetResponseCurrencyPen PayRateGetResponseCurrency = "PEN"
-)
-
-func (r PayRateGetResponseCurrency) IsKnown() bool {
-	switch r {
-	case PayRateGetResponseCurrencyUsd, PayRateGetResponseCurrencyAud, PayRateGetResponseCurrencyBgn, PayRateGetResponseCurrencyBrl, PayRateGetResponseCurrencyCad, PayRateGetResponseCurrencyChf, PayRateGetResponseCurrencyCzk, PayRateGetResponseCurrencyDkk, PayRateGetResponseCurrencyEur, PayRateGetResponseCurrencyGbp, PayRateGetResponseCurrencyHkd, PayRateGetResponseCurrencyHuf, PayRateGetResponseCurrencyIdr, PayRateGetResponseCurrencyInr, PayRateGetResponseCurrencyJpy, PayRateGetResponseCurrencyMyr, PayRateGetResponseCurrencyNok, PayRateGetResponseCurrencyNzd, PayRateGetResponseCurrencyCny, PayRateGetResponseCurrencyPln, PayRateGetResponseCurrencyRon, PayRateGetResponseCurrencyTry, PayRateGetResponseCurrencySek, PayRateGetResponseCurrencySgd, PayRateGetResponseCurrencyAed, PayRateGetResponseCurrencyArs, PayRateGetResponseCurrencyBdt, PayRateGetResponseCurrencyBwp, PayRateGetResponseCurrencyClp, PayRateGetResponseCurrencyCop, PayRateGetResponseCurrencyCrc, PayRateGetResponseCurrencyEgp, PayRateGetResponseCurrencyFjd, PayRateGetResponseCurrencyGel, PayRateGetResponseCurrencyGhs, PayRateGetResponseCurrencyIls, PayRateGetResponseCurrencyKes, PayRateGetResponseCurrencyKrw, PayRateGetResponseCurrencyLkr, PayRateGetResponseCurrencyMad, PayRateGetResponseCurrencyMxn, PayRateGetResponseCurrencyNpr, PayRateGetResponseCurrencyPhp, PayRateGetResponseCurrencyPkr, PayRateGetResponseCurrencyThb, PayRateGetResponseCurrencyUah, PayRateGetResponseCurrencyUgx, PayRateGetResponseCurrencyUyu, PayRateGetResponseCurrencyVnd, PayRateGetResponseCurrencyZar, PayRateGetResponseCurrencyZmw, PayRateGetResponseCurrencyTnd, PayRateGetResponseCurrencyNgn, PayRateGetResponseCurrencyRsd, PayRateGetResponseCurrencyTwd, PayRateGetResponseCurrencyGtq, PayRateGetResponseCurrencyHnl, PayRateGetResponseCurrencyDop, PayRateGetResponseCurrencySar, PayRateGetResponseCurrencyXaf, PayRateGetResponseCurrencyPen:
+	case PublicPayRatePerYear, PublicPayRatePerMonth, PublicPayRatePerWeek, PublicPayRatePerHour:
 		return true
 	}
 	return false
@@ -414,7 +258,7 @@ type PayRateListParams struct {
 	// Only return pay rates whose effective start date is on or after this date.
 	EffectiveOnOrAfter param.Field[string] `query:"effectiveOnOrAfter"`
 	// Only return regular or additional pay rates of this type.
-	Type param.Field[PayRateListParamsType] `query:"type"`
+	Type param.Field[PublicPayRateType] `query:"type"`
 	// Only return pay rates assigned to this worker.
 	WorkerID param.Field[string] `query:"workerId"`
 }
@@ -425,21 +269,6 @@ func (r PayRateListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
-}
-
-type PayRateListParamsType string
-
-const (
-	PayRateListParamsTypeRegular    PayRateListParamsType = "regular"
-	PayRateListParamsTypeAdditional PayRateListParamsType = "additional"
-)
-
-func (r PayRateListParamsType) IsKnown() bool {
-	switch r {
-	case PayRateListParamsTypeRegular, PayRateListParamsTypeAdditional:
-		return true
-	}
-	return false
 }
 
 type PayRateListResponse struct {
@@ -463,59 +292,5 @@ func (r *PayRateListResponse) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r payRateListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type PayRateGetResponseWorker struct {
-	// The worker id.
-	ID string `json:"id" api:"required"`
-	// The worker first name.
-	FirstName string `json:"firstName" api:"required"`
-	// The worker last name.
-	LastName string                       `json:"lastName" api:"required"`
-	JSON     payRateGetResponseWorkerJSON `json:"-"`
-}
-
-// payRateGetResponseWorkerJSON contains the JSON metadata for the struct [PayRateGetResponseWorker]
-type payRateGetResponseWorkerJSON struct {
-	ID          apijson.Field
-	FirstName   apijson.Field
-	LastName    apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PayRateGetResponseWorker) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r payRateGetResponseWorkerJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayRateWorker struct {
-	// The worker id.
-	ID string `json:"id" api:"required"`
-	// The worker first name.
-	FirstName string `json:"firstName" api:"required"`
-	// The worker last name.
-	LastName string                  `json:"lastName" api:"required"`
-	JSON     publicPayRateWorkerJSON `json:"-"`
-}
-
-// publicPayRateWorkerJSON contains the JSON metadata for the struct [PublicPayRateWorker]
-type publicPayRateWorkerJSON struct {
-	ID          apijson.Field
-	FirstName   apijson.Field
-	LastName    apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayRateWorker) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayRateWorkerJSON) RawJSON() string {
 	return r.raw
 }

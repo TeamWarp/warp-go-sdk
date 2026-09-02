@@ -31,6 +31,8 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [List Departments](#list-departments)
   - [Create Department](#create-department)
   - [Update Department](#update-department)
+- [`Levels`](#levels)
+  - [List Job Levels](#list-job-levels)
 - [`Offers`](#offers)
   - [List Offers](#list-offers)
   - [Create Offer](#create-offer)
@@ -40,6 +42,11 @@ Complete reference of every operation, grouped by resource. See [the README](./R
 - [`PayRates`](#payrates)
   - [List Pay Rates](#list-pay-rates)
   - [Get Pay Rate](#get-pay-rate)
+- [`Payroll`](#payroll)
+  - [List Payrolls](#list-payrolls)
+  - [Get Payroll](#get-payroll)
+  - [List Paychecks](#list-paychecks)
+  - [Get Paycheck](#get-paycheck)
 - [`TimeOff`](#timeoff)
   - [List Time Off Assignments](#list-time-off-assignments)
   - [List Time Off Balances](#list-time-off-balances)
@@ -58,13 +65,6 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [List Workplaces](#list-workplaces)
   - [Create Workplace](#create-workplace)
   - [Update Workplace](#update-workplace)
-- [`Payroll`](#payroll)
-  - [List Paychecks](#list-paychecks)
-  - [Get Paycheck](#get-paycheck)
-  - [List Payrolls](#list-payrolls)
-  - [Get Payroll](#get-payroll)
-- [`Levels`](#levels)
-  - [List Job Levels](#list-job-levels)
 
 ## Setup
 
@@ -97,7 +97,7 @@ List company health plans. Defaults to active plans. A plan whose effectiveEndDa
 ```go
 healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
 	Limit:    sdk.F[string]("limit"),
-	Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+	Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 })
 if err != nil {
 	panic(err)
@@ -112,7 +112,7 @@ Get a publicly visible company health plan by id.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`BenefitHealthPlanGetResponse`](./benefithealthplan.go) |
+| Response | [`PublicHealthPlan`](./benefithealthplan.go) |
 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
@@ -139,7 +139,7 @@ List company retirement plans. Defaults to active plans. A plan whose effectiveE
 ```go
 retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
 	Limit:    sdk.F[string]("limit"),
-	Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
+	Statuses: sdk.F[[]sdk.PublicRetirementPlanStatus]([]sdk.PublicRetirementPlanStatus{"active"}),
 })
 if err != nil {
 	panic(err)
@@ -154,7 +154,7 @@ Get a company retirement plan by id, regardless of status.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`BenefitRetirementPlanGetResponse`](./benefitretirementplan.go) |
+| Response | [`PublicRetirementPlan`](./benefitretirementplan.go) |
 
 ```go
 retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
@@ -181,7 +181,7 @@ List current payroll benefit deductions. Defaults to active deductions. A deduct
 ```go
 deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
 	Limit:    sdk.F[string]("limit"),
-	Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
+	Statuses: sdk.F[[]sdk.PublicBenefitDeductionStatus]([]sdk.PublicBenefitDeductionStatus{"active"}),
 })
 if err != nil {
 	panic(err)
@@ -196,7 +196,7 @@ Get the current version of a company benefit deduction by id.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`BenefitDeductionGetResponse`](./benefitdeduction.go) |
+| Response | [`PublicBenefitDeduction`](./benefitdeduction.go) |
 
 ```go
 deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
@@ -487,6 +487,27 @@ if err != nil {
 fmt.Println(department)
 ```
 
+## `Levels`
+
+Endpoints for reading the job-level framework configured for your company.
+
+### List Job Levels
+
+List the active standard job levels available to your company.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`[]LevelListResponse`](./level.go) |
+
+```go
+level, err := client.Levels.List(context.Background())
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(level)
+```
+
 ## `Offers`
 
 Endpoints for managing candidate offers. Create and send offers, list existing offers, and manage their lifecycle.
@@ -627,7 +648,7 @@ Get a specific pay rate by id. The API key must have the compensation read scope
 
 | Direction | Type |
 | --- | --- |
-| Response | [`PayRateGetResponse`](./payrate.go) |
+| Response | [`PublicPayRate`](./payrate.go) |
 
 ```go
 payRate, err := client.PayRates.Get(context.Background(), "pyr_1234")
@@ -636,6 +657,84 @@ if err != nil {
 }
 
 fmt.Println(payRate)
+```
+
+## `Payroll`
+
+Read-only payrolls and worker-level payroll calculations. Paycheck endpoints use one consistent resource for every worker type; payment execution is outside this API.
+
+### List Payrolls
+
+List payroll summaries newest first with stable cursor ordering. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`PayrollListParams`](./payroll.go) |
+| Response | [`PublicPayrollList`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.List(context.Background(), sdk.PayrollListParams{
+	Limit: sdk.F[string]("limit"),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
+### Get Payroll
+
+Get a payroll by id. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Missing, foreign, unauthorized, or unavailable payrolls return 404.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`PublicPayrollDetail`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.Get(context.Background(), "pay_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
+### List Paychecks
+
+List per-worker paycheck summaries newest first with stable cursor ordering. By default, the response includes every worker type visible to the API key, including US W-2 employees, US 1099 contractors, and global contractors; use workerTypes to narrow the results. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`PayrollListPaychecksParams`](./payroll.go) |
+| Response | [`PublicPaycheckList`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
+	Limit: sdk.F[string]("limit"),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
+### Get Paycheck
+
+Get a paycheck by id. All worker types use the same paycheck schema. Categories that do not apply to a worker are represented by zero-valued totals and empty line-item arrays. For example, a US 1099 contractor with no applicable payroll taxes returns zero `workerTaxes` and `employerTaxes` totals and an empty `taxes` array. Missing, foreign, unauthorized, or unavailable paychecks return 404.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`PublicPaycheckDetail`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
 ```
 
 ## `TimeOff`
@@ -935,103 +1034,4 @@ if err != nil {
 }
 
 fmt.Println(workplace)
-```
-
-## `Payroll`
-
-Read-only payrolls and worker-level payroll calculations. Paycheck endpoints use one consistent resource for every worker type; payment execution is outside this API.
-
-### List Paychecks
-
-List per-worker paycheck summaries newest first with stable cursor ordering. By default, the response includes every worker type visible to the API key, including US W-2 employees, US 1099 contractors, and global contractors; use workerTypes to narrow the results. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
-
-| Direction | Type |
-| --- | --- |
-| Request | [`PayrollListPaychecksParams`](./payroll.go) |
-| Response | [`PayrollListPaychecksResponse`](./payroll.go) |
-
-```go
-payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
-	Limit: sdk.F[string]("limit"),
-})
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(payroll)
-```
-
-### Get Paycheck
-
-Get a paycheck by id. All worker types use the same paycheck schema. Categories that do not apply to a worker are represented by zero-valued totals and empty line-item arrays. For example, a US 1099 contractor with no applicable payroll taxes returns zero `workerTaxes` and `employerTaxes` totals and an empty `taxes` array. Missing, foreign, unauthorized, or unavailable paychecks return 404.
-
-| Direction | Type |
-| --- | --- |
-| Response | [`PayrollGetPaycheckResponse`](./payroll.go) |
-
-```go
-payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(payroll)
-```
-
-### List Payrolls
-
-List payroll summaries newest first with stable cursor ordering. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
-
-| Direction | Type |
-| --- | --- |
-| Request | [`PayrollListParams`](./payroll.go) |
-| Response | [`PayrollListResponse`](./payroll.go) |
-
-```go
-payroll, err := client.Payroll.List(context.Background(), sdk.PayrollListParams{
-	Limit: sdk.F[string]("limit"),
-})
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(payroll)
-```
-
-### Get Payroll
-
-Get a payroll by id. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Missing, foreign, unauthorized, or unavailable payrolls return 404.
-
-| Direction | Type |
-| --- | --- |
-| Response | [`PayrollGetResponse`](./payroll.go) |
-
-```go
-payroll, err := client.Payroll.Get(context.Background(), "pay_1234")
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(payroll)
-```
-
-## `Levels`
-
-Endpoints for reading the job-level framework configured for your company.
-
-### List Job Levels
-
-List the active standard job levels available to your company.
-
-| Direction | Type |
-| --- | --- |
-| Response | [`[]LevelListResponse`](./level.go) |
-
-```go
-level, err := client.Levels.List(context.Background())
-if err != nil {
-	panic(err)
-}
-
-fmt.Println(level)
 ```

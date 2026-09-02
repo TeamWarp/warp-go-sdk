@@ -33,66 +33,6 @@ func NewPayrollService(opts ...option.RequestOption) (r *PayrollService) {
 	return
 }
 
-// List per-worker paycheck summaries newest first with stable cursor ordering. By default, the response includes every worker type visible to the API key, including US W-2 employees, US 1099 contractors, and global contractors; use workerTypes to narrow the results. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
-//
-// Parameters:
-//
-//	ctx: Context for the request.
-//	query: PayrollListPaychecksParams request parameters.
-//	opts: Options to apply to this request.
-//
-// Returns:
-//
-//	*PayrollListPaychecksResponse: A cursor-paginated page of paycheck summaries.
-//
-// Example:
-//
-//	payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
-//		Limit: sdk.F[string]("limit"),
-//	})
-//	if err != nil {
-//		panic(err)
-//	}
-//
-//	fmt.Println(payroll)
-func (r *PayrollService) ListPaychecks(ctx context.Context, query PayrollListPaychecksParams, opts ...option.RequestOption) (res *PayrollListPaychecksResponse, err error) {
-	opts = slices.Concat(r.Options, opts)
-	path := "v1/paychecks"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
-	return res, err
-}
-
-// Get a paycheck by id. All worker types use the same paycheck schema. Categories that do not apply to a worker are represented by zero-valued totals and empty line-item arrays. For example, a US 1099 contractor with no applicable payroll taxes returns zero `workerTaxes` and `employerTaxes` totals and an empty `taxes` array. Missing, foreign, unauthorized, or unavailable paychecks return 404.
-//
-// Parameters:
-//
-//	ctx: Context for the request.
-//	id: The paycheck ID.
-//	opts: Options to apply to this request.
-//
-// Returns:
-//
-//	*PayrollGetPaycheckResponse: A paycheck with currency-specific calculation lines, totals grouped by currency, and authoritative parent-payroll funding-currency totals. Source currencies for expenses, benefits, or other inputs are outside this payroll-calculation resource.
-//
-// Example:
-//
-//	payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
-//	if err != nil {
-//		panic(err)
-//	}
-//
-//	fmt.Println(payroll)
-func (r *PayrollService) GetPaycheck(ctx context.Context, id string, opts ...option.RequestOption) (res *PayrollGetPaycheckResponse, err error) {
-	opts = slices.Concat(r.Options, opts)
-	if id == "" {
-		err = errors.New("missing required id parameter")
-		return nil, err
-	}
-	path := fmt.Sprintf("v1/paychecks/%s", url.PathEscape(id))
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return res, err
-}
-
 // List payroll summaries newest first with stable cursor ordering. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
 //
 // Parameters:
@@ -103,7 +43,7 @@ func (r *PayrollService) GetPaycheck(ctx context.Context, id string, opts ...opt
 //
 // Returns:
 //
-//	*PayrollListResponse: A cursor-paginated page of payroll summaries.
+//	*PublicPayrollList: A cursor-paginated page of payroll summaries.
 //
 // Example:
 //
@@ -115,7 +55,7 @@ func (r *PayrollService) GetPaycheck(ctx context.Context, id string, opts ...opt
 //	}
 //
 //	fmt.Println(payroll)
-func (r *PayrollService) List(ctx context.Context, query PayrollListParams, opts ...option.RequestOption) (res *PayrollListResponse, err error) {
+func (r *PayrollService) List(ctx context.Context, query PayrollListParams, opts ...option.RequestOption) (res *PublicPayrollList, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/payrolls"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
@@ -132,7 +72,7 @@ func (r *PayrollService) List(ctx context.Context, query PayrollListParams, opts
 //
 // Returns:
 //
-//	*PayrollGetResponse: A payroll run with funding and lifecycle details. Every amount in totals is expressed in fundingCurrency; line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative.
+//	*PublicPayrollDetail: A payroll run with funding and lifecycle details. Every amount in totals is expressed in fundingCurrency; line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative.
 //
 // Example:
 //
@@ -142,7 +82,7 @@ func (r *PayrollService) List(ctx context.Context, query PayrollListParams, opts
 //	}
 //
 //	fmt.Println(payroll)
-func (r *PayrollService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PayrollGetResponse, err error) {
+func (r *PayrollService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PublicPayrollDetail, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -151,6 +91,479 @@ func (r *PayrollService) Get(ctx context.Context, id string, opts ...option.Requ
 	path := fmt.Sprintf("v1/payrolls/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
+}
+
+// List per-worker paycheck summaries newest first with stable cursor ordering. By default, the response includes every worker type visible to the API key, including US W-2 employees, US 1099 contractors, and global contractors; use workerTypes to narrow the results. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
+//
+// Parameters:
+//
+//	ctx: Context for the request.
+//	query: PayrollListPaychecksParams request parameters.
+//	opts: Options to apply to this request.
+//
+// Returns:
+//
+//	*PublicPaycheckList: A cursor-paginated page of paycheck summaries.
+//
+// Example:
+//
+//	payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	fmt.Println(payroll)
+func (r *PayrollService) ListPaychecks(ctx context.Context, query PayrollListPaychecksParams, opts ...option.RequestOption) (res *PublicPaycheckList, err error) {
+	opts = slices.Concat(r.Options, opts)
+	path := "v1/paychecks"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
+}
+
+// Get a paycheck by id. All worker types use the same paycheck schema. Categories that do not apply to a worker are represented by zero-valued totals and empty line-item arrays. For example, a US 1099 contractor with no applicable payroll taxes returns zero `workerTaxes` and `employerTaxes` totals and an empty `taxes` array. Missing, foreign, unauthorized, or unavailable paychecks return 404.
+//
+// Parameters:
+//
+//	ctx: Context for the request.
+//	id: The paycheck ID.
+//	opts: Options to apply to this request.
+//
+// Returns:
+//
+//	*PublicPaycheckDetail: A paycheck with currency-specific calculation lines, totals grouped by currency, and authoritative parent-payroll funding-currency totals. Source currencies for expenses, benefits, or other inputs are outside this payroll-calculation resource.
+//
+// Example:
+//
+//	payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	fmt.Println(payroll)
+func (r *PayrollService) GetPaycheck(ctx context.Context, id string, opts ...option.RequestOption) (res *PublicPaycheckDetail, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("v1/paychecks/%s", url.PathEscape(id))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+type PublicPayrollList struct {
+	HasMore bool                  `json:"hasMore" api:"required"`
+	Count   int64                 `json:"count" api:"required"`
+	Data    interface{}           `json:"data" api:"required"`
+	JSON    publicPayrollListJSON `json:"-"`
+}
+
+// publicPayrollListJSON contains the JSON metadata for the struct [PublicPayrollList]
+type publicPayrollListJSON struct {
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollList) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollListJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayrollDetail struct {
+	// The tag of the payroll.
+	ID               string                  `json:"id" api:"required"`
+	Type             interface{}             `json:"type" api:"required"`
+	Subtype          interface{}             `json:"subtype" api:"required"`
+	Status           interface{}             `json:"status" api:"required"`
+	FundingCurrency  interface{}             `json:"fundingCurrency" api:"required"`
+	Payday           string                  `json:"payday" api:"required"`
+	PayPeriod        interface{}             `json:"payPeriod" api:"required"`
+	PayFrequency     PublicPayFrequency      `json:"payFrequency" api:"required,nullable"`
+	Description      string                  `json:"description" api:"required,nullable"`
+	ApprovalDeadline string                  `json:"approvalDeadline" api:"required,nullable"`
+	PaycheckCount    int64                   `json:"paycheckCount" api:"required"`
+	Totals           interface{}             `json:"totals" api:"required"`
+	FundingMethod    interface{}             `json:"fundingMethod" api:"required"`
+	ReopenDeadline   string                  `json:"reopenDeadline" api:"required,nullable"`
+	Timeline         interface{}             `json:"timeline" api:"required"`
+	JSON             publicPayrollDetailJSON `json:"-"`
+}
+
+// publicPayrollDetailJSON contains the JSON metadata for the struct [PublicPayrollDetail]
+type publicPayrollDetailJSON struct {
+	ID               apijson.Field
+	Type             apijson.Field
+	Subtype          apijson.Field
+	Status           apijson.Field
+	FundingCurrency  apijson.Field
+	Payday           apijson.Field
+	PayPeriod        apijson.Field
+	PayFrequency     apijson.Field
+	Description      apijson.Field
+	ApprovalDeadline apijson.Field
+	PaycheckCount    apijson.Field
+	Totals           apijson.Field
+	FundingMethod    apijson.Field
+	ReopenDeadline   apijson.Field
+	Timeline         apijson.Field
+	raw              string
+	ExtraFields      map[string]apijson.Field
+}
+
+func (r *PublicPayrollDetail) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollDetailJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPaycheckList struct {
+	HasMore bool                   `json:"hasMore" api:"required"`
+	Count   int64                  `json:"count" api:"required"`
+	Data    string                 `json:"data" api:"required"`
+	JSON    publicPaycheckListJSON `json:"-"`
+}
+
+// publicPaycheckListJSON contains the JSON metadata for the struct [PublicPaycheckList]
+type publicPaycheckListJSON struct {
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPaycheckList) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPaycheckListJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPaycheckDetail struct {
+	// The tag of the paycheck.
+	ID             string                   `json:"id" api:"required"`
+	Payroll        interface{}              `json:"payroll" api:"required"`
+	Worker         interface{}              `json:"worker" api:"required"`
+	Status         interface{}              `json:"status" api:"required"`
+	Payday         string                   `json:"payday" api:"required"`
+	PaymentMethod  interface{}              `json:"paymentMethod" api:"required"`
+	Totals         interface{}              `json:"totals" api:"required"`
+	Description    string                   `json:"description" api:"required,nullable"`
+	ExchangeRates  string                   `json:"exchangeRates" api:"required"`
+	ReportedHours  float64                  `json:"reportedHours" api:"required,nullable"`
+	Earnings       string                   `json:"earnings" api:"required"`
+	Reimbursements string                   `json:"reimbursements" api:"required"`
+	Deductions     string                   `json:"deductions" api:"required"`
+	Benefits       string                   `json:"benefits" api:"required"`
+	Taxes          string                   `json:"taxes" api:"required"`
+	JSON           publicPaycheckDetailJSON `json:"-"`
+}
+
+// publicPaycheckDetailJSON contains the JSON metadata for the struct [PublicPaycheckDetail]
+type publicPaycheckDetailJSON struct {
+	ID             apijson.Field
+	Payroll        apijson.Field
+	Worker         apijson.Field
+	Status         apijson.Field
+	Payday         apijson.Field
+	PaymentMethod  apijson.Field
+	Totals         apijson.Field
+	Description    apijson.Field
+	ExchangeRates  apijson.Field
+	ReportedHours  apijson.Field
+	Earnings       apijson.Field
+	Reimbursements apijson.Field
+	Deductions     apijson.Field
+	Benefits       apijson.Field
+	Taxes          apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
+}
+
+func (r *PublicPaycheckDetail) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPaycheckDetailJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayrollType string
+
+const (
+	PublicPayrollTypeUs     PublicPayrollType = "us"
+	PublicPayrollTypeGlobal PublicPayrollType = "global"
+)
+
+func (r PublicPayrollType) IsKnown() bool {
+	switch r {
+	case PublicPayrollTypeUs, PublicPayrollTypeGlobal:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollSubtype string
+
+const (
+	PublicPayrollSubtypeRegular       PublicPayrollSubtype = "regular"
+	PublicPayrollSubtypeOffCycle      PublicPayrollSubtype = "off_cycle"
+	PublicPayrollSubtypeBonus         PublicPayrollSubtype = "bonus"
+	PublicPayrollSubtypeInvoice       PublicPayrollSubtype = "invoice"
+	PublicPayrollSubtypeContractor    PublicPayrollSubtype = "contractor"
+	PublicPayrollSubtypeDismissal     PublicPayrollSubtype = "dismissal"
+	PublicPayrollSubtypeReimbursement PublicPayrollSubtype = "reimbursement"
+	PublicPayrollSubtypeManual        PublicPayrollSubtype = "manual"
+)
+
+func (r PublicPayrollSubtype) IsKnown() bool {
+	switch r {
+	case PublicPayrollSubtypeRegular, PublicPayrollSubtypeOffCycle, PublicPayrollSubtypeBonus, PublicPayrollSubtypeInvoice, PublicPayrollSubtypeContractor, PublicPayrollSubtypeDismissal, PublicPayrollSubtypeReimbursement, PublicPayrollSubtypeManual:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollStatus string
+
+const (
+	PublicPayrollStatusDraft         PublicPayrollStatus = "draft"
+	PublicPayrollStatusPending       PublicPayrollStatus = "pending"
+	PublicPayrollStatusProcessing    PublicPayrollStatus = "processing"
+	PublicPayrollStatusPartiallyPaid PublicPayrollStatus = "partially_paid"
+	PublicPayrollStatusProcessed     PublicPayrollStatus = "processed"
+	PublicPayrollStatusFailed        PublicPayrollStatus = "failed"
+	PublicPayrollStatusVoided        PublicPayrollStatus = "voided"
+)
+
+func (r PublicPayrollStatus) IsKnown() bool {
+	switch r {
+	case PublicPayrollStatusDraft, PublicPayrollStatusPending, PublicPayrollStatusProcessing, PublicPayrollStatusPartiallyPaid, PublicPayrollStatusProcessed, PublicPayrollStatusFailed, PublicPayrollStatusVoided:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollCurrency string
+
+const (
+	PublicPayrollCurrencyUsd PublicPayrollCurrency = "USD"
+	PublicPayrollCurrencyAud PublicPayrollCurrency = "AUD"
+	PublicPayrollCurrencyBgn PublicPayrollCurrency = "BGN"
+	PublicPayrollCurrencyBrl PublicPayrollCurrency = "BRL"
+	PublicPayrollCurrencyCad PublicPayrollCurrency = "CAD"
+	PublicPayrollCurrencyChf PublicPayrollCurrency = "CHF"
+	PublicPayrollCurrencyCzk PublicPayrollCurrency = "CZK"
+	PublicPayrollCurrencyDkk PublicPayrollCurrency = "DKK"
+	PublicPayrollCurrencyEur PublicPayrollCurrency = "EUR"
+	PublicPayrollCurrencyGbp PublicPayrollCurrency = "GBP"
+	PublicPayrollCurrencyHkd PublicPayrollCurrency = "HKD"
+	PublicPayrollCurrencyHuf PublicPayrollCurrency = "HUF"
+	PublicPayrollCurrencyIdr PublicPayrollCurrency = "IDR"
+	PublicPayrollCurrencyInr PublicPayrollCurrency = "INR"
+	PublicPayrollCurrencyJpy PublicPayrollCurrency = "JPY"
+	PublicPayrollCurrencyMyr PublicPayrollCurrency = "MYR"
+	PublicPayrollCurrencyNok PublicPayrollCurrency = "NOK"
+	PublicPayrollCurrencyNzd PublicPayrollCurrency = "NZD"
+	PublicPayrollCurrencyCny PublicPayrollCurrency = "CNY"
+	PublicPayrollCurrencyPln PublicPayrollCurrency = "PLN"
+	PublicPayrollCurrencyRon PublicPayrollCurrency = "RON"
+	PublicPayrollCurrencyTry PublicPayrollCurrency = "TRY"
+	PublicPayrollCurrencySek PublicPayrollCurrency = "SEK"
+	PublicPayrollCurrencySgd PublicPayrollCurrency = "SGD"
+	PublicPayrollCurrencyAed PublicPayrollCurrency = "AED"
+	PublicPayrollCurrencyArs PublicPayrollCurrency = "ARS"
+	PublicPayrollCurrencyBdt PublicPayrollCurrency = "BDT"
+	PublicPayrollCurrencyBwp PublicPayrollCurrency = "BWP"
+	PublicPayrollCurrencyClp PublicPayrollCurrency = "CLP"
+	PublicPayrollCurrencyCop PublicPayrollCurrency = "COP"
+	PublicPayrollCurrencyCrc PublicPayrollCurrency = "CRC"
+	PublicPayrollCurrencyEgp PublicPayrollCurrency = "EGP"
+	PublicPayrollCurrencyFjd PublicPayrollCurrency = "FJD"
+	PublicPayrollCurrencyGel PublicPayrollCurrency = "GEL"
+	PublicPayrollCurrencyGhs PublicPayrollCurrency = "GHS"
+	PublicPayrollCurrencyIls PublicPayrollCurrency = "ILS"
+	PublicPayrollCurrencyKes PublicPayrollCurrency = "KES"
+	PublicPayrollCurrencyKrw PublicPayrollCurrency = "KRW"
+	PublicPayrollCurrencyLkr PublicPayrollCurrency = "LKR"
+	PublicPayrollCurrencyMad PublicPayrollCurrency = "MAD"
+	PublicPayrollCurrencyMxn PublicPayrollCurrency = "MXN"
+	PublicPayrollCurrencyNpr PublicPayrollCurrency = "NPR"
+	PublicPayrollCurrencyPhp PublicPayrollCurrency = "PHP"
+	PublicPayrollCurrencyPkr PublicPayrollCurrency = "PKR"
+	PublicPayrollCurrencyThb PublicPayrollCurrency = "THB"
+	PublicPayrollCurrencyUah PublicPayrollCurrency = "UAH"
+	PublicPayrollCurrencyUgx PublicPayrollCurrency = "UGX"
+	PublicPayrollCurrencyUyu PublicPayrollCurrency = "UYU"
+	PublicPayrollCurrencyVnd PublicPayrollCurrency = "VND"
+	PublicPayrollCurrencyZar PublicPayrollCurrency = "ZAR"
+	PublicPayrollCurrencyZmw PublicPayrollCurrency = "ZMW"
+	PublicPayrollCurrencyTnd PublicPayrollCurrency = "TND"
+	PublicPayrollCurrencyNgn PublicPayrollCurrency = "NGN"
+	PublicPayrollCurrencyRsd PublicPayrollCurrency = "RSD"
+	PublicPayrollCurrencyTwd PublicPayrollCurrency = "TWD"
+	PublicPayrollCurrencyGtq PublicPayrollCurrency = "GTQ"
+	PublicPayrollCurrencyHnl PublicPayrollCurrency = "HNL"
+	PublicPayrollCurrencyDop PublicPayrollCurrency = "DOP"
+	PublicPayrollCurrencySar PublicPayrollCurrency = "SAR"
+	PublicPayrollCurrencyXaf PublicPayrollCurrency = "XAF"
+	PublicPayrollCurrencyPen PublicPayrollCurrency = "PEN"
+	PublicPayrollCurrencyBob PublicPayrollCurrency = "BOB"
+)
+
+func (r PublicPayrollCurrency) IsKnown() bool {
+	switch r {
+	case PublicPayrollCurrencyUsd, PublicPayrollCurrencyAud, PublicPayrollCurrencyBgn, PublicPayrollCurrencyBrl, PublicPayrollCurrencyCad, PublicPayrollCurrencyChf, PublicPayrollCurrencyCzk, PublicPayrollCurrencyDkk, PublicPayrollCurrencyEur, PublicPayrollCurrencyGbp, PublicPayrollCurrencyHkd, PublicPayrollCurrencyHuf, PublicPayrollCurrencyIdr, PublicPayrollCurrencyInr, PublicPayrollCurrencyJpy, PublicPayrollCurrencyMyr, PublicPayrollCurrencyNok, PublicPayrollCurrencyNzd, PublicPayrollCurrencyCny, PublicPayrollCurrencyPln, PublicPayrollCurrencyRon, PublicPayrollCurrencyTry, PublicPayrollCurrencySek, PublicPayrollCurrencySgd, PublicPayrollCurrencyAed, PublicPayrollCurrencyArs, PublicPayrollCurrencyBdt, PublicPayrollCurrencyBwp, PublicPayrollCurrencyClp, PublicPayrollCurrencyCop, PublicPayrollCurrencyCrc, PublicPayrollCurrencyEgp, PublicPayrollCurrencyFjd, PublicPayrollCurrencyGel, PublicPayrollCurrencyGhs, PublicPayrollCurrencyIls, PublicPayrollCurrencyKes, PublicPayrollCurrencyKrw, PublicPayrollCurrencyLkr, PublicPayrollCurrencyMad, PublicPayrollCurrencyMxn, PublicPayrollCurrencyNpr, PublicPayrollCurrencyPhp, PublicPayrollCurrencyPkr, PublicPayrollCurrencyThb, PublicPayrollCurrencyUah, PublicPayrollCurrencyUgx, PublicPayrollCurrencyUyu, PublicPayrollCurrencyVnd, PublicPayrollCurrencyZar, PublicPayrollCurrencyZmw, PublicPayrollCurrencyTnd, PublicPayrollCurrencyNgn, PublicPayrollCurrencyRsd, PublicPayrollCurrencyTwd, PublicPayrollCurrencyGtq, PublicPayrollCurrencyHnl, PublicPayrollCurrencyDop, PublicPayrollCurrencySar, PublicPayrollCurrencyXaf, PublicPayrollCurrencyPen, PublicPayrollCurrencyBob:
+		return true
+	}
+	return false
+}
+
+type PublicPayPeriod struct {
+	StartDate string              `json:"startDate" api:"required"`
+	EndDate   string              `json:"endDate" api:"required"`
+	JSON      publicPayPeriodJSON `json:"-"`
+}
+
+// publicPayPeriodJSON contains the JSON metadata for the struct [PublicPayPeriod]
+type publicPayPeriodJSON struct {
+	StartDate   apijson.Field
+	EndDate     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayPeriod) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayPeriodJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayFrequency string
+
+const (
+	PublicPayFrequencyWeekly      PublicPayFrequency = "weekly"
+	PublicPayFrequencyBiweekly    PublicPayFrequency = "biweekly"
+	PublicPayFrequencyMonthly     PublicPayFrequency = "monthly"
+	PublicPayFrequencySemimonthly PublicPayFrequency = "semimonthly"
+	PublicPayFrequencyQuarterly   PublicPayFrequency = "quarterly"
+	PublicPayFrequencyAnnually    PublicPayFrequency = "annually"
+)
+
+func (r PublicPayFrequency) IsKnown() bool {
+	switch r {
+	case PublicPayFrequencyWeekly, PublicPayFrequencyBiweekly, PublicPayFrequencyMonthly, PublicPayFrequencySemimonthly, PublicPayFrequencyQuarterly, PublicPayFrequencyAnnually:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollDetailTotals struct {
+	CashRequirement PublicCurrencyMoneyAmount11 `json:"cashRequirement" api:"required,nullable"`
+	// Gross earnings before worker taxes, deductions, and benefit contributions.
+	// Reimbursements are reported separately.
+	GrossPay PublicCurrencyMoneyAmount `json:"grossPay" api:"required"`
+	// The provider-calculated amount to send for workers: gross pay plus
+	// reimbursements, less worker taxes, deductions, and benefit contributions. It
+	// excludes payment execution fees and may differ from recomputed totals because of
+	// provider and FX rounding.
+	NetPay PublicCurrencyMoneyAmount1 `json:"netPay" api:"required"`
+	// Amounts reimbursed to workers in addition to gross pay. Reimbursements increase
+	// net pay and employer cost.
+	Reimbursements PublicCurrencyMoneyAmount2 `json:"reimbursements" api:"required"`
+	// Payroll taxes withheld from worker pay, reducing net pay.
+	WorkerTaxes PublicCurrencyMoneyAmount3 `json:"workerTaxes" api:"required"`
+	// Payroll taxes paid by the employer in addition to gross pay.
+	EmployerTaxes PublicCurrencyMoneyAmount4 `json:"employerTaxes" api:"required"`
+	// Non-benefit amounts deducted from worker pay before taxes, reducing taxable pay
+	// and net pay.
+	PreTaxDeductions PublicCurrencyMoneyAmount5 `json:"preTaxDeductions" api:"required"`
+	// Non-benefit amounts deducted from worker pay after taxes, reducing net pay.
+	PostTaxDeductions PublicCurrencyMoneyAmount6 `json:"postTaxDeductions" api:"required"`
+	// Amounts workers pay toward benefits, deducted from their pay.
+	WorkerBenefitContributions PublicCurrencyMoneyAmount7 `json:"workerBenefitContributions" api:"required"`
+	// Amounts the employer pays toward worker benefits in addition to gross pay.
+	EmployerBenefitContributions PublicCurrencyMoneyAmount8 `json:"employerBenefitContributions" api:"required"`
+	// Banking and transaction fees paid by the employer to fund and pay the payroll.
+	TransactionFees PublicCurrencyMoneyAmount9 `json:"transactionFees" api:"required"`
+	// The employer's total payroll cost: gross pay, reimbursements, employer taxes,
+	// employer benefit contributions, and transaction fees.
+	TotalCost PublicCurrencyMoneyAmount10   `json:"totalCost" api:"required"`
+	JSON      publicPayrollDetailTotalsJSON `json:"-"`
+}
+
+// publicPayrollDetailTotalsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotals]
+type publicPayrollDetailTotalsJSON struct {
+	CashRequirement              apijson.Field
+	GrossPay                     apijson.Field
+	NetPay                       apijson.Field
+	Reimbursements               apijson.Field
+	WorkerTaxes                  apijson.Field
+	EmployerTaxes                apijson.Field
+	PreTaxDeductions             apijson.Field
+	PostTaxDeductions            apijson.Field
+	WorkerBenefitContributions   apijson.Field
+	EmployerBenefitContributions apijson.Field
+	TransactionFees              apijson.Field
+	TotalCost                    apijson.Field
+	raw                          string
+	ExtraFields                  map[string]apijson.Field
+}
+
+func (r *PublicPayrollDetailTotals) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollDetailTotalsJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayrollFundingMethod string
+
+const (
+	PublicPayrollFundingMethodACH  PublicPayrollFundingMethod = "ach"
+	PublicPayrollFundingMethodWire PublicPayrollFundingMethod = "wire"
+)
+
+func (r PublicPayrollFundingMethod) IsKnown() bool {
+	switch r {
+	case PublicPayrollFundingMethodACH, PublicPayrollFundingMethodWire:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollTimeline struct {
+	ApprovedAt string                    `json:"approvedAt" api:"required,nullable"`
+	JSON       publicPayrollTimelineJSON `json:"-"`
+}
+
+// publicPayrollTimelineJSON contains the JSON metadata for the struct [PublicPayrollTimeline]
+type publicPayrollTimelineJSON struct {
+	ApprovedAt  apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollTimeline) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollTimelineJSON) RawJSON() string {
+	return r.raw
 }
 
 type PublicPaycheckPayroll struct {
@@ -233,6 +646,43 @@ func (r PublicPaycheckWorkerWorkerType) IsKnown() bool {
 	return false
 }
 
+type PublicPaycheckStatus string
+
+const (
+	PublicPaycheckStatusDraft         PublicPaycheckStatus = "draft"
+	PublicPaycheckStatusPending       PublicPaycheckStatus = "pending"
+	PublicPaycheckStatusProcessing    PublicPaycheckStatus = "processing"
+	PublicPaycheckStatusDebited       PublicPaycheckStatus = "debited"
+	PublicPaycheckStatusCredited      PublicPaycheckStatus = "credited"
+	PublicPaycheckStatusPartiallyPaid PublicPaycheckStatus = "partially_paid"
+	PublicPaycheckStatusProcessed     PublicPaycheckStatus = "processed"
+	PublicPaycheckStatusFailed        PublicPaycheckStatus = "failed"
+	PublicPaycheckStatusVoided        PublicPaycheckStatus = "voided"
+)
+
+func (r PublicPaycheckStatus) IsKnown() bool {
+	switch r {
+	case PublicPaycheckStatusDraft, PublicPaycheckStatusPending, PublicPaycheckStatusProcessing, PublicPaycheckStatusDebited, PublicPaycheckStatusCredited, PublicPaycheckStatusPartiallyPaid, PublicPaycheckStatusProcessed, PublicPaycheckStatusFailed, PublicPaycheckStatusVoided:
+		return true
+	}
+	return false
+}
+
+type PublicPaycheckPaymentMethod string
+
+const (
+	PublicPaycheckPaymentMethodDirectDeposit PublicPaycheckPaymentMethod = "direct_deposit"
+	PublicPaycheckPaymentMethodManual        PublicPaycheckPaymentMethod = "manual"
+)
+
+func (r PublicPaycheckPaymentMethod) IsKnown() bool {
+	switch r {
+	case PublicPaycheckPaymentMethodDirectDeposit, PublicPaycheckPaymentMethodManual:
+		return true
+	}
+	return false
+}
+
 type PublicPaycheckDetailTotals struct {
 	ByCurrency        string                         `json:"byCurrency" api:"required"`
 	InFundingCurrency interface{}                    `json:"inFundingCurrency" api:"required"`
@@ -255,33 +705,401 @@ func (r publicPaycheckDetailTotalsJSON) RawJSON() string {
 	return r.raw
 }
 
+type PublicFundingPayrollTotals struct {
+	// Gross earnings before worker taxes, deductions, and benefit contributions.
+	// Reimbursements are reported separately.
+	GrossPay PublicCurrencyMoneyAmount `json:"grossPay" api:"required"`
+	// The provider-calculated amount to send for workers: gross pay plus
+	// reimbursements, less worker taxes, deductions, and benefit contributions. It
+	// excludes payment execution fees and may differ from recomputed totals because of
+	// provider and FX rounding.
+	NetPay PublicCurrencyMoneyAmount1 `json:"netPay" api:"required"`
+	// Amounts reimbursed to workers in addition to gross pay. Reimbursements increase
+	// net pay and employer cost.
+	Reimbursements PublicCurrencyMoneyAmount2 `json:"reimbursements" api:"required"`
+	// Payroll taxes withheld from worker pay, reducing net pay.
+	WorkerTaxes PublicCurrencyMoneyAmount3 `json:"workerTaxes" api:"required"`
+	// Payroll taxes paid by the employer in addition to gross pay.
+	EmployerTaxes PublicCurrencyMoneyAmount4 `json:"employerTaxes" api:"required"`
+	// Non-benefit amounts deducted from worker pay before taxes, reducing taxable pay
+	// and net pay.
+	PreTaxDeductions PublicCurrencyMoneyAmount5 `json:"preTaxDeductions" api:"required"`
+	// Non-benefit amounts deducted from worker pay after taxes, reducing net pay.
+	PostTaxDeductions PublicCurrencyMoneyAmount6 `json:"postTaxDeductions" api:"required"`
+	// Amounts workers pay toward benefits, deducted from their pay.
+	WorkerBenefitContributions PublicCurrencyMoneyAmount7 `json:"workerBenefitContributions" api:"required"`
+	// Amounts the employer pays toward worker benefits in addition to gross pay.
+	EmployerBenefitContributions PublicCurrencyMoneyAmount8 `json:"employerBenefitContributions" api:"required"`
+	// Banking and transaction fees paid by the employer to fund and pay the payroll.
+	TransactionFees PublicCurrencyMoneyAmount9 `json:"transactionFees" api:"required"`
+	// The employer's total payroll cost: gross pay, reimbursements, employer taxes,
+	// employer benefit contributions, and transaction fees.
+	TotalCost PublicCurrencyMoneyAmount10    `json:"totalCost" api:"required"`
+	JSON      publicFundingPayrollTotalsJSON `json:"-"`
+}
+
+// publicFundingPayrollTotalsJSON contains the JSON metadata for the struct [PublicFundingPayrollTotals]
+type publicFundingPayrollTotalsJSON struct {
+	GrossPay                     apijson.Field
+	NetPay                       apijson.Field
+	Reimbursements               apijson.Field
+	WorkerTaxes                  apijson.Field
+	EmployerTaxes                apijson.Field
+	PreTaxDeductions             apijson.Field
+	PostTaxDeductions            apijson.Field
+	WorkerBenefitContributions   apijson.Field
+	EmployerBenefitContributions apijson.Field
+	TransactionFees              apijson.Field
+	TotalCost                    apijson.Field
+	raw                          string
+	ExtraFields                  map[string]apijson.Field
+}
+
+func (r *PublicFundingPayrollTotals) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicFundingPayrollTotalsJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount11 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount11JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount11JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount11]
+type publicCurrencyMoneyAmount11JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount11) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount11JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                        `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmountJSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmountJSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount]
+type publicCurrencyMoneyAmountJSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmountJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount1 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount1JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount1JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount1]
+type publicCurrencyMoneyAmount1JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount1JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount2 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount2JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount2JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount2]
+type publicCurrencyMoneyAmount2JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount2JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount3 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount3JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount3JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount3]
+type publicCurrencyMoneyAmount3JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount3JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount4 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount4JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount4JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount4]
+type publicCurrencyMoneyAmount4JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount4JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount5 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount5JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount5JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount5]
+type publicCurrencyMoneyAmount5JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount5JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount6 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount6JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount6JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount6]
+type publicCurrencyMoneyAmount6JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount6) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount6JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount7 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount7JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount7JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount7]
+type publicCurrencyMoneyAmount7JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount7) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount7JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount8 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount8JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount8JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount8]
+type publicCurrencyMoneyAmount8JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount8) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount8JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount9 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                         `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount9JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount9JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount9]
+type publicCurrencyMoneyAmount9JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount9) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount9JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount10 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount10JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount10JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount10]
+type publicCurrencyMoneyAmount10JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount10) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount10JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPaycheckSummaryTotals struct {
+	ByCurrency        string                          `json:"byCurrency" api:"required"`
+	InFundingCurrency interface{}                     `json:"inFundingCurrency" api:"required"`
+	JSON              publicPaycheckSummaryTotalsJSON `json:"-"`
+}
+
+// publicPaycheckSummaryTotalsJSON contains the JSON metadata for the struct [PublicPaycheckSummaryTotals]
+type publicPaycheckSummaryTotalsJSON struct {
+	ByCurrency        apijson.Field
+	InFundingCurrency apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *PublicPaycheckSummaryTotals) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPaycheckSummaryTotalsJSON) RawJSON() string {
+	return r.raw
+}
+
 type PublicPaycheckCurrencyTotals struct {
 	Currency interface{} `json:"currency" api:"required"`
 	// Gross earnings before worker taxes, deductions, and benefit contributions.
 	// Reimbursements are reported separately.
-	GrossPay PublicPaycheckCurrencyTotalsGrossPay `json:"grossPay" api:"required"`
+	GrossPay PublicCurrencyMoneyAmount13 `json:"grossPay" api:"required"`
 	// Calculated net pay after reimbursements, worker taxes, deductions, and benefit
 	// contributions. It excludes payment execution fees and may differ from the amount
 	// the worker ultimately receives.
-	NetPay PublicPaycheckCurrencyTotalsNetPay `json:"netPay" api:"required"`
+	NetPay PublicCurrencyMoneyAmount12 `json:"netPay" api:"required"`
 	// Amounts reimbursed to the worker in addition to gross pay. Reimbursements
 	// increase net pay and employer cost.
-	Reimbursements PublicPaycheckCurrencyTotalsReimbursements `json:"reimbursements" api:"required"`
+	Reimbursements PublicCurrencyMoneyAmount14 `json:"reimbursements" api:"required"`
 	// Payroll taxes withheld from the worker's pay, reducing net pay.
-	WorkerTaxes PublicPaycheckCurrencyTotalsWorkerTaxes `json:"workerTaxes" api:"required"`
+	WorkerTaxes PublicCurrencyMoneyAmount15 `json:"workerTaxes" api:"required"`
 	// Payroll taxes paid by the employer in addition to gross pay.
-	EmployerTaxes PublicPaycheckCurrencyTotalsEmployerTaxes `json:"employerTaxes" api:"required"`
+	EmployerTaxes PublicCurrencyMoneyAmount16 `json:"employerTaxes" api:"required"`
 	// Non-benefit amounts deducted from the worker's pay before taxes, reducing
 	// taxable pay and net pay.
-	PreTaxDeductions PublicPaycheckCurrencyTotalsPreTaxDeductions `json:"preTaxDeductions" api:"required"`
+	PreTaxDeductions PublicCurrencyMoneyAmount17 `json:"preTaxDeductions" api:"required"`
 	// Non-benefit amounts deducted from the worker's pay after taxes, reducing net
 	// pay.
-	PostTaxDeductions PublicPaycheckCurrencyTotalsPostTaxDeductions `json:"postTaxDeductions" api:"required"`
+	PostTaxDeductions PublicCurrencyMoneyAmount18 `json:"postTaxDeductions" api:"required"`
 	// Amounts the worker pays toward benefits, deducted from their pay.
-	WorkerBenefitContributions PublicPaycheckCurrencyTotalsWorkerBenefitContributions `json:"workerBenefitContributions" api:"required"`
+	WorkerBenefitContributions PublicCurrencyMoneyAmount19 `json:"workerBenefitContributions" api:"required"`
 	// Amounts the employer pays toward the worker's benefits in addition to gross pay.
-	EmployerBenefitContributions PublicPaycheckCurrencyTotalsEmployerBenefitContributions `json:"employerBenefitContributions" api:"required"`
-	JSON                         publicPaycheckCurrencyTotalsJSON                         `json:"-"`
+	EmployerBenefitContributions PublicCurrencyMoneyAmount20      `json:"employerBenefitContributions" api:"required"`
+	JSON                         publicPaycheckCurrencyTotalsJSON `json:"-"`
 }
 
 // publicPaycheckCurrencyTotalsJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotals]
@@ -308,249 +1126,504 @@ func (r publicPaycheckCurrencyTotalsJSON) RawJSON() string {
 	return r.raw
 }
 
-type PublicPayrollDetailTotals struct {
-	CashRequirement PublicPayrollDetailTotalsCashRequirement `json:"cashRequirement" api:"required,nullable"`
-	// Gross earnings before worker taxes, deductions, and benefit contributions.
-	// Reimbursements are reported separately.
-	GrossPay PublicPayrollDetailTotalsGrossPay `json:"grossPay" api:"required"`
-	// The provider-calculated amount to send for workers: gross pay plus
-	// reimbursements, less worker taxes, deductions, and benefit contributions. It
-	// excludes payment execution fees and may differ from recomputed totals because of
-	// provider and FX rounding.
-	NetPay PublicPayrollDetailTotalsNetPay `json:"netPay" api:"required"`
-	// Amounts reimbursed to workers in addition to gross pay. Reimbursements increase
-	// net pay and employer cost.
-	Reimbursements PublicPayrollDetailTotalsReimbursements `json:"reimbursements" api:"required"`
-	// Payroll taxes withheld from worker pay, reducing net pay.
-	WorkerTaxes PublicPayrollDetailTotalsWorkerTaxes `json:"workerTaxes" api:"required"`
-	// Payroll taxes paid by the employer in addition to gross pay.
-	EmployerTaxes PublicPayrollDetailTotalsEmployerTaxes `json:"employerTaxes" api:"required"`
-	// Non-benefit amounts deducted from worker pay before taxes, reducing taxable pay
-	// and net pay.
-	PreTaxDeductions PublicPayrollDetailTotalsPreTaxDeductions `json:"preTaxDeductions" api:"required"`
-	// Non-benefit amounts deducted from worker pay after taxes, reducing net pay.
-	PostTaxDeductions PublicPayrollDetailTotalsPostTaxDeductions `json:"postTaxDeductions" api:"required"`
-	// Amounts workers pay toward benefits, deducted from their pay.
-	WorkerBenefitContributions PublicPayrollDetailTotalsWorkerBenefitContributions `json:"workerBenefitContributions" api:"required"`
-	// Amounts the employer pays toward worker benefits in addition to gross pay.
-	EmployerBenefitContributions PublicPayrollDetailTotalsEmployerBenefitContributions `json:"employerBenefitContributions" api:"required"`
-	// Banking and transaction fees paid by the employer to fund and pay the payroll.
-	TransactionFees PublicPayrollDetailTotalsTransactionFees `json:"transactionFees" api:"required"`
-	// The employer's total payroll cost: gross pay, reimbursements, employer taxes,
-	// employer benefit contributions, and transaction fees.
-	TotalCost PublicPayrollDetailTotalsTotalCost `json:"totalCost" api:"required"`
-	JSON      publicPayrollDetailTotalsJSON      `json:"-"`
+type PublicPayrollMoneyAmount struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount   int64       `json:"amount" api:"required"`
+	Currency interface{} `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                       `json:"display" api:"required"`
+	JSON    publicPayrollMoneyAmountJSON `json:"-"`
 }
 
-// publicPayrollDetailTotalsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotals]
-type publicPayrollDetailTotalsJSON struct {
-	CashRequirement              apijson.Field
-	GrossPay                     apijson.Field
-	NetPay                       apijson.Field
-	Reimbursements               apijson.Field
-	WorkerTaxes                  apijson.Field
-	EmployerTaxes                apijson.Field
-	PreTaxDeductions             apijson.Field
-	PostTaxDeductions            apijson.Field
-	WorkerBenefitContributions   apijson.Field
-	EmployerBenefitContributions apijson.Field
-	TransactionFees              apijson.Field
-	TotalCost                    apijson.Field
-	raw                          string
-	ExtraFields                  map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotals) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollTimeline struct {
-	ApprovedAt string                    `json:"approvedAt" api:"required,nullable"`
-	JSON       publicPayrollTimelineJSON `json:"-"`
-}
-
-// publicPayrollTimelineJSON contains the JSON metadata for the struct [PublicPayrollTimeline]
-type publicPayrollTimelineJSON struct {
-	ApprovedAt  apijson.Field
+// publicPayrollMoneyAmountJSON contains the JSON metadata for the struct [PublicPayrollMoneyAmount]
+type publicPayrollMoneyAmountJSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *PublicPayrollTimeline) UnmarshalJSON(data []byte) (err error) {
+func (r *PublicPayrollMoneyAmount) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r publicPayrollTimelineJSON) RawJSON() string {
+func (r publicPayrollMoneyAmountJSON) RawJSON() string {
 	return r.raw
 }
 
-type PayrollListPaychecksResponse struct {
-	HasMore bool                             `json:"hasMore" api:"required"`
-	Count   int64                            `json:"count" api:"required"`
-	Data    string                           `json:"data" api:"required"`
-	JSON    payrollListPaychecksResponseJSON `json:"-"`
+type PublicHourlyRate struct {
+	Amount   interface{}          `json:"amount" api:"required"`
+	Currency interface{}          `json:"currency" api:"required"`
+	Per      PublicHourlyRatePer  `json:"per" api:"required"`
+	JSON     publicHourlyRateJSON `json:"-"`
 }
 
-// payrollListPaychecksResponseJSON contains the JSON metadata for the struct [PayrollListPaychecksResponse]
-type payrollListPaychecksResponseJSON struct {
-	HasMore     apijson.Field
-	Count       apijson.Field
-	Data        apijson.Field
+// publicHourlyRateJSON contains the JSON metadata for the struct [PublicHourlyRate]
+type publicHourlyRateJSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Per         apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *PayrollListPaychecksResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *PublicHourlyRate) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r payrollListPaychecksResponseJSON) RawJSON() string {
+func (r publicHourlyRateJSON) RawJSON() string {
 	return r.raw
 }
 
-type PayrollGetPaycheckResponse struct {
-	// The tag of the paycheck.
-	ID             string                         `json:"id" api:"required"`
-	Payroll        interface{}                    `json:"payroll" api:"required"`
-	Worker         interface{}                    `json:"worker" api:"required"`
-	Status         interface{}                    `json:"status" api:"required"`
-	Payday         string                         `json:"payday" api:"required"`
-	PaymentMethod  interface{}                    `json:"paymentMethod" api:"required"`
-	Totals         interface{}                    `json:"totals" api:"required"`
-	Description    string                         `json:"description" api:"required,nullable"`
-	ExchangeRates  string                         `json:"exchangeRates" api:"required"`
-	ReportedHours  float64                        `json:"reportedHours" api:"required,nullable"`
-	Earnings       string                         `json:"earnings" api:"required"`
-	Reimbursements string                         `json:"reimbursements" api:"required"`
-	Deductions     string                         `json:"deductions" api:"required"`
-	Benefits       string                         `json:"benefits" api:"required"`
-	Taxes          string                         `json:"taxes" api:"required"`
-	JSON           payrollGetPaycheckResponseJSON `json:"-"`
-}
-
-// payrollGetPaycheckResponseJSON contains the JSON metadata for the struct [PayrollGetPaycheckResponse]
-type payrollGetPaycheckResponseJSON struct {
-	ID             apijson.Field
-	Payroll        apijson.Field
-	Worker         apijson.Field
-	Status         apijson.Field
-	Payday         apijson.Field
-	PaymentMethod  apijson.Field
-	Totals         apijson.Field
-	Description    apijson.Field
-	ExchangeRates  apijson.Field
-	ReportedHours  apijson.Field
-	Earnings       apijson.Field
-	Reimbursements apijson.Field
-	Deductions     apijson.Field
-	Benefits       apijson.Field
-	Taxes          apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *PayrollGetPaycheckResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r payrollGetPaycheckResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type PayrollListResponse struct {
-	HasMore bool                    `json:"hasMore" api:"required"`
-	Count   int64                   `json:"count" api:"required"`
-	Data    interface{}             `json:"data" api:"required"`
-	JSON    payrollListResponseJSON `json:"-"`
-}
-
-// payrollListResponseJSON contains the JSON metadata for the struct [PayrollListResponse]
-type payrollListResponseJSON struct {
-	HasMore     apijson.Field
-	Count       apijson.Field
-	Data        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PayrollListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r payrollListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type PayrollGetResponse struct {
-	// The tag of the payroll.
-	ID               string                 `json:"id" api:"required"`
-	Type             interface{}            `json:"type" api:"required"`
-	Subtype          interface{}            `json:"subtype" api:"required"`
-	Status           interface{}            `json:"status" api:"required"`
-	FundingCurrency  interface{}            `json:"fundingCurrency" api:"required"`
-	Payday           string                 `json:"payday" api:"required"`
-	PayPeriod        interface{}            `json:"payPeriod" api:"required"`
-	PayFrequency     PublicPayFrequency     `json:"payFrequency" api:"required,nullable"`
-	Description      string                 `json:"description" api:"required,nullable"`
-	ApprovalDeadline string                 `json:"approvalDeadline" api:"required,nullable"`
-	PaycheckCount    int64                  `json:"paycheckCount" api:"required"`
-	Totals           interface{}            `json:"totals" api:"required"`
-	FundingMethod    interface{}            `json:"fundingMethod" api:"required"`
-	ReopenDeadline   string                 `json:"reopenDeadline" api:"required,nullable"`
-	Timeline         interface{}            `json:"timeline" api:"required"`
-	JSON             payrollGetResponseJSON `json:"-"`
-}
-
-// payrollGetResponseJSON contains the JSON metadata for the struct [PayrollGetResponse]
-type payrollGetResponseJSON struct {
-	ID               apijson.Field
-	Type             apijson.Field
-	Subtype          apijson.Field
-	Status           apijson.Field
-	FundingCurrency  apijson.Field
-	Payday           apijson.Field
-	PayPeriod        apijson.Field
-	PayFrequency     apijson.Field
-	Description      apijson.Field
-	ApprovalDeadline apijson.Field
-	PaycheckCount    apijson.Field
-	Totals           apijson.Field
-	FundingMethod    apijson.Field
-	ReopenDeadline   apijson.Field
-	Timeline         apijson.Field
-	raw              string
-	ExtraFields      map[string]apijson.Field
-}
-
-func (r *PayrollGetResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r payrollGetResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type PayrollGetResponsePayFrequency string
+type PublicHourlyRatePer string
 
 const (
-	PayrollGetResponsePayFrequencyWeekly      PayrollGetResponsePayFrequency = "weekly"
-	PayrollGetResponsePayFrequencyBiweekly    PayrollGetResponsePayFrequency = "biweekly"
-	PayrollGetResponsePayFrequencyMonthly     PayrollGetResponsePayFrequency = "monthly"
-	PayrollGetResponsePayFrequencySemimonthly PayrollGetResponsePayFrequency = "semimonthly"
-	PayrollGetResponsePayFrequencyQuarterly   PayrollGetResponsePayFrequency = "quarterly"
-	PayrollGetResponsePayFrequencyAnnually    PayrollGetResponsePayFrequency = "annually"
+	PublicHourlyRatePerHour PublicHourlyRatePer = "hour"
 )
 
-func (r PayrollGetResponsePayFrequency) IsKnown() bool {
+func (r PublicHourlyRatePer) IsKnown() bool {
 	switch r {
-	case PayrollGetResponsePayFrequencyWeekly, PayrollGetResponsePayFrequencyBiweekly, PayrollGetResponsePayFrequencyMonthly, PayrollGetResponsePayFrequencySemimonthly, PayrollGetResponsePayFrequencyQuarterly, PayrollGetResponsePayFrequencyAnnually:
+	case PublicHourlyRatePerHour:
 		return true
 	}
 	return false
+}
+
+type PublicPayrollMoneyAmount1 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount   int64       `json:"amount" api:"required"`
+	Currency interface{} `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                        `json:"display" api:"required"`
+	JSON    publicPayrollMoneyAmount1JSON `json:"-"`
+}
+
+// publicPayrollMoneyAmount1JSON contains the JSON metadata for the struct [PublicPayrollMoneyAmount1]
+type publicPayrollMoneyAmount1JSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollMoneyAmount1) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollMoneyAmount1JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPaycheckDeductionTaxTreatment string
+
+const (
+	PublicPaycheckDeductionTaxTreatmentPreTax  PublicPaycheckDeductionTaxTreatment = "pre_tax"
+	PublicPaycheckDeductionTaxTreatmentPostTax PublicPaycheckDeductionTaxTreatment = "post_tax"
+)
+
+func (r PublicPaycheckDeductionTaxTreatment) IsKnown() bool {
+	switch r {
+	case PublicPaycheckDeductionTaxTreatmentPreTax, PublicPaycheckDeductionTaxTreatmentPostTax:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollMoneyAmount2 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount   int64       `json:"amount" api:"required"`
+	Currency interface{} `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                        `json:"display" api:"required"`
+	JSON    publicPayrollMoneyAmount2JSON `json:"-"`
+}
+
+// publicPayrollMoneyAmount2JSON contains the JSON metadata for the struct [PublicPayrollMoneyAmount2]
+type publicPayrollMoneyAmount2JSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollMoneyAmount2) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollMoneyAmount2JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayrollMoneyAmount3 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount   int64       `json:"amount" api:"required"`
+	Currency interface{} `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                        `json:"display" api:"required"`
+	JSON    publicPayrollMoneyAmount3JSON `json:"-"`
+}
+
+// publicPayrollMoneyAmount3JSON contains the JSON metadata for the struct [PublicPayrollMoneyAmount3]
+type publicPayrollMoneyAmount3JSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollMoneyAmount3) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollMoneyAmount3JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPayrollMoneyAmount4 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount   int64       `json:"amount" api:"required"`
+	Currency interface{} `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                        `json:"display" api:"required"`
+	JSON    publicPayrollMoneyAmount4JSON `json:"-"`
+}
+
+// publicPayrollMoneyAmount4JSON contains the JSON metadata for the struct [PublicPayrollMoneyAmount4]
+type publicPayrollMoneyAmount4JSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollMoneyAmount4) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollMoneyAmount4JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicTaxPayer string
+
+const (
+	PublicTaxPayerWorker   PublicTaxPayer = "worker"
+	PublicTaxPayerEmployer PublicTaxPayer = "employer"
+)
+
+func (r PublicTaxPayer) IsKnown() bool {
+	switch r {
+	case PublicTaxPayerWorker, PublicTaxPayerEmployer:
+		return true
+	}
+	return false
+}
+
+type PublicPayrollMoneyAmount5 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount   int64       `json:"amount" api:"required"`
+	Currency interface{} `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                        `json:"display" api:"required"`
+	JSON    publicPayrollMoneyAmount5JSON `json:"-"`
+}
+
+// publicPayrollMoneyAmount5JSON contains the JSON metadata for the struct [PublicPayrollMoneyAmount5]
+type publicPayrollMoneyAmount5JSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPayrollMoneyAmount5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPayrollMoneyAmount5JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPaycheckSummaryCurrencyTotals struct {
+	Currency interface{} `json:"currency" api:"required"`
+	// Calculated net pay after reimbursements, worker taxes, deductions, and benefit
+	// contributions. It excludes payment execution fees and may differ from the amount
+	// the worker ultimately receives.
+	NetPay PublicCurrencyMoneyAmount12             `json:"netPay" api:"required"`
+	JSON   publicPaycheckSummaryCurrencyTotalsJSON `json:"-"`
+}
+
+// publicPaycheckSummaryCurrencyTotalsJSON contains the JSON metadata for the struct [PublicPaycheckSummaryCurrencyTotals]
+type publicPaycheckSummaryCurrencyTotalsJSON struct {
+	Currency    apijson.Field
+	NetPay      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPaycheckSummaryCurrencyTotals) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPaycheckSummaryCurrencyTotalsJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount13 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount13JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount13JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount13]
+type publicCurrencyMoneyAmount13JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount13) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount13JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount12 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount12JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount12JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount12]
+type publicCurrencyMoneyAmount12JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount12) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount12JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount14 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount14JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount14JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount14]
+type publicCurrencyMoneyAmount14JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount14) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount14JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount15 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount15JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount15JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount15]
+type publicCurrencyMoneyAmount15JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount15) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount15JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount16 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount16JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount16JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount16]
+type publicCurrencyMoneyAmount16JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount16) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount16JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount17 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount17JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount17JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount17]
+type publicCurrencyMoneyAmount17JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount17) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount17JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount18 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount18JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount18JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount18]
+type publicCurrencyMoneyAmount18JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount18) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount18JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount19 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount19JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount19JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount19]
+type publicCurrencyMoneyAmount19JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount19) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount19JSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyMoneyAmount20 struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
+	Amount int64 `json:"amount" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                          `json:"display" api:"required"`
+	JSON    publicCurrencyMoneyAmount20JSON `json:"-"`
+}
+
+// publicCurrencyMoneyAmount20JSON contains the JSON metadata for the struct [PublicCurrencyMoneyAmount20]
+type publicCurrencyMoneyAmount20JSON struct {
+	Amount      apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicCurrencyMoneyAmount20) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyMoneyAmount20JSON) RawJSON() string {
+	return r.raw
+}
+
+type PayrollListParams struct {
+	// The maximum number of payrolls to return, from 1 to 50.
+	Limit param.Field[string] `query:"limit" api:"required"`
+	// Return payrolls after this payroll ID in the stable cursor order. Cannot be used
+	// with beforeId.
+	AfterID param.Field[string] `query:"afterId"`
+	// Return payrolls before this payroll ID in the stable cursor order. Cannot be
+	// used with afterId.
+	BeforeID param.Field[string] `query:"beforeId"`
+	// Pay cadences to include.
+	PayFrequencies param.Field[[]PublicPayFrequency] `query:"payFrequencies"`
+	// Exclusive end of the half-open pay-period-end range.
+	PayPeriodEndBefore param.Field[string] `query:"payPeriodEndBefore"`
+	// Inclusive start of the half-open pay-period-end range.
+	PayPeriodEndOnOrAfter param.Field[string] `query:"payPeriodEndOnOrAfter"`
+	// Exclusive end of the half-open payday range.
+	PaydayBefore param.Field[string] `query:"paydayBefore"`
+	// Inclusive start of the half-open payday range.
+	PaydayOnOrAfter param.Field[string] `query:"paydayOnOrAfter"`
+	// Lifecycle statuses to include. Omit to include every status.
+	Statuses param.Field[[]PublicPayrollStatus] `query:"statuses"`
+	// Payroll subtypes to include.
+	Subtypes param.Field[[]PublicPayrollSubtype] `query:"subtypes"`
+	// Payroll calculation types to include.
+	Types param.Field[[]PublicPayrollType] `query:"types"`
+}
+
+// URLQuery serializes [PayrollListParams]'s query parameters as `url.Values`.
+func (r PayrollListParams) URLQuery() (v url.Values) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
 }
 
 type PayrollListPaychecksParams struct {
@@ -607,543 +1680,4 @@ func (r PayrollListPaychecksParamsWorkerType) IsKnown() bool {
 		return true
 	}
 	return false
-}
-
-type PayrollListParams struct {
-	// The maximum number of payrolls to return, from 1 to 50.
-	Limit param.Field[string] `query:"limit" api:"required"`
-	// Return payrolls after this payroll ID in the stable cursor order. Cannot be used
-	// with beforeId.
-	AfterID param.Field[string] `query:"afterId"`
-	// Return payrolls before this payroll ID in the stable cursor order. Cannot be
-	// used with afterId.
-	BeforeID param.Field[string] `query:"beforeId"`
-	// Pay cadences to include.
-	PayFrequencies param.Field[[]PublicPayFrequency] `query:"payFrequencies"`
-	// Exclusive end of the half-open pay-period-end range.
-	PayPeriodEndBefore param.Field[string] `query:"payPeriodEndBefore"`
-	// Inclusive start of the half-open pay-period-end range.
-	PayPeriodEndOnOrAfter param.Field[string] `query:"payPeriodEndOnOrAfter"`
-	// Exclusive end of the half-open payday range.
-	PaydayBefore param.Field[string] `query:"paydayBefore"`
-	// Inclusive start of the half-open payday range.
-	PaydayOnOrAfter param.Field[string] `query:"paydayOnOrAfter"`
-	// Lifecycle statuses to include. Omit to include every status.
-	Statuses param.Field[[]PublicPayrollStatus] `query:"statuses"`
-	// Payroll subtypes to include.
-	Subtypes param.Field[[]PublicPayrollSubtype] `query:"subtypes"`
-	// Payroll calculation types to include.
-	Types param.Field[[]PublicPayrollType] `query:"types"`
-}
-
-// URLQuery serializes [PayrollListParams]'s query parameters as `url.Values`.
-func (r PayrollListParams) URLQuery() (v url.Values) {
-	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
-		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
-		NestedFormat: apiquery.NestedQueryFormatBrackets,
-	})
-}
-
-type PublicPaycheckCurrencyTotalsGrossPay struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                   `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsGrossPayJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsGrossPayJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsGrossPay]
-type publicPaycheckCurrencyTotalsGrossPayJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsGrossPay) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsGrossPayJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsNetPay struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                 `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsNetPayJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsNetPayJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsNetPay]
-type publicPaycheckCurrencyTotalsNetPayJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsNetPay) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsNetPayJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsReimbursements struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                         `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsReimbursementsJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsReimbursementsJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsReimbursements]
-type publicPaycheckCurrencyTotalsReimbursementsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsReimbursements) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsReimbursementsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsWorkerTaxes struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                      `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsWorkerTaxesJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsWorkerTaxesJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsWorkerTaxes]
-type publicPaycheckCurrencyTotalsWorkerTaxesJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsWorkerTaxes) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsWorkerTaxesJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsEmployerTaxes struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                        `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsEmployerTaxesJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsEmployerTaxesJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsEmployerTaxes]
-type publicPaycheckCurrencyTotalsEmployerTaxesJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsEmployerTaxes) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsEmployerTaxesJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsPreTaxDeductions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                           `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsPreTaxDeductionsJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsPreTaxDeductionsJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsPreTaxDeductions]
-type publicPaycheckCurrencyTotalsPreTaxDeductionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsPreTaxDeductions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsPreTaxDeductionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsPostTaxDeductions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                            `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsPostTaxDeductionsJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsPostTaxDeductionsJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsPostTaxDeductions]
-type publicPaycheckCurrencyTotalsPostTaxDeductionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsPostTaxDeductions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsPostTaxDeductionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsWorkerBenefitContributions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                     `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsWorkerBenefitContributionsJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsWorkerBenefitContributionsJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsWorkerBenefitContributions]
-type publicPaycheckCurrencyTotalsWorkerBenefitContributionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsWorkerBenefitContributions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsWorkerBenefitContributionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPaycheckCurrencyTotalsEmployerBenefitContributions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                       `json:"display" api:"required"`
-	JSON    publicPaycheckCurrencyTotalsEmployerBenefitContributionsJSON `json:"-"`
-}
-
-// publicPaycheckCurrencyTotalsEmployerBenefitContributionsJSON contains the JSON metadata for the struct [PublicPaycheckCurrencyTotalsEmployerBenefitContributions]
-type publicPaycheckCurrencyTotalsEmployerBenefitContributionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPaycheckCurrencyTotalsEmployerBenefitContributions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPaycheckCurrencyTotalsEmployerBenefitContributionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsCashRequirement struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                       `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsCashRequirementJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsCashRequirementJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsCashRequirement]
-type publicPayrollDetailTotalsCashRequirementJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsCashRequirement) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsCashRequirementJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsGrossPay struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsGrossPayJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsGrossPayJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsGrossPay]
-type publicPayrollDetailTotalsGrossPayJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsGrossPay) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsGrossPayJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsNetPay struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                              `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsNetPayJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsNetPayJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsNetPay]
-type publicPayrollDetailTotalsNetPayJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsNetPay) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsNetPayJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsReimbursements struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                      `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsReimbursementsJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsReimbursementsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsReimbursements]
-type publicPayrollDetailTotalsReimbursementsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsReimbursements) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsReimbursementsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsWorkerTaxes struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                   `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsWorkerTaxesJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsWorkerTaxesJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsWorkerTaxes]
-type publicPayrollDetailTotalsWorkerTaxesJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsWorkerTaxes) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsWorkerTaxesJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsEmployerTaxes struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                     `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsEmployerTaxesJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsEmployerTaxesJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsEmployerTaxes]
-type publicPayrollDetailTotalsEmployerTaxesJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsEmployerTaxes) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsEmployerTaxesJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsPreTaxDeductions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                        `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsPreTaxDeductionsJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsPreTaxDeductionsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsPreTaxDeductions]
-type publicPayrollDetailTotalsPreTaxDeductionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsPreTaxDeductions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsPreTaxDeductionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsPostTaxDeductions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                         `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsPostTaxDeductionsJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsPostTaxDeductionsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsPostTaxDeductions]
-type publicPayrollDetailTotalsPostTaxDeductionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsPostTaxDeductions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsPostTaxDeductionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsWorkerBenefitContributions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                  `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsWorkerBenefitContributionsJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsWorkerBenefitContributionsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsWorkerBenefitContributions]
-type publicPayrollDetailTotalsWorkerBenefitContributionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsWorkerBenefitContributions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsWorkerBenefitContributionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsEmployerBenefitContributions struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                    `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsEmployerBenefitContributionsJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsEmployerBenefitContributionsJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsEmployerBenefitContributions]
-type publicPayrollDetailTotalsEmployerBenefitContributionsJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsEmployerBenefitContributions) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsEmployerBenefitContributionsJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsTransactionFees struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                       `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsTransactionFeesJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsTransactionFeesJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsTransactionFees]
-type publicPayrollDetailTotalsTransactionFeesJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsTransactionFees) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsTransactionFeesJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicPayrollDetailTotalsTotalCost struct {
-	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
-	Amount int64 `json:"amount" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                 `json:"display" api:"required"`
-	JSON    publicPayrollDetailTotalsTotalCostJSON `json:"-"`
-}
-
-// publicPayrollDetailTotalsTotalCostJSON contains the JSON metadata for the struct [PublicPayrollDetailTotalsTotalCost]
-type publicPayrollDetailTotalsTotalCostJSON struct {
-	Amount      apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicPayrollDetailTotalsTotalCost) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicPayrollDetailTotalsTotalCostJSON) RawJSON() string {
-	return r.raw
 }
