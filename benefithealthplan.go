@@ -68,7 +68,7 @@ func (r *BenefitHealthPlanService) List(ctx context.Context, query BenefitHealth
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company health plan.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -95,6 +95,7 @@ func (r *BenefitHealthPlanService) Get(ctx context.Context, id string, opts ...o
 }
 
 type PublicHealthPlan struct {
+	// The tag of a company health plan.
 	ID string `json:"id" api:"required"`
 	// The insurance carrier underwriting the health plan.
 	Carrier PublicHealthPlanCarrier `json:"carrier" api:"required"`
@@ -194,6 +195,7 @@ func (r PublicHealthPlanStatus) IsKnown() bool {
 }
 
 type PublicHealthPlanCarrier struct {
+	// The tag of a carrier.
 	ID string `json:"id" api:"required"`
 	// The carrier name.
 	Name string                      `json:"name" api:"required"`
@@ -217,6 +219,7 @@ func (r publicHealthPlanCarrierJSON) RawJSON() string {
 }
 
 type BenefitHealthPlanGetResponse struct {
+	// The tag of a company health plan.
 	ID string `json:"id" api:"required"`
 	// The insurance carrier underwriting the health plan.
 	Carrier PublicHealthPlanCarrier `json:"carrier" api:"required"`

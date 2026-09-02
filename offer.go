@@ -108,7 +108,7 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of the offer.
 //	body: OfferVoidParams request parameters.
 //	opts: Options to apply to this request.
 //
@@ -140,7 +140,7 @@ func (r *OfferService) Void(ctx context.Context, id string, body OfferVoidParams
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of the offer.
 //	body: OfferExtendDeadlineParams request parameters.
 //	opts: Options to apply to this request.
 //
@@ -174,7 +174,7 @@ func (r *OfferService) ExtendDeadline(ctx context.Context, id string, body Offer
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of the offer.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -200,339 +200,12 @@ func (r *OfferService) Resend(ctx context.Context, id string, opts ...option.Req
 	return res, err
 }
 
-type Objects6 struct {
-	ID         string                     `json:"id" api:"required"`
-	Status     Union13                    `json:"status" api:"required"`
-	WorkerType Objects6WorkerType         `json:"workerType" api:"required"`
-	Candidate  Objects6Candidate          `json:"candidate" api:"required"`
-	Position   Objects6Position           `json:"position" api:"required"`
-	Department OfferNewResponseDepartment `json:"department" api:"required,nullable"`
-	Workplace  OfferNewResponseWorkplace  `json:"workplace" api:"required,nullable"`
-	Manager    OfferNewResponseManager    `json:"manager" api:"required,nullable"`
-	// Display name of the person or company that sent the offer. Null for offers not
-	// yet sent.
-	SentBy       string               `json:"sentBy" api:"required,nullable"`
-	Compensation Objects6Compensation `json:"compensation" api:"required"`
-	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string `json:"createdAt" api:"required"`
-	// The offer's job level, or null if unassigned. Omitted when job levels are not
-	// enabled.
-	Level shared.Objects5 `json:"level" api:"nullable"`
-	JSON  objects6JSON    `json:"-"`
-}
-
-// objects6JSON contains the JSON metadata for the struct [Objects6]
-type objects6JSON struct {
-	ID             apijson.Field
-	Status         apijson.Field
-	WorkerType     apijson.Field
-	Candidate      apijson.Field
-	Position       apijson.Field
-	Department     apijson.Field
-	Workplace      apijson.Field
-	Manager        apijson.Field
-	SentBy         apijson.Field
-	Compensation   apijson.Field
-	OfferURL       apijson.Field
-	ExpirationTime apijson.Field
-	LastViewedAt   apijson.Field
-	CreatedAt      apijson.Field
-	Level          apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *Objects6) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects6JSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects6WorkerType string
-
-const (
-	Objects6WorkerTypeEmployee         Objects6WorkerType = "employee"
-	Objects6WorkerTypeUsContractor     Objects6WorkerType = "us_contractor"
-	Objects6WorkerTypeGlobalContractor Objects6WorkerType = "global_contractor"
-)
-
-func (r Objects6WorkerType) IsKnown() bool {
-	switch r {
-	case Objects6WorkerTypeEmployee, Objects6WorkerTypeUsContractor, Objects6WorkerTypeGlobalContractor:
-		return true
-	}
-	return false
-}
-
-type OfferVoidResponse struct {
-	ID         string                      `json:"id" api:"required"`
-	Status     Union13                     `json:"status" api:"required"`
-	WorkerType OfferVoidResponseWorkerType `json:"workerType" api:"required"`
-	Candidate  OfferVoidResponseCandidate  `json:"candidate" api:"required"`
-	Position   OfferVoidResponsePosition   `json:"position" api:"required"`
-	Department OfferNewResponseDepartment  `json:"department" api:"required,nullable"`
-	Workplace  OfferNewResponseWorkplace   `json:"workplace" api:"required,nullable"`
-	Manager    OfferNewResponseManager     `json:"manager" api:"required,nullable"`
-	// Display name of the person or company that sent the offer. Null for offers not
-	// yet sent.
-	SentBy       string                        `json:"sentBy" api:"required,nullable"`
-	Compensation OfferVoidResponseCompensation `json:"compensation" api:"required"`
-	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string `json:"createdAt" api:"required"`
-	// The offer's job level, or null if unassigned. Omitted when job levels are not
-	// enabled.
-	Level shared.Objects5       `json:"level" api:"nullable"`
-	JSON  offerVoidResponseJSON `json:"-"`
-}
-
-// offerVoidResponseJSON contains the JSON metadata for the struct [OfferVoidResponse]
-type offerVoidResponseJSON struct {
-	ID             apijson.Field
-	Status         apijson.Field
-	WorkerType     apijson.Field
-	Candidate      apijson.Field
-	Position       apijson.Field
-	Department     apijson.Field
-	Workplace      apijson.Field
-	Manager        apijson.Field
-	SentBy         apijson.Field
-	Compensation   apijson.Field
-	OfferURL       apijson.Field
-	ExpirationTime apijson.Field
-	LastViewedAt   apijson.Field
-	CreatedAt      apijson.Field
-	Level          apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *OfferVoidResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidResponseStatus string
-
-const (
-	OfferVoidResponseStatusDraft    OfferVoidResponseStatus = "draft"
-	OfferVoidResponseStatusSent     OfferVoidResponseStatus = "sent"
-	OfferVoidResponseStatusAccepted OfferVoidResponseStatus = "accepted"
-	OfferVoidResponseStatusVoid     OfferVoidResponseStatus = "void"
-)
-
-func (r OfferVoidResponseStatus) IsKnown() bool {
-	switch r {
-	case OfferVoidResponseStatusDraft, OfferVoidResponseStatusSent, OfferVoidResponseStatusAccepted, OfferVoidResponseStatusVoid:
-		return true
-	}
-	return false
-}
-
-type OfferVoidResponseWorkerType string
-
-const (
-	OfferVoidResponseWorkerTypeEmployee         OfferVoidResponseWorkerType = "employee"
-	OfferVoidResponseWorkerTypeUsContractor     OfferVoidResponseWorkerType = "us_contractor"
-	OfferVoidResponseWorkerTypeGlobalContractor OfferVoidResponseWorkerType = "global_contractor"
-)
-
-func (r OfferVoidResponseWorkerType) IsKnown() bool {
-	switch r {
-	case OfferVoidResponseWorkerTypeEmployee, OfferVoidResponseWorkerTypeUsContractor, OfferVoidResponseWorkerTypeGlobalContractor:
-		return true
-	}
-	return false
-}
-
-type OfferExtendDeadlineResponse struct {
-	ID         string                                `json:"id" api:"required"`
-	Status     Union13                               `json:"status" api:"required"`
-	WorkerType OfferExtendDeadlineResponseWorkerType `json:"workerType" api:"required"`
-	Candidate  OfferExtendDeadlineResponseCandidate  `json:"candidate" api:"required"`
-	Position   OfferExtendDeadlineResponsePosition   `json:"position" api:"required"`
-	Department OfferNewResponseDepartment            `json:"department" api:"required,nullable"`
-	Workplace  OfferNewResponseWorkplace             `json:"workplace" api:"required,nullable"`
-	Manager    OfferNewResponseManager               `json:"manager" api:"required,nullable"`
-	// Display name of the person or company that sent the offer. Null for offers not
-	// yet sent.
-	SentBy       string                                  `json:"sentBy" api:"required,nullable"`
-	Compensation OfferExtendDeadlineResponseCompensation `json:"compensation" api:"required"`
-	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string `json:"createdAt" api:"required"`
-	// The offer's job level, or null if unassigned. Omitted when job levels are not
-	// enabled.
-	Level shared.Objects5                 `json:"level" api:"nullable"`
-	JSON  offerExtendDeadlineResponseJSON `json:"-"`
-}
-
-// offerExtendDeadlineResponseJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponse]
-type offerExtendDeadlineResponseJSON struct {
-	ID             apijson.Field
-	Status         apijson.Field
-	WorkerType     apijson.Field
-	Candidate      apijson.Field
-	Position       apijson.Field
-	Department     apijson.Field
-	Workplace      apijson.Field
-	Manager        apijson.Field
-	SentBy         apijson.Field
-	Compensation   apijson.Field
-	OfferURL       apijson.Field
-	ExpirationTime apijson.Field
-	LastViewedAt   apijson.Field
-	CreatedAt      apijson.Field
-	Level          apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponseStatus string
-
-const (
-	OfferExtendDeadlineResponseStatusDraft    OfferExtendDeadlineResponseStatus = "draft"
-	OfferExtendDeadlineResponseStatusSent     OfferExtendDeadlineResponseStatus = "sent"
-	OfferExtendDeadlineResponseStatusAccepted OfferExtendDeadlineResponseStatus = "accepted"
-	OfferExtendDeadlineResponseStatusVoid     OfferExtendDeadlineResponseStatus = "void"
-)
-
-func (r OfferExtendDeadlineResponseStatus) IsKnown() bool {
-	switch r {
-	case OfferExtendDeadlineResponseStatusDraft, OfferExtendDeadlineResponseStatusSent, OfferExtendDeadlineResponseStatusAccepted, OfferExtendDeadlineResponseStatusVoid:
-		return true
-	}
-	return false
-}
-
-type OfferExtendDeadlineResponseWorkerType string
-
-const (
-	OfferExtendDeadlineResponseWorkerTypeEmployee         OfferExtendDeadlineResponseWorkerType = "employee"
-	OfferExtendDeadlineResponseWorkerTypeUsContractor     OfferExtendDeadlineResponseWorkerType = "us_contractor"
-	OfferExtendDeadlineResponseWorkerTypeGlobalContractor OfferExtendDeadlineResponseWorkerType = "global_contractor"
-)
-
-func (r OfferExtendDeadlineResponseWorkerType) IsKnown() bool {
-	switch r {
-	case OfferExtendDeadlineResponseWorkerTypeEmployee, OfferExtendDeadlineResponseWorkerTypeUsContractor, OfferExtendDeadlineResponseWorkerTypeGlobalContractor:
-		return true
-	}
-	return false
-}
-
-type OfferResendResponse struct {
-	ID         string                        `json:"id" api:"required"`
-	Status     Union13                       `json:"status" api:"required"`
-	WorkerType OfferResendResponseWorkerType `json:"workerType" api:"required"`
-	Candidate  OfferResendResponseCandidate  `json:"candidate" api:"required"`
-	Position   OfferResendResponsePosition   `json:"position" api:"required"`
-	Department OfferNewResponseDepartment    `json:"department" api:"required,nullable"`
-	Workplace  OfferNewResponseWorkplace     `json:"workplace" api:"required,nullable"`
-	Manager    OfferNewResponseManager       `json:"manager" api:"required,nullable"`
-	// Display name of the person or company that sent the offer. Null for offers not
-	// yet sent.
-	SentBy       string                          `json:"sentBy" api:"required,nullable"`
-	Compensation OfferResendResponseCompensation `json:"compensation" api:"required"`
-	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string `json:"createdAt" api:"required"`
-	// The offer's job level, or null if unassigned. Omitted when job levels are not
-	// enabled.
-	Level shared.Objects5         `json:"level" api:"nullable"`
-	JSON  offerResendResponseJSON `json:"-"`
-}
-
-// offerResendResponseJSON contains the JSON metadata for the struct [OfferResendResponse]
-type offerResendResponseJSON struct {
-	ID             apijson.Field
-	Status         apijson.Field
-	WorkerType     apijson.Field
-	Candidate      apijson.Field
-	Position       apijson.Field
-	Department     apijson.Field
-	Workplace      apijson.Field
-	Manager        apijson.Field
-	SentBy         apijson.Field
-	Compensation   apijson.Field
-	OfferURL       apijson.Field
-	ExpirationTime apijson.Field
-	LastViewedAt   apijson.Field
-	CreatedAt      apijson.Field
-	Level          apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *OfferResendResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponseStatus string
-
-const (
-	OfferResendResponseStatusDraft    OfferResendResponseStatus = "draft"
-	OfferResendResponseStatusSent     OfferResendResponseStatus = "sent"
-	OfferResendResponseStatusAccepted OfferResendResponseStatus = "accepted"
-	OfferResendResponseStatusVoid     OfferResendResponseStatus = "void"
-)
-
-func (r OfferResendResponseStatus) IsKnown() bool {
-	switch r {
-	case OfferResendResponseStatusDraft, OfferResendResponseStatusSent, OfferResendResponseStatusAccepted, OfferResendResponseStatusVoid:
-		return true
-	}
-	return false
-}
-
-type OfferResendResponseWorkerType string
-
-const (
-	OfferResendResponseWorkerTypeEmployee         OfferResendResponseWorkerType = "employee"
-	OfferResendResponseWorkerTypeUsContractor     OfferResendResponseWorkerType = "us_contractor"
-	OfferResendResponseWorkerTypeGlobalContractor OfferResendResponseWorkerType = "global_contractor"
-)
-
-func (r OfferResendResponseWorkerType) IsKnown() bool {
-	switch r {
-	case OfferResendResponseWorkerTypeEmployee, OfferResendResponseWorkerTypeUsContractor, OfferResendResponseWorkerTypeGlobalContractor:
-		return true
-	}
-	return false
-}
-
 type OfferListParams struct {
 	Limit          param.Field[string]                      `query:"limit" api:"required"`
 	AfterID        param.Field[string]                      `query:"afterId"`
 	BeforeID       param.Field[string]                      `query:"beforeId"`
 	CandidateEmail param.Field[string]                      `query:"candidateEmail" format:"email"`
-	Statuses       param.Field[[]Union13]                   `query:"statuses"`
+	Statuses       param.Field[[]OfferListParamsStatus]     `query:"statuses"`
 	WorkerTypes    param.Field[[]OfferListParamsWorkerType] `query:"workerTypes"`
 }
 
@@ -542,6 +215,23 @@ func (r OfferListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
+}
+
+type OfferListParamsStatus string
+
+const (
+	OfferListParamsStatusDraft    OfferListParamsStatus = "draft"
+	OfferListParamsStatusSent     OfferListParamsStatus = "sent"
+	OfferListParamsStatusAccepted OfferListParamsStatus = "accepted"
+	OfferListParamsStatusVoid     OfferListParamsStatus = "void"
+)
+
+func (r OfferListParamsStatus) IsKnown() bool {
+	switch r {
+	case OfferListParamsStatusDraft, OfferListParamsStatusSent, OfferListParamsStatusAccepted, OfferListParamsStatusVoid:
+		return true
+	}
+	return false
 }
 
 type OfferListParamsWorkerType string
@@ -578,6 +268,7 @@ func (r OfferNewParams) MarshalJSON() (data []byte, err error) {
 }
 
 type OfferNewParamsCandidate struct {
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             param.Field[string]                                   `json:"email" api:"required" format:"email"`
 	FirstName         param.Field[string]                                   `json:"firstName" api:"required"`
 	LastName          param.Field[string]                                   `json:"lastName" api:"required"`
@@ -1054,10 +745,10 @@ func (r OfferExtendDeadlineParams) MarshalJSON() (data []byte, err error) {
 }
 
 type OfferListResponse struct {
-	HasMore bool                  `json:"hasMore" api:"required"`
-	Count   int64                 `json:"count" api:"required"`
-	Data    []Objects6            `json:"data" api:"required"`
-	JSON    offerListResponseJSON `json:"-"`
+	HasMore bool                    `json:"hasMore" api:"required"`
+	Count   int64                   `json:"count" api:"required"`
+	Data    []OfferListResponseData `json:"data" api:"required"`
+	JSON    offerListResponseJSON   `json:"-"`
 }
 
 // offerListResponseJSON contains the JSON metadata for the struct [OfferListResponse]
@@ -1078,8 +769,9 @@ func (r offerListResponseJSON) RawJSON() string {
 }
 
 type OfferNewResponse struct {
+	// The tag of the offer.
 	ID         string                     `json:"id" api:"required"`
-	Status     Union13                    `json:"status" api:"required"`
+	Status     OfferNewResponseStatus     `json:"status" api:"required"`
 	WorkerType OfferNewResponseWorkerType `json:"workerType" api:"required"`
 	Candidate  OfferNewResponseCandidate  `json:"candidate" api:"required"`
 	Position   OfferNewResponsePosition   `json:"position" api:"required"`
@@ -1097,8 +789,8 @@ type OfferNewResponse struct {
 	CreatedAt      string `json:"createdAt" api:"required"`
 	// The offer's job level, or null if unassigned. Omitted when job levels are not
 	// enabled.
-	Level shared.Objects5      `json:"level" api:"nullable"`
-	JSON  offerNewResponseJSON `json:"-"`
+	Level OfferNewResponseLevel `json:"level" api:"nullable"`
+	JSON  offerNewResponseJSON  `json:"-"`
 }
 
 // offerNewResponseJSON contains the JSON metadata for the struct [OfferNewResponse]
@@ -1130,382 +822,237 @@ func (r offerNewResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferNewResponseDepartment struct {
-	ID   string                         `json:"id" api:"required"`
-	Name string                         `json:"name" api:"required"`
-	JSON offerNewResponseDepartmentJSON `json:"-"`
+type OfferVoidResponse struct {
+	// The tag of the offer.
+	ID         string                      `json:"id" api:"required"`
+	Status     OfferVoidResponseStatus     `json:"status" api:"required"`
+	WorkerType OfferVoidResponseWorkerType `json:"workerType" api:"required"`
+	Candidate  OfferVoidResponseCandidate  `json:"candidate" api:"required"`
+	Position   OfferVoidResponsePosition   `json:"position" api:"required"`
+	Department OfferVoidResponseDepartment `json:"department" api:"required,nullable"`
+	Workplace  OfferVoidResponseWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferVoidResponseManager    `json:"manager" api:"required,nullable"`
+	// Display name of the person or company that sent the offer. Null for offers not
+	// yet sent.
+	SentBy       string                        `json:"sentBy" api:"required,nullable"`
+	Compensation OfferVoidResponseCompensation `json:"compensation" api:"required"`
+	// The candidate-facing offer portal URL. Null for offers that have not been sent.
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferVoidResponseLevel `json:"level" api:"nullable"`
+	JSON  offerVoidResponseJSON  `json:"-"`
 }
 
-// offerNewResponseDepartmentJSON contains the JSON metadata for the struct [OfferNewResponseDepartment]
-type offerNewResponseDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+// offerVoidResponseJSON contains the JSON metadata for the struct [OfferVoidResponse]
+type offerVoidResponseJSON struct {
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
+	ExpirationTime apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	Level          apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
-func (r *OfferNewResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferVoidResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r offerNewResponseDepartmentJSON) RawJSON() string {
+func (r offerVoidResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferNewResponseWorkplace struct {
-	ID   string                        `json:"id" api:"required"`
-	Name string                        `json:"name" api:"required"`
-	JSON offerNewResponseWorkplaceJSON `json:"-"`
+type OfferExtendDeadlineResponse struct {
+	// The tag of the offer.
+	ID         string                                `json:"id" api:"required"`
+	Status     OfferExtendDeadlineResponseStatus     `json:"status" api:"required"`
+	WorkerType OfferExtendDeadlineResponseWorkerType `json:"workerType" api:"required"`
+	Candidate  OfferExtendDeadlineResponseCandidate  `json:"candidate" api:"required"`
+	Position   OfferExtendDeadlineResponsePosition   `json:"position" api:"required"`
+	Department OfferExtendDeadlineResponseDepartment `json:"department" api:"required,nullable"`
+	Workplace  OfferExtendDeadlineResponseWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferExtendDeadlineResponseManager    `json:"manager" api:"required,nullable"`
+	// Display name of the person or company that sent the offer. Null for offers not
+	// yet sent.
+	SentBy       string                                  `json:"sentBy" api:"required,nullable"`
+	Compensation OfferExtendDeadlineResponseCompensation `json:"compensation" api:"required"`
+	// The candidate-facing offer portal URL. Null for offers that have not been sent.
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferExtendDeadlineResponseLevel `json:"level" api:"nullable"`
+	JSON  offerExtendDeadlineResponseJSON  `json:"-"`
 }
 
-// offerNewResponseWorkplaceJSON contains the JSON metadata for the struct [OfferNewResponseWorkplace]
-type offerNewResponseWorkplaceJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+// offerExtendDeadlineResponseJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponse]
+type offerExtendDeadlineResponseJSON struct {
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
+	ExpirationTime apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	Level          apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
-func (r *OfferNewResponseWorkplace) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferExtendDeadlineResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r offerNewResponseWorkplaceJSON) RawJSON() string {
+func (r offerExtendDeadlineResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferNewResponseManager struct {
-	ID   string                      `json:"id" api:"required"`
-	Name string                      `json:"name" api:"required,nullable"`
-	JSON offerNewResponseManagerJSON `json:"-"`
+type OfferResendResponse struct {
+	// The tag of the offer.
+	ID         string                        `json:"id" api:"required"`
+	Status     OfferResendResponseStatus     `json:"status" api:"required"`
+	WorkerType OfferResendResponseWorkerType `json:"workerType" api:"required"`
+	Candidate  OfferResendResponseCandidate  `json:"candidate" api:"required"`
+	Position   OfferResendResponsePosition   `json:"position" api:"required"`
+	Department OfferResendResponseDepartment `json:"department" api:"required,nullable"`
+	Workplace  OfferResendResponseWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferResendResponseManager    `json:"manager" api:"required,nullable"`
+	// Display name of the person or company that sent the offer. Null for offers not
+	// yet sent.
+	SentBy       string                          `json:"sentBy" api:"required,nullable"`
+	Compensation OfferResendResponseCompensation `json:"compensation" api:"required"`
+	// The candidate-facing offer portal URL. Null for offers that have not been sent.
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferResendResponseLevel `json:"level" api:"nullable"`
+	JSON  offerResendResponseJSON  `json:"-"`
 }
 
-// offerNewResponseManagerJSON contains the JSON metadata for the struct [OfferNewResponseManager]
-type offerNewResponseManagerJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+// offerResendResponseJSON contains the JSON metadata for the struct [OfferResendResponse]
+type offerResendResponseJSON struct {
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
+	ExpirationTime apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	Level          apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
-func (r *OfferNewResponseManager) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferResendResponse) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r offerNewResponseManagerJSON) RawJSON() string {
+func (r offerResendResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferVoidResponseCandidate struct {
-	FirstName         string                                      `json:"firstName" api:"required"`
-	LastName          string                                      `json:"lastName" api:"required"`
-	Email             string                                      `json:"email" api:"required" format:"email"`
-	ContractorDetails OfferVoidResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON              offerVoidResponseCandidateJSON              `json:"-"`
+type OfferListResponseData struct {
+	// The tag of the offer.
+	ID         string                          `json:"id" api:"required"`
+	Status     OfferListResponseDataStatus     `json:"status" api:"required"`
+	WorkerType OfferListResponseDataWorkerType `json:"workerType" api:"required"`
+	Candidate  OfferListResponseDataCandidate  `json:"candidate" api:"required"`
+	Position   OfferListResponseDataPosition   `json:"position" api:"required"`
+	Department OfferListResponseDataDepartment `json:"department" api:"required,nullable"`
+	Workplace  OfferListResponseDataWorkplace  `json:"workplace" api:"required,nullable"`
+	Manager    OfferListResponseDataManager    `json:"manager" api:"required,nullable"`
+	// Display name of the person or company that sent the offer. Null for offers not
+	// yet sent.
+	SentBy       string                            `json:"sentBy" api:"required,nullable"`
+	Compensation OfferListResponseDataCompensation `json:"compensation" api:"required"`
+	// The candidate-facing offer portal URL. Null for offers that have not been sent.
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferListResponseDataLevel `json:"level" api:"nullable"`
+	JSON  offerListResponseDataJSON  `json:"-"`
 }
 
-// offerVoidResponseCandidateJSON contains the JSON metadata for the struct [OfferVoidResponseCandidate]
-type offerVoidResponseCandidateJSON struct {
-	FirstName         apijson.Field
-	LastName          apijson.Field
-	Email             apijson.Field
-	ContractorDetails apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
+// offerListResponseDataJSON contains the JSON metadata for the struct [OfferListResponseData]
+type offerListResponseDataJSON struct {
+	ID             apijson.Field
+	Status         apijson.Field
+	WorkerType     apijson.Field
+	Candidate      apijson.Field
+	Position       apijson.Field
+	Department     apijson.Field
+	Workplace      apijson.Field
+	Manager        apijson.Field
+	SentBy         apijson.Field
+	Compensation   apijson.Field
+	OfferURL       apijson.Field
+	ExpirationTime apijson.Field
+	LastViewedAt   apijson.Field
+	CreatedAt      apijson.Field
+	Level          apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
 }
 
-func (r *OfferVoidResponseCandidate) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferListResponseData) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r offerVoidResponseCandidateJSON) RawJSON() string {
+func (r offerListResponseDataJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferVoidResponsePosition struct {
-	Title       string                           `json:"title" api:"required"`
-	StartDate   string                           `json:"startDate" api:"required"`
-	Country     OfferVoidResponsePositionCountry `json:"country" api:"required"`
-	ScopeOfWork string                           `json:"scopeOfWork" api:"required,nullable"`
-	JSON        offerVoidResponsePositionJSON    `json:"-"`
-}
+type OfferNewResponseStatus string
 
-// offerVoidResponsePositionJSON contains the JSON metadata for the struct [OfferVoidResponsePosition]
-type offerVoidResponsePositionJSON struct {
-	Title       apijson.Field
-	StartDate   apijson.Field
-	Country     apijson.Field
-	ScopeOfWork apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
+const (
+	OfferNewResponseStatusDraft    OfferNewResponseStatus = "draft"
+	OfferNewResponseStatusSent     OfferNewResponseStatus = "sent"
+	OfferNewResponseStatusAccepted OfferNewResponseStatus = "accepted"
+	OfferNewResponseStatusVoid     OfferNewResponseStatus = "void"
+)
 
-func (r *OfferVoidResponsePosition) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponsePositionJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidResponseCompensation struct {
-	BasePay         OfferVoidResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount             `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount             `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferVoidResponseCompensationStock   `json:"stock" api:"required,nullable"`
-	JSON            offerVoidResponseCompensationJSON    `json:"-"`
-}
-
-// offerVoidResponseCompensationJSON contains the JSON metadata for the struct [OfferVoidResponseCompensation]
-type offerVoidResponseCompensationJSON struct {
-	BasePay         apijson.Field
-	SignOnBonus     apijson.Field
-	RelocationBonus apijson.Field
-	Stock           apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *OfferVoidResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponseCandidate struct {
-	FirstName         string                                                `json:"firstName" api:"required"`
-	LastName          string                                                `json:"lastName" api:"required"`
-	Email             string                                                `json:"email" api:"required" format:"email"`
-	ContractorDetails OfferExtendDeadlineResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON              offerExtendDeadlineResponseCandidateJSON              `json:"-"`
-}
-
-// offerExtendDeadlineResponseCandidateJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCandidate]
-type offerExtendDeadlineResponseCandidateJSON struct {
-	FirstName         apijson.Field
-	LastName          apijson.Field
-	Email             apijson.Field
-	ContractorDetails apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponseCandidate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseCandidateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponsePosition struct {
-	Title       string                                     `json:"title" api:"required"`
-	StartDate   string                                     `json:"startDate" api:"required"`
-	Country     OfferExtendDeadlineResponsePositionCountry `json:"country" api:"required"`
-	ScopeOfWork string                                     `json:"scopeOfWork" api:"required,nullable"`
-	JSON        offerExtendDeadlineResponsePositionJSON    `json:"-"`
-}
-
-// offerExtendDeadlineResponsePositionJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponsePosition]
-type offerExtendDeadlineResponsePositionJSON struct {
-	Title       apijson.Field
-	StartDate   apijson.Field
-	Country     apijson.Field
-	ScopeOfWork apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponsePosition) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponsePositionJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponseCompensation struct {
-	BasePay         OfferExtendDeadlineResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                       `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                       `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferExtendDeadlineResponseCompensationStock   `json:"stock" api:"required,nullable"`
-	JSON            offerExtendDeadlineResponseCompensationJSON    `json:"-"`
-}
-
-// offerExtendDeadlineResponseCompensationJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensation]
-type offerExtendDeadlineResponseCompensationJSON struct {
-	BasePay         apijson.Field
-	SignOnBonus     apijson.Field
-	RelocationBonus apijson.Field
-	Stock           apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponseCandidate struct {
-	FirstName         string                                        `json:"firstName" api:"required"`
-	LastName          string                                        `json:"lastName" api:"required"`
-	Email             string                                        `json:"email" api:"required" format:"email"`
-	ContractorDetails OfferResendResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON              offerResendResponseCandidateJSON              `json:"-"`
-}
-
-// offerResendResponseCandidateJSON contains the JSON metadata for the struct [OfferResendResponseCandidate]
-type offerResendResponseCandidateJSON struct {
-	FirstName         apijson.Field
-	LastName          apijson.Field
-	Email             apijson.Field
-	ContractorDetails apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *OfferResendResponseCandidate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseCandidateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponsePosition struct {
-	Title       string                             `json:"title" api:"required"`
-	StartDate   string                             `json:"startDate" api:"required"`
-	Country     OfferResendResponsePositionCountry `json:"country" api:"required"`
-	ScopeOfWork string                             `json:"scopeOfWork" api:"required,nullable"`
-	JSON        offerResendResponsePositionJSON    `json:"-"`
-}
-
-// offerResendResponsePositionJSON contains the JSON metadata for the struct [OfferResendResponsePosition]
-type offerResendResponsePositionJSON struct {
-	Title       apijson.Field
-	StartDate   apijson.Field
-	Country     apijson.Field
-	ScopeOfWork apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferResendResponsePosition) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponsePositionJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponseCompensation struct {
-	BasePay         OfferResendResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount               `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount               `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferResendResponseCompensationStock   `json:"stock" api:"required,nullable"`
-	JSON            offerResendResponseCompensationJSON    `json:"-"`
-}
-
-// offerResendResponseCompensationJSON contains the JSON metadata for the struct [OfferResendResponseCompensation]
-type offerResendResponseCompensationJSON struct {
-	BasePay         apijson.Field
-	SignOnBonus     apijson.Field
-	RelocationBonus apijson.Field
-	Stock           apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *OfferResendResponseCompensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseCompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects6Candidate struct {
-	FirstName         string                             `json:"firstName" api:"required"`
-	LastName          string                             `json:"lastName" api:"required"`
-	Email             string                             `json:"email" api:"required" format:"email"`
-	ContractorDetails Objects6CandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON              objects6CandidateJSON              `json:"-"`
-}
-
-// objects6CandidateJSON contains the JSON metadata for the struct [Objects6Candidate]
-type objects6CandidateJSON struct {
-	FirstName         apijson.Field
-	LastName          apijson.Field
-	Email             apijson.Field
-	ContractorDetails apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *Objects6Candidate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects6CandidateJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects6Position struct {
-	Title       string                  `json:"title" api:"required"`
-	StartDate   string                  `json:"startDate" api:"required"`
-	Country     Objects6PositionCountry `json:"country" api:"required"`
-	ScopeOfWork string                  `json:"scopeOfWork" api:"required,nullable"`
-	JSON        objects6PositionJSON    `json:"-"`
-}
-
-// objects6PositionJSON contains the JSON metadata for the struct [Objects6Position]
-type objects6PositionJSON struct {
-	Title       apijson.Field
-	StartDate   apijson.Field
-	Country     apijson.Field
-	ScopeOfWork apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects6Position) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects6PositionJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects6Compensation struct {
-	BasePay         Objects6CompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount    `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount    `json:"relocationBonus" api:"required,nullable"`
-	Stock           Objects6CompensationStock   `json:"stock" api:"required,nullable"`
-	JSON            objects6CompensationJSON    `json:"-"`
-}
-
-// objects6CompensationJSON contains the JSON metadata for the struct [Objects6Compensation]
-type objects6CompensationJSON struct {
-	BasePay         apijson.Field
-	SignOnBonus     apijson.Field
-	RelocationBonus apijson.Field
-	Stock           apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *Objects6Compensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects6CompensationJSON) RawJSON() string {
-	return r.raw
+func (r OfferNewResponseStatus) IsKnown() bool {
+	switch r {
+	case OfferNewResponseStatusDraft, OfferNewResponseStatusSent, OfferNewResponseStatusAccepted, OfferNewResponseStatusVoid:
+		return true
+	}
+	return false
 }
 
 type OfferNewResponseWorkerType string
@@ -1525,8 +1072,9 @@ func (r OfferNewResponseWorkerType) IsKnown() bool {
 }
 
 type OfferNewResponseCandidate struct {
-	FirstName         string                                     `json:"firstName" api:"required"`
-	LastName          string                                     `json:"lastName" api:"required"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             string                                     `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferNewResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerNewResponseCandidateJSON              `json:"-"`
@@ -1576,6 +1124,102 @@ func (r offerNewResponsePositionJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferNewResponseDepartment struct {
+	// The unique public id of the department
+	ID   string                         `json:"id" api:"required"`
+	Name string                         `json:"name" api:"required"`
+	JSON offerNewResponseDepartmentJSON `json:"-"`
+}
+
+// offerNewResponseDepartmentJSON contains the JSON metadata for the struct [OfferNewResponseDepartment]
+type offerNewResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferNewResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferNewResponseWorkplace struct {
+	// Public workplace identifier
+	ID   string                        `json:"id" api:"required"`
+	Name string                        `json:"name" api:"required"`
+	JSON offerNewResponseWorkplaceJSON `json:"-"`
+}
+
+// offerNewResponseWorkplaceJSON contains the JSON metadata for the struct [OfferNewResponseWorkplace]
+type offerNewResponseWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferNewResponseWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferNewResponseManager struct {
+	// The id of the worker.
+	ID   string                      `json:"id" api:"required"`
+	Name string                      `json:"name" api:"required,nullable"`
+	JSON offerNewResponseManagerJSON `json:"-"`
+}
+
+// offerNewResponseManagerJSON contains the JSON metadata for the struct [OfferNewResponseManager]
+type offerNewResponseManagerJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferNewResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseManagerJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferNewResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                     `json:"id" api:"required"`
+	Code  string                     `json:"code" api:"required"`
+	Name  string                     `json:"name" api:"required"`
+	Track OfferNewResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerNewResponseLevelJSON  `json:"-"`
+}
+
+// offerNewResponseLevelJSON contains the JSON metadata for the struct [OfferNewResponseLevel]
+type offerNewResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferNewResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferNewResponseCompensation struct {
 	BasePay         OfferNewResponseCompensationBasePay `json:"basePay" api:"required"`
 	SignOnBonus     shared.PublicMoneyAmount            `json:"signOnBonus" api:"required,nullable"`
@@ -1599,6 +1243,1190 @@ func (r *OfferNewResponseCompensation) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r offerNewResponseCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponseStatus string
+
+const (
+	OfferVoidResponseStatusDraft    OfferVoidResponseStatus = "draft"
+	OfferVoidResponseStatusSent     OfferVoidResponseStatus = "sent"
+	OfferVoidResponseStatusAccepted OfferVoidResponseStatus = "accepted"
+	OfferVoidResponseStatusVoid     OfferVoidResponseStatus = "void"
+)
+
+func (r OfferVoidResponseStatus) IsKnown() bool {
+	switch r {
+	case OfferVoidResponseStatusDraft, OfferVoidResponseStatusSent, OfferVoidResponseStatusAccepted, OfferVoidResponseStatusVoid:
+		return true
+	}
+	return false
+}
+
+type OfferVoidResponseWorkerType string
+
+const (
+	OfferVoidResponseWorkerTypeEmployee         OfferVoidResponseWorkerType = "employee"
+	OfferVoidResponseWorkerTypeUsContractor     OfferVoidResponseWorkerType = "us_contractor"
+	OfferVoidResponseWorkerTypeGlobalContractor OfferVoidResponseWorkerType = "global_contractor"
+)
+
+func (r OfferVoidResponseWorkerType) IsKnown() bool {
+	switch r {
+	case OfferVoidResponseWorkerTypeEmployee, OfferVoidResponseWorkerTypeUsContractor, OfferVoidResponseWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
+}
+
+type OfferVoidResponseCandidate struct {
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email             string                                      `json:"email" api:"required" format:"email"`
+	ContractorDetails OfferVoidResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
+	JSON              offerVoidResponseCandidateJSON              `json:"-"`
+}
+
+// offerVoidResponseCandidateJSON contains the JSON metadata for the struct [OfferVoidResponseCandidate]
+type offerVoidResponseCandidateJSON struct {
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	ContractorDetails apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseCandidate) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseCandidateJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponsePosition struct {
+	Title       string                           `json:"title" api:"required"`
+	StartDate   string                           `json:"startDate" api:"required"`
+	Country     OfferVoidResponsePositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                           `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerVoidResponsePositionJSON    `json:"-"`
+}
+
+// offerVoidResponsePositionJSON contains the JSON metadata for the struct [OfferVoidResponsePosition]
+type offerVoidResponsePositionJSON struct {
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
+	ScopeOfWork apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidResponsePosition) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponsePositionJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponseDepartment struct {
+	// The unique public id of the department
+	ID   string                          `json:"id" api:"required"`
+	Name string                          `json:"name" api:"required"`
+	JSON offerVoidResponseDepartmentJSON `json:"-"`
+}
+
+// offerVoidResponseDepartmentJSON contains the JSON metadata for the struct [OfferVoidResponseDepartment]
+type offerVoidResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponseWorkplace struct {
+	// Public workplace identifier
+	ID   string                         `json:"id" api:"required"`
+	Name string                         `json:"name" api:"required"`
+	JSON offerVoidResponseWorkplaceJSON `json:"-"`
+}
+
+// offerVoidResponseWorkplaceJSON contains the JSON metadata for the struct [OfferVoidResponseWorkplace]
+type offerVoidResponseWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponseManager struct {
+	// The id of the worker.
+	ID   string                       `json:"id" api:"required"`
+	Name string                       `json:"name" api:"required,nullable"`
+	JSON offerVoidResponseManagerJSON `json:"-"`
+}
+
+// offerVoidResponseManagerJSON contains the JSON metadata for the struct [OfferVoidResponseManager]
+type offerVoidResponseManagerJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseManagerJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                      `json:"id" api:"required"`
+	Code  string                      `json:"code" api:"required"`
+	Name  string                      `json:"name" api:"required"`
+	Track OfferVoidResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerVoidResponseLevelJSON  `json:"-"`
+}
+
+// offerVoidResponseLevelJSON contains the JSON metadata for the struct [OfferVoidResponseLevel]
+type offerVoidResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidResponseCompensation struct {
+	BasePay         OfferVoidResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount             `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount             `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferVoidResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerVoidResponseCompensationJSON    `json:"-"`
+}
+
+// offerVoidResponseCompensationJSON contains the JSON metadata for the struct [OfferVoidResponseCompensation]
+type offerVoidResponseCompensationJSON struct {
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
+	RelocationBonus apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponseStatus string
+
+const (
+	OfferExtendDeadlineResponseStatusDraft    OfferExtendDeadlineResponseStatus = "draft"
+	OfferExtendDeadlineResponseStatusSent     OfferExtendDeadlineResponseStatus = "sent"
+	OfferExtendDeadlineResponseStatusAccepted OfferExtendDeadlineResponseStatus = "accepted"
+	OfferExtendDeadlineResponseStatusVoid     OfferExtendDeadlineResponseStatus = "void"
+)
+
+func (r OfferExtendDeadlineResponseStatus) IsKnown() bool {
+	switch r {
+	case OfferExtendDeadlineResponseStatusDraft, OfferExtendDeadlineResponseStatusSent, OfferExtendDeadlineResponseStatusAccepted, OfferExtendDeadlineResponseStatusVoid:
+		return true
+	}
+	return false
+}
+
+type OfferExtendDeadlineResponseWorkerType string
+
+const (
+	OfferExtendDeadlineResponseWorkerTypeEmployee         OfferExtendDeadlineResponseWorkerType = "employee"
+	OfferExtendDeadlineResponseWorkerTypeUsContractor     OfferExtendDeadlineResponseWorkerType = "us_contractor"
+	OfferExtendDeadlineResponseWorkerTypeGlobalContractor OfferExtendDeadlineResponseWorkerType = "global_contractor"
+)
+
+func (r OfferExtendDeadlineResponseWorkerType) IsKnown() bool {
+	switch r {
+	case OfferExtendDeadlineResponseWorkerTypeEmployee, OfferExtendDeadlineResponseWorkerTypeUsContractor, OfferExtendDeadlineResponseWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
+}
+
+type OfferExtendDeadlineResponseCandidate struct {
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email             string                                                `json:"email" api:"required" format:"email"`
+	ContractorDetails OfferExtendDeadlineResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
+	JSON              offerExtendDeadlineResponseCandidateJSON              `json:"-"`
+}
+
+// offerExtendDeadlineResponseCandidateJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCandidate]
+type offerExtendDeadlineResponseCandidateJSON struct {
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	ContractorDetails apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseCandidate) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseCandidateJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponsePosition struct {
+	Title       string                                     `json:"title" api:"required"`
+	StartDate   string                                     `json:"startDate" api:"required"`
+	Country     OfferExtendDeadlineResponsePositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                                     `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerExtendDeadlineResponsePositionJSON    `json:"-"`
+}
+
+// offerExtendDeadlineResponsePositionJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponsePosition]
+type offerExtendDeadlineResponsePositionJSON struct {
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
+	ScopeOfWork apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponsePosition) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponsePositionJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponseDepartment struct {
+	// The unique public id of the department
+	ID   string                                    `json:"id" api:"required"`
+	Name string                                    `json:"name" api:"required"`
+	JSON offerExtendDeadlineResponseDepartmentJSON `json:"-"`
+}
+
+// offerExtendDeadlineResponseDepartmentJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseDepartment]
+type offerExtendDeadlineResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponseWorkplace struct {
+	// Public workplace identifier
+	ID   string                                   `json:"id" api:"required"`
+	Name string                                   `json:"name" api:"required"`
+	JSON offerExtendDeadlineResponseWorkplaceJSON `json:"-"`
+}
+
+// offerExtendDeadlineResponseWorkplaceJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseWorkplace]
+type offerExtendDeadlineResponseWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponseManager struct {
+	// The id of the worker.
+	ID   string                                 `json:"id" api:"required"`
+	Name string                                 `json:"name" api:"required,nullable"`
+	JSON offerExtendDeadlineResponseManagerJSON `json:"-"`
+}
+
+// offerExtendDeadlineResponseManagerJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseManager]
+type offerExtendDeadlineResponseManagerJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseManagerJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                                `json:"id" api:"required"`
+	Code  string                                `json:"code" api:"required"`
+	Name  string                                `json:"name" api:"required"`
+	Track OfferExtendDeadlineResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerExtendDeadlineResponseLevelJSON  `json:"-"`
+}
+
+// offerExtendDeadlineResponseLevelJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseLevel]
+type offerExtendDeadlineResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferExtendDeadlineResponseCompensation struct {
+	BasePay         OfferExtendDeadlineResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                       `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                       `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferExtendDeadlineResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerExtendDeadlineResponseCompensationJSON    `json:"-"`
+}
+
+// offerExtendDeadlineResponseCompensationJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensation]
+type offerExtendDeadlineResponseCompensationJSON struct {
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
+	RelocationBonus apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponseStatus string
+
+const (
+	OfferResendResponseStatusDraft    OfferResendResponseStatus = "draft"
+	OfferResendResponseStatusSent     OfferResendResponseStatus = "sent"
+	OfferResendResponseStatusAccepted OfferResendResponseStatus = "accepted"
+	OfferResendResponseStatusVoid     OfferResendResponseStatus = "void"
+)
+
+func (r OfferResendResponseStatus) IsKnown() bool {
+	switch r {
+	case OfferResendResponseStatusDraft, OfferResendResponseStatusSent, OfferResendResponseStatusAccepted, OfferResendResponseStatusVoid:
+		return true
+	}
+	return false
+}
+
+type OfferResendResponseWorkerType string
+
+const (
+	OfferResendResponseWorkerTypeEmployee         OfferResendResponseWorkerType = "employee"
+	OfferResendResponseWorkerTypeUsContractor     OfferResendResponseWorkerType = "us_contractor"
+	OfferResendResponseWorkerTypeGlobalContractor OfferResendResponseWorkerType = "global_contractor"
+)
+
+func (r OfferResendResponseWorkerType) IsKnown() bool {
+	switch r {
+	case OfferResendResponseWorkerTypeEmployee, OfferResendResponseWorkerTypeUsContractor, OfferResendResponseWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
+}
+
+type OfferResendResponseCandidate struct {
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email             string                                        `json:"email" api:"required" format:"email"`
+	ContractorDetails OfferResendResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
+	JSON              offerResendResponseCandidateJSON              `json:"-"`
+}
+
+// offerResendResponseCandidateJSON contains the JSON metadata for the struct [OfferResendResponseCandidate]
+type offerResendResponseCandidateJSON struct {
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	ContractorDetails apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *OfferResendResponseCandidate) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseCandidateJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponsePosition struct {
+	Title       string                             `json:"title" api:"required"`
+	StartDate   string                             `json:"startDate" api:"required"`
+	Country     OfferResendResponsePositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                             `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerResendResponsePositionJSON    `json:"-"`
+}
+
+// offerResendResponsePositionJSON contains the JSON metadata for the struct [OfferResendResponsePosition]
+type offerResendResponsePositionJSON struct {
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
+	ScopeOfWork apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferResendResponsePosition) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponsePositionJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponseDepartment struct {
+	// The unique public id of the department
+	ID   string                            `json:"id" api:"required"`
+	Name string                            `json:"name" api:"required"`
+	JSON offerResendResponseDepartmentJSON `json:"-"`
+}
+
+// offerResendResponseDepartmentJSON contains the JSON metadata for the struct [OfferResendResponseDepartment]
+type offerResendResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferResendResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponseWorkplace struct {
+	// Public workplace identifier
+	ID   string                           `json:"id" api:"required"`
+	Name string                           `json:"name" api:"required"`
+	JSON offerResendResponseWorkplaceJSON `json:"-"`
+}
+
+// offerResendResponseWorkplaceJSON contains the JSON metadata for the struct [OfferResendResponseWorkplace]
+type offerResendResponseWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferResendResponseWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponseManager struct {
+	// The id of the worker.
+	ID   string                         `json:"id" api:"required"`
+	Name string                         `json:"name" api:"required,nullable"`
+	JSON offerResendResponseManagerJSON `json:"-"`
+}
+
+// offerResendResponseManagerJSON contains the JSON metadata for the struct [OfferResendResponseManager]
+type offerResendResponseManagerJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferResendResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseManagerJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                        `json:"id" api:"required"`
+	Code  string                        `json:"code" api:"required"`
+	Name  string                        `json:"name" api:"required"`
+	Track OfferResendResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerResendResponseLevelJSON  `json:"-"`
+}
+
+// offerResendResponseLevelJSON contains the JSON metadata for the struct [OfferResendResponseLevel]
+type offerResendResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferResendResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferResendResponseCompensation struct {
+	BasePay         OfferResendResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount               `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount               `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferResendResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerResendResponseCompensationJSON    `json:"-"`
+}
+
+// offerResendResponseCompensationJSON contains the JSON metadata for the struct [OfferResendResponseCompensation]
+type offerResendResponseCompensationJSON struct {
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
+	RelocationBonus apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
+}
+
+func (r *OfferResendResponseCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataStatus string
+
+const (
+	OfferListResponseDataStatusDraft    OfferListResponseDataStatus = "draft"
+	OfferListResponseDataStatusSent     OfferListResponseDataStatus = "sent"
+	OfferListResponseDataStatusAccepted OfferListResponseDataStatus = "accepted"
+	OfferListResponseDataStatusVoid     OfferListResponseDataStatus = "void"
+)
+
+func (r OfferListResponseDataStatus) IsKnown() bool {
+	switch r {
+	case OfferListResponseDataStatusDraft, OfferListResponseDataStatusSent, OfferListResponseDataStatusAccepted, OfferListResponseDataStatusVoid:
+		return true
+	}
+	return false
+}
+
+type OfferListResponseDataWorkerType string
+
+const (
+	OfferListResponseDataWorkerTypeEmployee         OfferListResponseDataWorkerType = "employee"
+	OfferListResponseDataWorkerTypeUsContractor     OfferListResponseDataWorkerType = "us_contractor"
+	OfferListResponseDataWorkerTypeGlobalContractor OfferListResponseDataWorkerType = "global_contractor"
+)
+
+func (r OfferListResponseDataWorkerType) IsKnown() bool {
+	switch r {
+	case OfferListResponseDataWorkerTypeEmployee, OfferListResponseDataWorkerTypeUsContractor, OfferListResponseDataWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
+}
+
+type OfferListResponseDataCandidate struct {
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email             string                                          `json:"email" api:"required" format:"email"`
+	ContractorDetails OfferListResponseDataCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
+	JSON              offerListResponseDataCandidateJSON              `json:"-"`
+}
+
+// offerListResponseDataCandidateJSON contains the JSON metadata for the struct [OfferListResponseDataCandidate]
+type offerListResponseDataCandidateJSON struct {
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	ContractorDetails apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataCandidate) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataCandidateJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataPosition struct {
+	Title       string                               `json:"title" api:"required"`
+	StartDate   string                               `json:"startDate" api:"required"`
+	Country     OfferListResponseDataPositionCountry `json:"country" api:"required"`
+	ScopeOfWork string                               `json:"scopeOfWork" api:"required,nullable"`
+	JSON        offerListResponseDataPositionJSON    `json:"-"`
+}
+
+// offerListResponseDataPositionJSON contains the JSON metadata for the struct [OfferListResponseDataPosition]
+type offerListResponseDataPositionJSON struct {
+	Title       apijson.Field
+	StartDate   apijson.Field
+	Country     apijson.Field
+	ScopeOfWork apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataPosition) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataPositionJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataDepartment struct {
+	// The unique public id of the department
+	ID   string                              `json:"id" api:"required"`
+	Name string                              `json:"name" api:"required"`
+	JSON offerListResponseDataDepartmentJSON `json:"-"`
+}
+
+// offerListResponseDataDepartmentJSON contains the JSON metadata for the struct [OfferListResponseDataDepartment]
+type offerListResponseDataDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataDepartmentJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataWorkplace struct {
+	// Public workplace identifier
+	ID   string                             `json:"id" api:"required"`
+	Name string                             `json:"name" api:"required"`
+	JSON offerListResponseDataWorkplaceJSON `json:"-"`
+}
+
+// offerListResponseDataWorkplaceJSON contains the JSON metadata for the struct [OfferListResponseDataWorkplace]
+type offerListResponseDataWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataManager struct {
+	// The id of the worker.
+	ID   string                           `json:"id" api:"required"`
+	Name string                           `json:"name" api:"required,nullable"`
+	JSON offerListResponseDataManagerJSON `json:"-"`
+}
+
+// offerListResponseDataManagerJSON contains the JSON metadata for the struct [OfferListResponseDataManager]
+type offerListResponseDataManagerJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataManagerJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataLevel struct {
+	// The unique public id of the job level
+	ID    string                          `json:"id" api:"required"`
+	Code  string                          `json:"code" api:"required"`
+	Name  string                          `json:"name" api:"required"`
+	Track OfferListResponseDataLevelTrack `json:"track" api:"required"`
+	JSON  offerListResponseDataLevelJSON  `json:"-"`
+}
+
+// offerListResponseDataLevelJSON contains the JSON metadata for the struct [OfferListResponseDataLevel]
+type offerListResponseDataLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferListResponseDataCompensation struct {
+	BasePay         OfferListResponseDataCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                 `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                 `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferListResponseDataCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerListResponseDataCompensationJSON    `json:"-"`
+}
+
+// offerListResponseDataCompensationJSON contains the JSON metadata for the struct [OfferListResponseDataCompensation]
+type offerListResponseDataCompensationJSON struct {
+	BasePay         apijson.Field
+	SignOnBonus     apijson.Field
+	RelocationBonus apijson.Field
+	Stock           apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferNewResponseCandidateContractorDetails struct {
+	IsBusiness        bool                                           `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                         `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerNewResponseCandidateContractorDetailsJSON `json:"-"`
+}
+
+// offerNewResponseCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferNewResponseCandidateContractorDetails]
+type offerNewResponseCandidateContractorDetailsJSON struct {
+	IsBusiness        apijson.Field
+	LegalBusinessName apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
+}
+
+func (r *OfferNewResponseCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseCandidateContractorDetailsJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferNewResponsePositionCountry string
+
+const (
+	OfferNewResponsePositionCountryAd OfferNewResponsePositionCountry = "AD"
+	OfferNewResponsePositionCountryAe OfferNewResponsePositionCountry = "AE"
+	OfferNewResponsePositionCountryAf OfferNewResponsePositionCountry = "AF"
+	OfferNewResponsePositionCountryAg OfferNewResponsePositionCountry = "AG"
+	OfferNewResponsePositionCountryAI OfferNewResponsePositionCountry = "AI"
+	OfferNewResponsePositionCountryAl OfferNewResponsePositionCountry = "AL"
+	OfferNewResponsePositionCountryAm OfferNewResponsePositionCountry = "AM"
+	OfferNewResponsePositionCountryAo OfferNewResponsePositionCountry = "AO"
+	OfferNewResponsePositionCountryAq OfferNewResponsePositionCountry = "AQ"
+	OfferNewResponsePositionCountryAr OfferNewResponsePositionCountry = "AR"
+	OfferNewResponsePositionCountryAs OfferNewResponsePositionCountry = "AS"
+	OfferNewResponsePositionCountryAt OfferNewResponsePositionCountry = "AT"
+	OfferNewResponsePositionCountryAu OfferNewResponsePositionCountry = "AU"
+	OfferNewResponsePositionCountryAw OfferNewResponsePositionCountry = "AW"
+	OfferNewResponsePositionCountryAx OfferNewResponsePositionCountry = "AX"
+	OfferNewResponsePositionCountryAz OfferNewResponsePositionCountry = "AZ"
+	OfferNewResponsePositionCountryBa OfferNewResponsePositionCountry = "BA"
+	OfferNewResponsePositionCountryBb OfferNewResponsePositionCountry = "BB"
+	OfferNewResponsePositionCountryBd OfferNewResponsePositionCountry = "BD"
+	OfferNewResponsePositionCountryBe OfferNewResponsePositionCountry = "BE"
+	OfferNewResponsePositionCountryBf OfferNewResponsePositionCountry = "BF"
+	OfferNewResponsePositionCountryBg OfferNewResponsePositionCountry = "BG"
+	OfferNewResponsePositionCountryBh OfferNewResponsePositionCountry = "BH"
+	OfferNewResponsePositionCountryBi OfferNewResponsePositionCountry = "BI"
+	OfferNewResponsePositionCountryBj OfferNewResponsePositionCountry = "BJ"
+	OfferNewResponsePositionCountryBl OfferNewResponsePositionCountry = "BL"
+	OfferNewResponsePositionCountryBm OfferNewResponsePositionCountry = "BM"
+	OfferNewResponsePositionCountryBn OfferNewResponsePositionCountry = "BN"
+	OfferNewResponsePositionCountryBo OfferNewResponsePositionCountry = "BO"
+	OfferNewResponsePositionCountryBq OfferNewResponsePositionCountry = "BQ"
+	OfferNewResponsePositionCountryBr OfferNewResponsePositionCountry = "BR"
+	OfferNewResponsePositionCountryBs OfferNewResponsePositionCountry = "BS"
+	OfferNewResponsePositionCountryBt OfferNewResponsePositionCountry = "BT"
+	OfferNewResponsePositionCountryBv OfferNewResponsePositionCountry = "BV"
+	OfferNewResponsePositionCountryBw OfferNewResponsePositionCountry = "BW"
+	OfferNewResponsePositionCountryBy OfferNewResponsePositionCountry = "BY"
+	OfferNewResponsePositionCountryBz OfferNewResponsePositionCountry = "BZ"
+	OfferNewResponsePositionCountryCa OfferNewResponsePositionCountry = "CA"
+	OfferNewResponsePositionCountryCc OfferNewResponsePositionCountry = "CC"
+	OfferNewResponsePositionCountryCd OfferNewResponsePositionCountry = "CD"
+	OfferNewResponsePositionCountryCf OfferNewResponsePositionCountry = "CF"
+	OfferNewResponsePositionCountryCg OfferNewResponsePositionCountry = "CG"
+	OfferNewResponsePositionCountryCh OfferNewResponsePositionCountry = "CH"
+	OfferNewResponsePositionCountryCi OfferNewResponsePositionCountry = "CI"
+	OfferNewResponsePositionCountryCk OfferNewResponsePositionCountry = "CK"
+	OfferNewResponsePositionCountryCl OfferNewResponsePositionCountry = "CL"
+	OfferNewResponsePositionCountryCm OfferNewResponsePositionCountry = "CM"
+	OfferNewResponsePositionCountryCn OfferNewResponsePositionCountry = "CN"
+	OfferNewResponsePositionCountryCo OfferNewResponsePositionCountry = "CO"
+	OfferNewResponsePositionCountryCr OfferNewResponsePositionCountry = "CR"
+	OfferNewResponsePositionCountryCu OfferNewResponsePositionCountry = "CU"
+	OfferNewResponsePositionCountryCv OfferNewResponsePositionCountry = "CV"
+	OfferNewResponsePositionCountryCw OfferNewResponsePositionCountry = "CW"
+	OfferNewResponsePositionCountryCx OfferNewResponsePositionCountry = "CX"
+	OfferNewResponsePositionCountryCy OfferNewResponsePositionCountry = "CY"
+	OfferNewResponsePositionCountryCz OfferNewResponsePositionCountry = "CZ"
+	OfferNewResponsePositionCountryDe OfferNewResponsePositionCountry = "DE"
+	OfferNewResponsePositionCountryDj OfferNewResponsePositionCountry = "DJ"
+	OfferNewResponsePositionCountryDk OfferNewResponsePositionCountry = "DK"
+	OfferNewResponsePositionCountryDm OfferNewResponsePositionCountry = "DM"
+	OfferNewResponsePositionCountryDo OfferNewResponsePositionCountry = "DO"
+	OfferNewResponsePositionCountryDz OfferNewResponsePositionCountry = "DZ"
+	OfferNewResponsePositionCountryEc OfferNewResponsePositionCountry = "EC"
+	OfferNewResponsePositionCountryEe OfferNewResponsePositionCountry = "EE"
+	OfferNewResponsePositionCountryEg OfferNewResponsePositionCountry = "EG"
+	OfferNewResponsePositionCountryEh OfferNewResponsePositionCountry = "EH"
+	OfferNewResponsePositionCountryEr OfferNewResponsePositionCountry = "ER"
+	OfferNewResponsePositionCountryEs OfferNewResponsePositionCountry = "ES"
+	OfferNewResponsePositionCountryEt OfferNewResponsePositionCountry = "ET"
+	OfferNewResponsePositionCountryFi OfferNewResponsePositionCountry = "FI"
+	OfferNewResponsePositionCountryFj OfferNewResponsePositionCountry = "FJ"
+	OfferNewResponsePositionCountryFk OfferNewResponsePositionCountry = "FK"
+	OfferNewResponsePositionCountryFm OfferNewResponsePositionCountry = "FM"
+	OfferNewResponsePositionCountryFo OfferNewResponsePositionCountry = "FO"
+	OfferNewResponsePositionCountryFr OfferNewResponsePositionCountry = "FR"
+	OfferNewResponsePositionCountryGa OfferNewResponsePositionCountry = "GA"
+	OfferNewResponsePositionCountryGB OfferNewResponsePositionCountry = "GB"
+	OfferNewResponsePositionCountryGd OfferNewResponsePositionCountry = "GD"
+	OfferNewResponsePositionCountryGe OfferNewResponsePositionCountry = "GE"
+	OfferNewResponsePositionCountryGf OfferNewResponsePositionCountry = "GF"
+	OfferNewResponsePositionCountryGg OfferNewResponsePositionCountry = "GG"
+	OfferNewResponsePositionCountryGh OfferNewResponsePositionCountry = "GH"
+	OfferNewResponsePositionCountryGi OfferNewResponsePositionCountry = "GI"
+	OfferNewResponsePositionCountryGl OfferNewResponsePositionCountry = "GL"
+	OfferNewResponsePositionCountryGm OfferNewResponsePositionCountry = "GM"
+	OfferNewResponsePositionCountryGn OfferNewResponsePositionCountry = "GN"
+	OfferNewResponsePositionCountryGp OfferNewResponsePositionCountry = "GP"
+	OfferNewResponsePositionCountryGq OfferNewResponsePositionCountry = "GQ"
+	OfferNewResponsePositionCountryGr OfferNewResponsePositionCountry = "GR"
+	OfferNewResponsePositionCountryGs OfferNewResponsePositionCountry = "GS"
+	OfferNewResponsePositionCountryGt OfferNewResponsePositionCountry = "GT"
+	OfferNewResponsePositionCountryGu OfferNewResponsePositionCountry = "GU"
+	OfferNewResponsePositionCountryGw OfferNewResponsePositionCountry = "GW"
+	OfferNewResponsePositionCountryGy OfferNewResponsePositionCountry = "GY"
+	OfferNewResponsePositionCountryHk OfferNewResponsePositionCountry = "HK"
+	OfferNewResponsePositionCountryHm OfferNewResponsePositionCountry = "HM"
+	OfferNewResponsePositionCountryHn OfferNewResponsePositionCountry = "HN"
+	OfferNewResponsePositionCountryHr OfferNewResponsePositionCountry = "HR"
+	OfferNewResponsePositionCountryHt OfferNewResponsePositionCountry = "HT"
+	OfferNewResponsePositionCountryHu OfferNewResponsePositionCountry = "HU"
+	OfferNewResponsePositionCountryID OfferNewResponsePositionCountry = "ID"
+	OfferNewResponsePositionCountryIe OfferNewResponsePositionCountry = "IE"
+	OfferNewResponsePositionCountryIl OfferNewResponsePositionCountry = "IL"
+	OfferNewResponsePositionCountryIm OfferNewResponsePositionCountry = "IM"
+	OfferNewResponsePositionCountryIn OfferNewResponsePositionCountry = "IN"
+	OfferNewResponsePositionCountryIo OfferNewResponsePositionCountry = "IO"
+	OfferNewResponsePositionCountryIq OfferNewResponsePositionCountry = "IQ"
+	OfferNewResponsePositionCountryIr OfferNewResponsePositionCountry = "IR"
+	OfferNewResponsePositionCountryIs OfferNewResponsePositionCountry = "IS"
+	OfferNewResponsePositionCountryIt OfferNewResponsePositionCountry = "IT"
+	OfferNewResponsePositionCountryJe OfferNewResponsePositionCountry = "JE"
+	OfferNewResponsePositionCountryJm OfferNewResponsePositionCountry = "JM"
+	OfferNewResponsePositionCountryJo OfferNewResponsePositionCountry = "JO"
+	OfferNewResponsePositionCountryJp OfferNewResponsePositionCountry = "JP"
+	OfferNewResponsePositionCountryKe OfferNewResponsePositionCountry = "KE"
+	OfferNewResponsePositionCountryKg OfferNewResponsePositionCountry = "KG"
+	OfferNewResponsePositionCountryKh OfferNewResponsePositionCountry = "KH"
+	OfferNewResponsePositionCountryKi OfferNewResponsePositionCountry = "KI"
+	OfferNewResponsePositionCountryKm OfferNewResponsePositionCountry = "KM"
+	OfferNewResponsePositionCountryKn OfferNewResponsePositionCountry = "KN"
+	OfferNewResponsePositionCountryKp OfferNewResponsePositionCountry = "KP"
+	OfferNewResponsePositionCountryKr OfferNewResponsePositionCountry = "KR"
+	OfferNewResponsePositionCountryKw OfferNewResponsePositionCountry = "KW"
+	OfferNewResponsePositionCountryKy OfferNewResponsePositionCountry = "KY"
+	OfferNewResponsePositionCountryKz OfferNewResponsePositionCountry = "KZ"
+	OfferNewResponsePositionCountryLa OfferNewResponsePositionCountry = "LA"
+	OfferNewResponsePositionCountryLb OfferNewResponsePositionCountry = "LB"
+	OfferNewResponsePositionCountryLc OfferNewResponsePositionCountry = "LC"
+	OfferNewResponsePositionCountryLi OfferNewResponsePositionCountry = "LI"
+	OfferNewResponsePositionCountryLk OfferNewResponsePositionCountry = "LK"
+	OfferNewResponsePositionCountryLr OfferNewResponsePositionCountry = "LR"
+	OfferNewResponsePositionCountryLs OfferNewResponsePositionCountry = "LS"
+	OfferNewResponsePositionCountryLt OfferNewResponsePositionCountry = "LT"
+	OfferNewResponsePositionCountryLu OfferNewResponsePositionCountry = "LU"
+	OfferNewResponsePositionCountryLv OfferNewResponsePositionCountry = "LV"
+	OfferNewResponsePositionCountryLy OfferNewResponsePositionCountry = "LY"
+	OfferNewResponsePositionCountryMa OfferNewResponsePositionCountry = "MA"
+	OfferNewResponsePositionCountryMc OfferNewResponsePositionCountry = "MC"
+	OfferNewResponsePositionCountryMd OfferNewResponsePositionCountry = "MD"
+	OfferNewResponsePositionCountryMe OfferNewResponsePositionCountry = "ME"
+	OfferNewResponsePositionCountryMf OfferNewResponsePositionCountry = "MF"
+	OfferNewResponsePositionCountryMg OfferNewResponsePositionCountry = "MG"
+	OfferNewResponsePositionCountryMh OfferNewResponsePositionCountry = "MH"
+	OfferNewResponsePositionCountryMk OfferNewResponsePositionCountry = "MK"
+	OfferNewResponsePositionCountryMl OfferNewResponsePositionCountry = "ML"
+	OfferNewResponsePositionCountryMm OfferNewResponsePositionCountry = "MM"
+	OfferNewResponsePositionCountryMn OfferNewResponsePositionCountry = "MN"
+	OfferNewResponsePositionCountryMo OfferNewResponsePositionCountry = "MO"
+	OfferNewResponsePositionCountryMp OfferNewResponsePositionCountry = "MP"
+	OfferNewResponsePositionCountryMq OfferNewResponsePositionCountry = "MQ"
+	OfferNewResponsePositionCountryMr OfferNewResponsePositionCountry = "MR"
+	OfferNewResponsePositionCountryMs OfferNewResponsePositionCountry = "MS"
+	OfferNewResponsePositionCountryMt OfferNewResponsePositionCountry = "MT"
+	OfferNewResponsePositionCountryMu OfferNewResponsePositionCountry = "MU"
+	OfferNewResponsePositionCountryMv OfferNewResponsePositionCountry = "MV"
+	OfferNewResponsePositionCountryMw OfferNewResponsePositionCountry = "MW"
+	OfferNewResponsePositionCountryMx OfferNewResponsePositionCountry = "MX"
+	OfferNewResponsePositionCountryMy OfferNewResponsePositionCountry = "MY"
+	OfferNewResponsePositionCountryMz OfferNewResponsePositionCountry = "MZ"
+	OfferNewResponsePositionCountryNa OfferNewResponsePositionCountry = "NA"
+	OfferNewResponsePositionCountryNc OfferNewResponsePositionCountry = "NC"
+	OfferNewResponsePositionCountryNe OfferNewResponsePositionCountry = "NE"
+	OfferNewResponsePositionCountryNf OfferNewResponsePositionCountry = "NF"
+	OfferNewResponsePositionCountryNg OfferNewResponsePositionCountry = "NG"
+	OfferNewResponsePositionCountryNi OfferNewResponsePositionCountry = "NI"
+	OfferNewResponsePositionCountryNl OfferNewResponsePositionCountry = "NL"
+	OfferNewResponsePositionCountryNo OfferNewResponsePositionCountry = "NO"
+	OfferNewResponsePositionCountryNp OfferNewResponsePositionCountry = "NP"
+	OfferNewResponsePositionCountryNr OfferNewResponsePositionCountry = "NR"
+	OfferNewResponsePositionCountryNu OfferNewResponsePositionCountry = "NU"
+	OfferNewResponsePositionCountryNz OfferNewResponsePositionCountry = "NZ"
+	OfferNewResponsePositionCountryOm OfferNewResponsePositionCountry = "OM"
+	OfferNewResponsePositionCountryPa OfferNewResponsePositionCountry = "PA"
+	OfferNewResponsePositionCountryPe OfferNewResponsePositionCountry = "PE"
+	OfferNewResponsePositionCountryPf OfferNewResponsePositionCountry = "PF"
+	OfferNewResponsePositionCountryPg OfferNewResponsePositionCountry = "PG"
+	OfferNewResponsePositionCountryPh OfferNewResponsePositionCountry = "PH"
+	OfferNewResponsePositionCountryPk OfferNewResponsePositionCountry = "PK"
+	OfferNewResponsePositionCountryPl OfferNewResponsePositionCountry = "PL"
+	OfferNewResponsePositionCountryPm OfferNewResponsePositionCountry = "PM"
+	OfferNewResponsePositionCountryPn OfferNewResponsePositionCountry = "PN"
+	OfferNewResponsePositionCountryPr OfferNewResponsePositionCountry = "PR"
+	OfferNewResponsePositionCountryPs OfferNewResponsePositionCountry = "PS"
+	OfferNewResponsePositionCountryPt OfferNewResponsePositionCountry = "PT"
+	OfferNewResponsePositionCountryPw OfferNewResponsePositionCountry = "PW"
+	OfferNewResponsePositionCountryPy OfferNewResponsePositionCountry = "PY"
+	OfferNewResponsePositionCountryQa OfferNewResponsePositionCountry = "QA"
+	OfferNewResponsePositionCountryRe OfferNewResponsePositionCountry = "RE"
+	OfferNewResponsePositionCountryRo OfferNewResponsePositionCountry = "RO"
+	OfferNewResponsePositionCountryRs OfferNewResponsePositionCountry = "RS"
+	OfferNewResponsePositionCountryRu OfferNewResponsePositionCountry = "RU"
+	OfferNewResponsePositionCountryRw OfferNewResponsePositionCountry = "RW"
+	OfferNewResponsePositionCountrySa OfferNewResponsePositionCountry = "SA"
+	OfferNewResponsePositionCountrySb OfferNewResponsePositionCountry = "SB"
+	OfferNewResponsePositionCountrySc OfferNewResponsePositionCountry = "SC"
+	OfferNewResponsePositionCountrySd OfferNewResponsePositionCountry = "SD"
+	OfferNewResponsePositionCountrySe OfferNewResponsePositionCountry = "SE"
+	OfferNewResponsePositionCountrySg OfferNewResponsePositionCountry = "SG"
+	OfferNewResponsePositionCountrySh OfferNewResponsePositionCountry = "SH"
+	OfferNewResponsePositionCountrySi OfferNewResponsePositionCountry = "SI"
+	OfferNewResponsePositionCountrySj OfferNewResponsePositionCountry = "SJ"
+	OfferNewResponsePositionCountrySk OfferNewResponsePositionCountry = "SK"
+	OfferNewResponsePositionCountrySl OfferNewResponsePositionCountry = "SL"
+	OfferNewResponsePositionCountrySm OfferNewResponsePositionCountry = "SM"
+	OfferNewResponsePositionCountrySn OfferNewResponsePositionCountry = "SN"
+	OfferNewResponsePositionCountrySo OfferNewResponsePositionCountry = "SO"
+	OfferNewResponsePositionCountrySr OfferNewResponsePositionCountry = "SR"
+	OfferNewResponsePositionCountrySS OfferNewResponsePositionCountry = "SS"
+	OfferNewResponsePositionCountrySt OfferNewResponsePositionCountry = "ST"
+	OfferNewResponsePositionCountrySv OfferNewResponsePositionCountry = "SV"
+	OfferNewResponsePositionCountrySx OfferNewResponsePositionCountry = "SX"
+	OfferNewResponsePositionCountrySy OfferNewResponsePositionCountry = "SY"
+	OfferNewResponsePositionCountrySz OfferNewResponsePositionCountry = "SZ"
+	OfferNewResponsePositionCountryTc OfferNewResponsePositionCountry = "TC"
+	OfferNewResponsePositionCountryTd OfferNewResponsePositionCountry = "TD"
+	OfferNewResponsePositionCountryTf OfferNewResponsePositionCountry = "TF"
+	OfferNewResponsePositionCountryTg OfferNewResponsePositionCountry = "TG"
+	OfferNewResponsePositionCountryTh OfferNewResponsePositionCountry = "TH"
+	OfferNewResponsePositionCountryTj OfferNewResponsePositionCountry = "TJ"
+	OfferNewResponsePositionCountryTk OfferNewResponsePositionCountry = "TK"
+	OfferNewResponsePositionCountryTl OfferNewResponsePositionCountry = "TL"
+	OfferNewResponsePositionCountryTm OfferNewResponsePositionCountry = "TM"
+	OfferNewResponsePositionCountryTn OfferNewResponsePositionCountry = "TN"
+	OfferNewResponsePositionCountryTo OfferNewResponsePositionCountry = "TO"
+	OfferNewResponsePositionCountryTr OfferNewResponsePositionCountry = "TR"
+	OfferNewResponsePositionCountryTt OfferNewResponsePositionCountry = "TT"
+	OfferNewResponsePositionCountryTv OfferNewResponsePositionCountry = "TV"
+	OfferNewResponsePositionCountryTw OfferNewResponsePositionCountry = "TW"
+	OfferNewResponsePositionCountryTz OfferNewResponsePositionCountry = "TZ"
+	OfferNewResponsePositionCountryUa OfferNewResponsePositionCountry = "UA"
+	OfferNewResponsePositionCountryUg OfferNewResponsePositionCountry = "UG"
+	OfferNewResponsePositionCountryUm OfferNewResponsePositionCountry = "UM"
+	OfferNewResponsePositionCountryUs OfferNewResponsePositionCountry = "US"
+	OfferNewResponsePositionCountryUy OfferNewResponsePositionCountry = "UY"
+	OfferNewResponsePositionCountryUz OfferNewResponsePositionCountry = "UZ"
+	OfferNewResponsePositionCountryVa OfferNewResponsePositionCountry = "VA"
+	OfferNewResponsePositionCountryVc OfferNewResponsePositionCountry = "VC"
+	OfferNewResponsePositionCountryVe OfferNewResponsePositionCountry = "VE"
+	OfferNewResponsePositionCountryVg OfferNewResponsePositionCountry = "VG"
+	OfferNewResponsePositionCountryVi OfferNewResponsePositionCountry = "VI"
+	OfferNewResponsePositionCountryVn OfferNewResponsePositionCountry = "VN"
+	OfferNewResponsePositionCountryVu OfferNewResponsePositionCountry = "VU"
+	OfferNewResponsePositionCountryWf OfferNewResponsePositionCountry = "WF"
+	OfferNewResponsePositionCountryWs OfferNewResponsePositionCountry = "WS"
+	OfferNewResponsePositionCountryXk OfferNewResponsePositionCountry = "XK"
+	OfferNewResponsePositionCountryYe OfferNewResponsePositionCountry = "YE"
+	OfferNewResponsePositionCountryYt OfferNewResponsePositionCountry = "YT"
+	OfferNewResponsePositionCountryZa OfferNewResponsePositionCountry = "ZA"
+	OfferNewResponsePositionCountryZm OfferNewResponsePositionCountry = "ZM"
+	OfferNewResponsePositionCountryZw OfferNewResponsePositionCountry = "ZW"
+)
+
+func (r OfferNewResponsePositionCountry) IsKnown() bool {
+	switch r {
+	case OfferNewResponsePositionCountryAd, OfferNewResponsePositionCountryAe, OfferNewResponsePositionCountryAf, OfferNewResponsePositionCountryAg, OfferNewResponsePositionCountryAI, OfferNewResponsePositionCountryAl, OfferNewResponsePositionCountryAm, OfferNewResponsePositionCountryAo, OfferNewResponsePositionCountryAq, OfferNewResponsePositionCountryAr, OfferNewResponsePositionCountryAs, OfferNewResponsePositionCountryAt, OfferNewResponsePositionCountryAu, OfferNewResponsePositionCountryAw, OfferNewResponsePositionCountryAx, OfferNewResponsePositionCountryAz, OfferNewResponsePositionCountryBa, OfferNewResponsePositionCountryBb, OfferNewResponsePositionCountryBd, OfferNewResponsePositionCountryBe, OfferNewResponsePositionCountryBf, OfferNewResponsePositionCountryBg, OfferNewResponsePositionCountryBh, OfferNewResponsePositionCountryBi, OfferNewResponsePositionCountryBj, OfferNewResponsePositionCountryBl, OfferNewResponsePositionCountryBm, OfferNewResponsePositionCountryBn, OfferNewResponsePositionCountryBo, OfferNewResponsePositionCountryBq, OfferNewResponsePositionCountryBr, OfferNewResponsePositionCountryBs, OfferNewResponsePositionCountryBt, OfferNewResponsePositionCountryBv, OfferNewResponsePositionCountryBw, OfferNewResponsePositionCountryBy, OfferNewResponsePositionCountryBz, OfferNewResponsePositionCountryCa, OfferNewResponsePositionCountryCc, OfferNewResponsePositionCountryCd, OfferNewResponsePositionCountryCf, OfferNewResponsePositionCountryCg, OfferNewResponsePositionCountryCh, OfferNewResponsePositionCountryCi, OfferNewResponsePositionCountryCk, OfferNewResponsePositionCountryCl, OfferNewResponsePositionCountryCm, OfferNewResponsePositionCountryCn, OfferNewResponsePositionCountryCo, OfferNewResponsePositionCountryCr, OfferNewResponsePositionCountryCu, OfferNewResponsePositionCountryCv, OfferNewResponsePositionCountryCw, OfferNewResponsePositionCountryCx, OfferNewResponsePositionCountryCy, OfferNewResponsePositionCountryCz, OfferNewResponsePositionCountryDe, OfferNewResponsePositionCountryDj, OfferNewResponsePositionCountryDk, OfferNewResponsePositionCountryDm, OfferNewResponsePositionCountryDo, OfferNewResponsePositionCountryDz, OfferNewResponsePositionCountryEc, OfferNewResponsePositionCountryEe, OfferNewResponsePositionCountryEg, OfferNewResponsePositionCountryEh, OfferNewResponsePositionCountryEr, OfferNewResponsePositionCountryEs, OfferNewResponsePositionCountryEt, OfferNewResponsePositionCountryFi, OfferNewResponsePositionCountryFj, OfferNewResponsePositionCountryFk, OfferNewResponsePositionCountryFm, OfferNewResponsePositionCountryFo, OfferNewResponsePositionCountryFr, OfferNewResponsePositionCountryGa, OfferNewResponsePositionCountryGB, OfferNewResponsePositionCountryGd, OfferNewResponsePositionCountryGe, OfferNewResponsePositionCountryGf, OfferNewResponsePositionCountryGg, OfferNewResponsePositionCountryGh, OfferNewResponsePositionCountryGi, OfferNewResponsePositionCountryGl, OfferNewResponsePositionCountryGm, OfferNewResponsePositionCountryGn, OfferNewResponsePositionCountryGp, OfferNewResponsePositionCountryGq, OfferNewResponsePositionCountryGr, OfferNewResponsePositionCountryGs, OfferNewResponsePositionCountryGt, OfferNewResponsePositionCountryGu, OfferNewResponsePositionCountryGw, OfferNewResponsePositionCountryGy, OfferNewResponsePositionCountryHk, OfferNewResponsePositionCountryHm, OfferNewResponsePositionCountryHn, OfferNewResponsePositionCountryHr, OfferNewResponsePositionCountryHt, OfferNewResponsePositionCountryHu, OfferNewResponsePositionCountryID, OfferNewResponsePositionCountryIe, OfferNewResponsePositionCountryIl, OfferNewResponsePositionCountryIm, OfferNewResponsePositionCountryIn, OfferNewResponsePositionCountryIo, OfferNewResponsePositionCountryIq, OfferNewResponsePositionCountryIr, OfferNewResponsePositionCountryIs, OfferNewResponsePositionCountryIt, OfferNewResponsePositionCountryJe, OfferNewResponsePositionCountryJm, OfferNewResponsePositionCountryJo, OfferNewResponsePositionCountryJp, OfferNewResponsePositionCountryKe, OfferNewResponsePositionCountryKg, OfferNewResponsePositionCountryKh, OfferNewResponsePositionCountryKi, OfferNewResponsePositionCountryKm, OfferNewResponsePositionCountryKn, OfferNewResponsePositionCountryKp, OfferNewResponsePositionCountryKr, OfferNewResponsePositionCountryKw, OfferNewResponsePositionCountryKy, OfferNewResponsePositionCountryKz, OfferNewResponsePositionCountryLa, OfferNewResponsePositionCountryLb, OfferNewResponsePositionCountryLc, OfferNewResponsePositionCountryLi, OfferNewResponsePositionCountryLk, OfferNewResponsePositionCountryLr, OfferNewResponsePositionCountryLs, OfferNewResponsePositionCountryLt, OfferNewResponsePositionCountryLu, OfferNewResponsePositionCountryLv, OfferNewResponsePositionCountryLy, OfferNewResponsePositionCountryMa, OfferNewResponsePositionCountryMc, OfferNewResponsePositionCountryMd, OfferNewResponsePositionCountryMe, OfferNewResponsePositionCountryMf, OfferNewResponsePositionCountryMg, OfferNewResponsePositionCountryMh, OfferNewResponsePositionCountryMk, OfferNewResponsePositionCountryMl, OfferNewResponsePositionCountryMm, OfferNewResponsePositionCountryMn, OfferNewResponsePositionCountryMo, OfferNewResponsePositionCountryMp, OfferNewResponsePositionCountryMq, OfferNewResponsePositionCountryMr, OfferNewResponsePositionCountryMs, OfferNewResponsePositionCountryMt, OfferNewResponsePositionCountryMu, OfferNewResponsePositionCountryMv, OfferNewResponsePositionCountryMw, OfferNewResponsePositionCountryMx, OfferNewResponsePositionCountryMy, OfferNewResponsePositionCountryMz, OfferNewResponsePositionCountryNa, OfferNewResponsePositionCountryNc, OfferNewResponsePositionCountryNe, OfferNewResponsePositionCountryNf, OfferNewResponsePositionCountryNg, OfferNewResponsePositionCountryNi, OfferNewResponsePositionCountryNl, OfferNewResponsePositionCountryNo, OfferNewResponsePositionCountryNp, OfferNewResponsePositionCountryNr, OfferNewResponsePositionCountryNu, OfferNewResponsePositionCountryNz, OfferNewResponsePositionCountryOm, OfferNewResponsePositionCountryPa, OfferNewResponsePositionCountryPe, OfferNewResponsePositionCountryPf, OfferNewResponsePositionCountryPg, OfferNewResponsePositionCountryPh, OfferNewResponsePositionCountryPk, OfferNewResponsePositionCountryPl, OfferNewResponsePositionCountryPm, OfferNewResponsePositionCountryPn, OfferNewResponsePositionCountryPr, OfferNewResponsePositionCountryPs, OfferNewResponsePositionCountryPt, OfferNewResponsePositionCountryPw, OfferNewResponsePositionCountryPy, OfferNewResponsePositionCountryQa, OfferNewResponsePositionCountryRe, OfferNewResponsePositionCountryRo, OfferNewResponsePositionCountryRs, OfferNewResponsePositionCountryRu, OfferNewResponsePositionCountryRw, OfferNewResponsePositionCountrySa, OfferNewResponsePositionCountrySb, OfferNewResponsePositionCountrySc, OfferNewResponsePositionCountrySd, OfferNewResponsePositionCountrySe, OfferNewResponsePositionCountrySg, OfferNewResponsePositionCountrySh, OfferNewResponsePositionCountrySi, OfferNewResponsePositionCountrySj, OfferNewResponsePositionCountrySk, OfferNewResponsePositionCountrySl, OfferNewResponsePositionCountrySm, OfferNewResponsePositionCountrySn, OfferNewResponsePositionCountrySo, OfferNewResponsePositionCountrySr, OfferNewResponsePositionCountrySS, OfferNewResponsePositionCountrySt, OfferNewResponsePositionCountrySv, OfferNewResponsePositionCountrySx, OfferNewResponsePositionCountrySy, OfferNewResponsePositionCountrySz, OfferNewResponsePositionCountryTc, OfferNewResponsePositionCountryTd, OfferNewResponsePositionCountryTf, OfferNewResponsePositionCountryTg, OfferNewResponsePositionCountryTh, OfferNewResponsePositionCountryTj, OfferNewResponsePositionCountryTk, OfferNewResponsePositionCountryTl, OfferNewResponsePositionCountryTm, OfferNewResponsePositionCountryTn, OfferNewResponsePositionCountryTo, OfferNewResponsePositionCountryTr, OfferNewResponsePositionCountryTt, OfferNewResponsePositionCountryTv, OfferNewResponsePositionCountryTw, OfferNewResponsePositionCountryTz, OfferNewResponsePositionCountryUa, OfferNewResponsePositionCountryUg, OfferNewResponsePositionCountryUm, OfferNewResponsePositionCountryUs, OfferNewResponsePositionCountryUy, OfferNewResponsePositionCountryUz, OfferNewResponsePositionCountryVa, OfferNewResponsePositionCountryVc, OfferNewResponsePositionCountryVe, OfferNewResponsePositionCountryVg, OfferNewResponsePositionCountryVi, OfferNewResponsePositionCountryVn, OfferNewResponsePositionCountryVu, OfferNewResponsePositionCountryWf, OfferNewResponsePositionCountryWs, OfferNewResponsePositionCountryXk, OfferNewResponsePositionCountryYe, OfferNewResponsePositionCountryYt, OfferNewResponsePositionCountryZa, OfferNewResponsePositionCountryZm, OfferNewResponsePositionCountryZw:
+		return true
+	}
+	return false
+}
+
+type OfferNewResponseLevelTrack string
+
+const (
+	OfferNewResponseLevelTrackIc        OfferNewResponseLevelTrack = "ic"
+	OfferNewResponseLevelTrackManager   OfferNewResponseLevelTrack = "manager"
+	OfferNewResponseLevelTrackExecutive OfferNewResponseLevelTrack = "executive"
+)
+
+func (r OfferNewResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferNewResponseLevelTrackIc, OfferNewResponseLevelTrackManager, OfferNewResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
+type OfferNewResponseCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
+	Amount       shared.PublicMoneyAmount                 `json:"amount" api:"required"`
+	Basis        OfferNewResponseCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferNewResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate shared.PublicMoneyAmount                 `json:"variableRate" api:"required,nullable"`
+	JSON         offerNewResponseCompensationBasePayJSON  `json:"-"`
+}
+
+// offerNewResponseCompensationBasePayJSON contains the JSON metadata for the struct [OfferNewResponseCompensationBasePay]
+type offerNewResponseCompensationBasePayJSON struct {
+	Amount       apijson.Field
+	Basis        apijson.Field
+	Type         apijson.Field
+	VariableRate apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *OfferNewResponseCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseCompensationBasePayJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferNewResponseCompensationStock struct {
+	Options               int64                                 `json:"options" api:"required"`
+	VestingScheduleMonths int64                                 `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                 `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerNewResponseCompensationStockJSON `json:"-"`
+}
+
+// offerNewResponseCompensationStockJSON contains the JSON metadata for the struct [OfferNewResponseCompensationStock]
+type offerNewResponseCompensationStockJSON struct {
+	Options               apijson.Field
+	VestingScheduleMonths apijson.Field
+	CliffMonths           apijson.Field
+	raw                   string
+	ExtraFields           map[string]apijson.Field
+}
+
+func (r *OfferNewResponseCompensationStock) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseCompensationStockJSON) RawJSON() string {
 	return r.raw
 }
 
@@ -1882,6 +2710,22 @@ const (
 func (r OfferVoidResponsePositionCountry) IsKnown() bool {
 	switch r {
 	case OfferVoidResponsePositionCountryAd, OfferVoidResponsePositionCountryAe, OfferVoidResponsePositionCountryAf, OfferVoidResponsePositionCountryAg, OfferVoidResponsePositionCountryAI, OfferVoidResponsePositionCountryAl, OfferVoidResponsePositionCountryAm, OfferVoidResponsePositionCountryAo, OfferVoidResponsePositionCountryAq, OfferVoidResponsePositionCountryAr, OfferVoidResponsePositionCountryAs, OfferVoidResponsePositionCountryAt, OfferVoidResponsePositionCountryAu, OfferVoidResponsePositionCountryAw, OfferVoidResponsePositionCountryAx, OfferVoidResponsePositionCountryAz, OfferVoidResponsePositionCountryBa, OfferVoidResponsePositionCountryBb, OfferVoidResponsePositionCountryBd, OfferVoidResponsePositionCountryBe, OfferVoidResponsePositionCountryBf, OfferVoidResponsePositionCountryBg, OfferVoidResponsePositionCountryBh, OfferVoidResponsePositionCountryBi, OfferVoidResponsePositionCountryBj, OfferVoidResponsePositionCountryBl, OfferVoidResponsePositionCountryBm, OfferVoidResponsePositionCountryBn, OfferVoidResponsePositionCountryBo, OfferVoidResponsePositionCountryBq, OfferVoidResponsePositionCountryBr, OfferVoidResponsePositionCountryBs, OfferVoidResponsePositionCountryBt, OfferVoidResponsePositionCountryBv, OfferVoidResponsePositionCountryBw, OfferVoidResponsePositionCountryBy, OfferVoidResponsePositionCountryBz, OfferVoidResponsePositionCountryCa, OfferVoidResponsePositionCountryCc, OfferVoidResponsePositionCountryCd, OfferVoidResponsePositionCountryCf, OfferVoidResponsePositionCountryCg, OfferVoidResponsePositionCountryCh, OfferVoidResponsePositionCountryCi, OfferVoidResponsePositionCountryCk, OfferVoidResponsePositionCountryCl, OfferVoidResponsePositionCountryCm, OfferVoidResponsePositionCountryCn, OfferVoidResponsePositionCountryCo, OfferVoidResponsePositionCountryCr, OfferVoidResponsePositionCountryCu, OfferVoidResponsePositionCountryCv, OfferVoidResponsePositionCountryCw, OfferVoidResponsePositionCountryCx, OfferVoidResponsePositionCountryCy, OfferVoidResponsePositionCountryCz, OfferVoidResponsePositionCountryDe, OfferVoidResponsePositionCountryDj, OfferVoidResponsePositionCountryDk, OfferVoidResponsePositionCountryDm, OfferVoidResponsePositionCountryDo, OfferVoidResponsePositionCountryDz, OfferVoidResponsePositionCountryEc, OfferVoidResponsePositionCountryEe, OfferVoidResponsePositionCountryEg, OfferVoidResponsePositionCountryEh, OfferVoidResponsePositionCountryEr, OfferVoidResponsePositionCountryEs, OfferVoidResponsePositionCountryEt, OfferVoidResponsePositionCountryFi, OfferVoidResponsePositionCountryFj, OfferVoidResponsePositionCountryFk, OfferVoidResponsePositionCountryFm, OfferVoidResponsePositionCountryFo, OfferVoidResponsePositionCountryFr, OfferVoidResponsePositionCountryGa, OfferVoidResponsePositionCountryGB, OfferVoidResponsePositionCountryGd, OfferVoidResponsePositionCountryGe, OfferVoidResponsePositionCountryGf, OfferVoidResponsePositionCountryGg, OfferVoidResponsePositionCountryGh, OfferVoidResponsePositionCountryGi, OfferVoidResponsePositionCountryGl, OfferVoidResponsePositionCountryGm, OfferVoidResponsePositionCountryGn, OfferVoidResponsePositionCountryGp, OfferVoidResponsePositionCountryGq, OfferVoidResponsePositionCountryGr, OfferVoidResponsePositionCountryGs, OfferVoidResponsePositionCountryGt, OfferVoidResponsePositionCountryGu, OfferVoidResponsePositionCountryGw, OfferVoidResponsePositionCountryGy, OfferVoidResponsePositionCountryHk, OfferVoidResponsePositionCountryHm, OfferVoidResponsePositionCountryHn, OfferVoidResponsePositionCountryHr, OfferVoidResponsePositionCountryHt, OfferVoidResponsePositionCountryHu, OfferVoidResponsePositionCountryID, OfferVoidResponsePositionCountryIe, OfferVoidResponsePositionCountryIl, OfferVoidResponsePositionCountryIm, OfferVoidResponsePositionCountryIn, OfferVoidResponsePositionCountryIo, OfferVoidResponsePositionCountryIq, OfferVoidResponsePositionCountryIr, OfferVoidResponsePositionCountryIs, OfferVoidResponsePositionCountryIt, OfferVoidResponsePositionCountryJe, OfferVoidResponsePositionCountryJm, OfferVoidResponsePositionCountryJo, OfferVoidResponsePositionCountryJp, OfferVoidResponsePositionCountryKe, OfferVoidResponsePositionCountryKg, OfferVoidResponsePositionCountryKh, OfferVoidResponsePositionCountryKi, OfferVoidResponsePositionCountryKm, OfferVoidResponsePositionCountryKn, OfferVoidResponsePositionCountryKp, OfferVoidResponsePositionCountryKr, OfferVoidResponsePositionCountryKw, OfferVoidResponsePositionCountryKy, OfferVoidResponsePositionCountryKz, OfferVoidResponsePositionCountryLa, OfferVoidResponsePositionCountryLb, OfferVoidResponsePositionCountryLc, OfferVoidResponsePositionCountryLi, OfferVoidResponsePositionCountryLk, OfferVoidResponsePositionCountryLr, OfferVoidResponsePositionCountryLs, OfferVoidResponsePositionCountryLt, OfferVoidResponsePositionCountryLu, OfferVoidResponsePositionCountryLv, OfferVoidResponsePositionCountryLy, OfferVoidResponsePositionCountryMa, OfferVoidResponsePositionCountryMc, OfferVoidResponsePositionCountryMd, OfferVoidResponsePositionCountryMe, OfferVoidResponsePositionCountryMf, OfferVoidResponsePositionCountryMg, OfferVoidResponsePositionCountryMh, OfferVoidResponsePositionCountryMk, OfferVoidResponsePositionCountryMl, OfferVoidResponsePositionCountryMm, OfferVoidResponsePositionCountryMn, OfferVoidResponsePositionCountryMo, OfferVoidResponsePositionCountryMp, OfferVoidResponsePositionCountryMq, OfferVoidResponsePositionCountryMr, OfferVoidResponsePositionCountryMs, OfferVoidResponsePositionCountryMt, OfferVoidResponsePositionCountryMu, OfferVoidResponsePositionCountryMv, OfferVoidResponsePositionCountryMw, OfferVoidResponsePositionCountryMx, OfferVoidResponsePositionCountryMy, OfferVoidResponsePositionCountryMz, OfferVoidResponsePositionCountryNa, OfferVoidResponsePositionCountryNc, OfferVoidResponsePositionCountryNe, OfferVoidResponsePositionCountryNf, OfferVoidResponsePositionCountryNg, OfferVoidResponsePositionCountryNi, OfferVoidResponsePositionCountryNl, OfferVoidResponsePositionCountryNo, OfferVoidResponsePositionCountryNp, OfferVoidResponsePositionCountryNr, OfferVoidResponsePositionCountryNu, OfferVoidResponsePositionCountryNz, OfferVoidResponsePositionCountryOm, OfferVoidResponsePositionCountryPa, OfferVoidResponsePositionCountryPe, OfferVoidResponsePositionCountryPf, OfferVoidResponsePositionCountryPg, OfferVoidResponsePositionCountryPh, OfferVoidResponsePositionCountryPk, OfferVoidResponsePositionCountryPl, OfferVoidResponsePositionCountryPm, OfferVoidResponsePositionCountryPn, OfferVoidResponsePositionCountryPr, OfferVoidResponsePositionCountryPs, OfferVoidResponsePositionCountryPt, OfferVoidResponsePositionCountryPw, OfferVoidResponsePositionCountryPy, OfferVoidResponsePositionCountryQa, OfferVoidResponsePositionCountryRe, OfferVoidResponsePositionCountryRo, OfferVoidResponsePositionCountryRs, OfferVoidResponsePositionCountryRu, OfferVoidResponsePositionCountryRw, OfferVoidResponsePositionCountrySa, OfferVoidResponsePositionCountrySb, OfferVoidResponsePositionCountrySc, OfferVoidResponsePositionCountrySd, OfferVoidResponsePositionCountrySe, OfferVoidResponsePositionCountrySg, OfferVoidResponsePositionCountrySh, OfferVoidResponsePositionCountrySi, OfferVoidResponsePositionCountrySj, OfferVoidResponsePositionCountrySk, OfferVoidResponsePositionCountrySl, OfferVoidResponsePositionCountrySm, OfferVoidResponsePositionCountrySn, OfferVoidResponsePositionCountrySo, OfferVoidResponsePositionCountrySr, OfferVoidResponsePositionCountrySS, OfferVoidResponsePositionCountrySt, OfferVoidResponsePositionCountrySv, OfferVoidResponsePositionCountrySx, OfferVoidResponsePositionCountrySy, OfferVoidResponsePositionCountrySz, OfferVoidResponsePositionCountryTc, OfferVoidResponsePositionCountryTd, OfferVoidResponsePositionCountryTf, OfferVoidResponsePositionCountryTg, OfferVoidResponsePositionCountryTh, OfferVoidResponsePositionCountryTj, OfferVoidResponsePositionCountryTk, OfferVoidResponsePositionCountryTl, OfferVoidResponsePositionCountryTm, OfferVoidResponsePositionCountryTn, OfferVoidResponsePositionCountryTo, OfferVoidResponsePositionCountryTr, OfferVoidResponsePositionCountryTt, OfferVoidResponsePositionCountryTv, OfferVoidResponsePositionCountryTw, OfferVoidResponsePositionCountryTz, OfferVoidResponsePositionCountryUa, OfferVoidResponsePositionCountryUg, OfferVoidResponsePositionCountryUm, OfferVoidResponsePositionCountryUs, OfferVoidResponsePositionCountryUy, OfferVoidResponsePositionCountryUz, OfferVoidResponsePositionCountryVa, OfferVoidResponsePositionCountryVc, OfferVoidResponsePositionCountryVe, OfferVoidResponsePositionCountryVg, OfferVoidResponsePositionCountryVi, OfferVoidResponsePositionCountryVn, OfferVoidResponsePositionCountryVu, OfferVoidResponsePositionCountryWf, OfferVoidResponsePositionCountryWs, OfferVoidResponsePositionCountryXk, OfferVoidResponsePositionCountryYe, OfferVoidResponsePositionCountryYt, OfferVoidResponsePositionCountryZa, OfferVoidResponsePositionCountryZm, OfferVoidResponsePositionCountryZw:
+		return true
+	}
+	return false
+}
+
+type OfferVoidResponseLevelTrack string
+
+const (
+	OfferVoidResponseLevelTrackIc        OfferVoidResponseLevelTrack = "ic"
+	OfferVoidResponseLevelTrackManager   OfferVoidResponseLevelTrack = "manager"
+	OfferVoidResponseLevelTrackExecutive OfferVoidResponseLevelTrack = "executive"
+)
+
+func (r OfferVoidResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferVoidResponseLevelTrackIc, OfferVoidResponseLevelTrackManager, OfferVoidResponseLevelTrackExecutive:
 		return true
 	}
 	return false
@@ -2223,6 +3067,22 @@ func (r OfferExtendDeadlineResponsePositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferExtendDeadlineResponseLevelTrack string
+
+const (
+	OfferExtendDeadlineResponseLevelTrackIc        OfferExtendDeadlineResponseLevelTrack = "ic"
+	OfferExtendDeadlineResponseLevelTrackManager   OfferExtendDeadlineResponseLevelTrack = "manager"
+	OfferExtendDeadlineResponseLevelTrackExecutive OfferExtendDeadlineResponseLevelTrack = "executive"
+)
+
+func (r OfferExtendDeadlineResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferExtendDeadlineResponseLevelTrackIc, OfferExtendDeadlineResponseLevelTrackManager, OfferExtendDeadlineResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferExtendDeadlineResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       shared.PublicMoneyAmount                            `json:"amount" api:"required"`
@@ -2559,6 +3419,22 @@ func (r OfferResendResponsePositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferResendResponseLevelTrack string
+
+const (
+	OfferResendResponseLevelTrackIc        OfferResendResponseLevelTrack = "ic"
+	OfferResendResponseLevelTrackManager   OfferResendResponseLevelTrack = "manager"
+	OfferResendResponseLevelTrackExecutive OfferResendResponseLevelTrack = "executive"
+)
+
+func (r OfferResendResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferResendResponseLevelTrackIc, OfferResendResponseLevelTrackManager, OfferResendResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferResendResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
 	Amount       shared.PublicMoneyAmount                    `json:"amount" api:"required"`
@@ -2610,302 +3486,318 @@ func (r offerResendResponseCompensationStockJSON) RawJSON() string {
 	return r.raw
 }
 
-type Objects6CandidateContractorDetails struct {
-	IsBusiness        bool                                   `json:"isBusiness" api:"required"`
-	LegalBusinessName string                                 `json:"legalBusinessName" api:"required,nullable"`
-	JSON              objects6CandidateContractorDetailsJSON `json:"-"`
+type OfferListResponseDataCandidateContractorDetails struct {
+	IsBusiness        bool                                                `json:"isBusiness" api:"required"`
+	LegalBusinessName string                                              `json:"legalBusinessName" api:"required,nullable"`
+	JSON              offerListResponseDataCandidateContractorDetailsJSON `json:"-"`
 }
 
-// objects6CandidateContractorDetailsJSON contains the JSON metadata for the struct [Objects6CandidateContractorDetails]
-type objects6CandidateContractorDetailsJSON struct {
+// offerListResponseDataCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferListResponseDataCandidateContractorDetails]
+type offerListResponseDataCandidateContractorDetailsJSON struct {
 	IsBusiness        apijson.Field
 	LegalBusinessName apijson.Field
 	raw               string
 	ExtraFields       map[string]apijson.Field
 }
 
-func (r *Objects6CandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferListResponseDataCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r objects6CandidateContractorDetailsJSON) RawJSON() string {
+func (r offerListResponseDataCandidateContractorDetailsJSON) RawJSON() string {
 	return r.raw
 }
 
-type Objects6PositionCountry string
+type OfferListResponseDataPositionCountry string
 
 const (
-	Objects6PositionCountryAd Objects6PositionCountry = "AD"
-	Objects6PositionCountryAe Objects6PositionCountry = "AE"
-	Objects6PositionCountryAf Objects6PositionCountry = "AF"
-	Objects6PositionCountryAg Objects6PositionCountry = "AG"
-	Objects6PositionCountryAI Objects6PositionCountry = "AI"
-	Objects6PositionCountryAl Objects6PositionCountry = "AL"
-	Objects6PositionCountryAm Objects6PositionCountry = "AM"
-	Objects6PositionCountryAo Objects6PositionCountry = "AO"
-	Objects6PositionCountryAq Objects6PositionCountry = "AQ"
-	Objects6PositionCountryAr Objects6PositionCountry = "AR"
-	Objects6PositionCountryAs Objects6PositionCountry = "AS"
-	Objects6PositionCountryAt Objects6PositionCountry = "AT"
-	Objects6PositionCountryAu Objects6PositionCountry = "AU"
-	Objects6PositionCountryAw Objects6PositionCountry = "AW"
-	Objects6PositionCountryAx Objects6PositionCountry = "AX"
-	Objects6PositionCountryAz Objects6PositionCountry = "AZ"
-	Objects6PositionCountryBa Objects6PositionCountry = "BA"
-	Objects6PositionCountryBb Objects6PositionCountry = "BB"
-	Objects6PositionCountryBd Objects6PositionCountry = "BD"
-	Objects6PositionCountryBe Objects6PositionCountry = "BE"
-	Objects6PositionCountryBf Objects6PositionCountry = "BF"
-	Objects6PositionCountryBg Objects6PositionCountry = "BG"
-	Objects6PositionCountryBh Objects6PositionCountry = "BH"
-	Objects6PositionCountryBi Objects6PositionCountry = "BI"
-	Objects6PositionCountryBj Objects6PositionCountry = "BJ"
-	Objects6PositionCountryBl Objects6PositionCountry = "BL"
-	Objects6PositionCountryBm Objects6PositionCountry = "BM"
-	Objects6PositionCountryBn Objects6PositionCountry = "BN"
-	Objects6PositionCountryBo Objects6PositionCountry = "BO"
-	Objects6PositionCountryBq Objects6PositionCountry = "BQ"
-	Objects6PositionCountryBr Objects6PositionCountry = "BR"
-	Objects6PositionCountryBs Objects6PositionCountry = "BS"
-	Objects6PositionCountryBt Objects6PositionCountry = "BT"
-	Objects6PositionCountryBv Objects6PositionCountry = "BV"
-	Objects6PositionCountryBw Objects6PositionCountry = "BW"
-	Objects6PositionCountryBy Objects6PositionCountry = "BY"
-	Objects6PositionCountryBz Objects6PositionCountry = "BZ"
-	Objects6PositionCountryCa Objects6PositionCountry = "CA"
-	Objects6PositionCountryCc Objects6PositionCountry = "CC"
-	Objects6PositionCountryCd Objects6PositionCountry = "CD"
-	Objects6PositionCountryCf Objects6PositionCountry = "CF"
-	Objects6PositionCountryCg Objects6PositionCountry = "CG"
-	Objects6PositionCountryCh Objects6PositionCountry = "CH"
-	Objects6PositionCountryCi Objects6PositionCountry = "CI"
-	Objects6PositionCountryCk Objects6PositionCountry = "CK"
-	Objects6PositionCountryCl Objects6PositionCountry = "CL"
-	Objects6PositionCountryCm Objects6PositionCountry = "CM"
-	Objects6PositionCountryCn Objects6PositionCountry = "CN"
-	Objects6PositionCountryCo Objects6PositionCountry = "CO"
-	Objects6PositionCountryCr Objects6PositionCountry = "CR"
-	Objects6PositionCountryCu Objects6PositionCountry = "CU"
-	Objects6PositionCountryCv Objects6PositionCountry = "CV"
-	Objects6PositionCountryCw Objects6PositionCountry = "CW"
-	Objects6PositionCountryCx Objects6PositionCountry = "CX"
-	Objects6PositionCountryCy Objects6PositionCountry = "CY"
-	Objects6PositionCountryCz Objects6PositionCountry = "CZ"
-	Objects6PositionCountryDe Objects6PositionCountry = "DE"
-	Objects6PositionCountryDj Objects6PositionCountry = "DJ"
-	Objects6PositionCountryDk Objects6PositionCountry = "DK"
-	Objects6PositionCountryDm Objects6PositionCountry = "DM"
-	Objects6PositionCountryDo Objects6PositionCountry = "DO"
-	Objects6PositionCountryDz Objects6PositionCountry = "DZ"
-	Objects6PositionCountryEc Objects6PositionCountry = "EC"
-	Objects6PositionCountryEe Objects6PositionCountry = "EE"
-	Objects6PositionCountryEg Objects6PositionCountry = "EG"
-	Objects6PositionCountryEh Objects6PositionCountry = "EH"
-	Objects6PositionCountryEr Objects6PositionCountry = "ER"
-	Objects6PositionCountryEs Objects6PositionCountry = "ES"
-	Objects6PositionCountryEt Objects6PositionCountry = "ET"
-	Objects6PositionCountryFi Objects6PositionCountry = "FI"
-	Objects6PositionCountryFj Objects6PositionCountry = "FJ"
-	Objects6PositionCountryFk Objects6PositionCountry = "FK"
-	Objects6PositionCountryFm Objects6PositionCountry = "FM"
-	Objects6PositionCountryFo Objects6PositionCountry = "FO"
-	Objects6PositionCountryFr Objects6PositionCountry = "FR"
-	Objects6PositionCountryGa Objects6PositionCountry = "GA"
-	Objects6PositionCountryGB Objects6PositionCountry = "GB"
-	Objects6PositionCountryGd Objects6PositionCountry = "GD"
-	Objects6PositionCountryGe Objects6PositionCountry = "GE"
-	Objects6PositionCountryGf Objects6PositionCountry = "GF"
-	Objects6PositionCountryGg Objects6PositionCountry = "GG"
-	Objects6PositionCountryGh Objects6PositionCountry = "GH"
-	Objects6PositionCountryGi Objects6PositionCountry = "GI"
-	Objects6PositionCountryGl Objects6PositionCountry = "GL"
-	Objects6PositionCountryGm Objects6PositionCountry = "GM"
-	Objects6PositionCountryGn Objects6PositionCountry = "GN"
-	Objects6PositionCountryGp Objects6PositionCountry = "GP"
-	Objects6PositionCountryGq Objects6PositionCountry = "GQ"
-	Objects6PositionCountryGr Objects6PositionCountry = "GR"
-	Objects6PositionCountryGs Objects6PositionCountry = "GS"
-	Objects6PositionCountryGt Objects6PositionCountry = "GT"
-	Objects6PositionCountryGu Objects6PositionCountry = "GU"
-	Objects6PositionCountryGw Objects6PositionCountry = "GW"
-	Objects6PositionCountryGy Objects6PositionCountry = "GY"
-	Objects6PositionCountryHk Objects6PositionCountry = "HK"
-	Objects6PositionCountryHm Objects6PositionCountry = "HM"
-	Objects6PositionCountryHn Objects6PositionCountry = "HN"
-	Objects6PositionCountryHr Objects6PositionCountry = "HR"
-	Objects6PositionCountryHt Objects6PositionCountry = "HT"
-	Objects6PositionCountryHu Objects6PositionCountry = "HU"
-	Objects6PositionCountryID Objects6PositionCountry = "ID"
-	Objects6PositionCountryIe Objects6PositionCountry = "IE"
-	Objects6PositionCountryIl Objects6PositionCountry = "IL"
-	Objects6PositionCountryIm Objects6PositionCountry = "IM"
-	Objects6PositionCountryIn Objects6PositionCountry = "IN"
-	Objects6PositionCountryIo Objects6PositionCountry = "IO"
-	Objects6PositionCountryIq Objects6PositionCountry = "IQ"
-	Objects6PositionCountryIr Objects6PositionCountry = "IR"
-	Objects6PositionCountryIs Objects6PositionCountry = "IS"
-	Objects6PositionCountryIt Objects6PositionCountry = "IT"
-	Objects6PositionCountryJe Objects6PositionCountry = "JE"
-	Objects6PositionCountryJm Objects6PositionCountry = "JM"
-	Objects6PositionCountryJo Objects6PositionCountry = "JO"
-	Objects6PositionCountryJp Objects6PositionCountry = "JP"
-	Objects6PositionCountryKe Objects6PositionCountry = "KE"
-	Objects6PositionCountryKg Objects6PositionCountry = "KG"
-	Objects6PositionCountryKh Objects6PositionCountry = "KH"
-	Objects6PositionCountryKi Objects6PositionCountry = "KI"
-	Objects6PositionCountryKm Objects6PositionCountry = "KM"
-	Objects6PositionCountryKn Objects6PositionCountry = "KN"
-	Objects6PositionCountryKp Objects6PositionCountry = "KP"
-	Objects6PositionCountryKr Objects6PositionCountry = "KR"
-	Objects6PositionCountryKw Objects6PositionCountry = "KW"
-	Objects6PositionCountryKy Objects6PositionCountry = "KY"
-	Objects6PositionCountryKz Objects6PositionCountry = "KZ"
-	Objects6PositionCountryLa Objects6PositionCountry = "LA"
-	Objects6PositionCountryLb Objects6PositionCountry = "LB"
-	Objects6PositionCountryLc Objects6PositionCountry = "LC"
-	Objects6PositionCountryLi Objects6PositionCountry = "LI"
-	Objects6PositionCountryLk Objects6PositionCountry = "LK"
-	Objects6PositionCountryLr Objects6PositionCountry = "LR"
-	Objects6PositionCountryLs Objects6PositionCountry = "LS"
-	Objects6PositionCountryLt Objects6PositionCountry = "LT"
-	Objects6PositionCountryLu Objects6PositionCountry = "LU"
-	Objects6PositionCountryLv Objects6PositionCountry = "LV"
-	Objects6PositionCountryLy Objects6PositionCountry = "LY"
-	Objects6PositionCountryMa Objects6PositionCountry = "MA"
-	Objects6PositionCountryMc Objects6PositionCountry = "MC"
-	Objects6PositionCountryMd Objects6PositionCountry = "MD"
-	Objects6PositionCountryMe Objects6PositionCountry = "ME"
-	Objects6PositionCountryMf Objects6PositionCountry = "MF"
-	Objects6PositionCountryMg Objects6PositionCountry = "MG"
-	Objects6PositionCountryMh Objects6PositionCountry = "MH"
-	Objects6PositionCountryMk Objects6PositionCountry = "MK"
-	Objects6PositionCountryMl Objects6PositionCountry = "ML"
-	Objects6PositionCountryMm Objects6PositionCountry = "MM"
-	Objects6PositionCountryMn Objects6PositionCountry = "MN"
-	Objects6PositionCountryMo Objects6PositionCountry = "MO"
-	Objects6PositionCountryMp Objects6PositionCountry = "MP"
-	Objects6PositionCountryMq Objects6PositionCountry = "MQ"
-	Objects6PositionCountryMr Objects6PositionCountry = "MR"
-	Objects6PositionCountryMs Objects6PositionCountry = "MS"
-	Objects6PositionCountryMt Objects6PositionCountry = "MT"
-	Objects6PositionCountryMu Objects6PositionCountry = "MU"
-	Objects6PositionCountryMv Objects6PositionCountry = "MV"
-	Objects6PositionCountryMw Objects6PositionCountry = "MW"
-	Objects6PositionCountryMx Objects6PositionCountry = "MX"
-	Objects6PositionCountryMy Objects6PositionCountry = "MY"
-	Objects6PositionCountryMz Objects6PositionCountry = "MZ"
-	Objects6PositionCountryNa Objects6PositionCountry = "NA"
-	Objects6PositionCountryNc Objects6PositionCountry = "NC"
-	Objects6PositionCountryNe Objects6PositionCountry = "NE"
-	Objects6PositionCountryNf Objects6PositionCountry = "NF"
-	Objects6PositionCountryNg Objects6PositionCountry = "NG"
-	Objects6PositionCountryNi Objects6PositionCountry = "NI"
-	Objects6PositionCountryNl Objects6PositionCountry = "NL"
-	Objects6PositionCountryNo Objects6PositionCountry = "NO"
-	Objects6PositionCountryNp Objects6PositionCountry = "NP"
-	Objects6PositionCountryNr Objects6PositionCountry = "NR"
-	Objects6PositionCountryNu Objects6PositionCountry = "NU"
-	Objects6PositionCountryNz Objects6PositionCountry = "NZ"
-	Objects6PositionCountryOm Objects6PositionCountry = "OM"
-	Objects6PositionCountryPa Objects6PositionCountry = "PA"
-	Objects6PositionCountryPe Objects6PositionCountry = "PE"
-	Objects6PositionCountryPf Objects6PositionCountry = "PF"
-	Objects6PositionCountryPg Objects6PositionCountry = "PG"
-	Objects6PositionCountryPh Objects6PositionCountry = "PH"
-	Objects6PositionCountryPk Objects6PositionCountry = "PK"
-	Objects6PositionCountryPl Objects6PositionCountry = "PL"
-	Objects6PositionCountryPm Objects6PositionCountry = "PM"
-	Objects6PositionCountryPn Objects6PositionCountry = "PN"
-	Objects6PositionCountryPr Objects6PositionCountry = "PR"
-	Objects6PositionCountryPs Objects6PositionCountry = "PS"
-	Objects6PositionCountryPt Objects6PositionCountry = "PT"
-	Objects6PositionCountryPw Objects6PositionCountry = "PW"
-	Objects6PositionCountryPy Objects6PositionCountry = "PY"
-	Objects6PositionCountryQa Objects6PositionCountry = "QA"
-	Objects6PositionCountryRe Objects6PositionCountry = "RE"
-	Objects6PositionCountryRo Objects6PositionCountry = "RO"
-	Objects6PositionCountryRs Objects6PositionCountry = "RS"
-	Objects6PositionCountryRu Objects6PositionCountry = "RU"
-	Objects6PositionCountryRw Objects6PositionCountry = "RW"
-	Objects6PositionCountrySa Objects6PositionCountry = "SA"
-	Objects6PositionCountrySb Objects6PositionCountry = "SB"
-	Objects6PositionCountrySc Objects6PositionCountry = "SC"
-	Objects6PositionCountrySd Objects6PositionCountry = "SD"
-	Objects6PositionCountrySe Objects6PositionCountry = "SE"
-	Objects6PositionCountrySg Objects6PositionCountry = "SG"
-	Objects6PositionCountrySh Objects6PositionCountry = "SH"
-	Objects6PositionCountrySi Objects6PositionCountry = "SI"
-	Objects6PositionCountrySj Objects6PositionCountry = "SJ"
-	Objects6PositionCountrySk Objects6PositionCountry = "SK"
-	Objects6PositionCountrySl Objects6PositionCountry = "SL"
-	Objects6PositionCountrySm Objects6PositionCountry = "SM"
-	Objects6PositionCountrySn Objects6PositionCountry = "SN"
-	Objects6PositionCountrySo Objects6PositionCountry = "SO"
-	Objects6PositionCountrySr Objects6PositionCountry = "SR"
-	Objects6PositionCountrySS Objects6PositionCountry = "SS"
-	Objects6PositionCountrySt Objects6PositionCountry = "ST"
-	Objects6PositionCountrySv Objects6PositionCountry = "SV"
-	Objects6PositionCountrySx Objects6PositionCountry = "SX"
-	Objects6PositionCountrySy Objects6PositionCountry = "SY"
-	Objects6PositionCountrySz Objects6PositionCountry = "SZ"
-	Objects6PositionCountryTc Objects6PositionCountry = "TC"
-	Objects6PositionCountryTd Objects6PositionCountry = "TD"
-	Objects6PositionCountryTf Objects6PositionCountry = "TF"
-	Objects6PositionCountryTg Objects6PositionCountry = "TG"
-	Objects6PositionCountryTh Objects6PositionCountry = "TH"
-	Objects6PositionCountryTj Objects6PositionCountry = "TJ"
-	Objects6PositionCountryTk Objects6PositionCountry = "TK"
-	Objects6PositionCountryTl Objects6PositionCountry = "TL"
-	Objects6PositionCountryTm Objects6PositionCountry = "TM"
-	Objects6PositionCountryTn Objects6PositionCountry = "TN"
-	Objects6PositionCountryTo Objects6PositionCountry = "TO"
-	Objects6PositionCountryTr Objects6PositionCountry = "TR"
-	Objects6PositionCountryTt Objects6PositionCountry = "TT"
-	Objects6PositionCountryTv Objects6PositionCountry = "TV"
-	Objects6PositionCountryTw Objects6PositionCountry = "TW"
-	Objects6PositionCountryTz Objects6PositionCountry = "TZ"
-	Objects6PositionCountryUa Objects6PositionCountry = "UA"
-	Objects6PositionCountryUg Objects6PositionCountry = "UG"
-	Objects6PositionCountryUm Objects6PositionCountry = "UM"
-	Objects6PositionCountryUs Objects6PositionCountry = "US"
-	Objects6PositionCountryUy Objects6PositionCountry = "UY"
-	Objects6PositionCountryUz Objects6PositionCountry = "UZ"
-	Objects6PositionCountryVa Objects6PositionCountry = "VA"
-	Objects6PositionCountryVc Objects6PositionCountry = "VC"
-	Objects6PositionCountryVe Objects6PositionCountry = "VE"
-	Objects6PositionCountryVg Objects6PositionCountry = "VG"
-	Objects6PositionCountryVi Objects6PositionCountry = "VI"
-	Objects6PositionCountryVn Objects6PositionCountry = "VN"
-	Objects6PositionCountryVu Objects6PositionCountry = "VU"
-	Objects6PositionCountryWf Objects6PositionCountry = "WF"
-	Objects6PositionCountryWs Objects6PositionCountry = "WS"
-	Objects6PositionCountryXk Objects6PositionCountry = "XK"
-	Objects6PositionCountryYe Objects6PositionCountry = "YE"
-	Objects6PositionCountryYt Objects6PositionCountry = "YT"
-	Objects6PositionCountryZa Objects6PositionCountry = "ZA"
-	Objects6PositionCountryZm Objects6PositionCountry = "ZM"
-	Objects6PositionCountryZw Objects6PositionCountry = "ZW"
+	OfferListResponseDataPositionCountryAd OfferListResponseDataPositionCountry = "AD"
+	OfferListResponseDataPositionCountryAe OfferListResponseDataPositionCountry = "AE"
+	OfferListResponseDataPositionCountryAf OfferListResponseDataPositionCountry = "AF"
+	OfferListResponseDataPositionCountryAg OfferListResponseDataPositionCountry = "AG"
+	OfferListResponseDataPositionCountryAI OfferListResponseDataPositionCountry = "AI"
+	OfferListResponseDataPositionCountryAl OfferListResponseDataPositionCountry = "AL"
+	OfferListResponseDataPositionCountryAm OfferListResponseDataPositionCountry = "AM"
+	OfferListResponseDataPositionCountryAo OfferListResponseDataPositionCountry = "AO"
+	OfferListResponseDataPositionCountryAq OfferListResponseDataPositionCountry = "AQ"
+	OfferListResponseDataPositionCountryAr OfferListResponseDataPositionCountry = "AR"
+	OfferListResponseDataPositionCountryAs OfferListResponseDataPositionCountry = "AS"
+	OfferListResponseDataPositionCountryAt OfferListResponseDataPositionCountry = "AT"
+	OfferListResponseDataPositionCountryAu OfferListResponseDataPositionCountry = "AU"
+	OfferListResponseDataPositionCountryAw OfferListResponseDataPositionCountry = "AW"
+	OfferListResponseDataPositionCountryAx OfferListResponseDataPositionCountry = "AX"
+	OfferListResponseDataPositionCountryAz OfferListResponseDataPositionCountry = "AZ"
+	OfferListResponseDataPositionCountryBa OfferListResponseDataPositionCountry = "BA"
+	OfferListResponseDataPositionCountryBb OfferListResponseDataPositionCountry = "BB"
+	OfferListResponseDataPositionCountryBd OfferListResponseDataPositionCountry = "BD"
+	OfferListResponseDataPositionCountryBe OfferListResponseDataPositionCountry = "BE"
+	OfferListResponseDataPositionCountryBf OfferListResponseDataPositionCountry = "BF"
+	OfferListResponseDataPositionCountryBg OfferListResponseDataPositionCountry = "BG"
+	OfferListResponseDataPositionCountryBh OfferListResponseDataPositionCountry = "BH"
+	OfferListResponseDataPositionCountryBi OfferListResponseDataPositionCountry = "BI"
+	OfferListResponseDataPositionCountryBj OfferListResponseDataPositionCountry = "BJ"
+	OfferListResponseDataPositionCountryBl OfferListResponseDataPositionCountry = "BL"
+	OfferListResponseDataPositionCountryBm OfferListResponseDataPositionCountry = "BM"
+	OfferListResponseDataPositionCountryBn OfferListResponseDataPositionCountry = "BN"
+	OfferListResponseDataPositionCountryBo OfferListResponseDataPositionCountry = "BO"
+	OfferListResponseDataPositionCountryBq OfferListResponseDataPositionCountry = "BQ"
+	OfferListResponseDataPositionCountryBr OfferListResponseDataPositionCountry = "BR"
+	OfferListResponseDataPositionCountryBs OfferListResponseDataPositionCountry = "BS"
+	OfferListResponseDataPositionCountryBt OfferListResponseDataPositionCountry = "BT"
+	OfferListResponseDataPositionCountryBv OfferListResponseDataPositionCountry = "BV"
+	OfferListResponseDataPositionCountryBw OfferListResponseDataPositionCountry = "BW"
+	OfferListResponseDataPositionCountryBy OfferListResponseDataPositionCountry = "BY"
+	OfferListResponseDataPositionCountryBz OfferListResponseDataPositionCountry = "BZ"
+	OfferListResponseDataPositionCountryCa OfferListResponseDataPositionCountry = "CA"
+	OfferListResponseDataPositionCountryCc OfferListResponseDataPositionCountry = "CC"
+	OfferListResponseDataPositionCountryCd OfferListResponseDataPositionCountry = "CD"
+	OfferListResponseDataPositionCountryCf OfferListResponseDataPositionCountry = "CF"
+	OfferListResponseDataPositionCountryCg OfferListResponseDataPositionCountry = "CG"
+	OfferListResponseDataPositionCountryCh OfferListResponseDataPositionCountry = "CH"
+	OfferListResponseDataPositionCountryCi OfferListResponseDataPositionCountry = "CI"
+	OfferListResponseDataPositionCountryCk OfferListResponseDataPositionCountry = "CK"
+	OfferListResponseDataPositionCountryCl OfferListResponseDataPositionCountry = "CL"
+	OfferListResponseDataPositionCountryCm OfferListResponseDataPositionCountry = "CM"
+	OfferListResponseDataPositionCountryCn OfferListResponseDataPositionCountry = "CN"
+	OfferListResponseDataPositionCountryCo OfferListResponseDataPositionCountry = "CO"
+	OfferListResponseDataPositionCountryCr OfferListResponseDataPositionCountry = "CR"
+	OfferListResponseDataPositionCountryCu OfferListResponseDataPositionCountry = "CU"
+	OfferListResponseDataPositionCountryCv OfferListResponseDataPositionCountry = "CV"
+	OfferListResponseDataPositionCountryCw OfferListResponseDataPositionCountry = "CW"
+	OfferListResponseDataPositionCountryCx OfferListResponseDataPositionCountry = "CX"
+	OfferListResponseDataPositionCountryCy OfferListResponseDataPositionCountry = "CY"
+	OfferListResponseDataPositionCountryCz OfferListResponseDataPositionCountry = "CZ"
+	OfferListResponseDataPositionCountryDe OfferListResponseDataPositionCountry = "DE"
+	OfferListResponseDataPositionCountryDj OfferListResponseDataPositionCountry = "DJ"
+	OfferListResponseDataPositionCountryDk OfferListResponseDataPositionCountry = "DK"
+	OfferListResponseDataPositionCountryDm OfferListResponseDataPositionCountry = "DM"
+	OfferListResponseDataPositionCountryDo OfferListResponseDataPositionCountry = "DO"
+	OfferListResponseDataPositionCountryDz OfferListResponseDataPositionCountry = "DZ"
+	OfferListResponseDataPositionCountryEc OfferListResponseDataPositionCountry = "EC"
+	OfferListResponseDataPositionCountryEe OfferListResponseDataPositionCountry = "EE"
+	OfferListResponseDataPositionCountryEg OfferListResponseDataPositionCountry = "EG"
+	OfferListResponseDataPositionCountryEh OfferListResponseDataPositionCountry = "EH"
+	OfferListResponseDataPositionCountryEr OfferListResponseDataPositionCountry = "ER"
+	OfferListResponseDataPositionCountryEs OfferListResponseDataPositionCountry = "ES"
+	OfferListResponseDataPositionCountryEt OfferListResponseDataPositionCountry = "ET"
+	OfferListResponseDataPositionCountryFi OfferListResponseDataPositionCountry = "FI"
+	OfferListResponseDataPositionCountryFj OfferListResponseDataPositionCountry = "FJ"
+	OfferListResponseDataPositionCountryFk OfferListResponseDataPositionCountry = "FK"
+	OfferListResponseDataPositionCountryFm OfferListResponseDataPositionCountry = "FM"
+	OfferListResponseDataPositionCountryFo OfferListResponseDataPositionCountry = "FO"
+	OfferListResponseDataPositionCountryFr OfferListResponseDataPositionCountry = "FR"
+	OfferListResponseDataPositionCountryGa OfferListResponseDataPositionCountry = "GA"
+	OfferListResponseDataPositionCountryGB OfferListResponseDataPositionCountry = "GB"
+	OfferListResponseDataPositionCountryGd OfferListResponseDataPositionCountry = "GD"
+	OfferListResponseDataPositionCountryGe OfferListResponseDataPositionCountry = "GE"
+	OfferListResponseDataPositionCountryGf OfferListResponseDataPositionCountry = "GF"
+	OfferListResponseDataPositionCountryGg OfferListResponseDataPositionCountry = "GG"
+	OfferListResponseDataPositionCountryGh OfferListResponseDataPositionCountry = "GH"
+	OfferListResponseDataPositionCountryGi OfferListResponseDataPositionCountry = "GI"
+	OfferListResponseDataPositionCountryGl OfferListResponseDataPositionCountry = "GL"
+	OfferListResponseDataPositionCountryGm OfferListResponseDataPositionCountry = "GM"
+	OfferListResponseDataPositionCountryGn OfferListResponseDataPositionCountry = "GN"
+	OfferListResponseDataPositionCountryGp OfferListResponseDataPositionCountry = "GP"
+	OfferListResponseDataPositionCountryGq OfferListResponseDataPositionCountry = "GQ"
+	OfferListResponseDataPositionCountryGr OfferListResponseDataPositionCountry = "GR"
+	OfferListResponseDataPositionCountryGs OfferListResponseDataPositionCountry = "GS"
+	OfferListResponseDataPositionCountryGt OfferListResponseDataPositionCountry = "GT"
+	OfferListResponseDataPositionCountryGu OfferListResponseDataPositionCountry = "GU"
+	OfferListResponseDataPositionCountryGw OfferListResponseDataPositionCountry = "GW"
+	OfferListResponseDataPositionCountryGy OfferListResponseDataPositionCountry = "GY"
+	OfferListResponseDataPositionCountryHk OfferListResponseDataPositionCountry = "HK"
+	OfferListResponseDataPositionCountryHm OfferListResponseDataPositionCountry = "HM"
+	OfferListResponseDataPositionCountryHn OfferListResponseDataPositionCountry = "HN"
+	OfferListResponseDataPositionCountryHr OfferListResponseDataPositionCountry = "HR"
+	OfferListResponseDataPositionCountryHt OfferListResponseDataPositionCountry = "HT"
+	OfferListResponseDataPositionCountryHu OfferListResponseDataPositionCountry = "HU"
+	OfferListResponseDataPositionCountryID OfferListResponseDataPositionCountry = "ID"
+	OfferListResponseDataPositionCountryIe OfferListResponseDataPositionCountry = "IE"
+	OfferListResponseDataPositionCountryIl OfferListResponseDataPositionCountry = "IL"
+	OfferListResponseDataPositionCountryIm OfferListResponseDataPositionCountry = "IM"
+	OfferListResponseDataPositionCountryIn OfferListResponseDataPositionCountry = "IN"
+	OfferListResponseDataPositionCountryIo OfferListResponseDataPositionCountry = "IO"
+	OfferListResponseDataPositionCountryIq OfferListResponseDataPositionCountry = "IQ"
+	OfferListResponseDataPositionCountryIr OfferListResponseDataPositionCountry = "IR"
+	OfferListResponseDataPositionCountryIs OfferListResponseDataPositionCountry = "IS"
+	OfferListResponseDataPositionCountryIt OfferListResponseDataPositionCountry = "IT"
+	OfferListResponseDataPositionCountryJe OfferListResponseDataPositionCountry = "JE"
+	OfferListResponseDataPositionCountryJm OfferListResponseDataPositionCountry = "JM"
+	OfferListResponseDataPositionCountryJo OfferListResponseDataPositionCountry = "JO"
+	OfferListResponseDataPositionCountryJp OfferListResponseDataPositionCountry = "JP"
+	OfferListResponseDataPositionCountryKe OfferListResponseDataPositionCountry = "KE"
+	OfferListResponseDataPositionCountryKg OfferListResponseDataPositionCountry = "KG"
+	OfferListResponseDataPositionCountryKh OfferListResponseDataPositionCountry = "KH"
+	OfferListResponseDataPositionCountryKi OfferListResponseDataPositionCountry = "KI"
+	OfferListResponseDataPositionCountryKm OfferListResponseDataPositionCountry = "KM"
+	OfferListResponseDataPositionCountryKn OfferListResponseDataPositionCountry = "KN"
+	OfferListResponseDataPositionCountryKp OfferListResponseDataPositionCountry = "KP"
+	OfferListResponseDataPositionCountryKr OfferListResponseDataPositionCountry = "KR"
+	OfferListResponseDataPositionCountryKw OfferListResponseDataPositionCountry = "KW"
+	OfferListResponseDataPositionCountryKy OfferListResponseDataPositionCountry = "KY"
+	OfferListResponseDataPositionCountryKz OfferListResponseDataPositionCountry = "KZ"
+	OfferListResponseDataPositionCountryLa OfferListResponseDataPositionCountry = "LA"
+	OfferListResponseDataPositionCountryLb OfferListResponseDataPositionCountry = "LB"
+	OfferListResponseDataPositionCountryLc OfferListResponseDataPositionCountry = "LC"
+	OfferListResponseDataPositionCountryLi OfferListResponseDataPositionCountry = "LI"
+	OfferListResponseDataPositionCountryLk OfferListResponseDataPositionCountry = "LK"
+	OfferListResponseDataPositionCountryLr OfferListResponseDataPositionCountry = "LR"
+	OfferListResponseDataPositionCountryLs OfferListResponseDataPositionCountry = "LS"
+	OfferListResponseDataPositionCountryLt OfferListResponseDataPositionCountry = "LT"
+	OfferListResponseDataPositionCountryLu OfferListResponseDataPositionCountry = "LU"
+	OfferListResponseDataPositionCountryLv OfferListResponseDataPositionCountry = "LV"
+	OfferListResponseDataPositionCountryLy OfferListResponseDataPositionCountry = "LY"
+	OfferListResponseDataPositionCountryMa OfferListResponseDataPositionCountry = "MA"
+	OfferListResponseDataPositionCountryMc OfferListResponseDataPositionCountry = "MC"
+	OfferListResponseDataPositionCountryMd OfferListResponseDataPositionCountry = "MD"
+	OfferListResponseDataPositionCountryMe OfferListResponseDataPositionCountry = "ME"
+	OfferListResponseDataPositionCountryMf OfferListResponseDataPositionCountry = "MF"
+	OfferListResponseDataPositionCountryMg OfferListResponseDataPositionCountry = "MG"
+	OfferListResponseDataPositionCountryMh OfferListResponseDataPositionCountry = "MH"
+	OfferListResponseDataPositionCountryMk OfferListResponseDataPositionCountry = "MK"
+	OfferListResponseDataPositionCountryMl OfferListResponseDataPositionCountry = "ML"
+	OfferListResponseDataPositionCountryMm OfferListResponseDataPositionCountry = "MM"
+	OfferListResponseDataPositionCountryMn OfferListResponseDataPositionCountry = "MN"
+	OfferListResponseDataPositionCountryMo OfferListResponseDataPositionCountry = "MO"
+	OfferListResponseDataPositionCountryMp OfferListResponseDataPositionCountry = "MP"
+	OfferListResponseDataPositionCountryMq OfferListResponseDataPositionCountry = "MQ"
+	OfferListResponseDataPositionCountryMr OfferListResponseDataPositionCountry = "MR"
+	OfferListResponseDataPositionCountryMs OfferListResponseDataPositionCountry = "MS"
+	OfferListResponseDataPositionCountryMt OfferListResponseDataPositionCountry = "MT"
+	OfferListResponseDataPositionCountryMu OfferListResponseDataPositionCountry = "MU"
+	OfferListResponseDataPositionCountryMv OfferListResponseDataPositionCountry = "MV"
+	OfferListResponseDataPositionCountryMw OfferListResponseDataPositionCountry = "MW"
+	OfferListResponseDataPositionCountryMx OfferListResponseDataPositionCountry = "MX"
+	OfferListResponseDataPositionCountryMy OfferListResponseDataPositionCountry = "MY"
+	OfferListResponseDataPositionCountryMz OfferListResponseDataPositionCountry = "MZ"
+	OfferListResponseDataPositionCountryNa OfferListResponseDataPositionCountry = "NA"
+	OfferListResponseDataPositionCountryNc OfferListResponseDataPositionCountry = "NC"
+	OfferListResponseDataPositionCountryNe OfferListResponseDataPositionCountry = "NE"
+	OfferListResponseDataPositionCountryNf OfferListResponseDataPositionCountry = "NF"
+	OfferListResponseDataPositionCountryNg OfferListResponseDataPositionCountry = "NG"
+	OfferListResponseDataPositionCountryNi OfferListResponseDataPositionCountry = "NI"
+	OfferListResponseDataPositionCountryNl OfferListResponseDataPositionCountry = "NL"
+	OfferListResponseDataPositionCountryNo OfferListResponseDataPositionCountry = "NO"
+	OfferListResponseDataPositionCountryNp OfferListResponseDataPositionCountry = "NP"
+	OfferListResponseDataPositionCountryNr OfferListResponseDataPositionCountry = "NR"
+	OfferListResponseDataPositionCountryNu OfferListResponseDataPositionCountry = "NU"
+	OfferListResponseDataPositionCountryNz OfferListResponseDataPositionCountry = "NZ"
+	OfferListResponseDataPositionCountryOm OfferListResponseDataPositionCountry = "OM"
+	OfferListResponseDataPositionCountryPa OfferListResponseDataPositionCountry = "PA"
+	OfferListResponseDataPositionCountryPe OfferListResponseDataPositionCountry = "PE"
+	OfferListResponseDataPositionCountryPf OfferListResponseDataPositionCountry = "PF"
+	OfferListResponseDataPositionCountryPg OfferListResponseDataPositionCountry = "PG"
+	OfferListResponseDataPositionCountryPh OfferListResponseDataPositionCountry = "PH"
+	OfferListResponseDataPositionCountryPk OfferListResponseDataPositionCountry = "PK"
+	OfferListResponseDataPositionCountryPl OfferListResponseDataPositionCountry = "PL"
+	OfferListResponseDataPositionCountryPm OfferListResponseDataPositionCountry = "PM"
+	OfferListResponseDataPositionCountryPn OfferListResponseDataPositionCountry = "PN"
+	OfferListResponseDataPositionCountryPr OfferListResponseDataPositionCountry = "PR"
+	OfferListResponseDataPositionCountryPs OfferListResponseDataPositionCountry = "PS"
+	OfferListResponseDataPositionCountryPt OfferListResponseDataPositionCountry = "PT"
+	OfferListResponseDataPositionCountryPw OfferListResponseDataPositionCountry = "PW"
+	OfferListResponseDataPositionCountryPy OfferListResponseDataPositionCountry = "PY"
+	OfferListResponseDataPositionCountryQa OfferListResponseDataPositionCountry = "QA"
+	OfferListResponseDataPositionCountryRe OfferListResponseDataPositionCountry = "RE"
+	OfferListResponseDataPositionCountryRo OfferListResponseDataPositionCountry = "RO"
+	OfferListResponseDataPositionCountryRs OfferListResponseDataPositionCountry = "RS"
+	OfferListResponseDataPositionCountryRu OfferListResponseDataPositionCountry = "RU"
+	OfferListResponseDataPositionCountryRw OfferListResponseDataPositionCountry = "RW"
+	OfferListResponseDataPositionCountrySa OfferListResponseDataPositionCountry = "SA"
+	OfferListResponseDataPositionCountrySb OfferListResponseDataPositionCountry = "SB"
+	OfferListResponseDataPositionCountrySc OfferListResponseDataPositionCountry = "SC"
+	OfferListResponseDataPositionCountrySd OfferListResponseDataPositionCountry = "SD"
+	OfferListResponseDataPositionCountrySe OfferListResponseDataPositionCountry = "SE"
+	OfferListResponseDataPositionCountrySg OfferListResponseDataPositionCountry = "SG"
+	OfferListResponseDataPositionCountrySh OfferListResponseDataPositionCountry = "SH"
+	OfferListResponseDataPositionCountrySi OfferListResponseDataPositionCountry = "SI"
+	OfferListResponseDataPositionCountrySj OfferListResponseDataPositionCountry = "SJ"
+	OfferListResponseDataPositionCountrySk OfferListResponseDataPositionCountry = "SK"
+	OfferListResponseDataPositionCountrySl OfferListResponseDataPositionCountry = "SL"
+	OfferListResponseDataPositionCountrySm OfferListResponseDataPositionCountry = "SM"
+	OfferListResponseDataPositionCountrySn OfferListResponseDataPositionCountry = "SN"
+	OfferListResponseDataPositionCountrySo OfferListResponseDataPositionCountry = "SO"
+	OfferListResponseDataPositionCountrySr OfferListResponseDataPositionCountry = "SR"
+	OfferListResponseDataPositionCountrySS OfferListResponseDataPositionCountry = "SS"
+	OfferListResponseDataPositionCountrySt OfferListResponseDataPositionCountry = "ST"
+	OfferListResponseDataPositionCountrySv OfferListResponseDataPositionCountry = "SV"
+	OfferListResponseDataPositionCountrySx OfferListResponseDataPositionCountry = "SX"
+	OfferListResponseDataPositionCountrySy OfferListResponseDataPositionCountry = "SY"
+	OfferListResponseDataPositionCountrySz OfferListResponseDataPositionCountry = "SZ"
+	OfferListResponseDataPositionCountryTc OfferListResponseDataPositionCountry = "TC"
+	OfferListResponseDataPositionCountryTd OfferListResponseDataPositionCountry = "TD"
+	OfferListResponseDataPositionCountryTf OfferListResponseDataPositionCountry = "TF"
+	OfferListResponseDataPositionCountryTg OfferListResponseDataPositionCountry = "TG"
+	OfferListResponseDataPositionCountryTh OfferListResponseDataPositionCountry = "TH"
+	OfferListResponseDataPositionCountryTj OfferListResponseDataPositionCountry = "TJ"
+	OfferListResponseDataPositionCountryTk OfferListResponseDataPositionCountry = "TK"
+	OfferListResponseDataPositionCountryTl OfferListResponseDataPositionCountry = "TL"
+	OfferListResponseDataPositionCountryTm OfferListResponseDataPositionCountry = "TM"
+	OfferListResponseDataPositionCountryTn OfferListResponseDataPositionCountry = "TN"
+	OfferListResponseDataPositionCountryTo OfferListResponseDataPositionCountry = "TO"
+	OfferListResponseDataPositionCountryTr OfferListResponseDataPositionCountry = "TR"
+	OfferListResponseDataPositionCountryTt OfferListResponseDataPositionCountry = "TT"
+	OfferListResponseDataPositionCountryTv OfferListResponseDataPositionCountry = "TV"
+	OfferListResponseDataPositionCountryTw OfferListResponseDataPositionCountry = "TW"
+	OfferListResponseDataPositionCountryTz OfferListResponseDataPositionCountry = "TZ"
+	OfferListResponseDataPositionCountryUa OfferListResponseDataPositionCountry = "UA"
+	OfferListResponseDataPositionCountryUg OfferListResponseDataPositionCountry = "UG"
+	OfferListResponseDataPositionCountryUm OfferListResponseDataPositionCountry = "UM"
+	OfferListResponseDataPositionCountryUs OfferListResponseDataPositionCountry = "US"
+	OfferListResponseDataPositionCountryUy OfferListResponseDataPositionCountry = "UY"
+	OfferListResponseDataPositionCountryUz OfferListResponseDataPositionCountry = "UZ"
+	OfferListResponseDataPositionCountryVa OfferListResponseDataPositionCountry = "VA"
+	OfferListResponseDataPositionCountryVc OfferListResponseDataPositionCountry = "VC"
+	OfferListResponseDataPositionCountryVe OfferListResponseDataPositionCountry = "VE"
+	OfferListResponseDataPositionCountryVg OfferListResponseDataPositionCountry = "VG"
+	OfferListResponseDataPositionCountryVi OfferListResponseDataPositionCountry = "VI"
+	OfferListResponseDataPositionCountryVn OfferListResponseDataPositionCountry = "VN"
+	OfferListResponseDataPositionCountryVu OfferListResponseDataPositionCountry = "VU"
+	OfferListResponseDataPositionCountryWf OfferListResponseDataPositionCountry = "WF"
+	OfferListResponseDataPositionCountryWs OfferListResponseDataPositionCountry = "WS"
+	OfferListResponseDataPositionCountryXk OfferListResponseDataPositionCountry = "XK"
+	OfferListResponseDataPositionCountryYe OfferListResponseDataPositionCountry = "YE"
+	OfferListResponseDataPositionCountryYt OfferListResponseDataPositionCountry = "YT"
+	OfferListResponseDataPositionCountryZa OfferListResponseDataPositionCountry = "ZA"
+	OfferListResponseDataPositionCountryZm OfferListResponseDataPositionCountry = "ZM"
+	OfferListResponseDataPositionCountryZw OfferListResponseDataPositionCountry = "ZW"
 )
 
-func (r Objects6PositionCountry) IsKnown() bool {
+func (r OfferListResponseDataPositionCountry) IsKnown() bool {
 	switch r {
-	case Objects6PositionCountryAd, Objects6PositionCountryAe, Objects6PositionCountryAf, Objects6PositionCountryAg, Objects6PositionCountryAI, Objects6PositionCountryAl, Objects6PositionCountryAm, Objects6PositionCountryAo, Objects6PositionCountryAq, Objects6PositionCountryAr, Objects6PositionCountryAs, Objects6PositionCountryAt, Objects6PositionCountryAu, Objects6PositionCountryAw, Objects6PositionCountryAx, Objects6PositionCountryAz, Objects6PositionCountryBa, Objects6PositionCountryBb, Objects6PositionCountryBd, Objects6PositionCountryBe, Objects6PositionCountryBf, Objects6PositionCountryBg, Objects6PositionCountryBh, Objects6PositionCountryBi, Objects6PositionCountryBj, Objects6PositionCountryBl, Objects6PositionCountryBm, Objects6PositionCountryBn, Objects6PositionCountryBo, Objects6PositionCountryBq, Objects6PositionCountryBr, Objects6PositionCountryBs, Objects6PositionCountryBt, Objects6PositionCountryBv, Objects6PositionCountryBw, Objects6PositionCountryBy, Objects6PositionCountryBz, Objects6PositionCountryCa, Objects6PositionCountryCc, Objects6PositionCountryCd, Objects6PositionCountryCf, Objects6PositionCountryCg, Objects6PositionCountryCh, Objects6PositionCountryCi, Objects6PositionCountryCk, Objects6PositionCountryCl, Objects6PositionCountryCm, Objects6PositionCountryCn, Objects6PositionCountryCo, Objects6PositionCountryCr, Objects6PositionCountryCu, Objects6PositionCountryCv, Objects6PositionCountryCw, Objects6PositionCountryCx, Objects6PositionCountryCy, Objects6PositionCountryCz, Objects6PositionCountryDe, Objects6PositionCountryDj, Objects6PositionCountryDk, Objects6PositionCountryDm, Objects6PositionCountryDo, Objects6PositionCountryDz, Objects6PositionCountryEc, Objects6PositionCountryEe, Objects6PositionCountryEg, Objects6PositionCountryEh, Objects6PositionCountryEr, Objects6PositionCountryEs, Objects6PositionCountryEt, Objects6PositionCountryFi, Objects6PositionCountryFj, Objects6PositionCountryFk, Objects6PositionCountryFm, Objects6PositionCountryFo, Objects6PositionCountryFr, Objects6PositionCountryGa, Objects6PositionCountryGB, Objects6PositionCountryGd, Objects6PositionCountryGe, Objects6PositionCountryGf, Objects6PositionCountryGg, Objects6PositionCountryGh, Objects6PositionCountryGi, Objects6PositionCountryGl, Objects6PositionCountryGm, Objects6PositionCountryGn, Objects6PositionCountryGp, Objects6PositionCountryGq, Objects6PositionCountryGr, Objects6PositionCountryGs, Objects6PositionCountryGt, Objects6PositionCountryGu, Objects6PositionCountryGw, Objects6PositionCountryGy, Objects6PositionCountryHk, Objects6PositionCountryHm, Objects6PositionCountryHn, Objects6PositionCountryHr, Objects6PositionCountryHt, Objects6PositionCountryHu, Objects6PositionCountryID, Objects6PositionCountryIe, Objects6PositionCountryIl, Objects6PositionCountryIm, Objects6PositionCountryIn, Objects6PositionCountryIo, Objects6PositionCountryIq, Objects6PositionCountryIr, Objects6PositionCountryIs, Objects6PositionCountryIt, Objects6PositionCountryJe, Objects6PositionCountryJm, Objects6PositionCountryJo, Objects6PositionCountryJp, Objects6PositionCountryKe, Objects6PositionCountryKg, Objects6PositionCountryKh, Objects6PositionCountryKi, Objects6PositionCountryKm, Objects6PositionCountryKn, Objects6PositionCountryKp, Objects6PositionCountryKr, Objects6PositionCountryKw, Objects6PositionCountryKy, Objects6PositionCountryKz, Objects6PositionCountryLa, Objects6PositionCountryLb, Objects6PositionCountryLc, Objects6PositionCountryLi, Objects6PositionCountryLk, Objects6PositionCountryLr, Objects6PositionCountryLs, Objects6PositionCountryLt, Objects6PositionCountryLu, Objects6PositionCountryLv, Objects6PositionCountryLy, Objects6PositionCountryMa, Objects6PositionCountryMc, Objects6PositionCountryMd, Objects6PositionCountryMe, Objects6PositionCountryMf, Objects6PositionCountryMg, Objects6PositionCountryMh, Objects6PositionCountryMk, Objects6PositionCountryMl, Objects6PositionCountryMm, Objects6PositionCountryMn, Objects6PositionCountryMo, Objects6PositionCountryMp, Objects6PositionCountryMq, Objects6PositionCountryMr, Objects6PositionCountryMs, Objects6PositionCountryMt, Objects6PositionCountryMu, Objects6PositionCountryMv, Objects6PositionCountryMw, Objects6PositionCountryMx, Objects6PositionCountryMy, Objects6PositionCountryMz, Objects6PositionCountryNa, Objects6PositionCountryNc, Objects6PositionCountryNe, Objects6PositionCountryNf, Objects6PositionCountryNg, Objects6PositionCountryNi, Objects6PositionCountryNl, Objects6PositionCountryNo, Objects6PositionCountryNp, Objects6PositionCountryNr, Objects6PositionCountryNu, Objects6PositionCountryNz, Objects6PositionCountryOm, Objects6PositionCountryPa, Objects6PositionCountryPe, Objects6PositionCountryPf, Objects6PositionCountryPg, Objects6PositionCountryPh, Objects6PositionCountryPk, Objects6PositionCountryPl, Objects6PositionCountryPm, Objects6PositionCountryPn, Objects6PositionCountryPr, Objects6PositionCountryPs, Objects6PositionCountryPt, Objects6PositionCountryPw, Objects6PositionCountryPy, Objects6PositionCountryQa, Objects6PositionCountryRe, Objects6PositionCountryRo, Objects6PositionCountryRs, Objects6PositionCountryRu, Objects6PositionCountryRw, Objects6PositionCountrySa, Objects6PositionCountrySb, Objects6PositionCountrySc, Objects6PositionCountrySd, Objects6PositionCountrySe, Objects6PositionCountrySg, Objects6PositionCountrySh, Objects6PositionCountrySi, Objects6PositionCountrySj, Objects6PositionCountrySk, Objects6PositionCountrySl, Objects6PositionCountrySm, Objects6PositionCountrySn, Objects6PositionCountrySo, Objects6PositionCountrySr, Objects6PositionCountrySS, Objects6PositionCountrySt, Objects6PositionCountrySv, Objects6PositionCountrySx, Objects6PositionCountrySy, Objects6PositionCountrySz, Objects6PositionCountryTc, Objects6PositionCountryTd, Objects6PositionCountryTf, Objects6PositionCountryTg, Objects6PositionCountryTh, Objects6PositionCountryTj, Objects6PositionCountryTk, Objects6PositionCountryTl, Objects6PositionCountryTm, Objects6PositionCountryTn, Objects6PositionCountryTo, Objects6PositionCountryTr, Objects6PositionCountryTt, Objects6PositionCountryTv, Objects6PositionCountryTw, Objects6PositionCountryTz, Objects6PositionCountryUa, Objects6PositionCountryUg, Objects6PositionCountryUm, Objects6PositionCountryUs, Objects6PositionCountryUy, Objects6PositionCountryUz, Objects6PositionCountryVa, Objects6PositionCountryVc, Objects6PositionCountryVe, Objects6PositionCountryVg, Objects6PositionCountryVi, Objects6PositionCountryVn, Objects6PositionCountryVu, Objects6PositionCountryWf, Objects6PositionCountryWs, Objects6PositionCountryXk, Objects6PositionCountryYe, Objects6PositionCountryYt, Objects6PositionCountryZa, Objects6PositionCountryZm, Objects6PositionCountryZw:
+	case OfferListResponseDataPositionCountryAd, OfferListResponseDataPositionCountryAe, OfferListResponseDataPositionCountryAf, OfferListResponseDataPositionCountryAg, OfferListResponseDataPositionCountryAI, OfferListResponseDataPositionCountryAl, OfferListResponseDataPositionCountryAm, OfferListResponseDataPositionCountryAo, OfferListResponseDataPositionCountryAq, OfferListResponseDataPositionCountryAr, OfferListResponseDataPositionCountryAs, OfferListResponseDataPositionCountryAt, OfferListResponseDataPositionCountryAu, OfferListResponseDataPositionCountryAw, OfferListResponseDataPositionCountryAx, OfferListResponseDataPositionCountryAz, OfferListResponseDataPositionCountryBa, OfferListResponseDataPositionCountryBb, OfferListResponseDataPositionCountryBd, OfferListResponseDataPositionCountryBe, OfferListResponseDataPositionCountryBf, OfferListResponseDataPositionCountryBg, OfferListResponseDataPositionCountryBh, OfferListResponseDataPositionCountryBi, OfferListResponseDataPositionCountryBj, OfferListResponseDataPositionCountryBl, OfferListResponseDataPositionCountryBm, OfferListResponseDataPositionCountryBn, OfferListResponseDataPositionCountryBo, OfferListResponseDataPositionCountryBq, OfferListResponseDataPositionCountryBr, OfferListResponseDataPositionCountryBs, OfferListResponseDataPositionCountryBt, OfferListResponseDataPositionCountryBv, OfferListResponseDataPositionCountryBw, OfferListResponseDataPositionCountryBy, OfferListResponseDataPositionCountryBz, OfferListResponseDataPositionCountryCa, OfferListResponseDataPositionCountryCc, OfferListResponseDataPositionCountryCd, OfferListResponseDataPositionCountryCf, OfferListResponseDataPositionCountryCg, OfferListResponseDataPositionCountryCh, OfferListResponseDataPositionCountryCi, OfferListResponseDataPositionCountryCk, OfferListResponseDataPositionCountryCl, OfferListResponseDataPositionCountryCm, OfferListResponseDataPositionCountryCn, OfferListResponseDataPositionCountryCo, OfferListResponseDataPositionCountryCr, OfferListResponseDataPositionCountryCu, OfferListResponseDataPositionCountryCv, OfferListResponseDataPositionCountryCw, OfferListResponseDataPositionCountryCx, OfferListResponseDataPositionCountryCy, OfferListResponseDataPositionCountryCz, OfferListResponseDataPositionCountryDe, OfferListResponseDataPositionCountryDj, OfferListResponseDataPositionCountryDk, OfferListResponseDataPositionCountryDm, OfferListResponseDataPositionCountryDo, OfferListResponseDataPositionCountryDz, OfferListResponseDataPositionCountryEc, OfferListResponseDataPositionCountryEe, OfferListResponseDataPositionCountryEg, OfferListResponseDataPositionCountryEh, OfferListResponseDataPositionCountryEr, OfferListResponseDataPositionCountryEs, OfferListResponseDataPositionCountryEt, OfferListResponseDataPositionCountryFi, OfferListResponseDataPositionCountryFj, OfferListResponseDataPositionCountryFk, OfferListResponseDataPositionCountryFm, OfferListResponseDataPositionCountryFo, OfferListResponseDataPositionCountryFr, OfferListResponseDataPositionCountryGa, OfferListResponseDataPositionCountryGB, OfferListResponseDataPositionCountryGd, OfferListResponseDataPositionCountryGe, OfferListResponseDataPositionCountryGf, OfferListResponseDataPositionCountryGg, OfferListResponseDataPositionCountryGh, OfferListResponseDataPositionCountryGi, OfferListResponseDataPositionCountryGl, OfferListResponseDataPositionCountryGm, OfferListResponseDataPositionCountryGn, OfferListResponseDataPositionCountryGp, OfferListResponseDataPositionCountryGq, OfferListResponseDataPositionCountryGr, OfferListResponseDataPositionCountryGs, OfferListResponseDataPositionCountryGt, OfferListResponseDataPositionCountryGu, OfferListResponseDataPositionCountryGw, OfferListResponseDataPositionCountryGy, OfferListResponseDataPositionCountryHk, OfferListResponseDataPositionCountryHm, OfferListResponseDataPositionCountryHn, OfferListResponseDataPositionCountryHr, OfferListResponseDataPositionCountryHt, OfferListResponseDataPositionCountryHu, OfferListResponseDataPositionCountryID, OfferListResponseDataPositionCountryIe, OfferListResponseDataPositionCountryIl, OfferListResponseDataPositionCountryIm, OfferListResponseDataPositionCountryIn, OfferListResponseDataPositionCountryIo, OfferListResponseDataPositionCountryIq, OfferListResponseDataPositionCountryIr, OfferListResponseDataPositionCountryIs, OfferListResponseDataPositionCountryIt, OfferListResponseDataPositionCountryJe, OfferListResponseDataPositionCountryJm, OfferListResponseDataPositionCountryJo, OfferListResponseDataPositionCountryJp, OfferListResponseDataPositionCountryKe, OfferListResponseDataPositionCountryKg, OfferListResponseDataPositionCountryKh, OfferListResponseDataPositionCountryKi, OfferListResponseDataPositionCountryKm, OfferListResponseDataPositionCountryKn, OfferListResponseDataPositionCountryKp, OfferListResponseDataPositionCountryKr, OfferListResponseDataPositionCountryKw, OfferListResponseDataPositionCountryKy, OfferListResponseDataPositionCountryKz, OfferListResponseDataPositionCountryLa, OfferListResponseDataPositionCountryLb, OfferListResponseDataPositionCountryLc, OfferListResponseDataPositionCountryLi, OfferListResponseDataPositionCountryLk, OfferListResponseDataPositionCountryLr, OfferListResponseDataPositionCountryLs, OfferListResponseDataPositionCountryLt, OfferListResponseDataPositionCountryLu, OfferListResponseDataPositionCountryLv, OfferListResponseDataPositionCountryLy, OfferListResponseDataPositionCountryMa, OfferListResponseDataPositionCountryMc, OfferListResponseDataPositionCountryMd, OfferListResponseDataPositionCountryMe, OfferListResponseDataPositionCountryMf, OfferListResponseDataPositionCountryMg, OfferListResponseDataPositionCountryMh, OfferListResponseDataPositionCountryMk, OfferListResponseDataPositionCountryMl, OfferListResponseDataPositionCountryMm, OfferListResponseDataPositionCountryMn, OfferListResponseDataPositionCountryMo, OfferListResponseDataPositionCountryMp, OfferListResponseDataPositionCountryMq, OfferListResponseDataPositionCountryMr, OfferListResponseDataPositionCountryMs, OfferListResponseDataPositionCountryMt, OfferListResponseDataPositionCountryMu, OfferListResponseDataPositionCountryMv, OfferListResponseDataPositionCountryMw, OfferListResponseDataPositionCountryMx, OfferListResponseDataPositionCountryMy, OfferListResponseDataPositionCountryMz, OfferListResponseDataPositionCountryNa, OfferListResponseDataPositionCountryNc, OfferListResponseDataPositionCountryNe, OfferListResponseDataPositionCountryNf, OfferListResponseDataPositionCountryNg, OfferListResponseDataPositionCountryNi, OfferListResponseDataPositionCountryNl, OfferListResponseDataPositionCountryNo, OfferListResponseDataPositionCountryNp, OfferListResponseDataPositionCountryNr, OfferListResponseDataPositionCountryNu, OfferListResponseDataPositionCountryNz, OfferListResponseDataPositionCountryOm, OfferListResponseDataPositionCountryPa, OfferListResponseDataPositionCountryPe, OfferListResponseDataPositionCountryPf, OfferListResponseDataPositionCountryPg, OfferListResponseDataPositionCountryPh, OfferListResponseDataPositionCountryPk, OfferListResponseDataPositionCountryPl, OfferListResponseDataPositionCountryPm, OfferListResponseDataPositionCountryPn, OfferListResponseDataPositionCountryPr, OfferListResponseDataPositionCountryPs, OfferListResponseDataPositionCountryPt, OfferListResponseDataPositionCountryPw, OfferListResponseDataPositionCountryPy, OfferListResponseDataPositionCountryQa, OfferListResponseDataPositionCountryRe, OfferListResponseDataPositionCountryRo, OfferListResponseDataPositionCountryRs, OfferListResponseDataPositionCountryRu, OfferListResponseDataPositionCountryRw, OfferListResponseDataPositionCountrySa, OfferListResponseDataPositionCountrySb, OfferListResponseDataPositionCountrySc, OfferListResponseDataPositionCountrySd, OfferListResponseDataPositionCountrySe, OfferListResponseDataPositionCountrySg, OfferListResponseDataPositionCountrySh, OfferListResponseDataPositionCountrySi, OfferListResponseDataPositionCountrySj, OfferListResponseDataPositionCountrySk, OfferListResponseDataPositionCountrySl, OfferListResponseDataPositionCountrySm, OfferListResponseDataPositionCountrySn, OfferListResponseDataPositionCountrySo, OfferListResponseDataPositionCountrySr, OfferListResponseDataPositionCountrySS, OfferListResponseDataPositionCountrySt, OfferListResponseDataPositionCountrySv, OfferListResponseDataPositionCountrySx, OfferListResponseDataPositionCountrySy, OfferListResponseDataPositionCountrySz, OfferListResponseDataPositionCountryTc, OfferListResponseDataPositionCountryTd, OfferListResponseDataPositionCountryTf, OfferListResponseDataPositionCountryTg, OfferListResponseDataPositionCountryTh, OfferListResponseDataPositionCountryTj, OfferListResponseDataPositionCountryTk, OfferListResponseDataPositionCountryTl, OfferListResponseDataPositionCountryTm, OfferListResponseDataPositionCountryTn, OfferListResponseDataPositionCountryTo, OfferListResponseDataPositionCountryTr, OfferListResponseDataPositionCountryTt, OfferListResponseDataPositionCountryTv, OfferListResponseDataPositionCountryTw, OfferListResponseDataPositionCountryTz, OfferListResponseDataPositionCountryUa, OfferListResponseDataPositionCountryUg, OfferListResponseDataPositionCountryUm, OfferListResponseDataPositionCountryUs, OfferListResponseDataPositionCountryUy, OfferListResponseDataPositionCountryUz, OfferListResponseDataPositionCountryVa, OfferListResponseDataPositionCountryVc, OfferListResponseDataPositionCountryVe, OfferListResponseDataPositionCountryVg, OfferListResponseDataPositionCountryVi, OfferListResponseDataPositionCountryVn, OfferListResponseDataPositionCountryVu, OfferListResponseDataPositionCountryWf, OfferListResponseDataPositionCountryWs, OfferListResponseDataPositionCountryXk, OfferListResponseDataPositionCountryYe, OfferListResponseDataPositionCountryYt, OfferListResponseDataPositionCountryZa, OfferListResponseDataPositionCountryZm, OfferListResponseDataPositionCountryZw:
 		return true
 	}
 	return false
 }
 
-type Objects6CompensationBasePay struct {
-	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount         `json:"amount" api:"required"`
-	Basis        Objects6CompensationBasePayBasis `json:"basis" api:"required"`
-	Type         Objects6CompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount         `json:"variableRate" api:"required,nullable"`
-	JSON         objects6CompensationBasePayJSON  `json:"-"`
+type OfferListResponseDataLevelTrack string
+
+const (
+	OfferListResponseDataLevelTrackIc        OfferListResponseDataLevelTrack = "ic"
+	OfferListResponseDataLevelTrackManager   OfferListResponseDataLevelTrack = "manager"
+	OfferListResponseDataLevelTrackExecutive OfferListResponseDataLevelTrack = "executive"
+)
+
+func (r OfferListResponseDataLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferListResponseDataLevelTrackIc, OfferListResponseDataLevelTrackManager, OfferListResponseDataLevelTrackExecutive:
+		return true
+	}
+	return false
 }
 
-// objects6CompensationBasePayJSON contains the JSON metadata for the struct [Objects6CompensationBasePay]
-type objects6CompensationBasePayJSON struct {
+type OfferListResponseDataCompensationBasePay struct {
+	// A monetary amount with its currency and server-formatted display value.
+	Amount       shared.PublicMoneyAmount                      `json:"amount" api:"required"`
+	Basis        OfferListResponseDataCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferListResponseDataCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate shared.PublicMoneyAmount                      `json:"variableRate" api:"required,nullable"`
+	JSON         offerListResponseDataCompensationBasePayJSON  `json:"-"`
+}
+
+// offerListResponseDataCompensationBasePayJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationBasePay]
+type offerListResponseDataCompensationBasePayJSON struct {
 	Amount       apijson.Field
 	Basis        apijson.Field
 	Type         apijson.Field
@@ -2914,23 +3806,23 @@ type objects6CompensationBasePayJSON struct {
 	ExtraFields  map[string]apijson.Field
 }
 
-func (r *Objects6CompensationBasePay) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferListResponseDataCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r objects6CompensationBasePayJSON) RawJSON() string {
+func (r offerListResponseDataCompensationBasePayJSON) RawJSON() string {
 	return r.raw
 }
 
-type Objects6CompensationStock struct {
-	Options               int64                         `json:"options" api:"required"`
-	VestingScheduleMonths int64                         `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                         `json:"cliffMonths" api:"required,nullable"`
-	JSON                  objects6CompensationStockJSON `json:"-"`
+type OfferListResponseDataCompensationStock struct {
+	Options               int64                                      `json:"options" api:"required"`
+	VestingScheduleMonths int64                                      `json:"vestingScheduleMonths" api:"required,nullable"`
+	CliffMonths           int64                                      `json:"cliffMonths" api:"required,nullable"`
+	JSON                  offerListResponseDataCompensationStockJSON `json:"-"`
 }
 
-// objects6CompensationStockJSON contains the JSON metadata for the struct [Objects6CompensationStock]
-type objects6CompensationStockJSON struct {
+// offerListResponseDataCompensationStockJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationStock]
+type offerListResponseDataCompensationStockJSON struct {
 	Options               apijson.Field
 	VestingScheduleMonths apijson.Field
 	CliffMonths           apijson.Field
@@ -2938,348 +3830,45 @@ type objects6CompensationStockJSON struct {
 	ExtraFields           map[string]apijson.Field
 }
 
-func (r *Objects6CompensationStock) UnmarshalJSON(data []byte) (err error) {
+func (r *OfferListResponseDataCompensationStock) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r objects6CompensationStockJSON) RawJSON() string {
+func (r offerListResponseDataCompensationStockJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferNewResponseCandidateContractorDetails struct {
-	IsBusiness        bool                                           `json:"isBusiness" api:"required"`
-	LegalBusinessName string                                         `json:"legalBusinessName" api:"required,nullable"`
-	JSON              offerNewResponseCandidateContractorDetailsJSON `json:"-"`
-}
-
-// offerNewResponseCandidateContractorDetailsJSON contains the JSON metadata for the struct [OfferNewResponseCandidateContractorDetails]
-type offerNewResponseCandidateContractorDetailsJSON struct {
-	IsBusiness        apijson.Field
-	LegalBusinessName apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *OfferNewResponseCandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCandidateContractorDetailsJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferNewResponsePositionCountry string
+type OfferNewResponseCompensationBasePayBasis string
 
 const (
-	OfferNewResponsePositionCountryAd OfferNewResponsePositionCountry = "AD"
-	OfferNewResponsePositionCountryAe OfferNewResponsePositionCountry = "AE"
-	OfferNewResponsePositionCountryAf OfferNewResponsePositionCountry = "AF"
-	OfferNewResponsePositionCountryAg OfferNewResponsePositionCountry = "AG"
-	OfferNewResponsePositionCountryAI OfferNewResponsePositionCountry = "AI"
-	OfferNewResponsePositionCountryAl OfferNewResponsePositionCountry = "AL"
-	OfferNewResponsePositionCountryAm OfferNewResponsePositionCountry = "AM"
-	OfferNewResponsePositionCountryAo OfferNewResponsePositionCountry = "AO"
-	OfferNewResponsePositionCountryAq OfferNewResponsePositionCountry = "AQ"
-	OfferNewResponsePositionCountryAr OfferNewResponsePositionCountry = "AR"
-	OfferNewResponsePositionCountryAs OfferNewResponsePositionCountry = "AS"
-	OfferNewResponsePositionCountryAt OfferNewResponsePositionCountry = "AT"
-	OfferNewResponsePositionCountryAu OfferNewResponsePositionCountry = "AU"
-	OfferNewResponsePositionCountryAw OfferNewResponsePositionCountry = "AW"
-	OfferNewResponsePositionCountryAx OfferNewResponsePositionCountry = "AX"
-	OfferNewResponsePositionCountryAz OfferNewResponsePositionCountry = "AZ"
-	OfferNewResponsePositionCountryBa OfferNewResponsePositionCountry = "BA"
-	OfferNewResponsePositionCountryBb OfferNewResponsePositionCountry = "BB"
-	OfferNewResponsePositionCountryBd OfferNewResponsePositionCountry = "BD"
-	OfferNewResponsePositionCountryBe OfferNewResponsePositionCountry = "BE"
-	OfferNewResponsePositionCountryBf OfferNewResponsePositionCountry = "BF"
-	OfferNewResponsePositionCountryBg OfferNewResponsePositionCountry = "BG"
-	OfferNewResponsePositionCountryBh OfferNewResponsePositionCountry = "BH"
-	OfferNewResponsePositionCountryBi OfferNewResponsePositionCountry = "BI"
-	OfferNewResponsePositionCountryBj OfferNewResponsePositionCountry = "BJ"
-	OfferNewResponsePositionCountryBl OfferNewResponsePositionCountry = "BL"
-	OfferNewResponsePositionCountryBm OfferNewResponsePositionCountry = "BM"
-	OfferNewResponsePositionCountryBn OfferNewResponsePositionCountry = "BN"
-	OfferNewResponsePositionCountryBo OfferNewResponsePositionCountry = "BO"
-	OfferNewResponsePositionCountryBq OfferNewResponsePositionCountry = "BQ"
-	OfferNewResponsePositionCountryBr OfferNewResponsePositionCountry = "BR"
-	OfferNewResponsePositionCountryBs OfferNewResponsePositionCountry = "BS"
-	OfferNewResponsePositionCountryBt OfferNewResponsePositionCountry = "BT"
-	OfferNewResponsePositionCountryBv OfferNewResponsePositionCountry = "BV"
-	OfferNewResponsePositionCountryBw OfferNewResponsePositionCountry = "BW"
-	OfferNewResponsePositionCountryBy OfferNewResponsePositionCountry = "BY"
-	OfferNewResponsePositionCountryBz OfferNewResponsePositionCountry = "BZ"
-	OfferNewResponsePositionCountryCa OfferNewResponsePositionCountry = "CA"
-	OfferNewResponsePositionCountryCc OfferNewResponsePositionCountry = "CC"
-	OfferNewResponsePositionCountryCd OfferNewResponsePositionCountry = "CD"
-	OfferNewResponsePositionCountryCf OfferNewResponsePositionCountry = "CF"
-	OfferNewResponsePositionCountryCg OfferNewResponsePositionCountry = "CG"
-	OfferNewResponsePositionCountryCh OfferNewResponsePositionCountry = "CH"
-	OfferNewResponsePositionCountryCi OfferNewResponsePositionCountry = "CI"
-	OfferNewResponsePositionCountryCk OfferNewResponsePositionCountry = "CK"
-	OfferNewResponsePositionCountryCl OfferNewResponsePositionCountry = "CL"
-	OfferNewResponsePositionCountryCm OfferNewResponsePositionCountry = "CM"
-	OfferNewResponsePositionCountryCn OfferNewResponsePositionCountry = "CN"
-	OfferNewResponsePositionCountryCo OfferNewResponsePositionCountry = "CO"
-	OfferNewResponsePositionCountryCr OfferNewResponsePositionCountry = "CR"
-	OfferNewResponsePositionCountryCu OfferNewResponsePositionCountry = "CU"
-	OfferNewResponsePositionCountryCv OfferNewResponsePositionCountry = "CV"
-	OfferNewResponsePositionCountryCw OfferNewResponsePositionCountry = "CW"
-	OfferNewResponsePositionCountryCx OfferNewResponsePositionCountry = "CX"
-	OfferNewResponsePositionCountryCy OfferNewResponsePositionCountry = "CY"
-	OfferNewResponsePositionCountryCz OfferNewResponsePositionCountry = "CZ"
-	OfferNewResponsePositionCountryDe OfferNewResponsePositionCountry = "DE"
-	OfferNewResponsePositionCountryDj OfferNewResponsePositionCountry = "DJ"
-	OfferNewResponsePositionCountryDk OfferNewResponsePositionCountry = "DK"
-	OfferNewResponsePositionCountryDm OfferNewResponsePositionCountry = "DM"
-	OfferNewResponsePositionCountryDo OfferNewResponsePositionCountry = "DO"
-	OfferNewResponsePositionCountryDz OfferNewResponsePositionCountry = "DZ"
-	OfferNewResponsePositionCountryEc OfferNewResponsePositionCountry = "EC"
-	OfferNewResponsePositionCountryEe OfferNewResponsePositionCountry = "EE"
-	OfferNewResponsePositionCountryEg OfferNewResponsePositionCountry = "EG"
-	OfferNewResponsePositionCountryEh OfferNewResponsePositionCountry = "EH"
-	OfferNewResponsePositionCountryEr OfferNewResponsePositionCountry = "ER"
-	OfferNewResponsePositionCountryEs OfferNewResponsePositionCountry = "ES"
-	OfferNewResponsePositionCountryEt OfferNewResponsePositionCountry = "ET"
-	OfferNewResponsePositionCountryFi OfferNewResponsePositionCountry = "FI"
-	OfferNewResponsePositionCountryFj OfferNewResponsePositionCountry = "FJ"
-	OfferNewResponsePositionCountryFk OfferNewResponsePositionCountry = "FK"
-	OfferNewResponsePositionCountryFm OfferNewResponsePositionCountry = "FM"
-	OfferNewResponsePositionCountryFo OfferNewResponsePositionCountry = "FO"
-	OfferNewResponsePositionCountryFr OfferNewResponsePositionCountry = "FR"
-	OfferNewResponsePositionCountryGa OfferNewResponsePositionCountry = "GA"
-	OfferNewResponsePositionCountryGB OfferNewResponsePositionCountry = "GB"
-	OfferNewResponsePositionCountryGd OfferNewResponsePositionCountry = "GD"
-	OfferNewResponsePositionCountryGe OfferNewResponsePositionCountry = "GE"
-	OfferNewResponsePositionCountryGf OfferNewResponsePositionCountry = "GF"
-	OfferNewResponsePositionCountryGg OfferNewResponsePositionCountry = "GG"
-	OfferNewResponsePositionCountryGh OfferNewResponsePositionCountry = "GH"
-	OfferNewResponsePositionCountryGi OfferNewResponsePositionCountry = "GI"
-	OfferNewResponsePositionCountryGl OfferNewResponsePositionCountry = "GL"
-	OfferNewResponsePositionCountryGm OfferNewResponsePositionCountry = "GM"
-	OfferNewResponsePositionCountryGn OfferNewResponsePositionCountry = "GN"
-	OfferNewResponsePositionCountryGp OfferNewResponsePositionCountry = "GP"
-	OfferNewResponsePositionCountryGq OfferNewResponsePositionCountry = "GQ"
-	OfferNewResponsePositionCountryGr OfferNewResponsePositionCountry = "GR"
-	OfferNewResponsePositionCountryGs OfferNewResponsePositionCountry = "GS"
-	OfferNewResponsePositionCountryGt OfferNewResponsePositionCountry = "GT"
-	OfferNewResponsePositionCountryGu OfferNewResponsePositionCountry = "GU"
-	OfferNewResponsePositionCountryGw OfferNewResponsePositionCountry = "GW"
-	OfferNewResponsePositionCountryGy OfferNewResponsePositionCountry = "GY"
-	OfferNewResponsePositionCountryHk OfferNewResponsePositionCountry = "HK"
-	OfferNewResponsePositionCountryHm OfferNewResponsePositionCountry = "HM"
-	OfferNewResponsePositionCountryHn OfferNewResponsePositionCountry = "HN"
-	OfferNewResponsePositionCountryHr OfferNewResponsePositionCountry = "HR"
-	OfferNewResponsePositionCountryHt OfferNewResponsePositionCountry = "HT"
-	OfferNewResponsePositionCountryHu OfferNewResponsePositionCountry = "HU"
-	OfferNewResponsePositionCountryID OfferNewResponsePositionCountry = "ID"
-	OfferNewResponsePositionCountryIe OfferNewResponsePositionCountry = "IE"
-	OfferNewResponsePositionCountryIl OfferNewResponsePositionCountry = "IL"
-	OfferNewResponsePositionCountryIm OfferNewResponsePositionCountry = "IM"
-	OfferNewResponsePositionCountryIn OfferNewResponsePositionCountry = "IN"
-	OfferNewResponsePositionCountryIo OfferNewResponsePositionCountry = "IO"
-	OfferNewResponsePositionCountryIq OfferNewResponsePositionCountry = "IQ"
-	OfferNewResponsePositionCountryIr OfferNewResponsePositionCountry = "IR"
-	OfferNewResponsePositionCountryIs OfferNewResponsePositionCountry = "IS"
-	OfferNewResponsePositionCountryIt OfferNewResponsePositionCountry = "IT"
-	OfferNewResponsePositionCountryJe OfferNewResponsePositionCountry = "JE"
-	OfferNewResponsePositionCountryJm OfferNewResponsePositionCountry = "JM"
-	OfferNewResponsePositionCountryJo OfferNewResponsePositionCountry = "JO"
-	OfferNewResponsePositionCountryJp OfferNewResponsePositionCountry = "JP"
-	OfferNewResponsePositionCountryKe OfferNewResponsePositionCountry = "KE"
-	OfferNewResponsePositionCountryKg OfferNewResponsePositionCountry = "KG"
-	OfferNewResponsePositionCountryKh OfferNewResponsePositionCountry = "KH"
-	OfferNewResponsePositionCountryKi OfferNewResponsePositionCountry = "KI"
-	OfferNewResponsePositionCountryKm OfferNewResponsePositionCountry = "KM"
-	OfferNewResponsePositionCountryKn OfferNewResponsePositionCountry = "KN"
-	OfferNewResponsePositionCountryKp OfferNewResponsePositionCountry = "KP"
-	OfferNewResponsePositionCountryKr OfferNewResponsePositionCountry = "KR"
-	OfferNewResponsePositionCountryKw OfferNewResponsePositionCountry = "KW"
-	OfferNewResponsePositionCountryKy OfferNewResponsePositionCountry = "KY"
-	OfferNewResponsePositionCountryKz OfferNewResponsePositionCountry = "KZ"
-	OfferNewResponsePositionCountryLa OfferNewResponsePositionCountry = "LA"
-	OfferNewResponsePositionCountryLb OfferNewResponsePositionCountry = "LB"
-	OfferNewResponsePositionCountryLc OfferNewResponsePositionCountry = "LC"
-	OfferNewResponsePositionCountryLi OfferNewResponsePositionCountry = "LI"
-	OfferNewResponsePositionCountryLk OfferNewResponsePositionCountry = "LK"
-	OfferNewResponsePositionCountryLr OfferNewResponsePositionCountry = "LR"
-	OfferNewResponsePositionCountryLs OfferNewResponsePositionCountry = "LS"
-	OfferNewResponsePositionCountryLt OfferNewResponsePositionCountry = "LT"
-	OfferNewResponsePositionCountryLu OfferNewResponsePositionCountry = "LU"
-	OfferNewResponsePositionCountryLv OfferNewResponsePositionCountry = "LV"
-	OfferNewResponsePositionCountryLy OfferNewResponsePositionCountry = "LY"
-	OfferNewResponsePositionCountryMa OfferNewResponsePositionCountry = "MA"
-	OfferNewResponsePositionCountryMc OfferNewResponsePositionCountry = "MC"
-	OfferNewResponsePositionCountryMd OfferNewResponsePositionCountry = "MD"
-	OfferNewResponsePositionCountryMe OfferNewResponsePositionCountry = "ME"
-	OfferNewResponsePositionCountryMf OfferNewResponsePositionCountry = "MF"
-	OfferNewResponsePositionCountryMg OfferNewResponsePositionCountry = "MG"
-	OfferNewResponsePositionCountryMh OfferNewResponsePositionCountry = "MH"
-	OfferNewResponsePositionCountryMk OfferNewResponsePositionCountry = "MK"
-	OfferNewResponsePositionCountryMl OfferNewResponsePositionCountry = "ML"
-	OfferNewResponsePositionCountryMm OfferNewResponsePositionCountry = "MM"
-	OfferNewResponsePositionCountryMn OfferNewResponsePositionCountry = "MN"
-	OfferNewResponsePositionCountryMo OfferNewResponsePositionCountry = "MO"
-	OfferNewResponsePositionCountryMp OfferNewResponsePositionCountry = "MP"
-	OfferNewResponsePositionCountryMq OfferNewResponsePositionCountry = "MQ"
-	OfferNewResponsePositionCountryMr OfferNewResponsePositionCountry = "MR"
-	OfferNewResponsePositionCountryMs OfferNewResponsePositionCountry = "MS"
-	OfferNewResponsePositionCountryMt OfferNewResponsePositionCountry = "MT"
-	OfferNewResponsePositionCountryMu OfferNewResponsePositionCountry = "MU"
-	OfferNewResponsePositionCountryMv OfferNewResponsePositionCountry = "MV"
-	OfferNewResponsePositionCountryMw OfferNewResponsePositionCountry = "MW"
-	OfferNewResponsePositionCountryMx OfferNewResponsePositionCountry = "MX"
-	OfferNewResponsePositionCountryMy OfferNewResponsePositionCountry = "MY"
-	OfferNewResponsePositionCountryMz OfferNewResponsePositionCountry = "MZ"
-	OfferNewResponsePositionCountryNa OfferNewResponsePositionCountry = "NA"
-	OfferNewResponsePositionCountryNc OfferNewResponsePositionCountry = "NC"
-	OfferNewResponsePositionCountryNe OfferNewResponsePositionCountry = "NE"
-	OfferNewResponsePositionCountryNf OfferNewResponsePositionCountry = "NF"
-	OfferNewResponsePositionCountryNg OfferNewResponsePositionCountry = "NG"
-	OfferNewResponsePositionCountryNi OfferNewResponsePositionCountry = "NI"
-	OfferNewResponsePositionCountryNl OfferNewResponsePositionCountry = "NL"
-	OfferNewResponsePositionCountryNo OfferNewResponsePositionCountry = "NO"
-	OfferNewResponsePositionCountryNp OfferNewResponsePositionCountry = "NP"
-	OfferNewResponsePositionCountryNr OfferNewResponsePositionCountry = "NR"
-	OfferNewResponsePositionCountryNu OfferNewResponsePositionCountry = "NU"
-	OfferNewResponsePositionCountryNz OfferNewResponsePositionCountry = "NZ"
-	OfferNewResponsePositionCountryOm OfferNewResponsePositionCountry = "OM"
-	OfferNewResponsePositionCountryPa OfferNewResponsePositionCountry = "PA"
-	OfferNewResponsePositionCountryPe OfferNewResponsePositionCountry = "PE"
-	OfferNewResponsePositionCountryPf OfferNewResponsePositionCountry = "PF"
-	OfferNewResponsePositionCountryPg OfferNewResponsePositionCountry = "PG"
-	OfferNewResponsePositionCountryPh OfferNewResponsePositionCountry = "PH"
-	OfferNewResponsePositionCountryPk OfferNewResponsePositionCountry = "PK"
-	OfferNewResponsePositionCountryPl OfferNewResponsePositionCountry = "PL"
-	OfferNewResponsePositionCountryPm OfferNewResponsePositionCountry = "PM"
-	OfferNewResponsePositionCountryPn OfferNewResponsePositionCountry = "PN"
-	OfferNewResponsePositionCountryPr OfferNewResponsePositionCountry = "PR"
-	OfferNewResponsePositionCountryPs OfferNewResponsePositionCountry = "PS"
-	OfferNewResponsePositionCountryPt OfferNewResponsePositionCountry = "PT"
-	OfferNewResponsePositionCountryPw OfferNewResponsePositionCountry = "PW"
-	OfferNewResponsePositionCountryPy OfferNewResponsePositionCountry = "PY"
-	OfferNewResponsePositionCountryQa OfferNewResponsePositionCountry = "QA"
-	OfferNewResponsePositionCountryRe OfferNewResponsePositionCountry = "RE"
-	OfferNewResponsePositionCountryRo OfferNewResponsePositionCountry = "RO"
-	OfferNewResponsePositionCountryRs OfferNewResponsePositionCountry = "RS"
-	OfferNewResponsePositionCountryRu OfferNewResponsePositionCountry = "RU"
-	OfferNewResponsePositionCountryRw OfferNewResponsePositionCountry = "RW"
-	OfferNewResponsePositionCountrySa OfferNewResponsePositionCountry = "SA"
-	OfferNewResponsePositionCountrySb OfferNewResponsePositionCountry = "SB"
-	OfferNewResponsePositionCountrySc OfferNewResponsePositionCountry = "SC"
-	OfferNewResponsePositionCountrySd OfferNewResponsePositionCountry = "SD"
-	OfferNewResponsePositionCountrySe OfferNewResponsePositionCountry = "SE"
-	OfferNewResponsePositionCountrySg OfferNewResponsePositionCountry = "SG"
-	OfferNewResponsePositionCountrySh OfferNewResponsePositionCountry = "SH"
-	OfferNewResponsePositionCountrySi OfferNewResponsePositionCountry = "SI"
-	OfferNewResponsePositionCountrySj OfferNewResponsePositionCountry = "SJ"
-	OfferNewResponsePositionCountrySk OfferNewResponsePositionCountry = "SK"
-	OfferNewResponsePositionCountrySl OfferNewResponsePositionCountry = "SL"
-	OfferNewResponsePositionCountrySm OfferNewResponsePositionCountry = "SM"
-	OfferNewResponsePositionCountrySn OfferNewResponsePositionCountry = "SN"
-	OfferNewResponsePositionCountrySo OfferNewResponsePositionCountry = "SO"
-	OfferNewResponsePositionCountrySr OfferNewResponsePositionCountry = "SR"
-	OfferNewResponsePositionCountrySS OfferNewResponsePositionCountry = "SS"
-	OfferNewResponsePositionCountrySt OfferNewResponsePositionCountry = "ST"
-	OfferNewResponsePositionCountrySv OfferNewResponsePositionCountry = "SV"
-	OfferNewResponsePositionCountrySx OfferNewResponsePositionCountry = "SX"
-	OfferNewResponsePositionCountrySy OfferNewResponsePositionCountry = "SY"
-	OfferNewResponsePositionCountrySz OfferNewResponsePositionCountry = "SZ"
-	OfferNewResponsePositionCountryTc OfferNewResponsePositionCountry = "TC"
-	OfferNewResponsePositionCountryTd OfferNewResponsePositionCountry = "TD"
-	OfferNewResponsePositionCountryTf OfferNewResponsePositionCountry = "TF"
-	OfferNewResponsePositionCountryTg OfferNewResponsePositionCountry = "TG"
-	OfferNewResponsePositionCountryTh OfferNewResponsePositionCountry = "TH"
-	OfferNewResponsePositionCountryTj OfferNewResponsePositionCountry = "TJ"
-	OfferNewResponsePositionCountryTk OfferNewResponsePositionCountry = "TK"
-	OfferNewResponsePositionCountryTl OfferNewResponsePositionCountry = "TL"
-	OfferNewResponsePositionCountryTm OfferNewResponsePositionCountry = "TM"
-	OfferNewResponsePositionCountryTn OfferNewResponsePositionCountry = "TN"
-	OfferNewResponsePositionCountryTo OfferNewResponsePositionCountry = "TO"
-	OfferNewResponsePositionCountryTr OfferNewResponsePositionCountry = "TR"
-	OfferNewResponsePositionCountryTt OfferNewResponsePositionCountry = "TT"
-	OfferNewResponsePositionCountryTv OfferNewResponsePositionCountry = "TV"
-	OfferNewResponsePositionCountryTw OfferNewResponsePositionCountry = "TW"
-	OfferNewResponsePositionCountryTz OfferNewResponsePositionCountry = "TZ"
-	OfferNewResponsePositionCountryUa OfferNewResponsePositionCountry = "UA"
-	OfferNewResponsePositionCountryUg OfferNewResponsePositionCountry = "UG"
-	OfferNewResponsePositionCountryUm OfferNewResponsePositionCountry = "UM"
-	OfferNewResponsePositionCountryUs OfferNewResponsePositionCountry = "US"
-	OfferNewResponsePositionCountryUy OfferNewResponsePositionCountry = "UY"
-	OfferNewResponsePositionCountryUz OfferNewResponsePositionCountry = "UZ"
-	OfferNewResponsePositionCountryVa OfferNewResponsePositionCountry = "VA"
-	OfferNewResponsePositionCountryVc OfferNewResponsePositionCountry = "VC"
-	OfferNewResponsePositionCountryVe OfferNewResponsePositionCountry = "VE"
-	OfferNewResponsePositionCountryVg OfferNewResponsePositionCountry = "VG"
-	OfferNewResponsePositionCountryVi OfferNewResponsePositionCountry = "VI"
-	OfferNewResponsePositionCountryVn OfferNewResponsePositionCountry = "VN"
-	OfferNewResponsePositionCountryVu OfferNewResponsePositionCountry = "VU"
-	OfferNewResponsePositionCountryWf OfferNewResponsePositionCountry = "WF"
-	OfferNewResponsePositionCountryWs OfferNewResponsePositionCountry = "WS"
-	OfferNewResponsePositionCountryXk OfferNewResponsePositionCountry = "XK"
-	OfferNewResponsePositionCountryYe OfferNewResponsePositionCountry = "YE"
-	OfferNewResponsePositionCountryYt OfferNewResponsePositionCountry = "YT"
-	OfferNewResponsePositionCountryZa OfferNewResponsePositionCountry = "ZA"
-	OfferNewResponsePositionCountryZm OfferNewResponsePositionCountry = "ZM"
-	OfferNewResponsePositionCountryZw OfferNewResponsePositionCountry = "ZW"
+	OfferNewResponseCompensationBasePayBasisYear     OfferNewResponseCompensationBasePayBasis = "year"
+	OfferNewResponseCompensationBasePayBasisMonth    OfferNewResponseCompensationBasePayBasis = "month"
+	OfferNewResponseCompensationBasePayBasisWeek     OfferNewResponseCompensationBasePayBasis = "week"
+	OfferNewResponseCompensationBasePayBasisHour     OfferNewResponseCompensationBasePayBasis = "hour"
+	OfferNewResponseCompensationBasePayBasisVariable OfferNewResponseCompensationBasePayBasis = "variable"
 )
 
-func (r OfferNewResponsePositionCountry) IsKnown() bool {
+func (r OfferNewResponseCompensationBasePayBasis) IsKnown() bool {
 	switch r {
-	case OfferNewResponsePositionCountryAd, OfferNewResponsePositionCountryAe, OfferNewResponsePositionCountryAf, OfferNewResponsePositionCountryAg, OfferNewResponsePositionCountryAI, OfferNewResponsePositionCountryAl, OfferNewResponsePositionCountryAm, OfferNewResponsePositionCountryAo, OfferNewResponsePositionCountryAq, OfferNewResponsePositionCountryAr, OfferNewResponsePositionCountryAs, OfferNewResponsePositionCountryAt, OfferNewResponsePositionCountryAu, OfferNewResponsePositionCountryAw, OfferNewResponsePositionCountryAx, OfferNewResponsePositionCountryAz, OfferNewResponsePositionCountryBa, OfferNewResponsePositionCountryBb, OfferNewResponsePositionCountryBd, OfferNewResponsePositionCountryBe, OfferNewResponsePositionCountryBf, OfferNewResponsePositionCountryBg, OfferNewResponsePositionCountryBh, OfferNewResponsePositionCountryBi, OfferNewResponsePositionCountryBj, OfferNewResponsePositionCountryBl, OfferNewResponsePositionCountryBm, OfferNewResponsePositionCountryBn, OfferNewResponsePositionCountryBo, OfferNewResponsePositionCountryBq, OfferNewResponsePositionCountryBr, OfferNewResponsePositionCountryBs, OfferNewResponsePositionCountryBt, OfferNewResponsePositionCountryBv, OfferNewResponsePositionCountryBw, OfferNewResponsePositionCountryBy, OfferNewResponsePositionCountryBz, OfferNewResponsePositionCountryCa, OfferNewResponsePositionCountryCc, OfferNewResponsePositionCountryCd, OfferNewResponsePositionCountryCf, OfferNewResponsePositionCountryCg, OfferNewResponsePositionCountryCh, OfferNewResponsePositionCountryCi, OfferNewResponsePositionCountryCk, OfferNewResponsePositionCountryCl, OfferNewResponsePositionCountryCm, OfferNewResponsePositionCountryCn, OfferNewResponsePositionCountryCo, OfferNewResponsePositionCountryCr, OfferNewResponsePositionCountryCu, OfferNewResponsePositionCountryCv, OfferNewResponsePositionCountryCw, OfferNewResponsePositionCountryCx, OfferNewResponsePositionCountryCy, OfferNewResponsePositionCountryCz, OfferNewResponsePositionCountryDe, OfferNewResponsePositionCountryDj, OfferNewResponsePositionCountryDk, OfferNewResponsePositionCountryDm, OfferNewResponsePositionCountryDo, OfferNewResponsePositionCountryDz, OfferNewResponsePositionCountryEc, OfferNewResponsePositionCountryEe, OfferNewResponsePositionCountryEg, OfferNewResponsePositionCountryEh, OfferNewResponsePositionCountryEr, OfferNewResponsePositionCountryEs, OfferNewResponsePositionCountryEt, OfferNewResponsePositionCountryFi, OfferNewResponsePositionCountryFj, OfferNewResponsePositionCountryFk, OfferNewResponsePositionCountryFm, OfferNewResponsePositionCountryFo, OfferNewResponsePositionCountryFr, OfferNewResponsePositionCountryGa, OfferNewResponsePositionCountryGB, OfferNewResponsePositionCountryGd, OfferNewResponsePositionCountryGe, OfferNewResponsePositionCountryGf, OfferNewResponsePositionCountryGg, OfferNewResponsePositionCountryGh, OfferNewResponsePositionCountryGi, OfferNewResponsePositionCountryGl, OfferNewResponsePositionCountryGm, OfferNewResponsePositionCountryGn, OfferNewResponsePositionCountryGp, OfferNewResponsePositionCountryGq, OfferNewResponsePositionCountryGr, OfferNewResponsePositionCountryGs, OfferNewResponsePositionCountryGt, OfferNewResponsePositionCountryGu, OfferNewResponsePositionCountryGw, OfferNewResponsePositionCountryGy, OfferNewResponsePositionCountryHk, OfferNewResponsePositionCountryHm, OfferNewResponsePositionCountryHn, OfferNewResponsePositionCountryHr, OfferNewResponsePositionCountryHt, OfferNewResponsePositionCountryHu, OfferNewResponsePositionCountryID, OfferNewResponsePositionCountryIe, OfferNewResponsePositionCountryIl, OfferNewResponsePositionCountryIm, OfferNewResponsePositionCountryIn, OfferNewResponsePositionCountryIo, OfferNewResponsePositionCountryIq, OfferNewResponsePositionCountryIr, OfferNewResponsePositionCountryIs, OfferNewResponsePositionCountryIt, OfferNewResponsePositionCountryJe, OfferNewResponsePositionCountryJm, OfferNewResponsePositionCountryJo, OfferNewResponsePositionCountryJp, OfferNewResponsePositionCountryKe, OfferNewResponsePositionCountryKg, OfferNewResponsePositionCountryKh, OfferNewResponsePositionCountryKi, OfferNewResponsePositionCountryKm, OfferNewResponsePositionCountryKn, OfferNewResponsePositionCountryKp, OfferNewResponsePositionCountryKr, OfferNewResponsePositionCountryKw, OfferNewResponsePositionCountryKy, OfferNewResponsePositionCountryKz, OfferNewResponsePositionCountryLa, OfferNewResponsePositionCountryLb, OfferNewResponsePositionCountryLc, OfferNewResponsePositionCountryLi, OfferNewResponsePositionCountryLk, OfferNewResponsePositionCountryLr, OfferNewResponsePositionCountryLs, OfferNewResponsePositionCountryLt, OfferNewResponsePositionCountryLu, OfferNewResponsePositionCountryLv, OfferNewResponsePositionCountryLy, OfferNewResponsePositionCountryMa, OfferNewResponsePositionCountryMc, OfferNewResponsePositionCountryMd, OfferNewResponsePositionCountryMe, OfferNewResponsePositionCountryMf, OfferNewResponsePositionCountryMg, OfferNewResponsePositionCountryMh, OfferNewResponsePositionCountryMk, OfferNewResponsePositionCountryMl, OfferNewResponsePositionCountryMm, OfferNewResponsePositionCountryMn, OfferNewResponsePositionCountryMo, OfferNewResponsePositionCountryMp, OfferNewResponsePositionCountryMq, OfferNewResponsePositionCountryMr, OfferNewResponsePositionCountryMs, OfferNewResponsePositionCountryMt, OfferNewResponsePositionCountryMu, OfferNewResponsePositionCountryMv, OfferNewResponsePositionCountryMw, OfferNewResponsePositionCountryMx, OfferNewResponsePositionCountryMy, OfferNewResponsePositionCountryMz, OfferNewResponsePositionCountryNa, OfferNewResponsePositionCountryNc, OfferNewResponsePositionCountryNe, OfferNewResponsePositionCountryNf, OfferNewResponsePositionCountryNg, OfferNewResponsePositionCountryNi, OfferNewResponsePositionCountryNl, OfferNewResponsePositionCountryNo, OfferNewResponsePositionCountryNp, OfferNewResponsePositionCountryNr, OfferNewResponsePositionCountryNu, OfferNewResponsePositionCountryNz, OfferNewResponsePositionCountryOm, OfferNewResponsePositionCountryPa, OfferNewResponsePositionCountryPe, OfferNewResponsePositionCountryPf, OfferNewResponsePositionCountryPg, OfferNewResponsePositionCountryPh, OfferNewResponsePositionCountryPk, OfferNewResponsePositionCountryPl, OfferNewResponsePositionCountryPm, OfferNewResponsePositionCountryPn, OfferNewResponsePositionCountryPr, OfferNewResponsePositionCountryPs, OfferNewResponsePositionCountryPt, OfferNewResponsePositionCountryPw, OfferNewResponsePositionCountryPy, OfferNewResponsePositionCountryQa, OfferNewResponsePositionCountryRe, OfferNewResponsePositionCountryRo, OfferNewResponsePositionCountryRs, OfferNewResponsePositionCountryRu, OfferNewResponsePositionCountryRw, OfferNewResponsePositionCountrySa, OfferNewResponsePositionCountrySb, OfferNewResponsePositionCountrySc, OfferNewResponsePositionCountrySd, OfferNewResponsePositionCountrySe, OfferNewResponsePositionCountrySg, OfferNewResponsePositionCountrySh, OfferNewResponsePositionCountrySi, OfferNewResponsePositionCountrySj, OfferNewResponsePositionCountrySk, OfferNewResponsePositionCountrySl, OfferNewResponsePositionCountrySm, OfferNewResponsePositionCountrySn, OfferNewResponsePositionCountrySo, OfferNewResponsePositionCountrySr, OfferNewResponsePositionCountrySS, OfferNewResponsePositionCountrySt, OfferNewResponsePositionCountrySv, OfferNewResponsePositionCountrySx, OfferNewResponsePositionCountrySy, OfferNewResponsePositionCountrySz, OfferNewResponsePositionCountryTc, OfferNewResponsePositionCountryTd, OfferNewResponsePositionCountryTf, OfferNewResponsePositionCountryTg, OfferNewResponsePositionCountryTh, OfferNewResponsePositionCountryTj, OfferNewResponsePositionCountryTk, OfferNewResponsePositionCountryTl, OfferNewResponsePositionCountryTm, OfferNewResponsePositionCountryTn, OfferNewResponsePositionCountryTo, OfferNewResponsePositionCountryTr, OfferNewResponsePositionCountryTt, OfferNewResponsePositionCountryTv, OfferNewResponsePositionCountryTw, OfferNewResponsePositionCountryTz, OfferNewResponsePositionCountryUa, OfferNewResponsePositionCountryUg, OfferNewResponsePositionCountryUm, OfferNewResponsePositionCountryUs, OfferNewResponsePositionCountryUy, OfferNewResponsePositionCountryUz, OfferNewResponsePositionCountryVa, OfferNewResponsePositionCountryVc, OfferNewResponsePositionCountryVe, OfferNewResponsePositionCountryVg, OfferNewResponsePositionCountryVi, OfferNewResponsePositionCountryVn, OfferNewResponsePositionCountryVu, OfferNewResponsePositionCountryWf, OfferNewResponsePositionCountryWs, OfferNewResponsePositionCountryXk, OfferNewResponsePositionCountryYe, OfferNewResponsePositionCountryYt, OfferNewResponsePositionCountryZa, OfferNewResponsePositionCountryZm, OfferNewResponsePositionCountryZw:
+	case OfferNewResponseCompensationBasePayBasisYear, OfferNewResponseCompensationBasePayBasisMonth, OfferNewResponseCompensationBasePayBasisWeek, OfferNewResponseCompensationBasePayBasisHour, OfferNewResponseCompensationBasePayBasisVariable:
 		return true
 	}
 	return false
 }
 
-type OfferNewResponseCompensationBasePay struct {
-	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                 `json:"amount" api:"required"`
-	Basis        OfferNewResponseCompensationBasePayBasis `json:"basis" api:"required"`
-	Type         OfferNewResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                 `json:"variableRate" api:"required,nullable"`
-	JSON         offerNewResponseCompensationBasePayJSON  `json:"-"`
-}
+type OfferNewResponseCompensationBasePayType string
 
-// offerNewResponseCompensationBasePayJSON contains the JSON metadata for the struct [OfferNewResponseCompensationBasePay]
-type offerNewResponseCompensationBasePayJSON struct {
-	Amount       apijson.Field
-	Basis        apijson.Field
-	Type         apijson.Field
-	VariableRate apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
+const (
+	OfferNewResponseCompensationBasePayTypeFixed      OfferNewResponseCompensationBasePayType = "fixed"
+	OfferNewResponseCompensationBasePayTypePayAsYouGo OfferNewResponseCompensationBasePayType = "pay_as_you_go"
+)
 
-func (r *OfferNewResponseCompensationBasePay) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCompensationBasePayJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferNewResponseCompensationStock struct {
-	Options               int64                                 `json:"options" api:"required"`
-	VestingScheduleMonths int64                                 `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                                 `json:"cliffMonths" api:"required,nullable"`
-	JSON                  offerNewResponseCompensationStockJSON `json:"-"`
-}
-
-// offerNewResponseCompensationStockJSON contains the JSON metadata for the struct [OfferNewResponseCompensationStock]
-type offerNewResponseCompensationStockJSON struct {
-	Options               apijson.Field
-	VestingScheduleMonths apijson.Field
-	CliffMonths           apijson.Field
-	raw                   string
-	ExtraFields           map[string]apijson.Field
-}
-
-func (r *OfferNewResponseCompensationStock) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCompensationStockJSON) RawJSON() string {
-	return r.raw
+func (r OfferNewResponseCompensationBasePayType) IsKnown() bool {
+	switch r {
+	case OfferNewResponseCompensationBasePayTypeFixed, OfferNewResponseCompensationBasePayTypePayAsYouGo:
+		return true
+	}
+	return false
 }
 
 type OfferVoidResponseCompensationBasePayBasis string
@@ -3381,67 +3970,34 @@ func (r OfferResendResponseCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
-type Objects6CompensationBasePayBasis string
+type OfferListResponseDataCompensationBasePayBasis string
 
 const (
-	Objects6CompensationBasePayBasisYear     Objects6CompensationBasePayBasis = "year"
-	Objects6CompensationBasePayBasisMonth    Objects6CompensationBasePayBasis = "month"
-	Objects6CompensationBasePayBasisWeek     Objects6CompensationBasePayBasis = "week"
-	Objects6CompensationBasePayBasisHour     Objects6CompensationBasePayBasis = "hour"
-	Objects6CompensationBasePayBasisVariable Objects6CompensationBasePayBasis = "variable"
+	OfferListResponseDataCompensationBasePayBasisYear     OfferListResponseDataCompensationBasePayBasis = "year"
+	OfferListResponseDataCompensationBasePayBasisMonth    OfferListResponseDataCompensationBasePayBasis = "month"
+	OfferListResponseDataCompensationBasePayBasisWeek     OfferListResponseDataCompensationBasePayBasis = "week"
+	OfferListResponseDataCompensationBasePayBasisHour     OfferListResponseDataCompensationBasePayBasis = "hour"
+	OfferListResponseDataCompensationBasePayBasisVariable OfferListResponseDataCompensationBasePayBasis = "variable"
 )
 
-func (r Objects6CompensationBasePayBasis) IsKnown() bool {
+func (r OfferListResponseDataCompensationBasePayBasis) IsKnown() bool {
 	switch r {
-	case Objects6CompensationBasePayBasisYear, Objects6CompensationBasePayBasisMonth, Objects6CompensationBasePayBasisWeek, Objects6CompensationBasePayBasisHour, Objects6CompensationBasePayBasisVariable:
+	case OfferListResponseDataCompensationBasePayBasisYear, OfferListResponseDataCompensationBasePayBasisMonth, OfferListResponseDataCompensationBasePayBasisWeek, OfferListResponseDataCompensationBasePayBasisHour, OfferListResponseDataCompensationBasePayBasisVariable:
 		return true
 	}
 	return false
 }
 
-type Objects6CompensationBasePayType string
+type OfferListResponseDataCompensationBasePayType string
 
 const (
-	Objects6CompensationBasePayTypeFixed      Objects6CompensationBasePayType = "fixed"
-	Objects6CompensationBasePayTypePayAsYouGo Objects6CompensationBasePayType = "pay_as_you_go"
+	OfferListResponseDataCompensationBasePayTypeFixed      OfferListResponseDataCompensationBasePayType = "fixed"
+	OfferListResponseDataCompensationBasePayTypePayAsYouGo OfferListResponseDataCompensationBasePayType = "pay_as_you_go"
 )
 
-func (r Objects6CompensationBasePayType) IsKnown() bool {
+func (r OfferListResponseDataCompensationBasePayType) IsKnown() bool {
 	switch r {
-	case Objects6CompensationBasePayTypeFixed, Objects6CompensationBasePayTypePayAsYouGo:
-		return true
-	}
-	return false
-}
-
-type OfferNewResponseCompensationBasePayBasis string
-
-const (
-	OfferNewResponseCompensationBasePayBasisYear     OfferNewResponseCompensationBasePayBasis = "year"
-	OfferNewResponseCompensationBasePayBasisMonth    OfferNewResponseCompensationBasePayBasis = "month"
-	OfferNewResponseCompensationBasePayBasisWeek     OfferNewResponseCompensationBasePayBasis = "week"
-	OfferNewResponseCompensationBasePayBasisHour     OfferNewResponseCompensationBasePayBasis = "hour"
-	OfferNewResponseCompensationBasePayBasisVariable OfferNewResponseCompensationBasePayBasis = "variable"
-)
-
-func (r OfferNewResponseCompensationBasePayBasis) IsKnown() bool {
-	switch r {
-	case OfferNewResponseCompensationBasePayBasisYear, OfferNewResponseCompensationBasePayBasisMonth, OfferNewResponseCompensationBasePayBasisWeek, OfferNewResponseCompensationBasePayBasisHour, OfferNewResponseCompensationBasePayBasisVariable:
-		return true
-	}
-	return false
-}
-
-type OfferNewResponseCompensationBasePayType string
-
-const (
-	OfferNewResponseCompensationBasePayTypeFixed      OfferNewResponseCompensationBasePayType = "fixed"
-	OfferNewResponseCompensationBasePayTypePayAsYouGo OfferNewResponseCompensationBasePayType = "pay_as_you_go"
-)
-
-func (r OfferNewResponseCompensationBasePayType) IsKnown() bool {
-	switch r {
-	case OfferNewResponseCompensationBasePayTypeFixed, OfferNewResponseCompensationBasePayTypePayAsYouGo:
+	case OfferListResponseDataCompensationBasePayTypeFixed, OfferListResponseDataCompensationBasePayTypePayAsYouGo:
 		return true
 	}
 	return false

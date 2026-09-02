@@ -6,55 +6,14 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 )
 
-type Union string
-
-const (
-	UnionMedical             Union = "medical"
-	UnionDental              Union = "dental"
-	UnionVision              Union = "vision"
-	UnionLife                Union = "life"
-	UnionShortTermDisability Union = "short_term_disability"
-	UnionLongTermDisability  Union = "long_term_disability"
-	Union401k                Union = "401k"
-	UnionRoth401k            Union = "roth_401k"
-	Union403b                Union = "403b"
-	UnionRoth403b            Union = "roth_403b"
-	Union457                 Union = "457"
-	UnionRoth457             Union = "roth_457"
-	UnionHsa                 Union = "hsa"
-	UnionFsaMedical          Union = "fsa_medical"
-	UnionFsaDependentCare    Union = "fsa_dependent_care"
-	UnionTransit             Union = "transit"
-	UnionParking             Union = "parking"
-	UnionAccident            Union = "accident"
-	UnionCancer              Union = "cancer"
-	UnionCriticalIllness     Union = "critical_illness"
-	UnionHospital            Union = "hospital"
-	UnionMedicalOther        Union = "medical_other"
-	UnionSimpleIra           Union = "simple_ira"
-	UnionRothSimpleIra       Union = "roth_simple_ira"
-	UnionNqdc                Union = "nqdc"
-	UnionNontaxableFringe    Union = "nontaxable_fringe"
-	UnionPucc                Union = "pucc"
-	UnionVoluntary           Union = "voluntary"
-	UnionPostTax             Union = "post_tax"
-	UnionOther               Union = "other"
-)
-
-func (r Union) IsKnown() bool {
-	switch r {
-	case UnionMedical, UnionDental, UnionVision, UnionLife, UnionShortTermDisability, UnionLongTermDisability, Union401k, UnionRoth401k, Union403b, UnionRoth403b, Union457, UnionRoth457, UnionHsa, UnionFsaMedical, UnionFsaDependentCare, UnionTransit, UnionParking, UnionAccident, UnionCancer, UnionCriticalIllness, UnionHospital, UnionMedicalOther, UnionSimpleIra, UnionRothSimpleIra, UnionNqdc, UnionNontaxableFringe, UnionPucc, UnionVoluntary, UnionPostTax, UnionOther:
-		return true
-	}
-	return false
-}
-
 type PublicWorkerCompensation struct {
+	// The id of the regular pay rate represented here.
 	PayRateID string `json:"payRateId" api:"required"`
 	// The period represented by the pay rate amount.
-	Per      PublicWorkerCompensationPer `json:"per" api:"required"`
-	Amount   int64                       `json:"amount" api:"required"`
-	Currency Union1                      `json:"currency" api:"required"`
+	Per PublicWorkerCompensationPer `json:"per" api:"required"`
+	// Amount in the currency base unit, e.g. cents for USD.
+	Amount   int64                            `json:"amount" api:"required"`
+	Currency PublicWorkerCompensationCurrency `json:"currency" api:"required"`
 	// The server-formatted pay rate, including its period.
 	Display string                       `json:"display" api:"required"`
 	JSON    publicWorkerCompensationJSON `json:"-"`
@@ -96,67 +55,84 @@ func (r PublicWorkerCompensationPer) IsKnown() bool {
 	return false
 }
 
-type Union2 string
+type PublicWorkerCompensationCurrency string
 
 const (
-	Union2Infinity  Union2 = "Infinity"
-	Union2Infinity2 Union2 = "-Infinity"
-	Union2NaN       Union2 = "NaN"
+	PublicWorkerCompensationCurrencyUsd PublicWorkerCompensationCurrency = "USD"
+	PublicWorkerCompensationCurrencyAud PublicWorkerCompensationCurrency = "AUD"
+	PublicWorkerCompensationCurrencyBgn PublicWorkerCompensationCurrency = "BGN"
+	PublicWorkerCompensationCurrencyBrl PublicWorkerCompensationCurrency = "BRL"
+	PublicWorkerCompensationCurrencyCad PublicWorkerCompensationCurrency = "CAD"
+	PublicWorkerCompensationCurrencyChf PublicWorkerCompensationCurrency = "CHF"
+	PublicWorkerCompensationCurrencyCzk PublicWorkerCompensationCurrency = "CZK"
+	PublicWorkerCompensationCurrencyDkk PublicWorkerCompensationCurrency = "DKK"
+	PublicWorkerCompensationCurrencyEur PublicWorkerCompensationCurrency = "EUR"
+	PublicWorkerCompensationCurrencyGbp PublicWorkerCompensationCurrency = "GBP"
+	PublicWorkerCompensationCurrencyHkd PublicWorkerCompensationCurrency = "HKD"
+	PublicWorkerCompensationCurrencyHuf PublicWorkerCompensationCurrency = "HUF"
+	PublicWorkerCompensationCurrencyIdr PublicWorkerCompensationCurrency = "IDR"
+	PublicWorkerCompensationCurrencyInr PublicWorkerCompensationCurrency = "INR"
+	PublicWorkerCompensationCurrencyJpy PublicWorkerCompensationCurrency = "JPY"
+	PublicWorkerCompensationCurrencyMyr PublicWorkerCompensationCurrency = "MYR"
+	PublicWorkerCompensationCurrencyNok PublicWorkerCompensationCurrency = "NOK"
+	PublicWorkerCompensationCurrencyNzd PublicWorkerCompensationCurrency = "NZD"
+	PublicWorkerCompensationCurrencyCny PublicWorkerCompensationCurrency = "CNY"
+	PublicWorkerCompensationCurrencyPln PublicWorkerCompensationCurrency = "PLN"
+	PublicWorkerCompensationCurrencyRon PublicWorkerCompensationCurrency = "RON"
+	PublicWorkerCompensationCurrencyTry PublicWorkerCompensationCurrency = "TRY"
+	PublicWorkerCompensationCurrencySek PublicWorkerCompensationCurrency = "SEK"
+	PublicWorkerCompensationCurrencySgd PublicWorkerCompensationCurrency = "SGD"
+	PublicWorkerCompensationCurrencyAed PublicWorkerCompensationCurrency = "AED"
+	PublicWorkerCompensationCurrencyArs PublicWorkerCompensationCurrency = "ARS"
+	PublicWorkerCompensationCurrencyBdt PublicWorkerCompensationCurrency = "BDT"
+	PublicWorkerCompensationCurrencyBwp PublicWorkerCompensationCurrency = "BWP"
+	PublicWorkerCompensationCurrencyClp PublicWorkerCompensationCurrency = "CLP"
+	PublicWorkerCompensationCurrencyCop PublicWorkerCompensationCurrency = "COP"
+	PublicWorkerCompensationCurrencyCrc PublicWorkerCompensationCurrency = "CRC"
+	PublicWorkerCompensationCurrencyEgp PublicWorkerCompensationCurrency = "EGP"
+	PublicWorkerCompensationCurrencyFjd PublicWorkerCompensationCurrency = "FJD"
+	PublicWorkerCompensationCurrencyGel PublicWorkerCompensationCurrency = "GEL"
+	PublicWorkerCompensationCurrencyGhs PublicWorkerCompensationCurrency = "GHS"
+	PublicWorkerCompensationCurrencyIls PublicWorkerCompensationCurrency = "ILS"
+	PublicWorkerCompensationCurrencyKes PublicWorkerCompensationCurrency = "KES"
+	PublicWorkerCompensationCurrencyKrw PublicWorkerCompensationCurrency = "KRW"
+	PublicWorkerCompensationCurrencyLkr PublicWorkerCompensationCurrency = "LKR"
+	PublicWorkerCompensationCurrencyMad PublicWorkerCompensationCurrency = "MAD"
+	PublicWorkerCompensationCurrencyMxn PublicWorkerCompensationCurrency = "MXN"
+	PublicWorkerCompensationCurrencyNpr PublicWorkerCompensationCurrency = "NPR"
+	PublicWorkerCompensationCurrencyPhp PublicWorkerCompensationCurrency = "PHP"
+	PublicWorkerCompensationCurrencyPkr PublicWorkerCompensationCurrency = "PKR"
+	PublicWorkerCompensationCurrencyThb PublicWorkerCompensationCurrency = "THB"
+	PublicWorkerCompensationCurrencyUah PublicWorkerCompensationCurrency = "UAH"
+	PublicWorkerCompensationCurrencyUgx PublicWorkerCompensationCurrency = "UGX"
+	PublicWorkerCompensationCurrencyUyu PublicWorkerCompensationCurrency = "UYU"
+	PublicWorkerCompensationCurrencyVnd PublicWorkerCompensationCurrency = "VND"
+	PublicWorkerCompensationCurrencyZar PublicWorkerCompensationCurrency = "ZAR"
+	PublicWorkerCompensationCurrencyZmw PublicWorkerCompensationCurrency = "ZMW"
+	PublicWorkerCompensationCurrencyTnd PublicWorkerCompensationCurrency = "TND"
+	PublicWorkerCompensationCurrencyNgn PublicWorkerCompensationCurrency = "NGN"
+	PublicWorkerCompensationCurrencyRsd PublicWorkerCompensationCurrency = "RSD"
+	PublicWorkerCompensationCurrencyTwd PublicWorkerCompensationCurrency = "TWD"
+	PublicWorkerCompensationCurrencyGtq PublicWorkerCompensationCurrency = "GTQ"
+	PublicWorkerCompensationCurrencyHnl PublicWorkerCompensationCurrency = "HNL"
+	PublicWorkerCompensationCurrencyDop PublicWorkerCompensationCurrency = "DOP"
+	PublicWorkerCompensationCurrencySar PublicWorkerCompensationCurrency = "SAR"
+	PublicWorkerCompensationCurrencyXaf PublicWorkerCompensationCurrency = "XAF"
+	PublicWorkerCompensationCurrencyPen PublicWorkerCompensationCurrency = "PEN"
 )
 
-func (r Union2) IsKnown() bool {
+func (r PublicWorkerCompensationCurrency) IsKnown() bool {
 	switch r {
-	case Union2Infinity, Union2Infinity2, Union2NaN:
+	case PublicWorkerCompensationCurrencyUsd, PublicWorkerCompensationCurrencyAud, PublicWorkerCompensationCurrencyBgn, PublicWorkerCompensationCurrencyBrl, PublicWorkerCompensationCurrencyCad, PublicWorkerCompensationCurrencyChf, PublicWorkerCompensationCurrencyCzk, PublicWorkerCompensationCurrencyDkk, PublicWorkerCompensationCurrencyEur, PublicWorkerCompensationCurrencyGbp, PublicWorkerCompensationCurrencyHkd, PublicWorkerCompensationCurrencyHuf, PublicWorkerCompensationCurrencyIdr, PublicWorkerCompensationCurrencyInr, PublicWorkerCompensationCurrencyJpy, PublicWorkerCompensationCurrencyMyr, PublicWorkerCompensationCurrencyNok, PublicWorkerCompensationCurrencyNzd, PublicWorkerCompensationCurrencyCny, PublicWorkerCompensationCurrencyPln, PublicWorkerCompensationCurrencyRon, PublicWorkerCompensationCurrencyTry, PublicWorkerCompensationCurrencySek, PublicWorkerCompensationCurrencySgd, PublicWorkerCompensationCurrencyAed, PublicWorkerCompensationCurrencyArs, PublicWorkerCompensationCurrencyBdt, PublicWorkerCompensationCurrencyBwp, PublicWorkerCompensationCurrencyClp, PublicWorkerCompensationCurrencyCop, PublicWorkerCompensationCurrencyCrc, PublicWorkerCompensationCurrencyEgp, PublicWorkerCompensationCurrencyFjd, PublicWorkerCompensationCurrencyGel, PublicWorkerCompensationCurrencyGhs, PublicWorkerCompensationCurrencyIls, PublicWorkerCompensationCurrencyKes, PublicWorkerCompensationCurrencyKrw, PublicWorkerCompensationCurrencyLkr, PublicWorkerCompensationCurrencyMad, PublicWorkerCompensationCurrencyMxn, PublicWorkerCompensationCurrencyNpr, PublicWorkerCompensationCurrencyPhp, PublicWorkerCompensationCurrencyPkr, PublicWorkerCompensationCurrencyThb, PublicWorkerCompensationCurrencyUah, PublicWorkerCompensationCurrencyUgx, PublicWorkerCompensationCurrencyUyu, PublicWorkerCompensationCurrencyVnd, PublicWorkerCompensationCurrencyZar, PublicWorkerCompensationCurrencyZmw, PublicWorkerCompensationCurrencyTnd, PublicWorkerCompensationCurrencyNgn, PublicWorkerCompensationCurrencyRsd, PublicWorkerCompensationCurrencyTwd, PublicWorkerCompensationCurrencyGtq, PublicWorkerCompensationCurrencyHnl, PublicWorkerCompensationCurrencyDop, PublicWorkerCompensationCurrencySar, PublicWorkerCompensationCurrencyXaf, PublicWorkerCompensationCurrencyPen:
 		return true
 	}
 	return false
 }
 
-type Objects struct {
-	ID          string      `json:"id" api:"required"`
-	Name        string      `json:"name" api:"required"`
-	Description string      `json:"description" api:"required,nullable"`
-	Type        Union4      `json:"type" api:"required"`
-	Config      interface{} `json:"config" api:"required"`
-	Status      Union5      `json:"status" api:"required"`
-	Category    Union6      `json:"category" api:"required"`
-	AccessLevel Union7      `json:"accessLevel" api:"required"`
-	InputBy     Union8      `json:"inputBy" api:"required"`
-	CanWrite    bool        `json:"canWrite" api:"required"`
-	CreatedAt   string      `json:"createdAt" api:"required"`
-	Required    bool        `json:"required" api:"nullable"`
-	JSON        objectsJSON `json:"-"`
-}
-
-// objectsJSON contains the JSON metadata for the struct [Objects]
-type objectsJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	Description apijson.Field
-	Type        apijson.Field
-	Config      apijson.Field
-	Status      apijson.Field
-	Category    apijson.Field
-	AccessLevel apijson.Field
-	InputBy     apijson.Field
-	CanWrite    apijson.Field
-	CreatedAt   apijson.Field
-	Required    apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objectsJSON) RawJSON() string {
-	return r.raw
-}
-
 type PublicMoneyAmount struct {
-	Amount   int64  `json:"amount" api:"required"`
-	Currency Union1 `json:"currency" api:"required"`
+	// Amount in the currency base unit, e.g. cents for USD.
+	Amount   int64                     `json:"amount" api:"required"`
+	Currency PublicMoneyAmountCurrency `json:"currency" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                `json:"display" api:"required"`
 	JSON    publicMoneyAmountJSON `json:"-"`
@@ -177,6 +153,80 @@ func (r *PublicMoneyAmount) UnmarshalJSON(data []byte) (err error) {
 
 func (r publicMoneyAmountJSON) RawJSON() string {
 	return r.raw
+}
+
+type PublicMoneyAmountCurrency string
+
+const (
+	PublicMoneyAmountCurrencyUsd PublicMoneyAmountCurrency = "USD"
+	PublicMoneyAmountCurrencyAud PublicMoneyAmountCurrency = "AUD"
+	PublicMoneyAmountCurrencyBgn PublicMoneyAmountCurrency = "BGN"
+	PublicMoneyAmountCurrencyBrl PublicMoneyAmountCurrency = "BRL"
+	PublicMoneyAmountCurrencyCad PublicMoneyAmountCurrency = "CAD"
+	PublicMoneyAmountCurrencyChf PublicMoneyAmountCurrency = "CHF"
+	PublicMoneyAmountCurrencyCzk PublicMoneyAmountCurrency = "CZK"
+	PublicMoneyAmountCurrencyDkk PublicMoneyAmountCurrency = "DKK"
+	PublicMoneyAmountCurrencyEur PublicMoneyAmountCurrency = "EUR"
+	PublicMoneyAmountCurrencyGbp PublicMoneyAmountCurrency = "GBP"
+	PublicMoneyAmountCurrencyHkd PublicMoneyAmountCurrency = "HKD"
+	PublicMoneyAmountCurrencyHuf PublicMoneyAmountCurrency = "HUF"
+	PublicMoneyAmountCurrencyIdr PublicMoneyAmountCurrency = "IDR"
+	PublicMoneyAmountCurrencyInr PublicMoneyAmountCurrency = "INR"
+	PublicMoneyAmountCurrencyJpy PublicMoneyAmountCurrency = "JPY"
+	PublicMoneyAmountCurrencyMyr PublicMoneyAmountCurrency = "MYR"
+	PublicMoneyAmountCurrencyNok PublicMoneyAmountCurrency = "NOK"
+	PublicMoneyAmountCurrencyNzd PublicMoneyAmountCurrency = "NZD"
+	PublicMoneyAmountCurrencyCny PublicMoneyAmountCurrency = "CNY"
+	PublicMoneyAmountCurrencyPln PublicMoneyAmountCurrency = "PLN"
+	PublicMoneyAmountCurrencyRon PublicMoneyAmountCurrency = "RON"
+	PublicMoneyAmountCurrencyTry PublicMoneyAmountCurrency = "TRY"
+	PublicMoneyAmountCurrencySek PublicMoneyAmountCurrency = "SEK"
+	PublicMoneyAmountCurrencySgd PublicMoneyAmountCurrency = "SGD"
+	PublicMoneyAmountCurrencyAed PublicMoneyAmountCurrency = "AED"
+	PublicMoneyAmountCurrencyArs PublicMoneyAmountCurrency = "ARS"
+	PublicMoneyAmountCurrencyBdt PublicMoneyAmountCurrency = "BDT"
+	PublicMoneyAmountCurrencyBwp PublicMoneyAmountCurrency = "BWP"
+	PublicMoneyAmountCurrencyClp PublicMoneyAmountCurrency = "CLP"
+	PublicMoneyAmountCurrencyCop PublicMoneyAmountCurrency = "COP"
+	PublicMoneyAmountCurrencyCrc PublicMoneyAmountCurrency = "CRC"
+	PublicMoneyAmountCurrencyEgp PublicMoneyAmountCurrency = "EGP"
+	PublicMoneyAmountCurrencyFjd PublicMoneyAmountCurrency = "FJD"
+	PublicMoneyAmountCurrencyGel PublicMoneyAmountCurrency = "GEL"
+	PublicMoneyAmountCurrencyGhs PublicMoneyAmountCurrency = "GHS"
+	PublicMoneyAmountCurrencyIls PublicMoneyAmountCurrency = "ILS"
+	PublicMoneyAmountCurrencyKes PublicMoneyAmountCurrency = "KES"
+	PublicMoneyAmountCurrencyKrw PublicMoneyAmountCurrency = "KRW"
+	PublicMoneyAmountCurrencyLkr PublicMoneyAmountCurrency = "LKR"
+	PublicMoneyAmountCurrencyMad PublicMoneyAmountCurrency = "MAD"
+	PublicMoneyAmountCurrencyMxn PublicMoneyAmountCurrency = "MXN"
+	PublicMoneyAmountCurrencyNpr PublicMoneyAmountCurrency = "NPR"
+	PublicMoneyAmountCurrencyPhp PublicMoneyAmountCurrency = "PHP"
+	PublicMoneyAmountCurrencyPkr PublicMoneyAmountCurrency = "PKR"
+	PublicMoneyAmountCurrencyThb PublicMoneyAmountCurrency = "THB"
+	PublicMoneyAmountCurrencyUah PublicMoneyAmountCurrency = "UAH"
+	PublicMoneyAmountCurrencyUgx PublicMoneyAmountCurrency = "UGX"
+	PublicMoneyAmountCurrencyUyu PublicMoneyAmountCurrency = "UYU"
+	PublicMoneyAmountCurrencyVnd PublicMoneyAmountCurrency = "VND"
+	PublicMoneyAmountCurrencyZar PublicMoneyAmountCurrency = "ZAR"
+	PublicMoneyAmountCurrencyZmw PublicMoneyAmountCurrency = "ZMW"
+	PublicMoneyAmountCurrencyTnd PublicMoneyAmountCurrency = "TND"
+	PublicMoneyAmountCurrencyNgn PublicMoneyAmountCurrency = "NGN"
+	PublicMoneyAmountCurrencyRsd PublicMoneyAmountCurrency = "RSD"
+	PublicMoneyAmountCurrencyTwd PublicMoneyAmountCurrency = "TWD"
+	PublicMoneyAmountCurrencyGtq PublicMoneyAmountCurrency = "GTQ"
+	PublicMoneyAmountCurrencyHnl PublicMoneyAmountCurrency = "HNL"
+	PublicMoneyAmountCurrencyDop PublicMoneyAmountCurrency = "DOP"
+	PublicMoneyAmountCurrencySar PublicMoneyAmountCurrency = "SAR"
+	PublicMoneyAmountCurrencyXaf PublicMoneyAmountCurrency = "XAF"
+	PublicMoneyAmountCurrencyPen PublicMoneyAmountCurrency = "PEN"
+)
+
+func (r PublicMoneyAmountCurrency) IsKnown() bool {
+	switch r {
+	case PublicMoneyAmountCurrencyUsd, PublicMoneyAmountCurrencyAud, PublicMoneyAmountCurrencyBgn, PublicMoneyAmountCurrencyBrl, PublicMoneyAmountCurrencyCad, PublicMoneyAmountCurrencyChf, PublicMoneyAmountCurrencyCzk, PublicMoneyAmountCurrencyDkk, PublicMoneyAmountCurrencyEur, PublicMoneyAmountCurrencyGbp, PublicMoneyAmountCurrencyHkd, PublicMoneyAmountCurrencyHuf, PublicMoneyAmountCurrencyIdr, PublicMoneyAmountCurrencyInr, PublicMoneyAmountCurrencyJpy, PublicMoneyAmountCurrencyMyr, PublicMoneyAmountCurrencyNok, PublicMoneyAmountCurrencyNzd, PublicMoneyAmountCurrencyCny, PublicMoneyAmountCurrencyPln, PublicMoneyAmountCurrencyRon, PublicMoneyAmountCurrencyTry, PublicMoneyAmountCurrencySek, PublicMoneyAmountCurrencySgd, PublicMoneyAmountCurrencyAed, PublicMoneyAmountCurrencyArs, PublicMoneyAmountCurrencyBdt, PublicMoneyAmountCurrencyBwp, PublicMoneyAmountCurrencyClp, PublicMoneyAmountCurrencyCop, PublicMoneyAmountCurrencyCrc, PublicMoneyAmountCurrencyEgp, PublicMoneyAmountCurrencyFjd, PublicMoneyAmountCurrencyGel, PublicMoneyAmountCurrencyGhs, PublicMoneyAmountCurrencyIls, PublicMoneyAmountCurrencyKes, PublicMoneyAmountCurrencyKrw, PublicMoneyAmountCurrencyLkr, PublicMoneyAmountCurrencyMad, PublicMoneyAmountCurrencyMxn, PublicMoneyAmountCurrencyNpr, PublicMoneyAmountCurrencyPhp, PublicMoneyAmountCurrencyPkr, PublicMoneyAmountCurrencyThb, PublicMoneyAmountCurrencyUah, PublicMoneyAmountCurrencyUgx, PublicMoneyAmountCurrencyUyu, PublicMoneyAmountCurrencyVnd, PublicMoneyAmountCurrencyZar, PublicMoneyAmountCurrencyZmw, PublicMoneyAmountCurrencyTnd, PublicMoneyAmountCurrencyNgn, PublicMoneyAmountCurrencyRsd, PublicMoneyAmountCurrencyTwd, PublicMoneyAmountCurrencyGtq, PublicMoneyAmountCurrencyHnl, PublicMoneyAmountCurrencyDop, PublicMoneyAmountCurrencySar, PublicMoneyAmountCurrencyXaf, PublicMoneyAmountCurrencyPen:
+		return true
+	}
+	return false
 }
 
 type EffectHTTPAPIErrorInternalServerErrorEncoded struct {
@@ -443,94 +493,6 @@ func (r APINotEnabledEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union3 = string
-
-type Union4 string
-
-const (
-	Union4Text        Union4 = "text"
-	Union4Number      Union4 = "number"
-	Union4Date        Union4 = "date"
-	Union4Boolean     Union4 = "boolean"
-	Union4Currency    Union4 = "currency"
-	Union4Percentage  Union4 = "percentage"
-	Union4Select      Union4 = "select"
-	Union4MultiSelect Union4 = "multi_select"
-)
-
-func (r Union4) IsKnown() bool {
-	switch r {
-	case Union4Text, Union4Number, Union4Date, Union4Boolean, Union4Currency, Union4Percentage, Union4Select, Union4MultiSelect:
-		return true
-	}
-	return false
-}
-
-type Union5 string
-
-const (
-	Union5Active   Union5 = "active"
-	Union5Archived Union5 = "archived"
-)
-
-func (r Union5) IsKnown() bool {
-	switch r {
-	case Union5Active, Union5Archived:
-		return true
-	}
-	return false
-}
-
-type Union6 string
-
-const (
-	Union6Info         Union6 = "info"
-	Union6Pii          Union6 = "pii"
-	Union6Compensation Union6 = "compensation"
-	Union6Banking      Union6 = "banking"
-	Union6It           Union6 = "it"
-	Union6Compliance   Union6 = "compliance"
-)
-
-func (r Union6) IsKnown() bool {
-	switch r {
-	case Union6Info, Union6Pii, Union6Compensation, Union6Banking, Union6It, Union6Compliance:
-		return true
-	}
-	return false
-}
-
-type Union7 string
-
-const (
-	Union7Admins  Union7 = "admins"
-	Union7Manager Union7 = "manager"
-	Union7Worker  Union7 = "worker"
-)
-
-func (r Union7) IsKnown() bool {
-	switch r {
-	case Union7Admins, Union7Manager, Union7Worker:
-		return true
-	}
-	return false
-}
-
-type Union8 string
-
-const (
-	Union8Admin  Union8 = "admin"
-	Union8Worker Union8 = "worker"
-)
-
-func (r Union8) IsKnown() bool {
-	switch r {
-	case Union8Admin, Union8Worker:
-		return true
-	}
-	return false
-}
-
 type CustomFieldOptionAlreadyExistsErrorEncoded struct {
 	Tag     CustomFieldOptionAlreadyExistsErrorEncodedTag  `json:"_tag" api:"required"`
 	Value   string                                         `json:"value" api:"required"`
@@ -605,53 +567,9 @@ func (r InvalidCustomFieldOperationErrorEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Objects3 struct {
-	ID        string         `json:"id" api:"required"`
-	Label     string         `json:"label" api:"required"`
-	Value     string         `json:"value" api:"required"`
-	SortOrder interface{}    `json:"sortOrder" api:"required"`
-	Status    Objects3Status `json:"status" api:"required"`
-	CreatedAt string         `json:"createdAt" api:"required"`
-	JSON      objects3JSON   `json:"-"`
-}
-
-// objects3JSON contains the JSON metadata for the struct [Objects3]
-type objects3JSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects3) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects3JSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects3Status string
-
-const (
-	Objects3StatusActive   Objects3Status = "active"
-	Objects3StatusArchived Objects3Status = "archived"
-)
-
-func (r Objects3Status) IsKnown() bool {
-	switch r {
-	case Objects3StatusActive, Objects3StatusArchived:
-		return true
-	}
-	return false
-}
-
 type CustomFieldNotFoundErrorEncoded struct {
-	Tag     CustomFieldNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
+	Tag CustomFieldNotFoundErrorEncodedTag `json:"_tag" api:"required"`
+	// The tag of a company custom worker field.
 	ID      string                              `json:"id" api:"required"`
 	Message string                              `json:"message" api:"required"`
 	JSON    customFieldNotFoundErrorEncodedJSON `json:"-"`
@@ -689,7 +607,8 @@ func (r CustomFieldNotFoundErrorEncodedTag) IsKnown() bool {
 }
 
 type CustomFieldOptionNotFoundErrorEncoded struct {
-	Tag     CustomFieldOptionNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
+	Tag CustomFieldOptionNotFoundErrorEncodedTag `json:"_tag" api:"required"`
+	// The tag of a company custom worker field option.
 	ID      string                                    `json:"id" api:"required"`
 	Message string                                    `json:"message" api:"required"`
 	JSON    customFieldOptionNotFoundErrorEncodedJSON `json:"-"`
@@ -726,10 +645,9 @@ func (r CustomFieldOptionNotFoundErrorEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union12 = string
-
 type DepartmentNotFoundEncoded struct {
-	Tag     DepartmentNotFoundEncodedTag  `json:"_tag" api:"required"`
+	Tag DepartmentNotFoundEncodedTag `json:"_tag" api:"required"`
+	// The unique public id of the department
 	ID      string                        `json:"id" api:"required"`
 	Message string                        `json:"message" api:"required"`
 	JSON    departmentNotFoundEncodedJSON `json:"-"`
@@ -766,67 +684,9 @@ func (r DepartmentNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Objects5 struct {
-	ID    string        `json:"id" api:"required"`
-	Code  string        `json:"code" api:"required"`
-	Name  string        `json:"name" api:"required"`
-	Track Objects5Track `json:"track" api:"required"`
-	JSON  objects5JSON  `json:"-"`
-}
-
-// objects5JSON contains the JSON metadata for the struct [Objects5]
-type objects5JSON struct {
-	ID          apijson.Field
-	Code        apijson.Field
-	Name        apijson.Field
-	Track       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects5) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5JSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5Track string
-
-const (
-	Objects5TrackIc        Objects5Track = "ic"
-	Objects5TrackManager   Objects5Track = "manager"
-	Objects5TrackExecutive Objects5Track = "executive"
-)
-
-func (r Objects5Track) IsKnown() bool {
-	switch r {
-	case Objects5TrackIc, Objects5TrackManager, Objects5TrackExecutive:
-		return true
-	}
-	return false
-}
-
-type Union13 string
-
-const (
-	Union13Draft    Union13 = "draft"
-	Union13Sent     Union13 = "sent"
-	Union13Accepted Union13 = "accepted"
-	Union13Void     Union13 = "void"
-)
-
-func (r Union13) IsKnown() bool {
-	switch r {
-	case Union13Draft, Union13Sent, Union13Accepted, Union13Void:
-		return true
-	}
-	return false
-}
-
 type WorkplaceNotFoundEncoded struct {
-	Tag     WorkplaceNotFoundEncodedTag  `json:"_tag" api:"required"`
+	Tag WorkplaceNotFoundEncodedTag `json:"_tag" api:"required"`
+	// Public workplace identifier
 	ID      string                       `json:"id" api:"required"`
 	Message string                       `json:"message" api:"required"`
 	JSON    workplaceNotFoundEncodedJSON `json:"-"`
@@ -864,7 +724,8 @@ func (r WorkplaceNotFoundEncodedTag) IsKnown() bool {
 }
 
 type ManagerNotFoundErrorEncoded struct {
-	Tag     ManagerNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
+	Tag ManagerNotFoundErrorEncodedTag `json:"_tag" api:"required"`
+	// The id of the worker.
 	ID      string                          `json:"id" api:"required"`
 	Message string                          `json:"message" api:"required"`
 	JSON    managerNotFoundErrorEncodedJSON `json:"-"`
@@ -902,7 +763,8 @@ func (r ManagerNotFoundErrorEncodedTag) IsKnown() bool {
 }
 
 type OfferNotFoundErrorEncoded struct {
-	Tag     OfferNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
+	Tag OfferNotFoundErrorEncodedTag `json:"_tag" api:"required"`
+	// The tag of the offer.
 	ID      string                        `json:"id" api:"required"`
 	Message string                        `json:"message" api:"required"`
 	JSON    offerNotFoundErrorEncodedJSON `json:"-"`
@@ -940,11 +802,12 @@ func (r OfferNotFoundErrorEncodedTag) IsKnown() bool {
 }
 
 type InvalidOfferStatusErrorEncoded struct {
-	Tag     InvalidOfferStatusErrorEncodedTag  `json:"_tag" api:"required"`
-	ID      string                             `json:"id" api:"required"`
-	Status  Union13                            `json:"status" api:"required"`
-	Message string                             `json:"message" api:"required"`
-	JSON    invalidOfferStatusErrorEncodedJSON `json:"-"`
+	Tag InvalidOfferStatusErrorEncodedTag `json:"_tag" api:"required"`
+	// The tag of the offer.
+	ID      string                               `json:"id" api:"required"`
+	Status  InvalidOfferStatusErrorEncodedStatus `json:"status" api:"required"`
+	Message string                               `json:"message" api:"required"`
+	JSON    invalidOfferStatusErrorEncodedJSON   `json:"-"`
 }
 
 // invalidOfferStatusErrorEncodedJSON contains the JSON metadata for the struct [InvalidOfferStatusErrorEncoded]
@@ -974,6 +837,23 @@ const (
 func (r InvalidOfferStatusErrorEncodedTag) IsKnown() bool {
 	switch r {
 	case InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError:
+		return true
+	}
+	return false
+}
+
+type InvalidOfferStatusErrorEncodedStatus string
+
+const (
+	InvalidOfferStatusErrorEncodedStatusDraft    InvalidOfferStatusErrorEncodedStatus = "draft"
+	InvalidOfferStatusErrorEncodedStatusSent     InvalidOfferStatusErrorEncodedStatus = "sent"
+	InvalidOfferStatusErrorEncodedStatusAccepted InvalidOfferStatusErrorEncodedStatus = "accepted"
+	InvalidOfferStatusErrorEncodedStatusVoid     InvalidOfferStatusErrorEncodedStatus = "void"
+)
+
+func (r InvalidOfferStatusErrorEncodedStatus) IsKnown() bool {
+	switch r {
+	case InvalidOfferStatusErrorEncodedStatusDraft, InvalidOfferStatusErrorEncodedStatusSent, InvalidOfferStatusErrorEncodedStatusAccepted, InvalidOfferStatusErrorEncodedStatusVoid:
 		return true
 	}
 	return false
@@ -1053,8 +933,6 @@ func (r PublicPayFrequency) IsKnown() bool {
 	}
 	return false
 }
-
-type Union21 = string
 
 type PublicPayrollCurrency string
 
@@ -1228,74 +1106,9 @@ func (r TimeOffPolicyNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union24 = string
-
-type Union25 = string
-
-type Union26 string
-
-const (
-	Union26Pending  Union26 = "pending"
-	Union26Approved Union26 = "approved"
-	Union26Denied   Union26 = "denied"
-)
-
-func (r Union26) IsKnown() bool {
-	switch r {
-	case Union26Pending, Union26Approved, Union26Denied:
-		return true
-	}
-	return false
-}
-
-type Union27 string
-
-const (
-	Union27Draft       Union27 = "draft"
-	Union27Invited     Union27 = "invited"
-	Union27Onboarding  Union27 = "onboarding"
-	Union27Active      Union27 = "active"
-	Union27Offboarding Union27 = "offboarding"
-	Union27Inactive    Union27 = "inactive"
-)
-
-func (r Union27) IsKnown() bool {
-	switch r {
-	case Union27Draft, Union27Invited, Union27Onboarding, Union27Active, Union27Offboarding, Union27Inactive:
-		return true
-	}
-	return false
-}
-
-type Union28 string
-
-const (
-	Union28Employee   Union28 = "employee"
-	Union28Contractor Union28 = "contractor"
-)
-
-func (r Union28) IsKnown() bool {
-	switch r {
-	case Union28Employee, Union28Contractor:
-		return true
-	}
-	return false
-}
-
-type Union29 = string
-
-type Union30 = bool
-
-type Union31 = string
-
-type Union32 = string
-
-type Union33 = string
-
-type Union34 = string
-
 type WorkerNotFoundErrorEncoded struct {
-	Tag     WorkerNotFoundErrorEncodedTag  `json:"_tag" api:"required"`
+	Tag WorkerNotFoundErrorEncodedTag `json:"_tag" api:"required"`
+	// The id of the worker.
 	ID      string                         `json:"id" api:"required"`
 	Message string                         `json:"message" api:"required"`
 	JSON    workerNotFoundErrorEncodedJSON `json:"-"`

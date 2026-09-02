@@ -68,7 +68,7 @@ func (r *BenefitRetirementPlanService) List(ctx context.Context, query BenefitRe
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company retirement plan.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -95,6 +95,7 @@ func (r *BenefitRetirementPlanService) Get(ctx context.Context, id string, opts 
 }
 
 type PublicRetirementPlan struct {
+	// The tag of a company retirement plan.
 	ID string `json:"id" api:"required"`
 	// The retirement plan type.
 	Type PublicRetirementPlanType `json:"type" api:"required"`
@@ -188,6 +189,7 @@ func (r PublicRetirementPlanStatus) IsKnown() bool {
 }
 
 type BenefitRetirementPlanGetResponse struct {
+	// The tag of a company retirement plan.
 	ID string `json:"id" api:"required"`
 	// The retirement plan type.
 	Type BenefitRetirementPlanGetResponseType `json:"type" api:"required"`

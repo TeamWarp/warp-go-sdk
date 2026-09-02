@@ -217,7 +217,7 @@ List the custom worker field definitions your API key can read. Each field belon
 
 | Direction | Type |
 | --- | --- |
-| Response | [`[]Objects`](./shared/shared.go) |
+| Response | [`[]CustomFieldListResponse`](./customfield.go) |
 
 ```go
 customField, err := client.CustomFields.List(context.Background())
@@ -272,7 +272,7 @@ Update a custom worker field definition. The field type cannot be changed; creat
 | Direction | Type |
 | --- | --- |
 | Request | [`CustomFieldUpdateParams`](./customfield.go) |
-| Response | [`Objects`](./shared/shared.go) |
+| Response | [`CustomFieldUpdateResponse`](./customfield.go) |
 
 ```go
 customField, err := client.CustomFields.Update(context.Background(), "cf_1234", sdk.CustomFieldUpdateParams{})
@@ -289,7 +289,7 @@ Archive a custom worker field. Archived fields keep their existing worker values
 
 | Direction | Type |
 | --- | --- |
-| Response | [`Objects`](./shared/shared.go) |
+| Response | [`CustomFieldArchiveResponse`](./customfield.go) |
 
 ```go
 customField, err := client.CustomFields.Archive(context.Background(), "cf_1234")
@@ -311,10 +311,8 @@ Add an option to a select or multi_select custom worker field. The option value 
 
 ```go
 customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
-	Objects2: sdk.Objects2Param{
-		Label: sdk.F[string]("x"),
-		Value: sdk.F[string]("x"),
-	},
+	Label: sdk.F[string]("x"),
+	Value: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)
@@ -330,7 +328,7 @@ Update the label or sort order of a custom worker field option. Options of archi
 | Direction | Type |
 | --- | --- |
 | Request | [`CustomFieldUpdateOptionParams`](./customfield.go) |
-| Response | [`Objects3`](./shared/shared.go) |
+| Response | [`CustomFieldUpdateOptionResponse`](./customfield.go) |
 
 ```go
 customField, err := client.CustomFields.UpdateOption(context.Background(), "cfo_1234", sdk.CustomFieldUpdateOptionParams{})
@@ -358,7 +356,7 @@ Archive a custom worker field option. Archived options remain on existing worker
 
 | Direction | Type |
 | --- | --- |
-| Response | [`Objects3`](./shared/shared.go) |
+| Response | [`CustomFieldArchiveOptionResponse`](./customfield.go) |
 
 ```go
 customField, err := client.CustomFields.ArchiveOption(context.Background(), "cfo_1234")
@@ -376,7 +374,7 @@ List custom field values for workers, optionally filtered by worker or field. Va
 | Direction | Type |
 | --- | --- |
 | Request | [`CustomFieldListValuesParams`](./customfield.go) |
-| Response | [`[]Objects4`](./customfield.go) |
+| Response | [`[]CustomFieldListValuesResponse`](./customfield.go) |
 
 ```go
 customField, err := client.CustomFields.ListValues(context.Background(), sdk.CustomFieldListValuesParams{})
@@ -775,7 +773,7 @@ Get a specific worker by id.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`Objects11`](./workplace.go) |
+| Response | [`WorkerGetResponse`](./worker.go) |
 
 ```go
 worker, err := client.Workers.Get(context.Background(), "wrk_1234")
@@ -1027,7 +1025,7 @@ List the active standard job levels available to your company.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`[]Objects5`](./shared/shared.go) |
+| Response | [`[]LevelListResponse`](./level.go) |
 
 ```go
 level, err := client.Levels.List(context.Background())

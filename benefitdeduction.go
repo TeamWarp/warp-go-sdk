@@ -72,7 +72,7 @@ func (r *BenefitDeductionService) List(ctx context.Context, query BenefitDeducti
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The version-group tag of a payroll benefit deduction. Stable across edits.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -99,6 +99,7 @@ func (r *BenefitDeductionService) Get(ctx context.Context, id string, opts ...op
 }
 
 type PublicBenefitDeduction struct {
+	// Stable identifier shared by every internal version of this deduction.
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
 	Worker PublicBenefitDeductionWorker `json:"worker" api:"required"`
@@ -247,6 +248,7 @@ func (r PublicBenefitDeductionStatus) IsKnown() bool {
 }
 
 type BenefitDeductionGetResponse struct {
+	// Stable identifier shared by every internal version of this deduction.
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
 	Worker BenefitDeductionGetResponseWorker `json:"worker" api:"required"`
@@ -402,7 +404,7 @@ type BenefitDeductionListParams struct {
 	Categories        param.Field[[]BenefitDeductionListParamsCategory] `query:"categories"`
 	HealthPlanIDs     param.Field[[]string]                             `query:"healthPlanIds"`
 	RetirementPlanIDs param.Field[[]string]                             `query:"retirementPlanIds"`
-	Types             param.Field[[]Union]                              `query:"types"`
+	Types             param.Field[[]BenefitDeductionListParamsType]     `query:"types"`
 	WorkerIDs         param.Field[[]string]                             `query:"workerIds"`
 }
 
@@ -429,6 +431,49 @@ const (
 func (r BenefitDeductionListParamsCategory) IsKnown() bool {
 	switch r {
 	case BenefitDeductionListParamsCategoryHealth, BenefitDeductionListParamsCategoryRetirement, BenefitDeductionListParamsCategoryHealthSavings, BenefitDeductionListParamsCategoryCommuter, BenefitDeductionListParamsCategoryVoluntary, BenefitDeductionListParamsCategoryPostTax, BenefitDeductionListParamsCategoryOther:
+		return true
+	}
+	return false
+}
+
+type BenefitDeductionListParamsType string
+
+const (
+	BenefitDeductionListParamsTypeMedical             BenefitDeductionListParamsType = "medical"
+	BenefitDeductionListParamsTypeDental              BenefitDeductionListParamsType = "dental"
+	BenefitDeductionListParamsTypeVision              BenefitDeductionListParamsType = "vision"
+	BenefitDeductionListParamsTypeLife                BenefitDeductionListParamsType = "life"
+	BenefitDeductionListParamsTypeShortTermDisability BenefitDeductionListParamsType = "short_term_disability"
+	BenefitDeductionListParamsTypeLongTermDisability  BenefitDeductionListParamsType = "long_term_disability"
+	BenefitDeductionListParamsType401k                BenefitDeductionListParamsType = "401k"
+	BenefitDeductionListParamsTypeRoth401k            BenefitDeductionListParamsType = "roth_401k"
+	BenefitDeductionListParamsType403b                BenefitDeductionListParamsType = "403b"
+	BenefitDeductionListParamsTypeRoth403b            BenefitDeductionListParamsType = "roth_403b"
+	BenefitDeductionListParamsType457                 BenefitDeductionListParamsType = "457"
+	BenefitDeductionListParamsTypeRoth457             BenefitDeductionListParamsType = "roth_457"
+	BenefitDeductionListParamsTypeHsa                 BenefitDeductionListParamsType = "hsa"
+	BenefitDeductionListParamsTypeFsaMedical          BenefitDeductionListParamsType = "fsa_medical"
+	BenefitDeductionListParamsTypeFsaDependentCare    BenefitDeductionListParamsType = "fsa_dependent_care"
+	BenefitDeductionListParamsTypeTransit             BenefitDeductionListParamsType = "transit"
+	BenefitDeductionListParamsTypeParking             BenefitDeductionListParamsType = "parking"
+	BenefitDeductionListParamsTypeAccident            BenefitDeductionListParamsType = "accident"
+	BenefitDeductionListParamsTypeCancer              BenefitDeductionListParamsType = "cancer"
+	BenefitDeductionListParamsTypeCriticalIllness     BenefitDeductionListParamsType = "critical_illness"
+	BenefitDeductionListParamsTypeHospital            BenefitDeductionListParamsType = "hospital"
+	BenefitDeductionListParamsTypeMedicalOther        BenefitDeductionListParamsType = "medical_other"
+	BenefitDeductionListParamsTypeSimpleIra           BenefitDeductionListParamsType = "simple_ira"
+	BenefitDeductionListParamsTypeRothSimpleIra       BenefitDeductionListParamsType = "roth_simple_ira"
+	BenefitDeductionListParamsTypeNqdc                BenefitDeductionListParamsType = "nqdc"
+	BenefitDeductionListParamsTypeNontaxableFringe    BenefitDeductionListParamsType = "nontaxable_fringe"
+	BenefitDeductionListParamsTypePucc                BenefitDeductionListParamsType = "pucc"
+	BenefitDeductionListParamsTypeVoluntary           BenefitDeductionListParamsType = "voluntary"
+	BenefitDeductionListParamsTypePostTax             BenefitDeductionListParamsType = "post_tax"
+	BenefitDeductionListParamsTypeOther               BenefitDeductionListParamsType = "other"
+)
+
+func (r BenefitDeductionListParamsType) IsKnown() bool {
+	switch r {
+	case BenefitDeductionListParamsTypeMedical, BenefitDeductionListParamsTypeDental, BenefitDeductionListParamsTypeVision, BenefitDeductionListParamsTypeLife, BenefitDeductionListParamsTypeShortTermDisability, BenefitDeductionListParamsTypeLongTermDisability, BenefitDeductionListParamsType401k, BenefitDeductionListParamsTypeRoth401k, BenefitDeductionListParamsType403b, BenefitDeductionListParamsTypeRoth403b, BenefitDeductionListParamsType457, BenefitDeductionListParamsTypeRoth457, BenefitDeductionListParamsTypeHsa, BenefitDeductionListParamsTypeFsaMedical, BenefitDeductionListParamsTypeFsaDependentCare, BenefitDeductionListParamsTypeTransit, BenefitDeductionListParamsTypeParking, BenefitDeductionListParamsTypeAccident, BenefitDeductionListParamsTypeCancer, BenefitDeductionListParamsTypeCriticalIllness, BenefitDeductionListParamsTypeHospital, BenefitDeductionListParamsTypeMedicalOther, BenefitDeductionListParamsTypeSimpleIra, BenefitDeductionListParamsTypeRothSimpleIra, BenefitDeductionListParamsTypeNqdc, BenefitDeductionListParamsTypeNontaxableFringe, BenefitDeductionListParamsTypePucc, BenefitDeductionListParamsTypeVoluntary, BenefitDeductionListParamsTypePostTax, BenefitDeductionListParamsTypeOther:
 		return true
 	}
 	return false
@@ -476,6 +521,7 @@ func (r benefitDeductionListResponseJSON) RawJSON() string {
 }
 
 type BenefitDeductionGetResponseWorker struct {
+	// The worker id.
 	ID string `json:"id" api:"required"`
 	// The worker first name.
 	FirstName string `json:"firstName" api:"required"`
@@ -503,7 +549,8 @@ func (r benefitDeductionGetResponseWorkerJSON) RawJSON() string {
 
 type BenefitDeductionGetResponsePlan struct {
 	Type BenefitDeductionGetResponsePlanType `json:"type" api:"required"`
-	ID   string                              `json:"id" api:"required"`
+	// The tag of a company health plan.
+	ID string `json:"id" api:"required"`
 	// The associated health plan name.
 	Name  string                              `json:"name" api:"required"`
 	JSON  benefitDeductionGetResponsePlanJSON `json:"-"`
@@ -576,6 +623,7 @@ func (r BenefitDeductionGetResponseCalculation) AsUnion() BenefitDeductionGetRes
 }
 
 type PublicBenefitDeductionWorker struct {
+	// The worker id.
 	ID string `json:"id" api:"required"`
 	// The worker first name.
 	FirstName string `json:"firstName" api:"required"`
@@ -780,7 +828,8 @@ func (r PublicBenefitDeductionCalculationFrequency) IsKnown() bool {
 
 type BenefitDeductionGetResponsePlanHealthPlanReference struct {
 	Type BenefitDeductionGetResponsePlanHealthPlanReferenceType `json:"type" api:"required"`
-	ID   string                                                 `json:"id" api:"required"`
+	// The tag of a company health plan.
+	ID string `json:"id" api:"required"`
 	// The associated health plan name.
 	Name string                                                 `json:"name" api:"required"`
 	JSON benefitDeductionGetResponsePlanHealthPlanReferenceJSON `json:"-"`
@@ -808,7 +857,8 @@ func (r BenefitDeductionGetResponsePlanHealthPlanReference) implementsBenefitDed
 
 type BenefitDeductionGetResponsePlanRetirementPlanReference struct {
 	Type BenefitDeductionGetResponsePlanRetirementPlanReferenceType `json:"type" api:"required"`
-	ID   string                                                     `json:"id" api:"required"`
+	// The tag of a company retirement plan.
+	ID string `json:"id" api:"required"`
 	// The associated retirement plan name.
 	Name string                                                     `json:"name" api:"required"`
 	JSON benefitDeductionGetResponsePlanRetirementPlanReferenceJSON `json:"-"`
