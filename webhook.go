@@ -105,8 +105,9 @@ func (r TimeOffRequestCreatedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffRequestCreatedWebhookEventPayload struct {
-	ID               string                                                 `json:"id" api:"required"`
-	TimeOffPolicyID  string                                                 `json:"timeOffPolicyId" api:"required"`
+	ID              string `json:"id" api:"required"`
+	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
+	// The id of the worker.
 	WorkerID         string                                                 `json:"workerId" api:"required"`
 	Status           TimeOffRequestCreatedWebhookEventPayloadStatus         `json:"status" api:"required"`
 	StartAt          string                                                 `json:"startAt" api:"required"`
@@ -237,8 +238,9 @@ func (r TimeOffRequestReviewedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffRequestReviewedWebhookEventPayload struct {
-	ID               string                                                  `json:"id" api:"required"`
-	TimeOffPolicyID  string                                                  `json:"timeOffPolicyId" api:"required"`
+	ID              string `json:"id" api:"required"`
+	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
+	// The id of the worker.
 	WorkerID         string                                                  `json:"workerId" api:"required"`
 	Status           TimeOffRequestReviewedWebhookEventPayloadStatus         `json:"status" api:"required"`
 	StartAt          string                                                  `json:"startAt" api:"required"`
@@ -369,8 +371,9 @@ func (r TimeOffRequestDeletedWebhookEventEventType) IsKnown() bool {
 }
 
 type TimeOffRequestDeletedWebhookEventPayload struct {
-	ID               string                                                 `json:"id" api:"required"`
-	TimeOffPolicyID  string                                                 `json:"timeOffPolicyId" api:"required"`
+	ID              string `json:"id" api:"required"`
+	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
+	// The id of the worker.
 	WorkerID         string                                                 `json:"workerId" api:"required"`
 	Status           TimeOffRequestDeletedWebhookEventPayloadStatus         `json:"status" api:"required"`
 	StartAt          string                                                 `json:"startAt" api:"required"`
@@ -462,7 +465,7 @@ type TimeOffBalanceAdjustedWebhookEvent struct {
 	ID string `json:"id" api:"required"`
 	// The event type.
 	EventType TimeOffBalanceAdjustedWebhookEventEventType `json:"event_type" api:"required"`
-	Payload   TimeOffBalanceAdjustedWebhookEventPayload   `json:"payload" api:"required"`
+	Payload   map[string]interface{}                      `json:"payload" api:"required"`
 	// ISO 8601 timestamp of when the event was generated.
 	CreatedAt string                                 `json:"created_at" api:"required"`
 	JSON      timeOffBalanceAdjustedWebhookEventJSON `json:"-"`
@@ -498,40 +501,6 @@ func (r TimeOffBalanceAdjustedWebhookEventEventType) IsKnown() bool {
 		return true
 	}
 	return false
-}
-
-type TimeOffBalanceAdjustedWebhookEventPayload struct {
-	WorkerID string `json:"workerId" api:"required"`
-	PolicyID string `json:"policyId" api:"required"`
-	// Signed adjustment applied to the balance, in minutes. Omitted when no balance
-	// snapshot was captured.
-	AdjustmentMinutes Union `json:"adjustmentMinutes" api:"nullable"`
-	// The date the adjustment takes effect. Omitted when no balance snapshot was
-	// captured.
-	EffectiveDate   string                                        `json:"effectiveDate" api:"nullable"`
-	PreviousBalance Union1                                        `json:"previousBalance"`
-	NewBalance      Union1                                        `json:"newBalance"`
-	JSON            timeOffBalanceAdjustedWebhookEventPayloadJSON `json:"-"`
-}
-
-// timeOffBalanceAdjustedWebhookEventPayloadJSON contains the JSON metadata for the struct [TimeOffBalanceAdjustedWebhookEventPayload]
-type timeOffBalanceAdjustedWebhookEventPayloadJSON struct {
-	WorkerID          apijson.Field
-	PolicyID          apijson.Field
-	AdjustmentMinutes apijson.Field
-	EffectiveDate     apijson.Field
-	PreviousBalance   apijson.Field
-	NewBalance        apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *TimeOffBalanceAdjustedWebhookEventPayload) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r timeOffBalanceAdjustedWebhookEventPayloadJSON) RawJSON() string {
-	return r.raw
 }
 
 type WorkerCreatedWebhookEvent struct {
@@ -578,19 +547,21 @@ func (r WorkerCreatedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerCreatedWebhookEventPayload struct {
-	ID            string                                 `json:"id" api:"required"`
-	Position      string                                 `json:"position" api:"required"`
-	Type          WorkerCreatedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                 `json:"startDate" api:"required"`
-	EndDate       string                                 `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                   `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
-	FirstName     string                                 `json:"firstName" api:"required"`
-	LastName      string                                 `json:"lastName" api:"required"`
-	Email         string                                 `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                 `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                 `json:"id" api:"required"`
+	Position     string                                 `json:"position" api:"required"`
+	Type         WorkerCreatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerCreatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                 `json:"startDate" api:"required"`
+	EndDate      string                                 `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                   `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                 `json:"businessName" api:"required,nullable"`
+	FirstName    string                                 `json:"firstName" api:"required"`
+	LastName     string                                 `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -677,6 +648,7 @@ func (r WorkerCreatedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerCreatedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON workerCreatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -699,6 +671,7 @@ func (r workerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerCreatedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                     `json:"id" api:"required"`
 	Code  string                                     `json:"code" api:"required"`
 	Name  string                                     `json:"name" api:"required"`
@@ -742,8 +715,9 @@ func (r WorkerCreatedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type WorkerCreatedWebhookEventPayloadCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsType `json:"type" api:"required"`
-	ID   string                                           `json:"id" api:"required"`
-	Name string                                           `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -759,10 +733,10 @@ type WorkerCreatedWebhookEventPayloadCustomField struct {
 	Amount int64 `json:"amount" api:"nullable"`
 	// The amount’s currency; null when unset or when the field is redacted for this
 	// API key.
-	CurrencyCode Union1 `json:"currencyCode" api:"nullable"`
+	CurrencyCode WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
 	// The selected option; null when unset or when the field is redacted for this API
 	// key.
-	Option shared.Objects3 `json:"option" api:"nullable"`
+	Option interface{} `json:"option" api:"nullable"`
 	// The selected options; null when unset or when the field is redacted for this API
 	// key.
 	Options interface{}                                     `json:"options" api:"nullable"`
@@ -856,8 +830,9 @@ func init() {
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                      `json:"id" api:"required"`
-	Name string                                                                      `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -910,8 +885,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicTextWorkerCustomFieldT
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                        `json:"id" api:"required"`
-	Name string                                                                        `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -964,8 +940,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicNumberWorkerCustomFiel
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                      `json:"id" api:"required"`
-	Name string                                                                      `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -1018,8 +995,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicDateWorkerCustomFieldT
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                         `json:"id" api:"required"`
-	Name string                                                                         `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -1072,8 +1050,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicBooleanWorkerCustomFie
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                          `json:"id" api:"required"`
-	Name string                                                                          `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -1086,8 +1065,8 @@ type WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField
 	Amount int64 `json:"amount" api:"required,nullable"`
 	// The amount’s currency; null when unset or when the field is redacted for this
 	// API key.
-	CurrencyCode Union1                                                                          `json:"currencyCode" api:"required,nullable"`
-	JSON         workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON `json:"-"`
+	CurrencyCode WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
+	JSON         workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomField]
@@ -1204,8 +1183,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicCurrencyWorkerCustomFi
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                            `json:"id" api:"required"`
-	Name string                                                                            `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -1258,8 +1238,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicPercentageWorkerCustom
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                        `json:"id" api:"required"`
-	Name string                                                                        `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -1269,8 +1250,8 @@ type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField s
 	Display string `json:"display" api:"required,nullable"`
 	// The selected option; null when unset or when the field is redacted for this API
 	// key.
-	Option shared.Objects3                                                               `json:"option" api:"required,nullable"`
-	JSON   workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON `json:"-"`
+	Option WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
+	JSON   workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomField]
@@ -1312,8 +1293,9 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFiel
 
 type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField struct {
 	Type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                                             `json:"id" api:"required"`
-	Name string                                                                             `json:"name" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
 	// True when this API key’s permission scopes cannot read the field’s category. The
 	// value fields are withheld (null), not absent — null does not imply the worker
 	// has no value.
@@ -1323,8 +1305,8 @@ type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFi
 	Display string `json:"display" api:"required,nullable"`
 	// The selected options; null when unset or when the field is redacted for this API
 	// key.
-	Options []shared.Objects3                                                                  `json:"options" api:"required,nullable"`
-	JSON    workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON `json:"-"`
+	Options []WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
+	JSON    workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
 }
 
 // workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomField]
@@ -1459,6 +1441,98 @@ func (r WorkerCreatedWebhookEventPayloadCustomFieldsCurrencyCode) IsKnown() bool
 	return false
 }
 
+type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                                                                `json:"id" api:"required"`
+	Label     string                                                                                `json:"label" api:"required"`
+	Value     string                                                                                `json:"value" api:"required"`
+	SortOrder interface{}                                                                           `json:"sortOrder" api:"required"`
+	Status    WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
+	CreatedAt string                                                                                `json:"createdAt" api:"required"`
+	JSON      workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption]
+type workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
+	WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerCreatedWebhookEventPayloadCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                                                                      `json:"id" api:"required"`
+	Label     string                                                                                      `json:"label" api:"required"`
+	Value     string                                                                                      `json:"value" api:"required"`
+	SortOrder interface{}                                                                                 `json:"sortOrder" api:"required"`
+	Status    WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
+	CreatedAt string                                                                                      `json:"createdAt" api:"required"`
+	JSON      workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
+type workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
+
+const (
+	WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
+	WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
+)
+
+func (r WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerCreatedWebhookEventPayloadCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
+		return true
+	}
+	return false
+}
+
 type WorkerUpdatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1503,19 +1577,21 @@ func (r WorkerUpdatedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerUpdatedWebhookEventPayload struct {
-	ID            string                                 `json:"id" api:"required"`
-	Position      string                                 `json:"position" api:"required"`
-	Type          WorkerUpdatedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerUpdatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                 `json:"startDate" api:"required"`
-	EndDate       string                                 `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                   `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
-	FirstName     string                                 `json:"firstName" api:"required"`
-	LastName      string                                 `json:"lastName" api:"required"`
-	Email         string                                 `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                 `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                 `json:"id" api:"required"`
+	Position     string                                 `json:"position" api:"required"`
+	Type         WorkerUpdatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerUpdatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                 `json:"startDate" api:"required"`
+	EndDate      string                                 `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                   `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                 `json:"businessName" api:"required,nullable"`
+	FirstName    string                                 `json:"firstName" api:"required"`
+	LastName     string                                 `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1602,6 +1678,7 @@ func (r WorkerUpdatedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerUpdatedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON workerUpdatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1624,6 +1701,7 @@ func (r workerUpdatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerUpdatedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                     `json:"id" api:"required"`
 	Code  string                                     `json:"code" api:"required"`
 	Name  string                                     `json:"name" api:"required"`
@@ -1709,19 +1787,21 @@ func (r WorkerDeletedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerDeletedWebhookEventPayload struct {
-	ID            string                                 `json:"id" api:"required"`
-	Position      string                                 `json:"position" api:"required"`
-	Type          WorkerDeletedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                 `json:"startDate" api:"required"`
-	EndDate       string                                 `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                   `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                 `json:"businessName" api:"required,nullable"`
-	FirstName     string                                 `json:"firstName" api:"required"`
-	LastName      string                                 `json:"lastName" api:"required"`
-	Email         string                                 `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                 `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                 `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                 `json:"id" api:"required"`
+	Position     string                                 `json:"position" api:"required"`
+	Type         WorkerDeletedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerDeletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                 `json:"startDate" api:"required"`
+	EndDate      string                                 `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                   `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                 `json:"businessName" api:"required,nullable"`
+	FirstName    string                                 `json:"firstName" api:"required"`
+	LastName     string                                 `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -1808,6 +1888,7 @@ func (r WorkerDeletedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerDeletedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON workerDeletedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -1830,6 +1911,7 @@ func (r workerDeletedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerDeletedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                     `json:"id" api:"required"`
 	Code  string                                     `json:"code" api:"required"`
 	Name  string                                     `json:"name" api:"required"`
@@ -1915,19 +1997,21 @@ func (r WorkerInviteSentWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerInviteSentWebhookEventPayload struct {
-	ID            string                                    `json:"id" api:"required"`
-	Position      string                                    `json:"position" api:"required"`
-	Type          WorkerInviteSentWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerInviteSentWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                    `json:"startDate" api:"required"`
-	EndDate       string                                    `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                      `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                    `json:"businessName" api:"required,nullable"`
-	FirstName     string                                    `json:"firstName" api:"required"`
-	LastName      string                                    `json:"lastName" api:"required"`
-	Email         string                                    `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                    `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                    `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                    `json:"id" api:"required"`
+	Position     string                                    `json:"position" api:"required"`
+	Type         WorkerInviteSentWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerInviteSentWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                    `json:"startDate" api:"required"`
+	EndDate      string                                    `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                      `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                    `json:"businessName" api:"required,nullable"`
+	FirstName    string                                    `json:"firstName" api:"required"`
+	LastName     string                                    `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -2014,6 +2098,7 @@ func (r WorkerInviteSentWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerInviteSentWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                            `json:"id" api:"required"`
 	Name string                                            `json:"name" api:"required"`
 	JSON workerInviteSentWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2036,6 +2121,7 @@ func (r workerInviteSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerInviteSentWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                        `json:"id" api:"required"`
 	Code  string                                        `json:"code" api:"required"`
 	Name  string                                        `json:"name" api:"required"`
@@ -2121,19 +2207,21 @@ func (r WorkerInviteAcceptedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerInviteAcceptedWebhookEventPayload struct {
-	ID            string                                        `json:"id" api:"required"`
-	Position      string                                        `json:"position" api:"required"`
-	Type          WorkerInviteAcceptedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerInviteAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                        `json:"startDate" api:"required"`
-	EndDate       string                                        `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                          `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                        `json:"businessName" api:"required,nullable"`
-	FirstName     string                                        `json:"firstName" api:"required"`
-	LastName      string                                        `json:"lastName" api:"required"`
-	Email         string                                        `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                        `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                        `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                        `json:"id" api:"required"`
+	Position     string                                        `json:"position" api:"required"`
+	Type         WorkerInviteAcceptedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerInviteAcceptedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                        `json:"startDate" api:"required"`
+	EndDate      string                                        `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                          `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                        `json:"businessName" api:"required,nullable"`
+	FirstName    string                                        `json:"firstName" api:"required"`
+	LastName     string                                        `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -2220,6 +2308,7 @@ func (r WorkerInviteAcceptedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerInviteAcceptedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                                `json:"id" api:"required"`
 	Name string                                                `json:"name" api:"required"`
 	JSON workerInviteAcceptedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2242,6 +2331,7 @@ func (r workerInviteAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string 
 }
 
 type WorkerInviteAcceptedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                            `json:"id" api:"required"`
 	Code  string                                            `json:"code" api:"required"`
 	Name  string                                            `json:"name" api:"required"`
@@ -2327,19 +2417,21 @@ func (r WorkerOnboardingCompletedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerOnboardingCompletedWebhookEventPayload struct {
-	ID            string                                             `json:"id" api:"required"`
-	Position      string                                             `json:"position" api:"required"`
-	Type          WorkerOnboardingCompletedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerOnboardingCompletedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                             `json:"startDate" api:"required"`
-	EndDate       string                                             `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                               `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                             `json:"businessName" api:"required,nullable"`
-	FirstName     string                                             `json:"firstName" api:"required"`
-	LastName      string                                             `json:"lastName" api:"required"`
-	Email         string                                             `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                             `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                             `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                             `json:"id" api:"required"`
+	Position     string                                             `json:"position" api:"required"`
+	Type         WorkerOnboardingCompletedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerOnboardingCompletedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                             `json:"startDate" api:"required"`
+	EndDate      string                                             `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                               `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                             `json:"businessName" api:"required,nullable"`
+	FirstName    string                                             `json:"firstName" api:"required"`
+	LastName     string                                             `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -2426,6 +2518,7 @@ func (r WorkerOnboardingCompletedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerOnboardingCompletedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                                     `json:"id" api:"required"`
 	Name string                                                     `json:"name" api:"required"`
 	JSON workerOnboardingCompletedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2448,6 +2541,7 @@ func (r workerOnboardingCompletedWebhookEventPayloadDepartmentJSON) RawJSON() st
 }
 
 type WorkerOnboardingCompletedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                                 `json:"id" api:"required"`
 	Code  string                                                 `json:"code" api:"required"`
 	Name  string                                                 `json:"name" api:"required"`
@@ -2533,19 +2627,21 @@ func (r WorkerOffboardingStartedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerOffboardingStartedWebhookEventPayload struct {
-	ID            string                                            `json:"id" api:"required"`
-	Position      string                                            `json:"position" api:"required"`
-	Type          WorkerOffboardingStartedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerOffboardingStartedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                            `json:"startDate" api:"required"`
-	EndDate       string                                            `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                              `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                            `json:"businessName" api:"required,nullable"`
-	FirstName     string                                            `json:"firstName" api:"required"`
-	LastName      string                                            `json:"lastName" api:"required"`
-	Email         string                                            `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                            `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                            `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                            `json:"id" api:"required"`
+	Position     string                                            `json:"position" api:"required"`
+	Type         WorkerOffboardingStartedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerOffboardingStartedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                            `json:"startDate" api:"required"`
+	EndDate      string                                            `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                              `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                            `json:"businessName" api:"required,nullable"`
+	FirstName    string                                            `json:"firstName" api:"required"`
+	LastName     string                                            `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -2632,6 +2728,7 @@ func (r WorkerOffboardingStartedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerOffboardingStartedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                                    `json:"id" api:"required"`
 	Name string                                                    `json:"name" api:"required"`
 	JSON workerOffboardingStartedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2654,6 +2751,7 @@ func (r workerOffboardingStartedWebhookEventPayloadDepartmentJSON) RawJSON() str
 }
 
 type WorkerOffboardingStartedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                                `json:"id" api:"required"`
 	Code  string                                                `json:"code" api:"required"`
 	Name  string                                                `json:"name" api:"required"`
@@ -2739,19 +2837,21 @@ func (r WorkerOffboardedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerOffboardedWebhookEventPayload struct {
-	ID            string                                    `json:"id" api:"required"`
-	Position      string                                    `json:"position" api:"required"`
-	Type          WorkerOffboardedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerOffboardedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                    `json:"startDate" api:"required"`
-	EndDate       string                                    `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                      `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                    `json:"businessName" api:"required,nullable"`
-	FirstName     string                                    `json:"firstName" api:"required"`
-	LastName      string                                    `json:"lastName" api:"required"`
-	Email         string                                    `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                    `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                    `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                    `json:"id" api:"required"`
+	Position     string                                    `json:"position" api:"required"`
+	Type         WorkerOffboardedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerOffboardedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                    `json:"startDate" api:"required"`
+	EndDate      string                                    `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                      `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                    `json:"businessName" api:"required,nullable"`
+	FirstName    string                                    `json:"firstName" api:"required"`
+	LastName     string                                    `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -2838,6 +2938,7 @@ func (r WorkerOffboardedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerOffboardedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                            `json:"id" api:"required"`
 	Name string                                            `json:"name" api:"required"`
 	JSON workerOffboardedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -2860,6 +2961,7 @@ func (r workerOffboardedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerOffboardedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                        `json:"id" api:"required"`
 	Code  string                                        `json:"code" api:"required"`
 	Name  string                                        `json:"name" api:"required"`
@@ -2945,19 +3047,21 @@ func (r WorkerReactivatedWebhookEventEventType) IsKnown() bool {
 }
 
 type WorkerReactivatedWebhookEventPayload struct {
-	ID            string                                     `json:"id" api:"required"`
-	Position      string                                     `json:"position" api:"required"`
-	Type          WorkerReactivatedWebhookEventPayloadType   `json:"type" api:"required"`
-	Status        WorkerReactivatedWebhookEventPayloadStatus `json:"status" api:"required"`
-	StartDate     string                                     `json:"startDate" api:"required"`
-	EndDate       string                                     `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool                                       `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string                                     `json:"businessName" api:"required,nullable"`
-	FirstName     string                                     `json:"firstName" api:"required"`
-	LastName      string                                     `json:"lastName" api:"required"`
-	Email         string                                     `json:"email" api:"required" format:"email"`
-	WorkEmail     string                                     `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string                                     `json:"preferredName" api:"required,nullable"`
+	// The id of the worker.
+	ID           string                                     `json:"id" api:"required"`
+	Position     string                                     `json:"position" api:"required"`
+	Type         WorkerReactivatedWebhookEventPayloadType   `json:"type" api:"required"`
+	Status       WorkerReactivatedWebhookEventPayloadStatus `json:"status" api:"required"`
+	StartDate    string                                     `json:"startDate" api:"required"`
+	EndDate      string                                     `json:"endDate" api:"required,nullable"`
+	IsBusiness   bool                                       `json:"isBusiness" api:"required,nullable"`
+	BusinessName string                                     `json:"businessName" api:"required,nullable"`
+	FirstName    string                                     `json:"firstName" api:"required"`
+	LastName     string                                     `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
+	Email         string `json:"email" api:"required" format:"email"`
+	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
+	PreferredName string `json:"preferredName" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -3044,6 +3148,7 @@ func (r WorkerReactivatedWebhookEventPayloadStatus) IsKnown() bool {
 }
 
 type WorkerReactivatedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                             `json:"id" api:"required"`
 	Name string                                             `json:"name" api:"required"`
 	JSON workerReactivatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -3066,6 +3171,7 @@ func (r workerReactivatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type WorkerReactivatedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                         `json:"id" api:"required"`
 	Code  string                                         `json:"code" api:"required"`
 	Name  string                                         `json:"name" api:"required"`
@@ -3151,6 +3257,7 @@ func (r OfferCreatedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayload struct {
+	// The tag of the offer.
 	ID         string                                    `json:"id" api:"required"`
 	Status     OfferCreatedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferCreatedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -3237,8 +3344,9 @@ func (r OfferCreatedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayloadCandidate struct {
-	FirstName         string                                                    `json:"firstName" api:"required"`
-	LastName          string                                                    `json:"lastName" api:"required"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             string                                                    `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferCreatedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerCreatedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -3574,6 +3682,7 @@ func (r OfferCreatedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferCreatedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                        `json:"id" api:"required"`
 	Name string                                        `json:"name" api:"required"`
 	JSON offerCreatedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -3596,6 +3705,7 @@ func (r offerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
 	ID   string                                       `json:"id" api:"required"`
 	Name string                                       `json:"name" api:"required"`
 	JSON offerCreatedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -3618,6 +3728,7 @@ func (r offerCreatedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadManager struct {
+	// The id of the worker.
 	ID   string                                     `json:"id" api:"required"`
 	Name string                                     `json:"name" api:"required,nullable"`
 	JSON offerCreatedWebhookEventPayloadManagerJSON `json:"-"`
@@ -3640,6 +3751,7 @@ func (r offerCreatedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferCreatedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                    `json:"id" api:"required"`
 	Code  string                                    `json:"code" api:"required"`
 	Name  string                                    `json:"name" api:"required"`
@@ -3683,8 +3795,8 @@ func (r OfferCreatedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferCreatedWebhookEventPayloadCompensation struct {
 	BasePay         OfferCreatedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     Union                                              `json:"signOnBonus" api:"required"`
-	RelocationBonus Union                                              `json:"relocationBonus" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                           `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                           `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferCreatedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerCreatedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -3712,7 +3824,7 @@ type OfferCreatedWebhookEventPayloadCompensationBasePay struct {
 	Amount       shared.PublicMoneyAmount                                `json:"amount" api:"required"`
 	Basis        OfferCreatedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferCreatedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate Union                                                   `json:"variableRate" api:"required"`
+	VariableRate shared.PublicMoneyAmount                                `json:"variableRate" api:"required,nullable"`
 	JSON         offerCreatedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -3835,6 +3947,7 @@ func (r OfferSentWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayload struct {
+	// The tag of the offer.
 	ID         string                                 `json:"id" api:"required"`
 	Status     OfferSentWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferSentWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -3921,8 +4034,9 @@ func (r OfferSentWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayloadCandidate struct {
-	FirstName         string                                                 `json:"firstName" api:"required"`
-	LastName          string                                                 `json:"lastName" api:"required"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             string                                                 `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferSentWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerSentWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -4258,6 +4372,7 @@ func (r OfferSentWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferSentWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                     `json:"id" api:"required"`
 	Name string                                     `json:"name" api:"required"`
 	JSON offerSentWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -4280,6 +4395,7 @@ func (r offerSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
 	ID   string                                    `json:"id" api:"required"`
 	Name string                                    `json:"name" api:"required"`
 	JSON offerSentWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -4302,6 +4418,7 @@ func (r offerSentWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadManager struct {
+	// The id of the worker.
 	ID   string                                  `json:"id" api:"required"`
 	Name string                                  `json:"name" api:"required,nullable"`
 	JSON offerSentWebhookEventPayloadManagerJSON `json:"-"`
@@ -4324,6 +4441,7 @@ func (r offerSentWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferSentWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                 `json:"id" api:"required"`
 	Code  string                                 `json:"code" api:"required"`
 	Name  string                                 `json:"name" api:"required"`
@@ -4367,8 +4485,8 @@ func (r OfferSentWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferSentWebhookEventPayloadCompensation struct {
 	BasePay         OfferSentWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     Union                                           `json:"signOnBonus" api:"required"`
-	RelocationBonus Union                                           `json:"relocationBonus" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                        `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                        `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferSentWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerSentWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -4396,7 +4514,7 @@ type OfferSentWebhookEventPayloadCompensationBasePay struct {
 	Amount       shared.PublicMoneyAmount                             `json:"amount" api:"required"`
 	Basis        OfferSentWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferSentWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate Union                                                `json:"variableRate" api:"required"`
+	VariableRate shared.PublicMoneyAmount                             `json:"variableRate" api:"required,nullable"`
 	JSON         offerSentWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -4519,6 +4637,7 @@ func (r OfferViewedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayload struct {
+	// The tag of the offer.
 	ID         string                                   `json:"id" api:"required"`
 	Status     OfferViewedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferViewedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -4605,8 +4724,9 @@ func (r OfferViewedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayloadCandidate struct {
-	FirstName         string                                                   `json:"firstName" api:"required"`
-	LastName          string                                                   `json:"lastName" api:"required"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             string                                                   `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferViewedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerViewedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -4942,6 +5062,7 @@ func (r OfferViewedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferViewedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                       `json:"id" api:"required"`
 	Name string                                       `json:"name" api:"required"`
 	JSON offerViewedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -4964,6 +5085,7 @@ func (r offerViewedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
 	ID   string                                      `json:"id" api:"required"`
 	Name string                                      `json:"name" api:"required"`
 	JSON offerViewedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -4986,6 +5108,7 @@ func (r offerViewedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadManager struct {
+	// The id of the worker.
 	ID   string                                    `json:"id" api:"required"`
 	Name string                                    `json:"name" api:"required,nullable"`
 	JSON offerViewedWebhookEventPayloadManagerJSON `json:"-"`
@@ -5008,6 +5131,7 @@ func (r offerViewedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferViewedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                   `json:"id" api:"required"`
 	Code  string                                   `json:"code" api:"required"`
 	Name  string                                   `json:"name" api:"required"`
@@ -5051,8 +5175,8 @@ func (r OfferViewedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferViewedWebhookEventPayloadCompensation struct {
 	BasePay         OfferViewedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     Union                                             `json:"signOnBonus" api:"required"`
-	RelocationBonus Union                                             `json:"relocationBonus" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                          `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                          `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferViewedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerViewedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -5080,7 +5204,7 @@ type OfferViewedWebhookEventPayloadCompensationBasePay struct {
 	Amount       shared.PublicMoneyAmount                               `json:"amount" api:"required"`
 	Basis        OfferViewedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferViewedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate Union                                                  `json:"variableRate" api:"required"`
+	VariableRate shared.PublicMoneyAmount                               `json:"variableRate" api:"required,nullable"`
 	JSON         offerViewedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -5203,6 +5327,7 @@ func (r OfferAcceptedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferAcceptedWebhookEventPayload struct {
+	// The tag of the offer.
 	ID         string                                     `json:"id" api:"required"`
 	Status     OfferAcceptedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferAcceptedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -5289,8 +5414,9 @@ func (r OfferAcceptedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferAcceptedWebhookEventPayloadCandidate struct {
-	FirstName         string                                                     `json:"firstName" api:"required"`
-	LastName          string                                                     `json:"lastName" api:"required"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             string                                                     `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferAcceptedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerAcceptedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -5626,6 +5752,7 @@ func (r OfferAcceptedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferAcceptedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
 	Name string                                         `json:"name" api:"required"`
 	JSON offerAcceptedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -5648,6 +5775,7 @@ func (r offerAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
 	ID   string                                        `json:"id" api:"required"`
 	Name string                                        `json:"name" api:"required"`
 	JSON offerAcceptedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -5670,6 +5798,7 @@ func (r offerAcceptedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadManager struct {
+	// The id of the worker.
 	ID   string                                      `json:"id" api:"required"`
 	Name string                                      `json:"name" api:"required,nullable"`
 	JSON offerAcceptedWebhookEventPayloadManagerJSON `json:"-"`
@@ -5692,6 +5821,7 @@ func (r offerAcceptedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferAcceptedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                     `json:"id" api:"required"`
 	Code  string                                     `json:"code" api:"required"`
 	Name  string                                     `json:"name" api:"required"`
@@ -5735,8 +5865,8 @@ func (r OfferAcceptedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferAcceptedWebhookEventPayloadCompensation struct {
 	BasePay         OfferAcceptedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     Union                                               `json:"signOnBonus" api:"required"`
-	RelocationBonus Union                                               `json:"relocationBonus" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                            `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                            `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferAcceptedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerAcceptedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -5764,7 +5894,7 @@ type OfferAcceptedWebhookEventPayloadCompensationBasePay struct {
 	Amount       shared.PublicMoneyAmount                                 `json:"amount" api:"required"`
 	Basis        OfferAcceptedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferAcceptedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate Union                                                    `json:"variableRate" api:"required"`
+	VariableRate shared.PublicMoneyAmount                                 `json:"variableRate" api:"required,nullable"`
 	JSON         offerAcceptedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 
@@ -5887,6 +6017,7 @@ func (r OfferVoidedWebhookEventEventType) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayload struct {
+	// The tag of the offer.
 	ID         string                                   `json:"id" api:"required"`
 	Status     OfferVoidedWebhookEventPayloadStatus     `json:"status" api:"required"`
 	WorkerType OfferVoidedWebhookEventPayloadWorkerType `json:"workerType" api:"required"`
@@ -5973,8 +6104,9 @@ func (r OfferVoidedWebhookEventPayloadWorkerType) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayloadCandidate struct {
-	FirstName         string                                                   `json:"firstName" api:"required"`
-	LastName          string                                                   `json:"lastName" api:"required"`
+	FirstName string `json:"firstName" api:"required"`
+	LastName  string `json:"lastName" api:"required"`
+	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
 	Email             string                                                   `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferVoidedWebhookEventPayloadCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerVoidedWebhookEventPayloadCandidateJSON              `json:"-"`
@@ -6310,6 +6442,7 @@ func (r OfferVoidedWebhookEventPayloadPositionCountry) IsKnown() bool {
 }
 
 type OfferVoidedWebhookEventPayloadDepartment struct {
+	// The unique public id of the department
 	ID   string                                       `json:"id" api:"required"`
 	Name string                                       `json:"name" api:"required"`
 	JSON offerVoidedWebhookEventPayloadDepartmentJSON `json:"-"`
@@ -6332,6 +6465,7 @@ func (r offerVoidedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadWorkplace struct {
+	// Public workplace identifier
 	ID   string                                      `json:"id" api:"required"`
 	Name string                                      `json:"name" api:"required"`
 	JSON offerVoidedWebhookEventPayloadWorkplaceJSON `json:"-"`
@@ -6354,6 +6488,7 @@ func (r offerVoidedWebhookEventPayloadWorkplaceJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadManager struct {
+	// The id of the worker.
 	ID   string                                    `json:"id" api:"required"`
 	Name string                                    `json:"name" api:"required,nullable"`
 	JSON offerVoidedWebhookEventPayloadManagerJSON `json:"-"`
@@ -6376,6 +6511,7 @@ func (r offerVoidedWebhookEventPayloadManagerJSON) RawJSON() string {
 }
 
 type OfferVoidedWebhookEventPayloadLevel struct {
+	// The unique public id of the job level
 	ID    string                                   `json:"id" api:"required"`
 	Code  string                                   `json:"code" api:"required"`
 	Name  string                                   `json:"name" api:"required"`
@@ -6419,8 +6555,8 @@ func (r OfferVoidedWebhookEventPayloadLevelTrack) IsKnown() bool {
 
 type OfferVoidedWebhookEventPayloadCompensation struct {
 	BasePay         OfferVoidedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     Union                                             `json:"signOnBonus" api:"required"`
-	RelocationBonus Union                                             `json:"relocationBonus" api:"required"`
+	SignOnBonus     shared.PublicMoneyAmount                          `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus shared.PublicMoneyAmount                          `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferVoidedWebhookEventPayloadCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerVoidedWebhookEventPayloadCompensationJSON    `json:"-"`
 }
@@ -6448,7 +6584,7 @@ type OfferVoidedWebhookEventPayloadCompensationBasePay struct {
 	Amount       shared.PublicMoneyAmount                               `json:"amount" api:"required"`
 	Basis        OfferVoidedWebhookEventPayloadCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferVoidedWebhookEventPayloadCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate Union                                                  `json:"variableRate" api:"required"`
+	VariableRate shared.PublicMoneyAmount                               `json:"variableRate" api:"required,nullable"`
 	JSON         offerVoidedWebhookEventPayloadCompensationBasePayJSON  `json:"-"`
 }
 

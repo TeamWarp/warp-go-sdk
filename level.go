@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"slices"
 
+	"github.com/TeamWarp/warp-go-sdk/internal/apijson"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // LevelService contains methods and other services that help with interacting
@@ -37,7 +37,7 @@ func NewLevelService(opts ...option.RequestOption) (r *LevelService) {
 //
 // Returns:
 //
-//	*[]shared.Objects5: Success
+//	*[]LevelListResponse: Success
 //
 // Example:
 //
@@ -47,9 +47,52 @@ func NewLevelService(opts ...option.RequestOption) (r *LevelService) {
 //	}
 //
 //	fmt.Println(level)
-func (r *LevelService) List(ctx context.Context, opts ...option.RequestOption) (res *[]shared.Objects5, err error) {
+func (r *LevelService) List(ctx context.Context, opts ...option.RequestOption) (res *[]LevelListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/levels"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
+}
+
+type LevelListResponse struct {
+	// The unique public id of the job level
+	ID    string                 `json:"id" api:"required"`
+	Code  string                 `json:"code" api:"required"`
+	Name  string                 `json:"name" api:"required"`
+	Track LevelListResponseTrack `json:"track" api:"required"`
+	JSON  levelListResponseJSON  `json:"-"`
+}
+
+// levelListResponseJSON contains the JSON metadata for the struct [LevelListResponse]
+type levelListResponseJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *LevelListResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r levelListResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type LevelListResponseTrack string
+
+const (
+	LevelListResponseTrackIc        LevelListResponseTrack = "ic"
+	LevelListResponseTrackManager   LevelListResponseTrack = "manager"
+	LevelListResponseTrackExecutive LevelListResponseTrack = "executive"
+)
+
+func (r LevelListResponseTrack) IsKnown() bool {
+	switch r {
+	case LevelListResponseTrackIc, LevelListResponseTrackManager, LevelListResponseTrackExecutive:
+		return true
+	}
+	return false
 }

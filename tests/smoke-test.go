@@ -134,7 +134,7 @@ func _smokeCase7() {
 		Categories:        sdk.F[[]sdk.BenefitDeductionListParamsCategory]([]sdk.BenefitDeductionListParamsCategory{"health"}),
 		HealthPlanIDs:     sdk.F[[]string]([]string{"chpl_1234"}),
 		RetirementPlanIDs: sdk.F[[]string]([]string{"crpl_1234"}),
-		Types:             sdk.F[[]sdk.Union]([]sdk.Union{"medical"}),
+		Types:             sdk.F[[]sdk.BenefitDeductionListParamsType]([]sdk.BenefitDeductionListParamsType{"medical"}),
 		WorkerIDs:         sdk.F[[]string]([]string{"wrk_1234"}),
 	})
 	if err != nil {
@@ -178,7 +178,7 @@ func _smokeCase11() {
 		Name:        sdk.F[string]("x"),
 		Config:      sdk.F[interface{}](map[string]interface{}{}),
 		Description: sdk.F[string](""),
-		Options: sdk.F[[]sdk.Objects2Param]([]sdk.Objects2Param{sdk.Objects2Param{
+		Options: sdk.F[[]sdk.CustomFieldNewParamsOption]([]sdk.CustomFieldNewParamsOption{sdk.CustomFieldNewParamsOption{
 			Label: sdk.F[string]("x"),
 			Value: sdk.F[string]("x"),
 		}}),
@@ -234,10 +234,8 @@ func _smokeCase15() {
 
 func _smokeCase16() {
 	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
-		Objects2: sdk.Objects2Param{
-			Label: sdk.F[string]("x"),
-			Value: sdk.F[string]("x"),
-		},
+		Label: sdk.F[string]("x"),
+		Value: sdk.F[string]("x"),
 	})
 	if err != nil {
 		panic(err)
@@ -248,11 +246,9 @@ func _smokeCase16() {
 
 func _smokeCase17() {
 	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
-		Objects2: sdk.Objects2Param{
-			Label:     sdk.F[string]("x"),
-			Value:     sdk.F[string]("x"),
-			SortOrder: sdk.F[interface{}](0),
-		},
+		Label:     sdk.F[string]("x"),
+		Value:     sdk.F[string]("x"),
+		SortOrder: sdk.F[interface{}](0),
 	})
 	if err != nil {
 		panic(err)
@@ -414,7 +410,7 @@ func _smokeCase32() {
 		AfterID:        sdk.F[string]("offr_1234"),
 		BeforeID:       sdk.F[string]("offr_1234"),
 		CandidateEmail: sdk.F[string]("john@joinwarp.com"),
-		Statuses:       sdk.F[[]sdk.Union13]([]sdk.Union13{"draft"}),
+		Statuses:       sdk.F[[]sdk.OfferListParamsStatus]([]sdk.OfferListParamsStatus{"draft"}),
 		WorkerTypes:    sdk.F[[]sdk.OfferListParamsWorkerType]([]sdk.OfferListParamsWorkerType{"employee"}),
 	})
 	if err != nil {
@@ -630,7 +626,7 @@ func _smokeCase47() {
 		PolicyIDs:       sdk.F[[]string]([]string{"top_1234"}),
 		StartsBefore:    sdk.F[string](""),
 		StartsOnOrAfter: sdk.F[string](""),
-		Statuses:        sdk.F[[]sdk.Union26]([]sdk.Union26{"pending"}),
+		Statuses:        sdk.F[[]sdk.TimeOffListRequestsParamsStatus]([]sdk.TimeOffListRequestsParamsStatus{"pending"}),
 		WorkerIDs:       sdk.F[[]string]([]string{"wrk_1234"}),
 	})
 	if err != nil {
@@ -689,8 +685,8 @@ func _smokeCase52() {
 		Limit:     sdk.F[string]("limit"),
 		AfterID:   sdk.F[string]("wrk_1234"),
 		BeforeID:  sdk.F[string]("wrk_1234"),
-		Statuses:  sdk.F[[]sdk.Union27]([]sdk.Union27{"draft"}),
-		Types:     sdk.F[[]sdk.Union28]([]sdk.Union28{"employee"}),
+		Statuses:  sdk.F[[]sdk.WorkerListParamsStatus]([]sdk.WorkerListParamsStatus{"draft"}),
+		Types:     sdk.F[[]sdk.WorkerListParamsType]([]sdk.WorkerListParamsType{"employee"}),
 		WorkEmail: sdk.F[string](""),
 	})
 	if err != nil {

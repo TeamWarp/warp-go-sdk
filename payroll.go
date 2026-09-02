@@ -154,6 +154,7 @@ func (r *PayrollService) Get(ctx context.Context, id string, opts ...option.Requ
 }
 
 type PublicPaycheckPayroll struct {
+	// The tag of the payroll.
 	ID              string                    `json:"id" api:"required"`
 	Type            interface{}               `json:"type" api:"required"`
 	Subtype         interface{}               `json:"subtype" api:"required"`
@@ -186,14 +187,15 @@ func (r publicPaycheckPayrollJSON) RawJSON() string {
 }
 
 type PublicPaycheckWorker struct {
+	// The worker id.
 	ID string `json:"id" api:"required"`
 	// The worker first name.
 	FirstName string `json:"firstName" api:"required"`
 	// The worker last name.
-	LastName    string                   `json:"lastName" api:"required"`
-	DisplayName string                   `json:"displayName" api:"required"`
-	WorkerType  interface{}              `json:"workerType" api:"required"`
-	JSON        publicPaycheckWorkerJSON `json:"-"`
+	LastName    string                         `json:"lastName" api:"required"`
+	DisplayName string                         `json:"displayName" api:"required"`
+	WorkerType  PublicPaycheckWorkerWorkerType `json:"workerType" api:"required"`
+	JSON        publicPaycheckWorkerJSON       `json:"-"`
 }
 
 // publicPaycheckWorkerJSON contains the JSON metadata for the struct [PublicPaycheckWorker]
@@ -215,8 +217,24 @@ func (r publicPaycheckWorkerJSON) RawJSON() string {
 	return r.raw
 }
 
+type PublicPaycheckWorkerWorkerType string
+
+const (
+	PublicPaycheckWorkerWorkerTypeUsW2             PublicPaycheckWorkerWorkerType = "us_w2"
+	PublicPaycheckWorkerWorkerTypeUs1099           PublicPaycheckWorkerWorkerType = "us_1099"
+	PublicPaycheckWorkerWorkerTypeGlobalContractor PublicPaycheckWorkerWorkerType = "global_contractor"
+)
+
+func (r PublicPaycheckWorkerWorkerType) IsKnown() bool {
+	switch r {
+	case PublicPaycheckWorkerWorkerTypeUsW2, PublicPaycheckWorkerWorkerTypeUs1099, PublicPaycheckWorkerWorkerTypeGlobalContractor:
+		return true
+	}
+	return false
+}
+
 type PublicPaycheckDetailTotals struct {
-	ByCurrency        interface{}                    `json:"byCurrency" api:"required"`
+	ByCurrency        string                         `json:"byCurrency" api:"required"`
 	InFundingCurrency interface{}                    `json:"inFundingCurrency" api:"required"`
 	JSON              publicPaycheckDetailTotalsJSON `json:"-"`
 }
@@ -395,6 +413,7 @@ func (r payrollListPaychecksResponseJSON) RawJSON() string {
 }
 
 type PayrollGetPaycheckResponse struct {
+	// The tag of the paycheck.
 	ID             string                         `json:"id" api:"required"`
 	Payroll        interface{}                    `json:"payroll" api:"required"`
 	Worker         interface{}                    `json:"worker" api:"required"`
@@ -467,6 +486,7 @@ func (r payrollListResponseJSON) RawJSON() string {
 }
 
 type PayrollGetResponse struct {
+	// The tag of the payroll.
 	ID               string                 `json:"id" api:"required"`
 	Type             interface{}            `json:"type" api:"required"`
 	Subtype          interface{}            `json:"subtype" api:"required"`
@@ -625,6 +645,7 @@ func (r PayrollListParams) URLQuery() (v url.Values) {
 }
 
 type PublicPaycheckCurrencyTotalsGrossPay struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                   `json:"display" api:"required"`
@@ -648,6 +669,7 @@ func (r publicPaycheckCurrencyTotalsGrossPayJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsNetPay struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                 `json:"display" api:"required"`
@@ -671,6 +693,7 @@ func (r publicPaycheckCurrencyTotalsNetPayJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsReimbursements struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                         `json:"display" api:"required"`
@@ -694,6 +717,7 @@ func (r publicPaycheckCurrencyTotalsReimbursementsJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsWorkerTaxes struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                      `json:"display" api:"required"`
@@ -717,6 +741,7 @@ func (r publicPaycheckCurrencyTotalsWorkerTaxesJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsEmployerTaxes struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                        `json:"display" api:"required"`
@@ -740,6 +765,7 @@ func (r publicPaycheckCurrencyTotalsEmployerTaxesJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsPreTaxDeductions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                           `json:"display" api:"required"`
@@ -763,6 +789,7 @@ func (r publicPaycheckCurrencyTotalsPreTaxDeductionsJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsPostTaxDeductions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                            `json:"display" api:"required"`
@@ -786,6 +813,7 @@ func (r publicPaycheckCurrencyTotalsPostTaxDeductionsJSON) RawJSON() string {
 }
 
 type PublicPaycheckCurrencyTotalsWorkerBenefitContributions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                     `json:"display" api:"required"`
@@ -809,6 +837,7 @@ func (r publicPaycheckCurrencyTotalsWorkerBenefitContributionsJSON) RawJSON() st
 }
 
 type PublicPaycheckCurrencyTotalsEmployerBenefitContributions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                       `json:"display" api:"required"`
@@ -832,6 +861,7 @@ func (r publicPaycheckCurrencyTotalsEmployerBenefitContributionsJSON) RawJSON() 
 }
 
 type PublicPayrollDetailTotalsCashRequirement struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                       `json:"display" api:"required"`
@@ -855,6 +885,7 @@ func (r publicPayrollDetailTotalsCashRequirementJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsGrossPay struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                `json:"display" api:"required"`
@@ -878,6 +909,7 @@ func (r publicPayrollDetailTotalsGrossPayJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsNetPay struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                              `json:"display" api:"required"`
@@ -901,6 +933,7 @@ func (r publicPayrollDetailTotalsNetPayJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsReimbursements struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                      `json:"display" api:"required"`
@@ -924,6 +957,7 @@ func (r publicPayrollDetailTotalsReimbursementsJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsWorkerTaxes struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                   `json:"display" api:"required"`
@@ -947,6 +981,7 @@ func (r publicPayrollDetailTotalsWorkerTaxesJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsEmployerTaxes struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                     `json:"display" api:"required"`
@@ -970,6 +1005,7 @@ func (r publicPayrollDetailTotalsEmployerTaxesJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsPreTaxDeductions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                        `json:"display" api:"required"`
@@ -993,6 +1029,7 @@ func (r publicPayrollDetailTotalsPreTaxDeductionsJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsPostTaxDeductions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                         `json:"display" api:"required"`
@@ -1016,6 +1053,7 @@ func (r publicPayrollDetailTotalsPostTaxDeductionsJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsWorkerBenefitContributions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                  `json:"display" api:"required"`
@@ -1039,6 +1077,7 @@ func (r publicPayrollDetailTotalsWorkerBenefitContributionsJSON) RawJSON() strin
 }
 
 type PublicPayrollDetailTotalsEmployerBenefitContributions struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                                    `json:"display" api:"required"`
@@ -1062,6 +1101,7 @@ func (r publicPayrollDetailTotalsEmployerBenefitContributionsJSON) RawJSON() str
 }
 
 type PublicPayrollDetailTotalsTransactionFees struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                       `json:"display" api:"required"`
@@ -1085,6 +1125,7 @@ func (r publicPayrollDetailTotalsTransactionFeesJSON) RawJSON() string {
 }
 
 type PublicPayrollDetailTotalsTotalCost struct {
+	// The amount in ISO 4217 minor units. For USD, 300000 represents $3,000.00.
 	Amount int64 `json:"amount" api:"required"`
 	// The server-formatted display string for the amount in its currency.
 	Display string                                 `json:"display" api:"required"`

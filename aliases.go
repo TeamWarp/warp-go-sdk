@@ -9,41 +9,6 @@ import (
 
 type Error = apierror.Error
 
-type Union = shared.Union
-
-const (
-	UnionMedical             = shared.UnionMedical
-	UnionDental              = shared.UnionDental
-	UnionVision              = shared.UnionVision
-	UnionLife                = shared.UnionLife
-	UnionShortTermDisability = shared.UnionShortTermDisability
-	UnionLongTermDisability  = shared.UnionLongTermDisability
-	Union401k                = shared.Union401k
-	UnionRoth401k            = shared.UnionRoth401k
-	Union403b                = shared.Union403b
-	UnionRoth403b            = shared.UnionRoth403b
-	Union457                 = shared.Union457
-	UnionRoth457             = shared.UnionRoth457
-	UnionHsa                 = shared.UnionHsa
-	UnionFsaMedical          = shared.UnionFsaMedical
-	UnionFsaDependentCare    = shared.UnionFsaDependentCare
-	UnionTransit             = shared.UnionTransit
-	UnionParking             = shared.UnionParking
-	UnionAccident            = shared.UnionAccident
-	UnionCancer              = shared.UnionCancer
-	UnionCriticalIllness     = shared.UnionCriticalIllness
-	UnionHospital            = shared.UnionHospital
-	UnionMedicalOther        = shared.UnionMedicalOther
-	UnionSimpleIra           = shared.UnionSimpleIra
-	UnionRothSimpleIra       = shared.UnionRothSimpleIra
-	UnionNqdc                = shared.UnionNqdc
-	UnionNontaxableFringe    = shared.UnionNontaxableFringe
-	UnionPucc                = shared.UnionPucc
-	UnionVoluntary           = shared.UnionVoluntary
-	UnionPostTax             = shared.UnionPostTax
-	UnionOther               = shared.UnionOther
-)
-
 type PublicWorkerCompensation = shared.PublicWorkerCompensation
 
 type PublicWorkerCompensationPer = shared.PublicWorkerCompensationPer
@@ -55,17 +20,139 @@ const (
 	PublicWorkerCompensationPerHour  = shared.PublicWorkerCompensationPerHour
 )
 
-type Union2 = shared.Union2
+type PublicWorkerCompensationCurrency = shared.PublicWorkerCompensationCurrency
 
 const (
-	Union2Infinity  = shared.Union2Infinity
-	Union2Infinity2 = shared.Union2Infinity2
-	Union2NaN       = shared.Union2NaN
+	PublicWorkerCompensationCurrencyUsd = shared.PublicWorkerCompensationCurrencyUsd
+	PublicWorkerCompensationCurrencyAud = shared.PublicWorkerCompensationCurrencyAud
+	PublicWorkerCompensationCurrencyBgn = shared.PublicWorkerCompensationCurrencyBgn
+	PublicWorkerCompensationCurrencyBrl = shared.PublicWorkerCompensationCurrencyBrl
+	PublicWorkerCompensationCurrencyCad = shared.PublicWorkerCompensationCurrencyCad
+	PublicWorkerCompensationCurrencyChf = shared.PublicWorkerCompensationCurrencyChf
+	PublicWorkerCompensationCurrencyCzk = shared.PublicWorkerCompensationCurrencyCzk
+	PublicWorkerCompensationCurrencyDkk = shared.PublicWorkerCompensationCurrencyDkk
+	PublicWorkerCompensationCurrencyEur = shared.PublicWorkerCompensationCurrencyEur
+	PublicWorkerCompensationCurrencyGbp = shared.PublicWorkerCompensationCurrencyGbp
+	PublicWorkerCompensationCurrencyHkd = shared.PublicWorkerCompensationCurrencyHkd
+	PublicWorkerCompensationCurrencyHuf = shared.PublicWorkerCompensationCurrencyHuf
+	PublicWorkerCompensationCurrencyIdr = shared.PublicWorkerCompensationCurrencyIdr
+	PublicWorkerCompensationCurrencyInr = shared.PublicWorkerCompensationCurrencyInr
+	PublicWorkerCompensationCurrencyJpy = shared.PublicWorkerCompensationCurrencyJpy
+	PublicWorkerCompensationCurrencyMyr = shared.PublicWorkerCompensationCurrencyMyr
+	PublicWorkerCompensationCurrencyNok = shared.PublicWorkerCompensationCurrencyNok
+	PublicWorkerCompensationCurrencyNzd = shared.PublicWorkerCompensationCurrencyNzd
+	PublicWorkerCompensationCurrencyCny = shared.PublicWorkerCompensationCurrencyCny
+	PublicWorkerCompensationCurrencyPln = shared.PublicWorkerCompensationCurrencyPln
+	PublicWorkerCompensationCurrencyRon = shared.PublicWorkerCompensationCurrencyRon
+	PublicWorkerCompensationCurrencyTry = shared.PublicWorkerCompensationCurrencyTry
+	PublicWorkerCompensationCurrencySek = shared.PublicWorkerCompensationCurrencySek
+	PublicWorkerCompensationCurrencySgd = shared.PublicWorkerCompensationCurrencySgd
+	PublicWorkerCompensationCurrencyAed = shared.PublicWorkerCompensationCurrencyAed
+	PublicWorkerCompensationCurrencyArs = shared.PublicWorkerCompensationCurrencyArs
+	PublicWorkerCompensationCurrencyBdt = shared.PublicWorkerCompensationCurrencyBdt
+	PublicWorkerCompensationCurrencyBwp = shared.PublicWorkerCompensationCurrencyBwp
+	PublicWorkerCompensationCurrencyClp = shared.PublicWorkerCompensationCurrencyClp
+	PublicWorkerCompensationCurrencyCop = shared.PublicWorkerCompensationCurrencyCop
+	PublicWorkerCompensationCurrencyCrc = shared.PublicWorkerCompensationCurrencyCrc
+	PublicWorkerCompensationCurrencyEgp = shared.PublicWorkerCompensationCurrencyEgp
+	PublicWorkerCompensationCurrencyFjd = shared.PublicWorkerCompensationCurrencyFjd
+	PublicWorkerCompensationCurrencyGel = shared.PublicWorkerCompensationCurrencyGel
+	PublicWorkerCompensationCurrencyGhs = shared.PublicWorkerCompensationCurrencyGhs
+	PublicWorkerCompensationCurrencyIls = shared.PublicWorkerCompensationCurrencyIls
+	PublicWorkerCompensationCurrencyKes = shared.PublicWorkerCompensationCurrencyKes
+	PublicWorkerCompensationCurrencyKrw = shared.PublicWorkerCompensationCurrencyKrw
+	PublicWorkerCompensationCurrencyLkr = shared.PublicWorkerCompensationCurrencyLkr
+	PublicWorkerCompensationCurrencyMad = shared.PublicWorkerCompensationCurrencyMad
+	PublicWorkerCompensationCurrencyMxn = shared.PublicWorkerCompensationCurrencyMxn
+	PublicWorkerCompensationCurrencyNpr = shared.PublicWorkerCompensationCurrencyNpr
+	PublicWorkerCompensationCurrencyPhp = shared.PublicWorkerCompensationCurrencyPhp
+	PublicWorkerCompensationCurrencyPkr = shared.PublicWorkerCompensationCurrencyPkr
+	PublicWorkerCompensationCurrencyThb = shared.PublicWorkerCompensationCurrencyThb
+	PublicWorkerCompensationCurrencyUah = shared.PublicWorkerCompensationCurrencyUah
+	PublicWorkerCompensationCurrencyUgx = shared.PublicWorkerCompensationCurrencyUgx
+	PublicWorkerCompensationCurrencyUyu = shared.PublicWorkerCompensationCurrencyUyu
+	PublicWorkerCompensationCurrencyVnd = shared.PublicWorkerCompensationCurrencyVnd
+	PublicWorkerCompensationCurrencyZar = shared.PublicWorkerCompensationCurrencyZar
+	PublicWorkerCompensationCurrencyZmw = shared.PublicWorkerCompensationCurrencyZmw
+	PublicWorkerCompensationCurrencyTnd = shared.PublicWorkerCompensationCurrencyTnd
+	PublicWorkerCompensationCurrencyNgn = shared.PublicWorkerCompensationCurrencyNgn
+	PublicWorkerCompensationCurrencyRsd = shared.PublicWorkerCompensationCurrencyRsd
+	PublicWorkerCompensationCurrencyTwd = shared.PublicWorkerCompensationCurrencyTwd
+	PublicWorkerCompensationCurrencyGtq = shared.PublicWorkerCompensationCurrencyGtq
+	PublicWorkerCompensationCurrencyHnl = shared.PublicWorkerCompensationCurrencyHnl
+	PublicWorkerCompensationCurrencyDop = shared.PublicWorkerCompensationCurrencyDop
+	PublicWorkerCompensationCurrencySar = shared.PublicWorkerCompensationCurrencySar
+	PublicWorkerCompensationCurrencyXaf = shared.PublicWorkerCompensationCurrencyXaf
+	PublicWorkerCompensationCurrencyPen = shared.PublicWorkerCompensationCurrencyPen
 )
 
-type Objects = shared.Objects
-
 type PublicMoneyAmount = shared.PublicMoneyAmount
+
+type PublicMoneyAmountCurrency = shared.PublicMoneyAmountCurrency
+
+const (
+	PublicMoneyAmountCurrencyUsd = shared.PublicMoneyAmountCurrencyUsd
+	PublicMoneyAmountCurrencyAud = shared.PublicMoneyAmountCurrencyAud
+	PublicMoneyAmountCurrencyBgn = shared.PublicMoneyAmountCurrencyBgn
+	PublicMoneyAmountCurrencyBrl = shared.PublicMoneyAmountCurrencyBrl
+	PublicMoneyAmountCurrencyCad = shared.PublicMoneyAmountCurrencyCad
+	PublicMoneyAmountCurrencyChf = shared.PublicMoneyAmountCurrencyChf
+	PublicMoneyAmountCurrencyCzk = shared.PublicMoneyAmountCurrencyCzk
+	PublicMoneyAmountCurrencyDkk = shared.PublicMoneyAmountCurrencyDkk
+	PublicMoneyAmountCurrencyEur = shared.PublicMoneyAmountCurrencyEur
+	PublicMoneyAmountCurrencyGbp = shared.PublicMoneyAmountCurrencyGbp
+	PublicMoneyAmountCurrencyHkd = shared.PublicMoneyAmountCurrencyHkd
+	PublicMoneyAmountCurrencyHuf = shared.PublicMoneyAmountCurrencyHuf
+	PublicMoneyAmountCurrencyIdr = shared.PublicMoneyAmountCurrencyIdr
+	PublicMoneyAmountCurrencyInr = shared.PublicMoneyAmountCurrencyInr
+	PublicMoneyAmountCurrencyJpy = shared.PublicMoneyAmountCurrencyJpy
+	PublicMoneyAmountCurrencyMyr = shared.PublicMoneyAmountCurrencyMyr
+	PublicMoneyAmountCurrencyNok = shared.PublicMoneyAmountCurrencyNok
+	PublicMoneyAmountCurrencyNzd = shared.PublicMoneyAmountCurrencyNzd
+	PublicMoneyAmountCurrencyCny = shared.PublicMoneyAmountCurrencyCny
+	PublicMoneyAmountCurrencyPln = shared.PublicMoneyAmountCurrencyPln
+	PublicMoneyAmountCurrencyRon = shared.PublicMoneyAmountCurrencyRon
+	PublicMoneyAmountCurrencyTry = shared.PublicMoneyAmountCurrencyTry
+	PublicMoneyAmountCurrencySek = shared.PublicMoneyAmountCurrencySek
+	PublicMoneyAmountCurrencySgd = shared.PublicMoneyAmountCurrencySgd
+	PublicMoneyAmountCurrencyAed = shared.PublicMoneyAmountCurrencyAed
+	PublicMoneyAmountCurrencyArs = shared.PublicMoneyAmountCurrencyArs
+	PublicMoneyAmountCurrencyBdt = shared.PublicMoneyAmountCurrencyBdt
+	PublicMoneyAmountCurrencyBwp = shared.PublicMoneyAmountCurrencyBwp
+	PublicMoneyAmountCurrencyClp = shared.PublicMoneyAmountCurrencyClp
+	PublicMoneyAmountCurrencyCop = shared.PublicMoneyAmountCurrencyCop
+	PublicMoneyAmountCurrencyCrc = shared.PublicMoneyAmountCurrencyCrc
+	PublicMoneyAmountCurrencyEgp = shared.PublicMoneyAmountCurrencyEgp
+	PublicMoneyAmountCurrencyFjd = shared.PublicMoneyAmountCurrencyFjd
+	PublicMoneyAmountCurrencyGel = shared.PublicMoneyAmountCurrencyGel
+	PublicMoneyAmountCurrencyGhs = shared.PublicMoneyAmountCurrencyGhs
+	PublicMoneyAmountCurrencyIls = shared.PublicMoneyAmountCurrencyIls
+	PublicMoneyAmountCurrencyKes = shared.PublicMoneyAmountCurrencyKes
+	PublicMoneyAmountCurrencyKrw = shared.PublicMoneyAmountCurrencyKrw
+	PublicMoneyAmountCurrencyLkr = shared.PublicMoneyAmountCurrencyLkr
+	PublicMoneyAmountCurrencyMad = shared.PublicMoneyAmountCurrencyMad
+	PublicMoneyAmountCurrencyMxn = shared.PublicMoneyAmountCurrencyMxn
+	PublicMoneyAmountCurrencyNpr = shared.PublicMoneyAmountCurrencyNpr
+	PublicMoneyAmountCurrencyPhp = shared.PublicMoneyAmountCurrencyPhp
+	PublicMoneyAmountCurrencyPkr = shared.PublicMoneyAmountCurrencyPkr
+	PublicMoneyAmountCurrencyThb = shared.PublicMoneyAmountCurrencyThb
+	PublicMoneyAmountCurrencyUah = shared.PublicMoneyAmountCurrencyUah
+	PublicMoneyAmountCurrencyUgx = shared.PublicMoneyAmountCurrencyUgx
+	PublicMoneyAmountCurrencyUyu = shared.PublicMoneyAmountCurrencyUyu
+	PublicMoneyAmountCurrencyVnd = shared.PublicMoneyAmountCurrencyVnd
+	PublicMoneyAmountCurrencyZar = shared.PublicMoneyAmountCurrencyZar
+	PublicMoneyAmountCurrencyZmw = shared.PublicMoneyAmountCurrencyZmw
+	PublicMoneyAmountCurrencyTnd = shared.PublicMoneyAmountCurrencyTnd
+	PublicMoneyAmountCurrencyNgn = shared.PublicMoneyAmountCurrencyNgn
+	PublicMoneyAmountCurrencyRsd = shared.PublicMoneyAmountCurrencyRsd
+	PublicMoneyAmountCurrencyTwd = shared.PublicMoneyAmountCurrencyTwd
+	PublicMoneyAmountCurrencyGtq = shared.PublicMoneyAmountCurrencyGtq
+	PublicMoneyAmountCurrencyHnl = shared.PublicMoneyAmountCurrencyHnl
+	PublicMoneyAmountCurrencyDop = shared.PublicMoneyAmountCurrencyDop
+	PublicMoneyAmountCurrencySar = shared.PublicMoneyAmountCurrencySar
+	PublicMoneyAmountCurrencyXaf = shared.PublicMoneyAmountCurrencyXaf
+	PublicMoneyAmountCurrencyPen = shared.PublicMoneyAmountCurrencyPen
+)
 
 type EffectHTTPAPIErrorInternalServerErrorEncoded = shared.EffectHTTPAPIErrorInternalServerErrorEncoded
 
@@ -153,54 +240,6 @@ const (
 	APINotEnabledEncodedTagAPINotEnabled = shared.APINotEnabledEncodedTagAPINotEnabled
 )
 
-type Union3 = shared.Union3
-
-type Union4 = shared.Union4
-
-const (
-	Union4Text        = shared.Union4Text
-	Union4Number      = shared.Union4Number
-	Union4Date        = shared.Union4Date
-	Union4Boolean     = shared.Union4Boolean
-	Union4Currency    = shared.Union4Currency
-	Union4Percentage  = shared.Union4Percentage
-	Union4Select      = shared.Union4Select
-	Union4MultiSelect = shared.Union4MultiSelect
-)
-
-type Union5 = shared.Union5
-
-const (
-	Union5Active   = shared.Union5Active
-	Union5Archived = shared.Union5Archived
-)
-
-type Union6 = shared.Union6
-
-const (
-	Union6Info         = shared.Union6Info
-	Union6Pii          = shared.Union6Pii
-	Union6Compensation = shared.Union6Compensation
-	Union6Banking      = shared.Union6Banking
-	Union6It           = shared.Union6It
-	Union6Compliance   = shared.Union6Compliance
-)
-
-type Union7 = shared.Union7
-
-const (
-	Union7Admins  = shared.Union7Admins
-	Union7Manager = shared.Union7Manager
-	Union7Worker  = shared.Union7Worker
-)
-
-type Union8 = shared.Union8
-
-const (
-	Union8Admin  = shared.Union8Admin
-	Union8Worker = shared.Union8Worker
-)
-
 type CustomFieldOptionAlreadyExistsErrorEncoded = shared.CustomFieldOptionAlreadyExistsErrorEncoded
 
 type CustomFieldOptionAlreadyExistsErrorEncodedTag = shared.CustomFieldOptionAlreadyExistsErrorEncodedTag
@@ -215,15 +254,6 @@ type InvalidCustomFieldOperationErrorEncodedTag = shared.InvalidCustomFieldOpera
 
 const (
 	InvalidCustomFieldOperationErrorEncodedTagInvalidCustomFieldOperationError = shared.InvalidCustomFieldOperationErrorEncodedTagInvalidCustomFieldOperationError
-)
-
-type Objects3 = shared.Objects3
-
-type Objects3Status = shared.Objects3Status
-
-const (
-	Objects3StatusActive   = shared.Objects3StatusActive
-	Objects3StatusArchived = shared.Objects3StatusArchived
 )
 
 type CustomFieldNotFoundErrorEncoded = shared.CustomFieldNotFoundErrorEncoded
@@ -242,33 +272,12 @@ const (
 	CustomFieldOptionNotFoundErrorEncodedTagCustomFieldOptionNotFoundError = shared.CustomFieldOptionNotFoundErrorEncodedTagCustomFieldOptionNotFoundError
 )
 
-type Union12 = shared.Union12
-
 type DepartmentNotFoundEncoded = shared.DepartmentNotFoundEncoded
 
 type DepartmentNotFoundEncodedTag = shared.DepartmentNotFoundEncodedTag
 
 const (
 	DepartmentNotFoundEncodedTagDepartmentNotFound = shared.DepartmentNotFoundEncodedTagDepartmentNotFound
-)
-
-type Objects5 = shared.Objects5
-
-type Objects5Track = shared.Objects5Track
-
-const (
-	Objects5TrackIc        = shared.Objects5TrackIc
-	Objects5TrackManager   = shared.Objects5TrackManager
-	Objects5TrackExecutive = shared.Objects5TrackExecutive
-)
-
-type Union13 = shared.Union13
-
-const (
-	Union13Draft    = shared.Union13Draft
-	Union13Sent     = shared.Union13Sent
-	Union13Accepted = shared.Union13Accepted
-	Union13Void     = shared.Union13Void
 )
 
 type WorkplaceNotFoundEncoded = shared.WorkplaceNotFoundEncoded
@@ -301,6 +310,15 @@ type InvalidOfferStatusErrorEncodedTag = shared.InvalidOfferStatusErrorEncodedTa
 
 const (
 	InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError = shared.InvalidOfferStatusErrorEncodedTagInvalidOfferStatusError
+)
+
+type InvalidOfferStatusErrorEncodedStatus = shared.InvalidOfferStatusErrorEncodedStatus
+
+const (
+	InvalidOfferStatusErrorEncodedStatusDraft    = shared.InvalidOfferStatusErrorEncodedStatusDraft
+	InvalidOfferStatusErrorEncodedStatusSent     = shared.InvalidOfferStatusErrorEncodedStatusSent
+	InvalidOfferStatusErrorEncodedStatusAccepted = shared.InvalidOfferStatusErrorEncodedStatusAccepted
+	InvalidOfferStatusErrorEncodedStatusVoid     = shared.InvalidOfferStatusErrorEncodedStatusVoid
 )
 
 type PublicPayrollType = shared.PublicPayrollType
@@ -345,8 +363,6 @@ const (
 	PublicPayFrequencyQuarterly   = shared.PublicPayFrequencyQuarterly
 	PublicPayFrequencyAnnually    = shared.PublicPayFrequencyAnnually
 )
-
-type Union21 = shared.Union21
 
 type PublicPayrollCurrency = shared.PublicPayrollCurrency
 
@@ -445,48 +461,6 @@ type TimeOffPolicyNotFoundEncodedTag = shared.TimeOffPolicyNotFoundEncodedTag
 const (
 	TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound = shared.TimeOffPolicyNotFoundEncodedTagTimeOffPolicyNotFound
 )
-
-type Union24 = shared.Union24
-
-type Union25 = shared.Union25
-
-type Union26 = shared.Union26
-
-const (
-	Union26Pending  = shared.Union26Pending
-	Union26Approved = shared.Union26Approved
-	Union26Denied   = shared.Union26Denied
-)
-
-type Union27 = shared.Union27
-
-const (
-	Union27Draft       = shared.Union27Draft
-	Union27Invited     = shared.Union27Invited
-	Union27Onboarding  = shared.Union27Onboarding
-	Union27Active      = shared.Union27Active
-	Union27Offboarding = shared.Union27Offboarding
-	Union27Inactive    = shared.Union27Inactive
-)
-
-type Union28 = shared.Union28
-
-const (
-	Union28Employee   = shared.Union28Employee
-	Union28Contractor = shared.Union28Contractor
-)
-
-type Union29 = shared.Union29
-
-type Union30 = shared.Union30
-
-type Union31 = shared.Union31
-
-type Union32 = shared.Union32
-
-type Union33 = shared.Union33
-
-type Union34 = shared.Union34
 
 type WorkerNotFoundErrorEncoded = shared.WorkerNotFoundErrorEncoded
 

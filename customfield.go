@@ -18,7 +18,6 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // CustomFieldService contains methods and other services that help with interacting
@@ -46,7 +45,7 @@ func NewCustomFieldService(opts ...option.RequestOption) (r *CustomFieldService)
 //
 // Returns:
 //
-//	*[]shared.Objects: Success
+//	*[]CustomFieldListResponse: Success
 //
 // Example:
 //
@@ -56,7 +55,7 @@ func NewCustomFieldService(opts ...option.RequestOption) (r *CustomFieldService)
 //	}
 //
 //	fmt.Println(customField)
-func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOption) (res *[]shared.Objects, err error) {
+func (r *CustomFieldService) List(ctx context.Context, opts ...option.RequestOption) (res *[]CustomFieldListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/custom_fields"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
@@ -97,7 +96,7 @@ func (r *CustomFieldService) New(ctx context.Context, body CustomFieldNewParams,
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -128,13 +127,13 @@ func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field.
 //	body: CustomFieldUpdateParams request parameters.
 //	opts: Options to apply to this request.
 //
 // Returns:
 //
-//	*shared.Objects: Success
+//	*CustomFieldUpdateResponse: Success
 //
 // Example:
 //
@@ -144,7 +143,7 @@ func (r *CustomFieldService) Get(ctx context.Context, id string, opts ...option.
 //	}
 //
 //	fmt.Println(customField)
-func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomFieldUpdateParams, opts ...option.RequestOption) (res *shared.Objects, err error) {
+func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomFieldUpdateParams, opts ...option.RequestOption) (res *CustomFieldUpdateResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -160,12 +159,12 @@ func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomF
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field.
 //	opts: Options to apply to this request.
 //
 // Returns:
 //
-//	*shared.Objects: Success
+//	*CustomFieldArchiveResponse: Success
 //
 // Example:
 //
@@ -175,7 +174,7 @@ func (r *CustomFieldService) Update(ctx context.Context, id string, body CustomF
 //	}
 //
 //	fmt.Println(customField)
-func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Objects, err error) {
+func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldArchiveResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -191,7 +190,7 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field.
 //	body: CustomFieldNewOptionParams request parameters.
 //	opts: Options to apply to this request.
 //
@@ -202,10 +201,8 @@ func (r *CustomFieldService) Archive(ctx context.Context, id string, opts ...opt
 // Example:
 //
 //	customField, err := client.CustomFields.NewOption(context.Background(), "cf_1234", sdk.CustomFieldNewOptionParams{
-//		Objects2: sdk.Objects2Param{
-//			Label: sdk.F[string]("x"),
-//			Value: sdk.F[string]("x"),
-//		},
+//		Label: sdk.F[string]("x"),
+//		Value: sdk.F[string]("x"),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -228,13 +225,13 @@ func (r *CustomFieldService) NewOption(ctx context.Context, id string, body Cust
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field option.
 //	body: CustomFieldUpdateOptionParams request parameters.
 //	opts: Options to apply to this request.
 //
 // Returns:
 //
-//	*shared.Objects3: Success
+//	*CustomFieldUpdateOptionResponse: Success
 //
 // Example:
 //
@@ -244,7 +241,7 @@ func (r *CustomFieldService) NewOption(ctx context.Context, id string, body Cust
 //	}
 //
 //	fmt.Println(customField)
-func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body CustomFieldUpdateOptionParams, opts ...option.RequestOption) (res *shared.Objects3, err error) {
+func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body CustomFieldUpdateOptionParams, opts ...option.RequestOption) (res *CustomFieldUpdateOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -260,7 +257,7 @@ func (r *CustomFieldService) UpdateOption(ctx context.Context, id string, body C
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field option.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -290,12 +287,12 @@ func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts .
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The tag of a company custom worker field option.
 //	opts: Options to apply to this request.
 //
 // Returns:
 //
-//	*shared.Objects3: Success
+//	*CustomFieldArchiveOptionResponse: Success
 //
 // Example:
 //
@@ -305,7 +302,7 @@ func (r *CustomFieldService) DeleteOption(ctx context.Context, id string, opts .
 //	}
 //
 //	fmt.Println(customField)
-func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Objects3, err error) {
+func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts ...option.RequestOption) (res *CustomFieldArchiveOptionResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -326,7 +323,7 @@ func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts 
 //
 // Returns:
 //
-//	*[]Objects4: Success
+//	*[]CustomFieldListValuesResponse: Success
 //
 // Example:
 //
@@ -336,7 +333,7 @@ func (r *CustomFieldService) ArchiveOption(ctx context.Context, id string, opts 
 //	}
 //
 //	fmt.Println(customField)
-func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldListValuesParams, opts ...option.RequestOption) (res *[]Objects4, err error) {
+func (r *CustomFieldService) ListValues(ctx context.Context, query CustomFieldListValuesParams, opts ...option.RequestOption) (res *[]CustomFieldListValuesResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/custom_field_values"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
@@ -403,146 +400,6 @@ func (r *CustomFieldService) ClearValue(ctx context.Context, body CustomFieldCle
 	return err
 }
 
-type Objects2Param struct {
-	Label     param.Field[string]      `json:"label" api:"required"`
-	Value     param.Field[string]      `json:"value" api:"required"`
-	SortOrder param.Field[interface{}] `json:"sortOrder"`
-}
-
-func (r Objects2Param) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type Union1 string
-
-const (
-	Union1Usd Union1 = "USD"
-	Union1Aud Union1 = "AUD"
-	Union1Bgn Union1 = "BGN"
-	Union1Brl Union1 = "BRL"
-	Union1Cad Union1 = "CAD"
-	Union1Chf Union1 = "CHF"
-	Union1Czk Union1 = "CZK"
-	Union1Dkk Union1 = "DKK"
-	Union1Eur Union1 = "EUR"
-	Union1Gbp Union1 = "GBP"
-	Union1Hkd Union1 = "HKD"
-	Union1Huf Union1 = "HUF"
-	Union1Idr Union1 = "IDR"
-	Union1Inr Union1 = "INR"
-	Union1Jpy Union1 = "JPY"
-	Union1Myr Union1 = "MYR"
-	Union1Nok Union1 = "NOK"
-	Union1Nzd Union1 = "NZD"
-	Union1Cny Union1 = "CNY"
-	Union1Pln Union1 = "PLN"
-	Union1Ron Union1 = "RON"
-	Union1Try Union1 = "TRY"
-	Union1Sek Union1 = "SEK"
-	Union1Sgd Union1 = "SGD"
-	Union1Aed Union1 = "AED"
-	Union1Ars Union1 = "ARS"
-	Union1Bdt Union1 = "BDT"
-	Union1Bwp Union1 = "BWP"
-	Union1Clp Union1 = "CLP"
-	Union1Cop Union1 = "COP"
-	Union1Crc Union1 = "CRC"
-	Union1Egp Union1 = "EGP"
-	Union1Fjd Union1 = "FJD"
-	Union1Gel Union1 = "GEL"
-	Union1Ghs Union1 = "GHS"
-	Union1Ils Union1 = "ILS"
-	Union1Kes Union1 = "KES"
-	Union1Krw Union1 = "KRW"
-	Union1Lkr Union1 = "LKR"
-	Union1Mad Union1 = "MAD"
-	Union1Mxn Union1 = "MXN"
-	Union1Npr Union1 = "NPR"
-	Union1Php Union1 = "PHP"
-	Union1Pkr Union1 = "PKR"
-	Union1Thb Union1 = "THB"
-	Union1Uah Union1 = "UAH"
-	Union1Ugx Union1 = "UGX"
-	Union1Uyu Union1 = "UYU"
-	Union1Vnd Union1 = "VND"
-	Union1Zar Union1 = "ZAR"
-	Union1Zmw Union1 = "ZMW"
-	Union1Tnd Union1 = "TND"
-	Union1Ngn Union1 = "NGN"
-	Union1Rsd Union1 = "RSD"
-	Union1Twd Union1 = "TWD"
-	Union1Gtq Union1 = "GTQ"
-	Union1Hnl Union1 = "HNL"
-	Union1Dop Union1 = "DOP"
-	Union1Sar Union1 = "SAR"
-	Union1Xaf Union1 = "XAF"
-	Union1Pen Union1 = "PEN"
-)
-
-func (r Union1) IsKnown() bool {
-	switch r {
-	case Union1Usd, Union1Aud, Union1Bgn, Union1Brl, Union1Cad, Union1Chf, Union1Czk, Union1Dkk, Union1Eur, Union1Gbp, Union1Hkd, Union1Huf, Union1Idr, Union1Inr, Union1Jpy, Union1Myr, Union1Nok, Union1Nzd, Union1Cny, Union1Pln, Union1Ron, Union1Try, Union1Sek, Union1Sgd, Union1Aed, Union1Ars, Union1Bdt, Union1Bwp, Union1Clp, Union1Cop, Union1Crc, Union1Egp, Union1Fjd, Union1Gel, Union1Ghs, Union1Ils, Union1Kes, Union1Krw, Union1Lkr, Union1Mad, Union1Mxn, Union1Npr, Union1Php, Union1Pkr, Union1Thb, Union1Uah, Union1Ugx, Union1Uyu, Union1Vnd, Union1Zar, Union1Zmw, Union1Tnd, Union1Ngn, Union1Rsd, Union1Twd, Union1Gtq, Union1Hnl, Union1Dop, Union1Sar, Union1Xaf, Union1Pen:
-		return true
-	}
-	return false
-}
-
-type Objects4 struct {
-	ID        string        `json:"id" api:"required"`
-	WorkerID  string        `json:"workerId" api:"required"`
-	FieldID   string        `json:"fieldId" api:"required"`
-	Value     Objects4Value `json:"value" api:"required"`
-	UpdatedAt string        `json:"updatedAt" api:"required"`
-	JSON      objects4JSON  `json:"-"`
-}
-
-// objects4JSON contains the JSON metadata for the struct [Objects4]
-type objects4JSON struct {
-	ID          apijson.Field
-	WorkerID    apijson.Field
-	FieldID     apijson.Field
-	Value       apijson.Field
-	UpdatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects4) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4JSON) RawJSON() string {
-	return r.raw
-}
-
-type CustomFieldUpsertValueResponse struct {
-	ID        string                              `json:"id" api:"required"`
-	WorkerID  string                              `json:"workerId" api:"required"`
-	FieldID   string                              `json:"fieldId" api:"required"`
-	Value     CustomFieldUpsertValueResponseValue `json:"value" api:"required"`
-	UpdatedAt string                              `json:"updatedAt" api:"required"`
-	JSON      customFieldUpsertValueResponseJSON  `json:"-"`
-}
-
-// customFieldUpsertValueResponseJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponse]
-type customFieldUpsertValueResponseJSON struct {
-	ID          apijson.Field
-	WorkerID    apijson.Field
-	FieldID     apijson.Field
-	Value       apijson.Field
-	UpdatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseJSON) RawJSON() string {
-	return r.raw
-}
-
 type CustomFieldNewParams struct {
 	Category    param.Field[CustomFieldNewParamsCategory]    `json:"category" api:"required"`
 	Name        param.Field[string]                          `json:"name" api:"required"`
@@ -551,7 +408,7 @@ type CustomFieldNewParams struct {
 	Config      param.Field[interface{}]                     `json:"config"`
 	Description param.Field[string]                          `json:"description"`
 	InputBy     param.Field[CustomFieldNewParamsInputBy]     `json:"inputBy"`
-	Options     param.Field[[]Objects2Param]                 `json:"options"`
+	Options     param.Field[[]CustomFieldNewParamsOption]    `json:"options"`
 	Required    param.Field[bool]                            `json:"required"`
 }
 
@@ -630,6 +487,16 @@ func (r CustomFieldNewParamsInputBy) IsKnown() bool {
 	return false
 }
 
+type CustomFieldNewParamsOption struct {
+	Label     param.Field[string]      `json:"label" api:"required"`
+	Value     param.Field[string]      `json:"value" api:"required"`
+	SortOrder param.Field[interface{}] `json:"sortOrder"`
+}
+
+func (r CustomFieldNewParamsOption) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
 type CustomFieldUpdateParams struct {
 	AccessLevel param.Field[CustomFieldUpdateParamsAccessLevel] `json:"accessLevel"`
 	Category    param.Field[CustomFieldUpdateParamsCategory]    `json:"category"`
@@ -695,11 +562,13 @@ func (r CustomFieldUpdateParamsInputBy) IsKnown() bool {
 }
 
 type CustomFieldNewOptionParams struct {
-	Objects2 Objects2Param `json:"objects_2" api:"required"`
+	Label     param.Field[string]      `json:"label" api:"required"`
+	Value     param.Field[string]      `json:"value" api:"required"`
+	SortOrder param.Field[interface{}] `json:"sortOrder"`
 }
 
 func (r CustomFieldNewOptionParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r.Objects2)
+	return apijson.MarshalRoot(r)
 }
 
 type CustomFieldUpdateOptionParams struct {
@@ -725,9 +594,11 @@ func (r CustomFieldListValuesParams) URLQuery() (v url.Values) {
 }
 
 type CustomFieldUpsertValueParams struct {
-	FieldID  param.Field[string]                                 `json:"fieldId" api:"required"`
-	Value    param.Field[CustomFieldUpsertValueParamsValueUnion] `json:"value" api:"required"`
-	WorkerID param.Field[string]                                 `json:"workerId" api:"required"`
+	// The tag of a company custom worker field.
+	FieldID param.Field[string]                                 `json:"fieldId" api:"required"`
+	Value   param.Field[CustomFieldUpsertValueParamsValueUnion] `json:"value" api:"required"`
+	// The id of the worker.
+	WorkerID param.Field[string] `json:"workerId" api:"required"`
 }
 
 func (r CustomFieldUpsertValueParams) MarshalJSON() (data []byte, err error) {
@@ -790,6 +661,7 @@ func (r CustomFieldUpsertValueParamsValueVariant3) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant4 struct {
+	// Integer base units of currencyCode (e.g. cents).
 	Amount       param.Field[int64]                                                 `json:"amount" api:"required"`
 	CurrencyCode param.Field[CustomFieldUpsertValueParamsValueVariant4CurrencyCode] `json:"currencyCode" api:"required"`
 	Type         param.Field[CustomFieldUpsertValueParamsValueVariant4Type]         `json:"type" api:"required"`
@@ -809,6 +681,7 @@ func (r CustomFieldUpsertValueParamsValueVariant5) MarshalJSON() (data []byte, e
 }
 
 type CustomFieldUpsertValueParamsValueVariant6 struct {
+	// The tag of a company custom worker field option.
 	OptionID param.Field[string]                                        `json:"optionId" api:"required"`
 	Type     param.Field[CustomFieldUpsertValueParamsValueVariant6Type] `json:"type" api:"required"`
 }
@@ -1013,7 +886,9 @@ func (r CustomFieldUpsertValueParamsValueVariant7Type) IsKnown() bool {
 }
 
 type CustomFieldClearValueParams struct {
-	FieldID  param.Field[string] `query:"fieldId" api:"required"`
+	// The tag of a company custom worker field.
+	FieldID param.Field[string] `query:"fieldId" api:"required"`
+	// The id of the worker.
 	WorkerID param.Field[string] `query:"workerId" api:"required"`
 }
 
@@ -1025,20 +900,64 @@ func (r CustomFieldClearValueParams) URLQuery() (v url.Values) {
 	})
 }
 
+type CustomFieldListResponse struct {
+	// The tag of a company custom worker field.
+	ID          string                             `json:"id" api:"required"`
+	Name        string                             `json:"name" api:"required"`
+	Description string                             `json:"description" api:"required,nullable"`
+	Type        CustomFieldListResponseType        `json:"type" api:"required"`
+	Config      interface{}                        `json:"config" api:"required"`
+	Status      CustomFieldListResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldListResponseCategory    `json:"category" api:"required"`
+	AccessLevel CustomFieldListResponseAccessLevel `json:"accessLevel" api:"required"`
+	InputBy     CustomFieldListResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                               `json:"canWrite" api:"required"`
+	CreatedAt   string                             `json:"createdAt" api:"required"`
+	Required    bool                               `json:"required" api:"nullable"`
+	JSON        customFieldListResponseJSON        `json:"-"`
+}
+
+// customFieldListResponseJSON contains the JSON metadata for the struct [CustomFieldListResponse]
+type customFieldListResponseJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Description apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
+	AccessLevel apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListResponseJSON) RawJSON() string {
+	return r.raw
+}
+
 type CustomFieldNewResponse struct {
-	ID          string                     `json:"id" api:"required"`
-	Name        string                     `json:"name" api:"required"`
-	Description string                     `json:"description" api:"required,nullable"`
-	Type        Union4                     `json:"type" api:"required"`
-	Config      interface{}                `json:"config" api:"required"`
-	Status      Union5                     `json:"status" api:"required"`
-	Category    Union6                     `json:"category" api:"required"`
-	AccessLevel Union7                     `json:"accessLevel" api:"required"`
-	InputBy     Union8                     `json:"inputBy" api:"required"`
-	CanWrite    bool                       `json:"canWrite" api:"required"`
-	CreatedAt   string                     `json:"createdAt" api:"required"`
-	Required    bool                       `json:"required" api:"nullable"`
-	JSON        customFieldNewResponseJSON `json:"-"`
+	// The tag of a company custom worker field.
+	ID          string                            `json:"id" api:"required"`
+	Name        string                            `json:"name" api:"required"`
+	Description string                            `json:"description" api:"required,nullable"`
+	Type        CustomFieldNewResponseType        `json:"type" api:"required"`
+	Config      interface{}                       `json:"config" api:"required"`
+	Status      CustomFieldNewResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldNewResponseCategory    `json:"category" api:"required"`
+	AccessLevel CustomFieldNewResponseAccessLevel `json:"accessLevel" api:"required"`
+	InputBy     CustomFieldNewResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                              `json:"canWrite" api:"required"`
+	CreatedAt   string                            `json:"createdAt" api:"required"`
+	Required    bool                              `json:"required" api:"nullable"`
+	JSON        customFieldNewResponseJSON        `json:"-"`
 }
 
 // customFieldNewResponseJSON contains the JSON metadata for the struct [CustomFieldNewResponse]
@@ -1068,20 +987,21 @@ func (r customFieldNewResponseJSON) RawJSON() string {
 }
 
 type CustomFieldGetResponse struct {
-	ID          string                     `json:"id" api:"required"`
-	Name        string                     `json:"name" api:"required"`
-	Description string                     `json:"description" api:"required,nullable"`
-	Type        Union4                     `json:"type" api:"required"`
-	Config      interface{}                `json:"config" api:"required"`
-	Status      Union5                     `json:"status" api:"required"`
-	Category    Union6                     `json:"category" api:"required"`
-	AccessLevel Union7                     `json:"accessLevel" api:"required"`
-	InputBy     Union8                     `json:"inputBy" api:"required"`
-	CanWrite    bool                       `json:"canWrite" api:"required"`
-	CreatedAt   string                     `json:"createdAt" api:"required"`
-	Options     []shared.Objects3          `json:"options" api:"required"`
-	Required    bool                       `json:"required" api:"nullable"`
-	JSON        customFieldGetResponseJSON `json:"-"`
+	// The tag of a company custom worker field.
+	ID          string                            `json:"id" api:"required"`
+	Name        string                            `json:"name" api:"required"`
+	Description string                            `json:"description" api:"required,nullable"`
+	Type        CustomFieldGetResponseType        `json:"type" api:"required"`
+	Config      interface{}                       `json:"config" api:"required"`
+	Status      CustomFieldGetResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldGetResponseCategory    `json:"category" api:"required"`
+	AccessLevel CustomFieldGetResponseAccessLevel `json:"accessLevel" api:"required"`
+	InputBy     CustomFieldGetResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                              `json:"canWrite" api:"required"`
+	CreatedAt   string                            `json:"createdAt" api:"required"`
+	Options     []CustomFieldGetResponseOption    `json:"options" api:"required"`
+	Required    bool                              `json:"required" api:"nullable"`
+	JSON        customFieldGetResponseJSON        `json:"-"`
 }
 
 // customFieldGetResponseJSON contains the JSON metadata for the struct [CustomFieldGetResponse]
@@ -1111,7 +1031,94 @@ func (r customFieldGetResponseJSON) RawJSON() string {
 	return r.raw
 }
 
+type CustomFieldUpdateResponse struct {
+	// The tag of a company custom worker field.
+	ID          string                               `json:"id" api:"required"`
+	Name        string                               `json:"name" api:"required"`
+	Description string                               `json:"description" api:"required,nullable"`
+	Type        CustomFieldUpdateResponseType        `json:"type" api:"required"`
+	Config      interface{}                          `json:"config" api:"required"`
+	Status      CustomFieldUpdateResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldUpdateResponseCategory    `json:"category" api:"required"`
+	AccessLevel CustomFieldUpdateResponseAccessLevel `json:"accessLevel" api:"required"`
+	InputBy     CustomFieldUpdateResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                                 `json:"canWrite" api:"required"`
+	CreatedAt   string                               `json:"createdAt" api:"required"`
+	Required    bool                                 `json:"required" api:"nullable"`
+	JSON        customFieldUpdateResponseJSON        `json:"-"`
+}
+
+// customFieldUpdateResponseJSON contains the JSON metadata for the struct [CustomFieldUpdateResponse]
+type customFieldUpdateResponseJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Description apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
+	AccessLevel apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldUpdateResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldUpdateResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldArchiveResponse struct {
+	// The tag of a company custom worker field.
+	ID          string                                `json:"id" api:"required"`
+	Name        string                                `json:"name" api:"required"`
+	Description string                                `json:"description" api:"required,nullable"`
+	Type        CustomFieldArchiveResponseType        `json:"type" api:"required"`
+	Config      interface{}                           `json:"config" api:"required"`
+	Status      CustomFieldArchiveResponseStatus      `json:"status" api:"required"`
+	Category    CustomFieldArchiveResponseCategory    `json:"category" api:"required"`
+	AccessLevel CustomFieldArchiveResponseAccessLevel `json:"accessLevel" api:"required"`
+	InputBy     CustomFieldArchiveResponseInputBy     `json:"inputBy" api:"required"`
+	CanWrite    bool                                  `json:"canWrite" api:"required"`
+	CreatedAt   string                                `json:"createdAt" api:"required"`
+	Required    bool                                  `json:"required" api:"nullable"`
+	JSON        customFieldArchiveResponseJSON        `json:"-"`
+}
+
+// customFieldArchiveResponseJSON contains the JSON metadata for the struct [CustomFieldArchiveResponse]
+type customFieldArchiveResponseJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Description apijson.Field
+	Type        apijson.Field
+	Config      apijson.Field
+	Status      apijson.Field
+	Category    apijson.Field
+	AccessLevel apijson.Field
+	InputBy     apijson.Field
+	CanWrite    apijson.Field
+	CreatedAt   apijson.Field
+	Required    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldArchiveResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldArchiveResponseJSON) RawJSON() string {
+	return r.raw
+}
+
 type CustomFieldNewOptionResponse struct {
+	// The tag of a company custom worker field option.
 	ID        string                             `json:"id" api:"required"`
 	Label     string                             `json:"label" api:"required"`
 	Value     string                             `json:"value" api:"required"`
@@ -1141,14 +1148,686 @@ func (r customFieldNewOptionResponseJSON) RawJSON() string {
 	return r.raw
 }
 
+type CustomFieldUpdateOptionResponse struct {
+	// The tag of a company custom worker field option.
+	ID        string                                `json:"id" api:"required"`
+	Label     string                                `json:"label" api:"required"`
+	Value     string                                `json:"value" api:"required"`
+	SortOrder interface{}                           `json:"sortOrder" api:"required"`
+	Status    CustomFieldUpdateOptionResponseStatus `json:"status" api:"required"`
+	CreatedAt string                                `json:"createdAt" api:"required"`
+	JSON      customFieldUpdateOptionResponseJSON   `json:"-"`
+}
+
+// customFieldUpdateOptionResponseJSON contains the JSON metadata for the struct [CustomFieldUpdateOptionResponse]
+type customFieldUpdateOptionResponseJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldUpdateOptionResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldUpdateOptionResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldArchiveOptionResponse struct {
+	// The tag of a company custom worker field option.
+	ID        string                                 `json:"id" api:"required"`
+	Label     string                                 `json:"label" api:"required"`
+	Value     string                                 `json:"value" api:"required"`
+	SortOrder interface{}                            `json:"sortOrder" api:"required"`
+	Status    CustomFieldArchiveOptionResponseStatus `json:"status" api:"required"`
+	CreatedAt string                                 `json:"createdAt" api:"required"`
+	JSON      customFieldArchiveOptionResponseJSON   `json:"-"`
+}
+
+// customFieldArchiveOptionResponseJSON contains the JSON metadata for the struct [CustomFieldArchiveOptionResponse]
+type customFieldArchiveOptionResponseJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldArchiveOptionResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldArchiveOptionResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldListValuesResponse struct {
+	// The tag of a company custom worker field value.
+	ID string `json:"id" api:"required"`
+	// The id of the worker.
+	WorkerID string `json:"workerId" api:"required"`
+	// The tag of a company custom worker field.
+	FieldID   string                             `json:"fieldId" api:"required"`
+	Value     CustomFieldListValuesResponseValue `json:"value" api:"required"`
+	UpdatedAt string                             `json:"updatedAt" api:"required"`
+	JSON      customFieldListValuesResponseJSON  `json:"-"`
+}
+
+// customFieldListValuesResponseJSON contains the JSON metadata for the struct [CustomFieldListValuesResponse]
+type customFieldListValuesResponseJSON struct {
+	ID          apijson.Field
+	WorkerID    apijson.Field
+	FieldID     apijson.Field
+	Value       apijson.Field
+	UpdatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldUpsertValueResponse struct {
+	// The tag of a company custom worker field value.
+	ID string `json:"id" api:"required"`
+	// The id of the worker.
+	WorkerID string `json:"workerId" api:"required"`
+	// The tag of a company custom worker field.
+	FieldID   string                              `json:"fieldId" api:"required"`
+	Value     CustomFieldUpsertValueResponseValue `json:"value" api:"required"`
+	UpdatedAt string                              `json:"updatedAt" api:"required"`
+	JSON      customFieldUpsertValueResponseJSON  `json:"-"`
+}
+
+// customFieldUpsertValueResponseJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponse]
+type customFieldUpsertValueResponseJSON struct {
+	ID          apijson.Field
+	WorkerID    apijson.Field
+	FieldID     apijson.Field
+	Value       apijson.Field
+	UpdatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldUpsertValueResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldUpsertValueResponseJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldListResponseType string
+
+const (
+	CustomFieldListResponseTypeText        CustomFieldListResponseType = "text"
+	CustomFieldListResponseTypeNumber      CustomFieldListResponseType = "number"
+	CustomFieldListResponseTypeDate        CustomFieldListResponseType = "date"
+	CustomFieldListResponseTypeBoolean     CustomFieldListResponseType = "boolean"
+	CustomFieldListResponseTypeCurrency    CustomFieldListResponseType = "currency"
+	CustomFieldListResponseTypePercentage  CustomFieldListResponseType = "percentage"
+	CustomFieldListResponseTypeSelect      CustomFieldListResponseType = "select"
+	CustomFieldListResponseTypeMultiSelect CustomFieldListResponseType = "multi_select"
+)
+
+func (r CustomFieldListResponseType) IsKnown() bool {
+	switch r {
+	case CustomFieldListResponseTypeText, CustomFieldListResponseTypeNumber, CustomFieldListResponseTypeDate, CustomFieldListResponseTypeBoolean, CustomFieldListResponseTypeCurrency, CustomFieldListResponseTypePercentage, CustomFieldListResponseTypeSelect, CustomFieldListResponseTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListResponseStatus string
+
+const (
+	CustomFieldListResponseStatusActive   CustomFieldListResponseStatus = "active"
+	CustomFieldListResponseStatusArchived CustomFieldListResponseStatus = "archived"
+)
+
+func (r CustomFieldListResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldListResponseStatusActive, CustomFieldListResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListResponseCategory string
+
+const (
+	CustomFieldListResponseCategoryInfo         CustomFieldListResponseCategory = "info"
+	CustomFieldListResponseCategoryPii          CustomFieldListResponseCategory = "pii"
+	CustomFieldListResponseCategoryCompensation CustomFieldListResponseCategory = "compensation"
+	CustomFieldListResponseCategoryBanking      CustomFieldListResponseCategory = "banking"
+	CustomFieldListResponseCategoryIt           CustomFieldListResponseCategory = "it"
+	CustomFieldListResponseCategoryCompliance   CustomFieldListResponseCategory = "compliance"
+)
+
+func (r CustomFieldListResponseCategory) IsKnown() bool {
+	switch r {
+	case CustomFieldListResponseCategoryInfo, CustomFieldListResponseCategoryPii, CustomFieldListResponseCategoryCompensation, CustomFieldListResponseCategoryBanking, CustomFieldListResponseCategoryIt, CustomFieldListResponseCategoryCompliance:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListResponseAccessLevel string
+
+const (
+	CustomFieldListResponseAccessLevelAdmins  CustomFieldListResponseAccessLevel = "admins"
+	CustomFieldListResponseAccessLevelManager CustomFieldListResponseAccessLevel = "manager"
+	CustomFieldListResponseAccessLevelWorker  CustomFieldListResponseAccessLevel = "worker"
+)
+
+func (r CustomFieldListResponseAccessLevel) IsKnown() bool {
+	switch r {
+	case CustomFieldListResponseAccessLevelAdmins, CustomFieldListResponseAccessLevelManager, CustomFieldListResponseAccessLevelWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListResponseInputBy string
+
+const (
+	CustomFieldListResponseInputByAdmin  CustomFieldListResponseInputBy = "admin"
+	CustomFieldListResponseInputByWorker CustomFieldListResponseInputBy = "worker"
+)
+
+func (r CustomFieldListResponseInputBy) IsKnown() bool {
+	switch r {
+	case CustomFieldListResponseInputByAdmin, CustomFieldListResponseInputByWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldNewResponseType string
+
+const (
+	CustomFieldNewResponseTypeText        CustomFieldNewResponseType = "text"
+	CustomFieldNewResponseTypeNumber      CustomFieldNewResponseType = "number"
+	CustomFieldNewResponseTypeDate        CustomFieldNewResponseType = "date"
+	CustomFieldNewResponseTypeBoolean     CustomFieldNewResponseType = "boolean"
+	CustomFieldNewResponseTypeCurrency    CustomFieldNewResponseType = "currency"
+	CustomFieldNewResponseTypePercentage  CustomFieldNewResponseType = "percentage"
+	CustomFieldNewResponseTypeSelect      CustomFieldNewResponseType = "select"
+	CustomFieldNewResponseTypeMultiSelect CustomFieldNewResponseType = "multi_select"
+)
+
+func (r CustomFieldNewResponseType) IsKnown() bool {
+	switch r {
+	case CustomFieldNewResponseTypeText, CustomFieldNewResponseTypeNumber, CustomFieldNewResponseTypeDate, CustomFieldNewResponseTypeBoolean, CustomFieldNewResponseTypeCurrency, CustomFieldNewResponseTypePercentage, CustomFieldNewResponseTypeSelect, CustomFieldNewResponseTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldNewResponseStatus string
+
+const (
+	CustomFieldNewResponseStatusActive   CustomFieldNewResponseStatus = "active"
+	CustomFieldNewResponseStatusArchived CustomFieldNewResponseStatus = "archived"
+)
+
+func (r CustomFieldNewResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldNewResponseStatusActive, CustomFieldNewResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldNewResponseCategory string
+
+const (
+	CustomFieldNewResponseCategoryInfo         CustomFieldNewResponseCategory = "info"
+	CustomFieldNewResponseCategoryPii          CustomFieldNewResponseCategory = "pii"
+	CustomFieldNewResponseCategoryCompensation CustomFieldNewResponseCategory = "compensation"
+	CustomFieldNewResponseCategoryBanking      CustomFieldNewResponseCategory = "banking"
+	CustomFieldNewResponseCategoryIt           CustomFieldNewResponseCategory = "it"
+	CustomFieldNewResponseCategoryCompliance   CustomFieldNewResponseCategory = "compliance"
+)
+
+func (r CustomFieldNewResponseCategory) IsKnown() bool {
+	switch r {
+	case CustomFieldNewResponseCategoryInfo, CustomFieldNewResponseCategoryPii, CustomFieldNewResponseCategoryCompensation, CustomFieldNewResponseCategoryBanking, CustomFieldNewResponseCategoryIt, CustomFieldNewResponseCategoryCompliance:
+		return true
+	}
+	return false
+}
+
+type CustomFieldNewResponseAccessLevel string
+
+const (
+	CustomFieldNewResponseAccessLevelAdmins  CustomFieldNewResponseAccessLevel = "admins"
+	CustomFieldNewResponseAccessLevelManager CustomFieldNewResponseAccessLevel = "manager"
+	CustomFieldNewResponseAccessLevelWorker  CustomFieldNewResponseAccessLevel = "worker"
+)
+
+func (r CustomFieldNewResponseAccessLevel) IsKnown() bool {
+	switch r {
+	case CustomFieldNewResponseAccessLevelAdmins, CustomFieldNewResponseAccessLevelManager, CustomFieldNewResponseAccessLevelWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldNewResponseInputBy string
+
+const (
+	CustomFieldNewResponseInputByAdmin  CustomFieldNewResponseInputBy = "admin"
+	CustomFieldNewResponseInputByWorker CustomFieldNewResponseInputBy = "worker"
+)
+
+func (r CustomFieldNewResponseInputBy) IsKnown() bool {
+	switch r {
+	case CustomFieldNewResponseInputByAdmin, CustomFieldNewResponseInputByWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldGetResponseType string
+
+const (
+	CustomFieldGetResponseTypeText        CustomFieldGetResponseType = "text"
+	CustomFieldGetResponseTypeNumber      CustomFieldGetResponseType = "number"
+	CustomFieldGetResponseTypeDate        CustomFieldGetResponseType = "date"
+	CustomFieldGetResponseTypeBoolean     CustomFieldGetResponseType = "boolean"
+	CustomFieldGetResponseTypeCurrency    CustomFieldGetResponseType = "currency"
+	CustomFieldGetResponseTypePercentage  CustomFieldGetResponseType = "percentage"
+	CustomFieldGetResponseTypeSelect      CustomFieldGetResponseType = "select"
+	CustomFieldGetResponseTypeMultiSelect CustomFieldGetResponseType = "multi_select"
+)
+
+func (r CustomFieldGetResponseType) IsKnown() bool {
+	switch r {
+	case CustomFieldGetResponseTypeText, CustomFieldGetResponseTypeNumber, CustomFieldGetResponseTypeDate, CustomFieldGetResponseTypeBoolean, CustomFieldGetResponseTypeCurrency, CustomFieldGetResponseTypePercentage, CustomFieldGetResponseTypeSelect, CustomFieldGetResponseTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldGetResponseStatus string
+
+const (
+	CustomFieldGetResponseStatusActive   CustomFieldGetResponseStatus = "active"
+	CustomFieldGetResponseStatusArchived CustomFieldGetResponseStatus = "archived"
+)
+
+func (r CustomFieldGetResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldGetResponseStatusActive, CustomFieldGetResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldGetResponseCategory string
+
+const (
+	CustomFieldGetResponseCategoryInfo         CustomFieldGetResponseCategory = "info"
+	CustomFieldGetResponseCategoryPii          CustomFieldGetResponseCategory = "pii"
+	CustomFieldGetResponseCategoryCompensation CustomFieldGetResponseCategory = "compensation"
+	CustomFieldGetResponseCategoryBanking      CustomFieldGetResponseCategory = "banking"
+	CustomFieldGetResponseCategoryIt           CustomFieldGetResponseCategory = "it"
+	CustomFieldGetResponseCategoryCompliance   CustomFieldGetResponseCategory = "compliance"
+)
+
+func (r CustomFieldGetResponseCategory) IsKnown() bool {
+	switch r {
+	case CustomFieldGetResponseCategoryInfo, CustomFieldGetResponseCategoryPii, CustomFieldGetResponseCategoryCompensation, CustomFieldGetResponseCategoryBanking, CustomFieldGetResponseCategoryIt, CustomFieldGetResponseCategoryCompliance:
+		return true
+	}
+	return false
+}
+
+type CustomFieldGetResponseAccessLevel string
+
+const (
+	CustomFieldGetResponseAccessLevelAdmins  CustomFieldGetResponseAccessLevel = "admins"
+	CustomFieldGetResponseAccessLevelManager CustomFieldGetResponseAccessLevel = "manager"
+	CustomFieldGetResponseAccessLevelWorker  CustomFieldGetResponseAccessLevel = "worker"
+)
+
+func (r CustomFieldGetResponseAccessLevel) IsKnown() bool {
+	switch r {
+	case CustomFieldGetResponseAccessLevelAdmins, CustomFieldGetResponseAccessLevelManager, CustomFieldGetResponseAccessLevelWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldGetResponseInputBy string
+
+const (
+	CustomFieldGetResponseInputByAdmin  CustomFieldGetResponseInputBy = "admin"
+	CustomFieldGetResponseInputByWorker CustomFieldGetResponseInputBy = "worker"
+)
+
+func (r CustomFieldGetResponseInputBy) IsKnown() bool {
+	switch r {
+	case CustomFieldGetResponseInputByAdmin, CustomFieldGetResponseInputByWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldGetResponseOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                              `json:"id" api:"required"`
+	Label     string                              `json:"label" api:"required"`
+	Value     string                              `json:"value" api:"required"`
+	SortOrder interface{}                         `json:"sortOrder" api:"required"`
+	Status    CustomFieldGetResponseOptionsStatus `json:"status" api:"required"`
+	CreatedAt string                              `json:"createdAt" api:"required"`
+	JSON      customFieldGetResponseOptionJSON    `json:"-"`
+}
+
+// customFieldGetResponseOptionJSON contains the JSON metadata for the struct [CustomFieldGetResponseOption]
+type customFieldGetResponseOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldGetResponseOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldGetResponseOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldUpdateResponseType string
+
+const (
+	CustomFieldUpdateResponseTypeText        CustomFieldUpdateResponseType = "text"
+	CustomFieldUpdateResponseTypeNumber      CustomFieldUpdateResponseType = "number"
+	CustomFieldUpdateResponseTypeDate        CustomFieldUpdateResponseType = "date"
+	CustomFieldUpdateResponseTypeBoolean     CustomFieldUpdateResponseType = "boolean"
+	CustomFieldUpdateResponseTypeCurrency    CustomFieldUpdateResponseType = "currency"
+	CustomFieldUpdateResponseTypePercentage  CustomFieldUpdateResponseType = "percentage"
+	CustomFieldUpdateResponseTypeSelect      CustomFieldUpdateResponseType = "select"
+	CustomFieldUpdateResponseTypeMultiSelect CustomFieldUpdateResponseType = "multi_select"
+)
+
+func (r CustomFieldUpdateResponseType) IsKnown() bool {
+	switch r {
+	case CustomFieldUpdateResponseTypeText, CustomFieldUpdateResponseTypeNumber, CustomFieldUpdateResponseTypeDate, CustomFieldUpdateResponseTypeBoolean, CustomFieldUpdateResponseTypeCurrency, CustomFieldUpdateResponseTypePercentage, CustomFieldUpdateResponseTypeSelect, CustomFieldUpdateResponseTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpdateResponseStatus string
+
+const (
+	CustomFieldUpdateResponseStatusActive   CustomFieldUpdateResponseStatus = "active"
+	CustomFieldUpdateResponseStatusArchived CustomFieldUpdateResponseStatus = "archived"
+)
+
+func (r CustomFieldUpdateResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldUpdateResponseStatusActive, CustomFieldUpdateResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpdateResponseCategory string
+
+const (
+	CustomFieldUpdateResponseCategoryInfo         CustomFieldUpdateResponseCategory = "info"
+	CustomFieldUpdateResponseCategoryPii          CustomFieldUpdateResponseCategory = "pii"
+	CustomFieldUpdateResponseCategoryCompensation CustomFieldUpdateResponseCategory = "compensation"
+	CustomFieldUpdateResponseCategoryBanking      CustomFieldUpdateResponseCategory = "banking"
+	CustomFieldUpdateResponseCategoryIt           CustomFieldUpdateResponseCategory = "it"
+	CustomFieldUpdateResponseCategoryCompliance   CustomFieldUpdateResponseCategory = "compliance"
+)
+
+func (r CustomFieldUpdateResponseCategory) IsKnown() bool {
+	switch r {
+	case CustomFieldUpdateResponseCategoryInfo, CustomFieldUpdateResponseCategoryPii, CustomFieldUpdateResponseCategoryCompensation, CustomFieldUpdateResponseCategoryBanking, CustomFieldUpdateResponseCategoryIt, CustomFieldUpdateResponseCategoryCompliance:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpdateResponseAccessLevel string
+
+const (
+	CustomFieldUpdateResponseAccessLevelAdmins  CustomFieldUpdateResponseAccessLevel = "admins"
+	CustomFieldUpdateResponseAccessLevelManager CustomFieldUpdateResponseAccessLevel = "manager"
+	CustomFieldUpdateResponseAccessLevelWorker  CustomFieldUpdateResponseAccessLevel = "worker"
+)
+
+func (r CustomFieldUpdateResponseAccessLevel) IsKnown() bool {
+	switch r {
+	case CustomFieldUpdateResponseAccessLevelAdmins, CustomFieldUpdateResponseAccessLevelManager, CustomFieldUpdateResponseAccessLevelWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpdateResponseInputBy string
+
+const (
+	CustomFieldUpdateResponseInputByAdmin  CustomFieldUpdateResponseInputBy = "admin"
+	CustomFieldUpdateResponseInputByWorker CustomFieldUpdateResponseInputBy = "worker"
+)
+
+func (r CustomFieldUpdateResponseInputBy) IsKnown() bool {
+	switch r {
+	case CustomFieldUpdateResponseInputByAdmin, CustomFieldUpdateResponseInputByWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldArchiveResponseType string
+
+const (
+	CustomFieldArchiveResponseTypeText        CustomFieldArchiveResponseType = "text"
+	CustomFieldArchiveResponseTypeNumber      CustomFieldArchiveResponseType = "number"
+	CustomFieldArchiveResponseTypeDate        CustomFieldArchiveResponseType = "date"
+	CustomFieldArchiveResponseTypeBoolean     CustomFieldArchiveResponseType = "boolean"
+	CustomFieldArchiveResponseTypeCurrency    CustomFieldArchiveResponseType = "currency"
+	CustomFieldArchiveResponseTypePercentage  CustomFieldArchiveResponseType = "percentage"
+	CustomFieldArchiveResponseTypeSelect      CustomFieldArchiveResponseType = "select"
+	CustomFieldArchiveResponseTypeMultiSelect CustomFieldArchiveResponseType = "multi_select"
+)
+
+func (r CustomFieldArchiveResponseType) IsKnown() bool {
+	switch r {
+	case CustomFieldArchiveResponseTypeText, CustomFieldArchiveResponseTypeNumber, CustomFieldArchiveResponseTypeDate, CustomFieldArchiveResponseTypeBoolean, CustomFieldArchiveResponseTypeCurrency, CustomFieldArchiveResponseTypePercentage, CustomFieldArchiveResponseTypeSelect, CustomFieldArchiveResponseTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldArchiveResponseStatus string
+
+const (
+	CustomFieldArchiveResponseStatusActive   CustomFieldArchiveResponseStatus = "active"
+	CustomFieldArchiveResponseStatusArchived CustomFieldArchiveResponseStatus = "archived"
+)
+
+func (r CustomFieldArchiveResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldArchiveResponseStatusActive, CustomFieldArchiveResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldArchiveResponseCategory string
+
+const (
+	CustomFieldArchiveResponseCategoryInfo         CustomFieldArchiveResponseCategory = "info"
+	CustomFieldArchiveResponseCategoryPii          CustomFieldArchiveResponseCategory = "pii"
+	CustomFieldArchiveResponseCategoryCompensation CustomFieldArchiveResponseCategory = "compensation"
+	CustomFieldArchiveResponseCategoryBanking      CustomFieldArchiveResponseCategory = "banking"
+	CustomFieldArchiveResponseCategoryIt           CustomFieldArchiveResponseCategory = "it"
+	CustomFieldArchiveResponseCategoryCompliance   CustomFieldArchiveResponseCategory = "compliance"
+)
+
+func (r CustomFieldArchiveResponseCategory) IsKnown() bool {
+	switch r {
+	case CustomFieldArchiveResponseCategoryInfo, CustomFieldArchiveResponseCategoryPii, CustomFieldArchiveResponseCategoryCompensation, CustomFieldArchiveResponseCategoryBanking, CustomFieldArchiveResponseCategoryIt, CustomFieldArchiveResponseCategoryCompliance:
+		return true
+	}
+	return false
+}
+
+type CustomFieldArchiveResponseAccessLevel string
+
+const (
+	CustomFieldArchiveResponseAccessLevelAdmins  CustomFieldArchiveResponseAccessLevel = "admins"
+	CustomFieldArchiveResponseAccessLevelManager CustomFieldArchiveResponseAccessLevel = "manager"
+	CustomFieldArchiveResponseAccessLevelWorker  CustomFieldArchiveResponseAccessLevel = "worker"
+)
+
+func (r CustomFieldArchiveResponseAccessLevel) IsKnown() bool {
+	switch r {
+	case CustomFieldArchiveResponseAccessLevelAdmins, CustomFieldArchiveResponseAccessLevelManager, CustomFieldArchiveResponseAccessLevelWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldArchiveResponseInputBy string
+
+const (
+	CustomFieldArchiveResponseInputByAdmin  CustomFieldArchiveResponseInputBy = "admin"
+	CustomFieldArchiveResponseInputByWorker CustomFieldArchiveResponseInputBy = "worker"
+)
+
+func (r CustomFieldArchiveResponseInputBy) IsKnown() bool {
+	switch r {
+	case CustomFieldArchiveResponseInputByAdmin, CustomFieldArchiveResponseInputByWorker:
+		return true
+	}
+	return false
+}
+
+type CustomFieldNewOptionResponseStatus string
+
+const (
+	CustomFieldNewOptionResponseStatusActive   CustomFieldNewOptionResponseStatus = "active"
+	CustomFieldNewOptionResponseStatusArchived CustomFieldNewOptionResponseStatus = "archived"
+)
+
+func (r CustomFieldNewOptionResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldNewOptionResponseStatusActive, CustomFieldNewOptionResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldUpdateOptionResponseStatus string
+
+const (
+	CustomFieldUpdateOptionResponseStatusActive   CustomFieldUpdateOptionResponseStatus = "active"
+	CustomFieldUpdateOptionResponseStatusArchived CustomFieldUpdateOptionResponseStatus = "archived"
+)
+
+func (r CustomFieldUpdateOptionResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldUpdateOptionResponseStatusActive, CustomFieldUpdateOptionResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldArchiveOptionResponseStatus string
+
+const (
+	CustomFieldArchiveOptionResponseStatusActive   CustomFieldArchiveOptionResponseStatus = "active"
+	CustomFieldArchiveOptionResponseStatusArchived CustomFieldArchiveOptionResponseStatus = "archived"
+)
+
+func (r CustomFieldArchiveOptionResponseStatus) IsKnown() bool {
+	switch r {
+	case CustomFieldArchiveOptionResponseStatusActive, CustomFieldArchiveOptionResponseStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValue struct {
+	Type  CustomFieldListValuesResponseValueType `json:"type" api:"required"`
+	Value interface{}                            `json:"value"`
+	// Integer base units of currencyCode (e.g. cents).
+	Amount       int64                                          `json:"amount"`
+	CurrencyCode CustomFieldListValuesResponseValueCurrencyCode `json:"currencyCode"`
+	Option       interface{}                                    `json:"option"`
+	Options      interface{}                                    `json:"options"`
+	JSON         customFieldListValuesResponseValueJSON         `json:"-"`
+	union        CustomFieldListValuesResponseValueUnion
+}
+
+// customFieldListValuesResponseValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValue]
+type customFieldListValuesResponseValueJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r customFieldListValuesResponseValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *CustomFieldListValuesResponseValue) UnmarshalJSON(data []byte) (err error) {
+	*r = CustomFieldListValuesResponseValue{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r CustomFieldListValuesResponseValue) AsUnion() CustomFieldListValuesResponseValueUnion {
+	return r.union
+}
+
 type CustomFieldUpsertValueResponseValue struct {
-	Type         CustomFieldUpsertValueResponseValueType `json:"type" api:"required"`
-	Value        interface{}                             `json:"value"`
-	Amount       int64                                   `json:"amount"`
-	CurrencyCode Union1                                  `json:"currencyCode"`
-	Option       shared.Objects3                         `json:"option"`
-	Options      interface{}                             `json:"options"`
-	JSON         customFieldUpsertValueResponseValueJSON `json:"-"`
+	Type  CustomFieldUpsertValueResponseValueType `json:"type" api:"required"`
+	Value interface{}                             `json:"value"`
+	// Integer base units of currencyCode (e.g. cents).
+	Amount       int64                                           `json:"amount"`
+	CurrencyCode CustomFieldUpsertValueResponseValueCurrencyCode `json:"currencyCode"`
+	Option       interface{}                                     `json:"option"`
+	Options      interface{}                                     `json:"options"`
+	JSON         customFieldUpsertValueResponseValueJSON         `json:"-"`
 	union        CustomFieldUpsertValueResponseValueUnion
 }
 
@@ -1181,56 +1860,162 @@ func (r CustomFieldUpsertValueResponseValue) AsUnion() CustomFieldUpsertValueRes
 	return r.union
 }
 
-type Objects4Value struct {
-	Type         Objects4ValueType `json:"type" api:"required"`
-	Value        interface{}       `json:"value"`
-	Amount       int64             `json:"amount"`
-	CurrencyCode Union1            `json:"currencyCode"`
-	Option       shared.Objects3   `json:"option"`
-	Options      interface{}       `json:"options"`
-	JSON         objects4ValueJSON `json:"-"`
-	union        Objects4ValueUnion
-}
-
-// objects4ValueJSON contains the JSON metadata for the struct [Objects4Value]
-type objects4ValueJSON struct {
-	Type         apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r objects4ValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *Objects4Value) UnmarshalJSON(data []byte) (err error) {
-	*r = Objects4Value{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r Objects4Value) AsUnion() Objects4ValueUnion {
-	return r.union
-}
-
-type CustomFieldNewOptionResponseStatus string
+type CustomFieldGetResponseOptionsStatus string
 
 const (
-	CustomFieldNewOptionResponseStatusActive   CustomFieldNewOptionResponseStatus = "active"
-	CustomFieldNewOptionResponseStatusArchived CustomFieldNewOptionResponseStatus = "archived"
+	CustomFieldGetResponseOptionsStatusActive   CustomFieldGetResponseOptionsStatus = "active"
+	CustomFieldGetResponseOptionsStatusArchived CustomFieldGetResponseOptionsStatus = "archived"
 )
 
-func (r CustomFieldNewOptionResponseStatus) IsKnown() bool {
+func (r CustomFieldGetResponseOptionsStatus) IsKnown() bool {
 	switch r {
-	case CustomFieldNewOptionResponseStatusActive, CustomFieldNewOptionResponseStatusArchived:
+	case CustomFieldGetResponseOptionsStatusActive, CustomFieldGetResponseOptionsStatusArchived:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueUnion interface {
+	implementsCustomFieldListValuesResponseValue()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*CustomFieldListValuesResponseValueUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueTextCustomFieldValue{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueNumberCustomFieldValue{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueDateCustomFieldValue{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueBooleanCustomFieldValue{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueCurrencyCustomFieldValue{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValuePercentageCustomFieldValue{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueSelectCustomFieldValue{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueMultiSelectCustomFieldValue{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type CustomFieldListValuesResponseValueType string
+
+const (
+	CustomFieldListValuesResponseValueTypeText        CustomFieldListValuesResponseValueType = "text"
+	CustomFieldListValuesResponseValueTypeNumber      CustomFieldListValuesResponseValueType = "number"
+	CustomFieldListValuesResponseValueTypeDate        CustomFieldListValuesResponseValueType = "date"
+	CustomFieldListValuesResponseValueTypeBoolean     CustomFieldListValuesResponseValueType = "boolean"
+	CustomFieldListValuesResponseValueTypeCurrency    CustomFieldListValuesResponseValueType = "currency"
+	CustomFieldListValuesResponseValueTypePercentage  CustomFieldListValuesResponseValueType = "percentage"
+	CustomFieldListValuesResponseValueTypeSelect      CustomFieldListValuesResponseValueType = "select"
+	CustomFieldListValuesResponseValueTypeMultiSelect CustomFieldListValuesResponseValueType = "multi_select"
+)
+
+func (r CustomFieldListValuesResponseValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueTypeText, CustomFieldListValuesResponseValueTypeNumber, CustomFieldListValuesResponseValueTypeDate, CustomFieldListValuesResponseValueTypeBoolean, CustomFieldListValuesResponseValueTypeCurrency, CustomFieldListValuesResponseValueTypePercentage, CustomFieldListValuesResponseValueTypeSelect, CustomFieldListValuesResponseValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueCurrencyCode string
+
+const (
+	CustomFieldListValuesResponseValueCurrencyCodeUsd CustomFieldListValuesResponseValueCurrencyCode = "USD"
+	CustomFieldListValuesResponseValueCurrencyCodeAud CustomFieldListValuesResponseValueCurrencyCode = "AUD"
+	CustomFieldListValuesResponseValueCurrencyCodeBgn CustomFieldListValuesResponseValueCurrencyCode = "BGN"
+	CustomFieldListValuesResponseValueCurrencyCodeBrl CustomFieldListValuesResponseValueCurrencyCode = "BRL"
+	CustomFieldListValuesResponseValueCurrencyCodeCad CustomFieldListValuesResponseValueCurrencyCode = "CAD"
+	CustomFieldListValuesResponseValueCurrencyCodeChf CustomFieldListValuesResponseValueCurrencyCode = "CHF"
+	CustomFieldListValuesResponseValueCurrencyCodeCzk CustomFieldListValuesResponseValueCurrencyCode = "CZK"
+	CustomFieldListValuesResponseValueCurrencyCodeDkk CustomFieldListValuesResponseValueCurrencyCode = "DKK"
+	CustomFieldListValuesResponseValueCurrencyCodeEur CustomFieldListValuesResponseValueCurrencyCode = "EUR"
+	CustomFieldListValuesResponseValueCurrencyCodeGbp CustomFieldListValuesResponseValueCurrencyCode = "GBP"
+	CustomFieldListValuesResponseValueCurrencyCodeHkd CustomFieldListValuesResponseValueCurrencyCode = "HKD"
+	CustomFieldListValuesResponseValueCurrencyCodeHuf CustomFieldListValuesResponseValueCurrencyCode = "HUF"
+	CustomFieldListValuesResponseValueCurrencyCodeIdr CustomFieldListValuesResponseValueCurrencyCode = "IDR"
+	CustomFieldListValuesResponseValueCurrencyCodeInr CustomFieldListValuesResponseValueCurrencyCode = "INR"
+	CustomFieldListValuesResponseValueCurrencyCodeJpy CustomFieldListValuesResponseValueCurrencyCode = "JPY"
+	CustomFieldListValuesResponseValueCurrencyCodeMyr CustomFieldListValuesResponseValueCurrencyCode = "MYR"
+	CustomFieldListValuesResponseValueCurrencyCodeNok CustomFieldListValuesResponseValueCurrencyCode = "NOK"
+	CustomFieldListValuesResponseValueCurrencyCodeNzd CustomFieldListValuesResponseValueCurrencyCode = "NZD"
+	CustomFieldListValuesResponseValueCurrencyCodeCny CustomFieldListValuesResponseValueCurrencyCode = "CNY"
+	CustomFieldListValuesResponseValueCurrencyCodePln CustomFieldListValuesResponseValueCurrencyCode = "PLN"
+	CustomFieldListValuesResponseValueCurrencyCodeRon CustomFieldListValuesResponseValueCurrencyCode = "RON"
+	CustomFieldListValuesResponseValueCurrencyCodeTry CustomFieldListValuesResponseValueCurrencyCode = "TRY"
+	CustomFieldListValuesResponseValueCurrencyCodeSek CustomFieldListValuesResponseValueCurrencyCode = "SEK"
+	CustomFieldListValuesResponseValueCurrencyCodeSgd CustomFieldListValuesResponseValueCurrencyCode = "SGD"
+	CustomFieldListValuesResponseValueCurrencyCodeAed CustomFieldListValuesResponseValueCurrencyCode = "AED"
+	CustomFieldListValuesResponseValueCurrencyCodeArs CustomFieldListValuesResponseValueCurrencyCode = "ARS"
+	CustomFieldListValuesResponseValueCurrencyCodeBdt CustomFieldListValuesResponseValueCurrencyCode = "BDT"
+	CustomFieldListValuesResponseValueCurrencyCodeBwp CustomFieldListValuesResponseValueCurrencyCode = "BWP"
+	CustomFieldListValuesResponseValueCurrencyCodeClp CustomFieldListValuesResponseValueCurrencyCode = "CLP"
+	CustomFieldListValuesResponseValueCurrencyCodeCop CustomFieldListValuesResponseValueCurrencyCode = "COP"
+	CustomFieldListValuesResponseValueCurrencyCodeCrc CustomFieldListValuesResponseValueCurrencyCode = "CRC"
+	CustomFieldListValuesResponseValueCurrencyCodeEgp CustomFieldListValuesResponseValueCurrencyCode = "EGP"
+	CustomFieldListValuesResponseValueCurrencyCodeFjd CustomFieldListValuesResponseValueCurrencyCode = "FJD"
+	CustomFieldListValuesResponseValueCurrencyCodeGel CustomFieldListValuesResponseValueCurrencyCode = "GEL"
+	CustomFieldListValuesResponseValueCurrencyCodeGhs CustomFieldListValuesResponseValueCurrencyCode = "GHS"
+	CustomFieldListValuesResponseValueCurrencyCodeIls CustomFieldListValuesResponseValueCurrencyCode = "ILS"
+	CustomFieldListValuesResponseValueCurrencyCodeKes CustomFieldListValuesResponseValueCurrencyCode = "KES"
+	CustomFieldListValuesResponseValueCurrencyCodeKrw CustomFieldListValuesResponseValueCurrencyCode = "KRW"
+	CustomFieldListValuesResponseValueCurrencyCodeLkr CustomFieldListValuesResponseValueCurrencyCode = "LKR"
+	CustomFieldListValuesResponseValueCurrencyCodeMad CustomFieldListValuesResponseValueCurrencyCode = "MAD"
+	CustomFieldListValuesResponseValueCurrencyCodeMxn CustomFieldListValuesResponseValueCurrencyCode = "MXN"
+	CustomFieldListValuesResponseValueCurrencyCodeNpr CustomFieldListValuesResponseValueCurrencyCode = "NPR"
+	CustomFieldListValuesResponseValueCurrencyCodePhp CustomFieldListValuesResponseValueCurrencyCode = "PHP"
+	CustomFieldListValuesResponseValueCurrencyCodePkr CustomFieldListValuesResponseValueCurrencyCode = "PKR"
+	CustomFieldListValuesResponseValueCurrencyCodeThb CustomFieldListValuesResponseValueCurrencyCode = "THB"
+	CustomFieldListValuesResponseValueCurrencyCodeUah CustomFieldListValuesResponseValueCurrencyCode = "UAH"
+	CustomFieldListValuesResponseValueCurrencyCodeUgx CustomFieldListValuesResponseValueCurrencyCode = "UGX"
+	CustomFieldListValuesResponseValueCurrencyCodeUyu CustomFieldListValuesResponseValueCurrencyCode = "UYU"
+	CustomFieldListValuesResponseValueCurrencyCodeVnd CustomFieldListValuesResponseValueCurrencyCode = "VND"
+	CustomFieldListValuesResponseValueCurrencyCodeZar CustomFieldListValuesResponseValueCurrencyCode = "ZAR"
+	CustomFieldListValuesResponseValueCurrencyCodeZmw CustomFieldListValuesResponseValueCurrencyCode = "ZMW"
+	CustomFieldListValuesResponseValueCurrencyCodeTnd CustomFieldListValuesResponseValueCurrencyCode = "TND"
+	CustomFieldListValuesResponseValueCurrencyCodeNgn CustomFieldListValuesResponseValueCurrencyCode = "NGN"
+	CustomFieldListValuesResponseValueCurrencyCodeRsd CustomFieldListValuesResponseValueCurrencyCode = "RSD"
+	CustomFieldListValuesResponseValueCurrencyCodeTwd CustomFieldListValuesResponseValueCurrencyCode = "TWD"
+	CustomFieldListValuesResponseValueCurrencyCodeGtq CustomFieldListValuesResponseValueCurrencyCode = "GTQ"
+	CustomFieldListValuesResponseValueCurrencyCodeHnl CustomFieldListValuesResponseValueCurrencyCode = "HNL"
+	CustomFieldListValuesResponseValueCurrencyCodeDop CustomFieldListValuesResponseValueCurrencyCode = "DOP"
+	CustomFieldListValuesResponseValueCurrencyCodeSar CustomFieldListValuesResponseValueCurrencyCode = "SAR"
+	CustomFieldListValuesResponseValueCurrencyCodeXaf CustomFieldListValuesResponseValueCurrencyCode = "XAF"
+	CustomFieldListValuesResponseValueCurrencyCodePen CustomFieldListValuesResponseValueCurrencyCode = "PEN"
+)
+
+func (r CustomFieldListValuesResponseValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueCurrencyCodeUsd, CustomFieldListValuesResponseValueCurrencyCodeAud, CustomFieldListValuesResponseValueCurrencyCodeBgn, CustomFieldListValuesResponseValueCurrencyCodeBrl, CustomFieldListValuesResponseValueCurrencyCodeCad, CustomFieldListValuesResponseValueCurrencyCodeChf, CustomFieldListValuesResponseValueCurrencyCodeCzk, CustomFieldListValuesResponseValueCurrencyCodeDkk, CustomFieldListValuesResponseValueCurrencyCodeEur, CustomFieldListValuesResponseValueCurrencyCodeGbp, CustomFieldListValuesResponseValueCurrencyCodeHkd, CustomFieldListValuesResponseValueCurrencyCodeHuf, CustomFieldListValuesResponseValueCurrencyCodeIdr, CustomFieldListValuesResponseValueCurrencyCodeInr, CustomFieldListValuesResponseValueCurrencyCodeJpy, CustomFieldListValuesResponseValueCurrencyCodeMyr, CustomFieldListValuesResponseValueCurrencyCodeNok, CustomFieldListValuesResponseValueCurrencyCodeNzd, CustomFieldListValuesResponseValueCurrencyCodeCny, CustomFieldListValuesResponseValueCurrencyCodePln, CustomFieldListValuesResponseValueCurrencyCodeRon, CustomFieldListValuesResponseValueCurrencyCodeTry, CustomFieldListValuesResponseValueCurrencyCodeSek, CustomFieldListValuesResponseValueCurrencyCodeSgd, CustomFieldListValuesResponseValueCurrencyCodeAed, CustomFieldListValuesResponseValueCurrencyCodeArs, CustomFieldListValuesResponseValueCurrencyCodeBdt, CustomFieldListValuesResponseValueCurrencyCodeBwp, CustomFieldListValuesResponseValueCurrencyCodeClp, CustomFieldListValuesResponseValueCurrencyCodeCop, CustomFieldListValuesResponseValueCurrencyCodeCrc, CustomFieldListValuesResponseValueCurrencyCodeEgp, CustomFieldListValuesResponseValueCurrencyCodeFjd, CustomFieldListValuesResponseValueCurrencyCodeGel, CustomFieldListValuesResponseValueCurrencyCodeGhs, CustomFieldListValuesResponseValueCurrencyCodeIls, CustomFieldListValuesResponseValueCurrencyCodeKes, CustomFieldListValuesResponseValueCurrencyCodeKrw, CustomFieldListValuesResponseValueCurrencyCodeLkr, CustomFieldListValuesResponseValueCurrencyCodeMad, CustomFieldListValuesResponseValueCurrencyCodeMxn, CustomFieldListValuesResponseValueCurrencyCodeNpr, CustomFieldListValuesResponseValueCurrencyCodePhp, CustomFieldListValuesResponseValueCurrencyCodePkr, CustomFieldListValuesResponseValueCurrencyCodeThb, CustomFieldListValuesResponseValueCurrencyCodeUah, CustomFieldListValuesResponseValueCurrencyCodeUgx, CustomFieldListValuesResponseValueCurrencyCodeUyu, CustomFieldListValuesResponseValueCurrencyCodeVnd, CustomFieldListValuesResponseValueCurrencyCodeZar, CustomFieldListValuesResponseValueCurrencyCodeZmw, CustomFieldListValuesResponseValueCurrencyCodeTnd, CustomFieldListValuesResponseValueCurrencyCodeNgn, CustomFieldListValuesResponseValueCurrencyCodeRsd, CustomFieldListValuesResponseValueCurrencyCodeTwd, CustomFieldListValuesResponseValueCurrencyCodeGtq, CustomFieldListValuesResponseValueCurrencyCodeHnl, CustomFieldListValuesResponseValueCurrencyCodeDop, CustomFieldListValuesResponseValueCurrencyCodeSar, CustomFieldListValuesResponseValueCurrencyCodeXaf, CustomFieldListValuesResponseValueCurrencyCodePen:
 		return true
 	}
 	return false
@@ -1308,76 +2093,281 @@ func (r CustomFieldUpsertValueResponseValueType) IsKnown() bool {
 	return false
 }
 
-type Objects4ValueUnion interface {
-	implementsObjects4Value()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*Objects4ValueUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueTextCustomFieldValue{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueNumberCustomFieldValue{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueDateCustomFieldValue{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueBooleanCustomFieldValue{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueCurrencyCustomFieldValue{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValuePercentageCustomFieldValue{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueSelectCustomFieldValue{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects4ValueMultiSelectCustomFieldValue{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type Objects4ValueType string
+type CustomFieldUpsertValueResponseValueCurrencyCode string
 
 const (
-	Objects4ValueTypeText        Objects4ValueType = "text"
-	Objects4ValueTypeNumber      Objects4ValueType = "number"
-	Objects4ValueTypeDate        Objects4ValueType = "date"
-	Objects4ValueTypeBoolean     Objects4ValueType = "boolean"
-	Objects4ValueTypeCurrency    Objects4ValueType = "currency"
-	Objects4ValueTypePercentage  Objects4ValueType = "percentage"
-	Objects4ValueTypeSelect      Objects4ValueType = "select"
-	Objects4ValueTypeMultiSelect Objects4ValueType = "multi_select"
+	CustomFieldUpsertValueResponseValueCurrencyCodeUsd CustomFieldUpsertValueResponseValueCurrencyCode = "USD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeAud CustomFieldUpsertValueResponseValueCurrencyCode = "AUD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeBgn CustomFieldUpsertValueResponseValueCurrencyCode = "BGN"
+	CustomFieldUpsertValueResponseValueCurrencyCodeBrl CustomFieldUpsertValueResponseValueCurrencyCode = "BRL"
+	CustomFieldUpsertValueResponseValueCurrencyCodeCad CustomFieldUpsertValueResponseValueCurrencyCode = "CAD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeChf CustomFieldUpsertValueResponseValueCurrencyCode = "CHF"
+	CustomFieldUpsertValueResponseValueCurrencyCodeCzk CustomFieldUpsertValueResponseValueCurrencyCode = "CZK"
+	CustomFieldUpsertValueResponseValueCurrencyCodeDkk CustomFieldUpsertValueResponseValueCurrencyCode = "DKK"
+	CustomFieldUpsertValueResponseValueCurrencyCodeEur CustomFieldUpsertValueResponseValueCurrencyCode = "EUR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeGbp CustomFieldUpsertValueResponseValueCurrencyCode = "GBP"
+	CustomFieldUpsertValueResponseValueCurrencyCodeHkd CustomFieldUpsertValueResponseValueCurrencyCode = "HKD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeHuf CustomFieldUpsertValueResponseValueCurrencyCode = "HUF"
+	CustomFieldUpsertValueResponseValueCurrencyCodeIdr CustomFieldUpsertValueResponseValueCurrencyCode = "IDR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeInr CustomFieldUpsertValueResponseValueCurrencyCode = "INR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeJpy CustomFieldUpsertValueResponseValueCurrencyCode = "JPY"
+	CustomFieldUpsertValueResponseValueCurrencyCodeMyr CustomFieldUpsertValueResponseValueCurrencyCode = "MYR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeNok CustomFieldUpsertValueResponseValueCurrencyCode = "NOK"
+	CustomFieldUpsertValueResponseValueCurrencyCodeNzd CustomFieldUpsertValueResponseValueCurrencyCode = "NZD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeCny CustomFieldUpsertValueResponseValueCurrencyCode = "CNY"
+	CustomFieldUpsertValueResponseValueCurrencyCodePln CustomFieldUpsertValueResponseValueCurrencyCode = "PLN"
+	CustomFieldUpsertValueResponseValueCurrencyCodeRon CustomFieldUpsertValueResponseValueCurrencyCode = "RON"
+	CustomFieldUpsertValueResponseValueCurrencyCodeTry CustomFieldUpsertValueResponseValueCurrencyCode = "TRY"
+	CustomFieldUpsertValueResponseValueCurrencyCodeSek CustomFieldUpsertValueResponseValueCurrencyCode = "SEK"
+	CustomFieldUpsertValueResponseValueCurrencyCodeSgd CustomFieldUpsertValueResponseValueCurrencyCode = "SGD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeAed CustomFieldUpsertValueResponseValueCurrencyCode = "AED"
+	CustomFieldUpsertValueResponseValueCurrencyCodeArs CustomFieldUpsertValueResponseValueCurrencyCode = "ARS"
+	CustomFieldUpsertValueResponseValueCurrencyCodeBdt CustomFieldUpsertValueResponseValueCurrencyCode = "BDT"
+	CustomFieldUpsertValueResponseValueCurrencyCodeBwp CustomFieldUpsertValueResponseValueCurrencyCode = "BWP"
+	CustomFieldUpsertValueResponseValueCurrencyCodeClp CustomFieldUpsertValueResponseValueCurrencyCode = "CLP"
+	CustomFieldUpsertValueResponseValueCurrencyCodeCop CustomFieldUpsertValueResponseValueCurrencyCode = "COP"
+	CustomFieldUpsertValueResponseValueCurrencyCodeCrc CustomFieldUpsertValueResponseValueCurrencyCode = "CRC"
+	CustomFieldUpsertValueResponseValueCurrencyCodeEgp CustomFieldUpsertValueResponseValueCurrencyCode = "EGP"
+	CustomFieldUpsertValueResponseValueCurrencyCodeFjd CustomFieldUpsertValueResponseValueCurrencyCode = "FJD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeGel CustomFieldUpsertValueResponseValueCurrencyCode = "GEL"
+	CustomFieldUpsertValueResponseValueCurrencyCodeGhs CustomFieldUpsertValueResponseValueCurrencyCode = "GHS"
+	CustomFieldUpsertValueResponseValueCurrencyCodeIls CustomFieldUpsertValueResponseValueCurrencyCode = "ILS"
+	CustomFieldUpsertValueResponseValueCurrencyCodeKes CustomFieldUpsertValueResponseValueCurrencyCode = "KES"
+	CustomFieldUpsertValueResponseValueCurrencyCodeKrw CustomFieldUpsertValueResponseValueCurrencyCode = "KRW"
+	CustomFieldUpsertValueResponseValueCurrencyCodeLkr CustomFieldUpsertValueResponseValueCurrencyCode = "LKR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeMad CustomFieldUpsertValueResponseValueCurrencyCode = "MAD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeMxn CustomFieldUpsertValueResponseValueCurrencyCode = "MXN"
+	CustomFieldUpsertValueResponseValueCurrencyCodeNpr CustomFieldUpsertValueResponseValueCurrencyCode = "NPR"
+	CustomFieldUpsertValueResponseValueCurrencyCodePhp CustomFieldUpsertValueResponseValueCurrencyCode = "PHP"
+	CustomFieldUpsertValueResponseValueCurrencyCodePkr CustomFieldUpsertValueResponseValueCurrencyCode = "PKR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeThb CustomFieldUpsertValueResponseValueCurrencyCode = "THB"
+	CustomFieldUpsertValueResponseValueCurrencyCodeUah CustomFieldUpsertValueResponseValueCurrencyCode = "UAH"
+	CustomFieldUpsertValueResponseValueCurrencyCodeUgx CustomFieldUpsertValueResponseValueCurrencyCode = "UGX"
+	CustomFieldUpsertValueResponseValueCurrencyCodeUyu CustomFieldUpsertValueResponseValueCurrencyCode = "UYU"
+	CustomFieldUpsertValueResponseValueCurrencyCodeVnd CustomFieldUpsertValueResponseValueCurrencyCode = "VND"
+	CustomFieldUpsertValueResponseValueCurrencyCodeZar CustomFieldUpsertValueResponseValueCurrencyCode = "ZAR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeZmw CustomFieldUpsertValueResponseValueCurrencyCode = "ZMW"
+	CustomFieldUpsertValueResponseValueCurrencyCodeTnd CustomFieldUpsertValueResponseValueCurrencyCode = "TND"
+	CustomFieldUpsertValueResponseValueCurrencyCodeNgn CustomFieldUpsertValueResponseValueCurrencyCode = "NGN"
+	CustomFieldUpsertValueResponseValueCurrencyCodeRsd CustomFieldUpsertValueResponseValueCurrencyCode = "RSD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeTwd CustomFieldUpsertValueResponseValueCurrencyCode = "TWD"
+	CustomFieldUpsertValueResponseValueCurrencyCodeGtq CustomFieldUpsertValueResponseValueCurrencyCode = "GTQ"
+	CustomFieldUpsertValueResponseValueCurrencyCodeHnl CustomFieldUpsertValueResponseValueCurrencyCode = "HNL"
+	CustomFieldUpsertValueResponseValueCurrencyCodeDop CustomFieldUpsertValueResponseValueCurrencyCode = "DOP"
+	CustomFieldUpsertValueResponseValueCurrencyCodeSar CustomFieldUpsertValueResponseValueCurrencyCode = "SAR"
+	CustomFieldUpsertValueResponseValueCurrencyCodeXaf CustomFieldUpsertValueResponseValueCurrencyCode = "XAF"
+	CustomFieldUpsertValueResponseValueCurrencyCodePen CustomFieldUpsertValueResponseValueCurrencyCode = "PEN"
 )
 
-func (r Objects4ValueType) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueCurrencyCode) IsKnown() bool {
 	switch r {
-	case Objects4ValueTypeText, Objects4ValueTypeNumber, Objects4ValueTypeDate, Objects4ValueTypeBoolean, Objects4ValueTypeCurrency, Objects4ValueTypePercentage, Objects4ValueTypeSelect, Objects4ValueTypeMultiSelect:
+	case CustomFieldUpsertValueResponseValueCurrencyCodeUsd, CustomFieldUpsertValueResponseValueCurrencyCodeAud, CustomFieldUpsertValueResponseValueCurrencyCodeBgn, CustomFieldUpsertValueResponseValueCurrencyCodeBrl, CustomFieldUpsertValueResponseValueCurrencyCodeCad, CustomFieldUpsertValueResponseValueCurrencyCodeChf, CustomFieldUpsertValueResponseValueCurrencyCodeCzk, CustomFieldUpsertValueResponseValueCurrencyCodeDkk, CustomFieldUpsertValueResponseValueCurrencyCodeEur, CustomFieldUpsertValueResponseValueCurrencyCodeGbp, CustomFieldUpsertValueResponseValueCurrencyCodeHkd, CustomFieldUpsertValueResponseValueCurrencyCodeHuf, CustomFieldUpsertValueResponseValueCurrencyCodeIdr, CustomFieldUpsertValueResponseValueCurrencyCodeInr, CustomFieldUpsertValueResponseValueCurrencyCodeJpy, CustomFieldUpsertValueResponseValueCurrencyCodeMyr, CustomFieldUpsertValueResponseValueCurrencyCodeNok, CustomFieldUpsertValueResponseValueCurrencyCodeNzd, CustomFieldUpsertValueResponseValueCurrencyCodeCny, CustomFieldUpsertValueResponseValueCurrencyCodePln, CustomFieldUpsertValueResponseValueCurrencyCodeRon, CustomFieldUpsertValueResponseValueCurrencyCodeTry, CustomFieldUpsertValueResponseValueCurrencyCodeSek, CustomFieldUpsertValueResponseValueCurrencyCodeSgd, CustomFieldUpsertValueResponseValueCurrencyCodeAed, CustomFieldUpsertValueResponseValueCurrencyCodeArs, CustomFieldUpsertValueResponseValueCurrencyCodeBdt, CustomFieldUpsertValueResponseValueCurrencyCodeBwp, CustomFieldUpsertValueResponseValueCurrencyCodeClp, CustomFieldUpsertValueResponseValueCurrencyCodeCop, CustomFieldUpsertValueResponseValueCurrencyCodeCrc, CustomFieldUpsertValueResponseValueCurrencyCodeEgp, CustomFieldUpsertValueResponseValueCurrencyCodeFjd, CustomFieldUpsertValueResponseValueCurrencyCodeGel, CustomFieldUpsertValueResponseValueCurrencyCodeGhs, CustomFieldUpsertValueResponseValueCurrencyCodeIls, CustomFieldUpsertValueResponseValueCurrencyCodeKes, CustomFieldUpsertValueResponseValueCurrencyCodeKrw, CustomFieldUpsertValueResponseValueCurrencyCodeLkr, CustomFieldUpsertValueResponseValueCurrencyCodeMad, CustomFieldUpsertValueResponseValueCurrencyCodeMxn, CustomFieldUpsertValueResponseValueCurrencyCodeNpr, CustomFieldUpsertValueResponseValueCurrencyCodePhp, CustomFieldUpsertValueResponseValueCurrencyCodePkr, CustomFieldUpsertValueResponseValueCurrencyCodeThb, CustomFieldUpsertValueResponseValueCurrencyCodeUah, CustomFieldUpsertValueResponseValueCurrencyCodeUgx, CustomFieldUpsertValueResponseValueCurrencyCodeUyu, CustomFieldUpsertValueResponseValueCurrencyCodeVnd, CustomFieldUpsertValueResponseValueCurrencyCodeZar, CustomFieldUpsertValueResponseValueCurrencyCodeZmw, CustomFieldUpsertValueResponseValueCurrencyCodeTnd, CustomFieldUpsertValueResponseValueCurrencyCodeNgn, CustomFieldUpsertValueResponseValueCurrencyCodeRsd, CustomFieldUpsertValueResponseValueCurrencyCodeTwd, CustomFieldUpsertValueResponseValueCurrencyCodeGtq, CustomFieldUpsertValueResponseValueCurrencyCodeHnl, CustomFieldUpsertValueResponseValueCurrencyCodeDop, CustomFieldUpsertValueResponseValueCurrencyCodeSar, CustomFieldUpsertValueResponseValueCurrencyCodeXaf, CustomFieldUpsertValueResponseValueCurrencyCodePen:
 		return true
 	}
 	return false
+}
+
+type CustomFieldListValuesResponseValueTextCustomFieldValue struct {
+	Type  CustomFieldListValuesResponseValueTextCustomFieldValueType `json:"type" api:"required"`
+	Value string                                                     `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueTextCustomFieldValueJSON `json:"-"`
+}
+
+// customFieldListValuesResponseValueTextCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueTextCustomFieldValue]
+type customFieldListValuesResponseValueTextCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueTextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueTextCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueTextCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValueNumberCustomFieldValue struct {
+	Type  CustomFieldListValuesResponseValueNumberCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                                                  `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueNumberCustomFieldValueJSON `json:"-"`
+}
+
+// customFieldListValuesResponseValueNumberCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueNumberCustomFieldValue]
+type customFieldListValuesResponseValueNumberCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueNumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueNumberCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueNumberCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValueDateCustomFieldValue struct {
+	Type  CustomFieldListValuesResponseValueDateCustomFieldValueType `json:"type" api:"required"`
+	Value string                                                     `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueDateCustomFieldValueJSON `json:"-"`
+}
+
+// customFieldListValuesResponseValueDateCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueDateCustomFieldValue]
+type customFieldListValuesResponseValueDateCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueDateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueDateCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueDateCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValueBooleanCustomFieldValue struct {
+	Type  CustomFieldListValuesResponseValueBooleanCustomFieldValueType `json:"type" api:"required"`
+	Value bool                                                          `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValueBooleanCustomFieldValueJSON `json:"-"`
+}
+
+// customFieldListValuesResponseValueBooleanCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueBooleanCustomFieldValue]
+type customFieldListValuesResponseValueBooleanCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueBooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueBooleanCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueBooleanCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValueCurrencyCustomFieldValue struct {
+	Type CustomFieldListValuesResponseValueCurrencyCustomFieldValueType `json:"type" api:"required"`
+	// Integer base units of currencyCode (e.g. cents).
+	Amount       int64                                                                  `json:"amount" api:"required"`
+	CurrencyCode CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode `json:"currencyCode" api:"required"`
+	JSON         customFieldListValuesResponseValueCurrencyCustomFieldValueJSON         `json:"-"`
+}
+
+// customFieldListValuesResponseValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueCurrencyCustomFieldValue]
+type customFieldListValuesResponseValueCurrencyCustomFieldValueJSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueCurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueCurrencyCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueCurrencyCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValuePercentageCustomFieldValue struct {
+	Type  CustomFieldListValuesResponseValuePercentageCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                                                      `json:"value" api:"required"`
+	JSON  customFieldListValuesResponseValuePercentageCustomFieldValueJSON `json:"-"`
+}
+
+// customFieldListValuesResponseValuePercentageCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValuePercentageCustomFieldValue]
+type customFieldListValuesResponseValuePercentageCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValuePercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValuePercentageCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValuePercentageCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValueSelectCustomFieldValue struct {
+	Type   CustomFieldListValuesResponseValueSelectCustomFieldValueType   `json:"type" api:"required"`
+	Option CustomFieldListValuesResponseValueSelectCustomFieldValueOption `json:"option" api:"required"`
+	JSON   customFieldListValuesResponseValueSelectCustomFieldValueJSON   `json:"-"`
+}
+
+// customFieldListValuesResponseValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueSelectCustomFieldValue]
+type customFieldListValuesResponseValueSelectCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueSelectCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueSelectCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
+}
+
+type CustomFieldListValuesResponseValueMultiSelectCustomFieldValue struct {
+	Type    CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType     `json:"type" api:"required"`
+	Options []CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption `json:"options" api:"required"`
+	JSON    customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON     `json:"-"`
+}
+
+// customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueMultiSelectCustomFieldValue]
+type customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldListValuesResponseValueMultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r CustomFieldListValuesResponseValueMultiSelectCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
 }
 
 type CustomFieldUpsertValueResponseValueTextCustomFieldValue struct {
@@ -1481,10 +2471,11 @@ func (r CustomFieldUpsertValueResponseValueBooleanCustomFieldValue) implementsCu
 }
 
 type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue struct {
-	Type         CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType `json:"type" api:"required"`
-	Amount       int64                                                           `json:"amount" api:"required"`
-	CurrencyCode Union1                                                          `json:"currencyCode" api:"required"`
-	JSON         customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON `json:"-"`
+	Type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType `json:"type" api:"required"`
+	// Integer base units of currencyCode (e.g. cents).
+	Amount       int64                                                                   `json:"amount" api:"required"`
+	CurrencyCode CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode `json:"currencyCode" api:"required"`
+	JSON         customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON         `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue]
@@ -1533,9 +2524,9 @@ func (r CustomFieldUpsertValueResponseValuePercentageCustomFieldValue) implement
 }
 
 type CustomFieldUpsertValueResponseValueSelectCustomFieldValue struct {
-	Type   CustomFieldUpsertValueResponseValueSelectCustomFieldValueType `json:"type" api:"required"`
-	Option shared.Objects3                                               `json:"option" api:"required"`
-	JSON   customFieldUpsertValueResponseValueSelectCustomFieldValueJSON `json:"-"`
+	Type   CustomFieldUpsertValueResponseValueSelectCustomFieldValueType   `json:"type" api:"required"`
+	Option CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption `json:"option" api:"required"`
+	JSON   customFieldUpsertValueResponseValueSelectCustomFieldValueJSON   `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueSelectCustomFieldValue]
@@ -1558,9 +2549,9 @@ func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValue) implementsCus
 }
 
 type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue struct {
-	Type    CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType `json:"type" api:"required"`
-	Options []shared.Objects3                                                  `json:"options" api:"required"`
-	JSON    customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON `json:"-"`
+	Type    CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType     `json:"type" api:"required"`
+	Options []CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption `json:"options" api:"required"`
+	JSON    customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON     `json:"-"`
 }
 
 // customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue]
@@ -1582,199 +2573,253 @@ func (r customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON) RawJ
 func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
 }
 
-type Objects4ValueTextCustomFieldValue struct {
-	Type  Objects4ValueTextCustomFieldValueType `json:"type" api:"required"`
-	Value string                                `json:"value" api:"required"`
-	JSON  objects4ValueTextCustomFieldValueJSON `json:"-"`
+type CustomFieldListValuesResponseValueTextCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueTextCustomFieldValueTypeText CustomFieldListValuesResponseValueTextCustomFieldValueType = "text"
+)
+
+func (r CustomFieldListValuesResponseValueTextCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueTextCustomFieldValueTypeText:
+		return true
+	}
+	return false
 }
 
-// objects4ValueTextCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueTextCustomFieldValue]
-type objects4ValueTextCustomFieldValueJSON struct {
-	Type        apijson.Field
+type CustomFieldListValuesResponseValueNumberCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueNumberCustomFieldValueTypeNumber CustomFieldListValuesResponseValueNumberCustomFieldValueType = "number"
+)
+
+func (r CustomFieldListValuesResponseValueNumberCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueNumberCustomFieldValueTypeNumber:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueDateCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueDateCustomFieldValueTypeDate CustomFieldListValuesResponseValueDateCustomFieldValueType = "date"
+)
+
+func (r CustomFieldListValuesResponseValueDateCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueDateCustomFieldValueTypeDate:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueBooleanCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueBooleanCustomFieldValueTypeBoolean CustomFieldListValuesResponseValueBooleanCustomFieldValueType = "boolean"
+)
+
+func (r CustomFieldListValuesResponseValueBooleanCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueBooleanCustomFieldValueTypeBoolean:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueCurrencyCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueTypeCurrency CustomFieldListValuesResponseValueCurrencyCustomFieldValueType = "currency"
+)
+
+func (r CustomFieldListValuesResponseValueCurrencyCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueCurrencyCustomFieldValueTypeCurrency:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode string
+
+const (
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUsd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "USD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAud CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "AUD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBgn CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BGN"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBrl CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BRL"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCad CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CAD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeChf CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CHF"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCzk CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CZK"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDkk CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "DKK"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEur CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "EUR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGbp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GBP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHkd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "HKD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHuf CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "HUF"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIdr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "IDR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeInr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "INR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeJpy CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "JPY"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMyr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "MYR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNok CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NOK"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNzd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NZD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCny CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CNY"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePln CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PLN"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRon CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "RON"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTry CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "TRY"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSek CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "SEK"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSgd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "SGD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAed CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "AED"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeArs CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ARS"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBdt CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BDT"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBwp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BWP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeClp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CLP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCop CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "COP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCrc CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CRC"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEgp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "EGP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeFjd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "FJD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGel CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GEL"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGhs CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GHS"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIls CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ILS"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKes CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "KES"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKrw CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "KRW"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeLkr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "LKR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMad CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "MAD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMxn CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "MXN"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNpr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NPR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePhp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PHP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePkr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PKR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeThb CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "THB"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUah CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "UAH"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUgx CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "UGX"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUyu CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "UYU"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeVnd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "VND"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZar CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ZAR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZmw CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ZMW"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTnd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "TND"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNgn CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NGN"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRsd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "RSD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTwd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "TWD"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGtq CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GTQ"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHnl CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "HNL"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDop CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "DOP"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSar CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "SAR"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeXaf CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "XAF"
+	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePen CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PEN"
+)
+
+func (r CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUsd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAud, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBgn, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBrl, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCad, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeChf, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCzk, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDkk, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEur, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGbp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHkd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHuf, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIdr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeInr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeJpy, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMyr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNok, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNzd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCny, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePln, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRon, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTry, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSek, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSgd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAed, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeArs, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBdt, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBwp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeClp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCop, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCrc, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEgp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeFjd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGel, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGhs, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIls, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKes, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKrw, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeLkr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMad, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMxn, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNpr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePhp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePkr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeThb, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUah, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUgx, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUyu, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeVnd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZar, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZmw, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTnd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNgn, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRsd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTwd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGtq, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHnl, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDop, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSar, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeXaf, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePen:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValuePercentageCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValuePercentageCustomFieldValueTypePercentage CustomFieldListValuesResponseValuePercentageCustomFieldValueType = "percentage"
+)
+
+func (r CustomFieldListValuesResponseValuePercentageCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValuePercentageCustomFieldValueTypePercentage:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueSelectCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueSelectCustomFieldValueTypeSelect CustomFieldListValuesResponseValueSelectCustomFieldValueType = "select"
+)
+
+func (r CustomFieldListValuesResponseValueSelectCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueSelectCustomFieldValueTypeSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType string
+
+const (
+	CustomFieldListValuesResponseValueMultiSelectCustomFieldValueTypeMultiSelect CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType = "multi_select"
+)
+
+func (r CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CustomFieldListValuesResponseValueMultiSelectCustomFieldValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type CustomFieldListValuesResponseValueSelectCustomFieldValueOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                                               `json:"id" api:"required"`
+	Label     string                                                               `json:"label" api:"required"`
+	Value     string                                                               `json:"value" api:"required"`
+	SortOrder interface{}                                                          `json:"sortOrder" api:"required"`
+	Status    CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus `json:"status" api:"required"`
+	CreatedAt string                                                               `json:"createdAt" api:"required"`
+	JSON      customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON   `json:"-"`
+}
+
+// customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueSelectCustomFieldValueOption]
+type customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
 	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *Objects4ValueTextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldListValuesResponseValueSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r objects4ValueTextCustomFieldValueJSON) RawJSON() string {
+func (r customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON) RawJSON() string {
 	return r.raw
 }
 
-func (r Objects4ValueTextCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValueNumberCustomFieldValue struct {
-	Type  Objects4ValueNumberCustomFieldValueType `json:"type" api:"required"`
-	Value interface{}                             `json:"value" api:"required"`
-	JSON  objects4ValueNumberCustomFieldValueJSON `json:"-"`
+type CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                                                     `json:"id" api:"required"`
+	Label     string                                                                     `json:"label" api:"required"`
+	Value     string                                                                     `json:"value" api:"required"`
+	SortOrder interface{}                                                                `json:"sortOrder" api:"required"`
+	Status    CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus `json:"status" api:"required"`
+	CreatedAt string                                                                     `json:"createdAt" api:"required"`
+	JSON      customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON    `json:"-"`
 }
 
-// objects4ValueNumberCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueNumberCustomFieldValue]
-type objects4ValueNumberCustomFieldValueJSON struct {
-	Type        apijson.Field
+// customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption]
+type customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
 	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *Objects4ValueNumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+func (r *CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r objects4ValueNumberCustomFieldValueJSON) RawJSON() string {
+func (r customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON) RawJSON() string {
 	return r.raw
 }
-
-func (r Objects4ValueNumberCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValueDateCustomFieldValue struct {
-	Type  Objects4ValueDateCustomFieldValueType `json:"type" api:"required"`
-	Value string                                `json:"value" api:"required"`
-	JSON  objects4ValueDateCustomFieldValueJSON `json:"-"`
-}
-
-// objects4ValueDateCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueDateCustomFieldValue]
-type objects4ValueDateCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects4ValueDateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4ValueDateCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects4ValueDateCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValueBooleanCustomFieldValue struct {
-	Type  Objects4ValueBooleanCustomFieldValueType `json:"type" api:"required"`
-	Value bool                                     `json:"value" api:"required"`
-	JSON  objects4ValueBooleanCustomFieldValueJSON `json:"-"`
-}
-
-// objects4ValueBooleanCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueBooleanCustomFieldValue]
-type objects4ValueBooleanCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects4ValueBooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4ValueBooleanCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects4ValueBooleanCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValueCurrencyCustomFieldValue struct {
-	Type         Objects4ValueCurrencyCustomFieldValueType `json:"type" api:"required"`
-	Amount       int64                                     `json:"amount" api:"required"`
-	CurrencyCode Union1                                    `json:"currencyCode" api:"required"`
-	JSON         objects4ValueCurrencyCustomFieldValueJSON `json:"-"`
-}
-
-// objects4ValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueCurrencyCustomFieldValue]
-type objects4ValueCurrencyCustomFieldValueJSON struct {
-	Type         apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *Objects4ValueCurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4ValueCurrencyCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects4ValueCurrencyCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValuePercentageCustomFieldValue struct {
-	Type  Objects4ValuePercentageCustomFieldValueType `json:"type" api:"required"`
-	Value interface{}                                 `json:"value" api:"required"`
-	JSON  objects4ValuePercentageCustomFieldValueJSON `json:"-"`
-}
-
-// objects4ValuePercentageCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValuePercentageCustomFieldValue]
-type objects4ValuePercentageCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects4ValuePercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4ValuePercentageCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects4ValuePercentageCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValueSelectCustomFieldValue struct {
-	Type   Objects4ValueSelectCustomFieldValueType `json:"type" api:"required"`
-	Option shared.Objects3                         `json:"option" api:"required"`
-	JSON   objects4ValueSelectCustomFieldValueJSON `json:"-"`
-}
-
-// objects4ValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueSelectCustomFieldValue]
-type objects4ValueSelectCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects4ValueSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4ValueSelectCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects4ValueSelectCustomFieldValue) implementsObjects4Value() {}
-
-type Objects4ValueMultiSelectCustomFieldValue struct {
-	Type    Objects4ValueMultiSelectCustomFieldValueType `json:"type" api:"required"`
-	Options []shared.Objects3                            `json:"options" api:"required"`
-	JSON    objects4ValueMultiSelectCustomFieldValueJSON `json:"-"`
-}
-
-// objects4ValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [Objects4ValueMultiSelectCustomFieldValue]
-type objects4ValueMultiSelectCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects4ValueMultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects4ValueMultiSelectCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects4ValueMultiSelectCustomFieldValue) implementsObjects4Value() {}
 
 type CustomFieldUpsertValueResponseValueTextCustomFieldValueType string
 
@@ -1846,6 +2891,80 @@ func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType) IsKnown
 	return false
 }
 
+type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode string
+
+const (
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUsd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "USD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAud CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "AUD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBgn CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BGN"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBrl CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BRL"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCad CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CAD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeChf CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CHF"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCzk CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CZK"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDkk CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "DKK"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEur CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "EUR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGbp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GBP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHkd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "HKD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHuf CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "HUF"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIdr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "IDR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeInr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "INR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeJpy CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "JPY"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMyr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "MYR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNok CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NOK"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNzd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NZD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCny CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CNY"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePln CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PLN"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRon CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "RON"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTry CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "TRY"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSek CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "SEK"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSgd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "SGD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAed CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "AED"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeArs CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ARS"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBdt CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BDT"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBwp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BWP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeClp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CLP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCop CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "COP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCrc CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CRC"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEgp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "EGP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeFjd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "FJD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGel CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GEL"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGhs CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GHS"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIls CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ILS"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKes CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "KES"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKrw CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "KRW"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeLkr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "LKR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMad CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "MAD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMxn CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "MXN"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNpr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NPR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePhp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PHP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePkr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PKR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeThb CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "THB"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUah CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "UAH"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUgx CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "UGX"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUyu CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "UYU"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeVnd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "VND"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZar CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ZAR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZmw CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ZMW"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTnd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "TND"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNgn CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NGN"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRsd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "RSD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTwd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "TWD"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGtq CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GTQ"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHnl CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "HNL"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDop CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "DOP"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSar CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "SAR"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeXaf CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "XAF"
+	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePen CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PEN"
+)
+
+func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUsd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAud, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBgn, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBrl, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCad, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeChf, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCzk, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDkk, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEur, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGbp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHkd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHuf, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIdr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeInr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeJpy, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMyr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNok, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNzd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCny, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePln, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRon, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTry, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSek, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSgd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAed, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeArs, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBdt, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBwp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeClp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCop, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCrc, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEgp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeFjd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGel, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGhs, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIls, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKes, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKrw, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeLkr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMad, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMxn, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNpr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePhp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePkr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeThb, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUah, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUgx, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUyu, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeVnd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZar, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZmw, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTnd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNgn, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRsd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTwd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGtq, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHnl, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDop, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSar, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeXaf, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePen:
+		return true
+	}
+	return false
+}
+
 type CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType string
 
 const (
@@ -1888,113 +3007,123 @@ func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType) IsKn
 	return false
 }
 
-type Objects4ValueTextCustomFieldValueType string
+type CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                                                `json:"id" api:"required"`
+	Label     string                                                                `json:"label" api:"required"`
+	Value     string                                                                `json:"value" api:"required"`
+	SortOrder interface{}                                                           `json:"sortOrder" api:"required"`
+	Status    CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus `json:"status" api:"required"`
+	CreatedAt string                                                                `json:"createdAt" api:"required"`
+	JSON      customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON   `json:"-"`
+}
+
+// customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption]
+type customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                                                      `json:"id" api:"required"`
+	Label     string                                                                      `json:"label" api:"required"`
+	Value     string                                                                      `json:"value" api:"required"`
+	SortOrder interface{}                                                                 `json:"sortOrder" api:"required"`
+	Status    CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus `json:"status" api:"required"`
+	CreatedAt string                                                                      `json:"createdAt" api:"required"`
+	JSON      customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON    `json:"-"`
+}
+
+// customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption]
+type customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus string
 
 const (
-	Objects4ValueTextCustomFieldValueTypeText Objects4ValueTextCustomFieldValueType = "text"
+	CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusActive   CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus = "active"
+	CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusArchived CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus = "archived"
 )
 
-func (r Objects4ValueTextCustomFieldValueType) IsKnown() bool {
+func (r CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus) IsKnown() bool {
 	switch r {
-	case Objects4ValueTextCustomFieldValueTypeText:
+	case CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusActive, CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusArchived:
 		return true
 	}
 	return false
 }
 
-type Objects4ValueNumberCustomFieldValueType string
+type CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus string
 
 const (
-	Objects4ValueNumberCustomFieldValueTypeNumber Objects4ValueNumberCustomFieldValueType = "number"
+	CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusActive   CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus = "active"
+	CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusArchived CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus = "archived"
 )
 
-func (r Objects4ValueNumberCustomFieldValueType) IsKnown() bool {
+func (r CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus) IsKnown() bool {
 	switch r {
-	case Objects4ValueNumberCustomFieldValueTypeNumber:
+	case CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusActive, CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusArchived:
 		return true
 	}
 	return false
 }
 
-type Objects4ValueDateCustomFieldValueType string
+type CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus string
 
 const (
-	Objects4ValueDateCustomFieldValueTypeDate Objects4ValueDateCustomFieldValueType = "date"
+	CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusActive   CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus = "active"
+	CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusArchived CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus = "archived"
 )
 
-func (r Objects4ValueDateCustomFieldValueType) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus) IsKnown() bool {
 	switch r {
-	case Objects4ValueDateCustomFieldValueTypeDate:
+	case CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusActive, CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusArchived:
 		return true
 	}
 	return false
 }
 
-type Objects4ValueBooleanCustomFieldValueType string
+type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus string
 
 const (
-	Objects4ValueBooleanCustomFieldValueTypeBoolean Objects4ValueBooleanCustomFieldValueType = "boolean"
+	CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusActive   CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus = "active"
+	CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusArchived CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus = "archived"
 )
 
-func (r Objects4ValueBooleanCustomFieldValueType) IsKnown() bool {
+func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus) IsKnown() bool {
 	switch r {
-	case Objects4ValueBooleanCustomFieldValueTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type Objects4ValueCurrencyCustomFieldValueType string
-
-const (
-	Objects4ValueCurrencyCustomFieldValueTypeCurrency Objects4ValueCurrencyCustomFieldValueType = "currency"
-)
-
-func (r Objects4ValueCurrencyCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case Objects4ValueCurrencyCustomFieldValueTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type Objects4ValuePercentageCustomFieldValueType string
-
-const (
-	Objects4ValuePercentageCustomFieldValueTypePercentage Objects4ValuePercentageCustomFieldValueType = "percentage"
-)
-
-func (r Objects4ValuePercentageCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case Objects4ValuePercentageCustomFieldValueTypePercentage:
-		return true
-	}
-	return false
-}
-
-type Objects4ValueSelectCustomFieldValueType string
-
-const (
-	Objects4ValueSelectCustomFieldValueTypeSelect Objects4ValueSelectCustomFieldValueType = "select"
-)
-
-func (r Objects4ValueSelectCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case Objects4ValueSelectCustomFieldValueTypeSelect:
-		return true
-	}
-	return false
-}
-
-type Objects4ValueMultiSelectCustomFieldValueType string
-
-const (
-	Objects4ValueMultiSelectCustomFieldValueTypeMultiSelect Objects4ValueMultiSelectCustomFieldValueType = "multi_select"
-)
-
-func (r Objects4ValueMultiSelectCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case Objects4ValueMultiSelectCustomFieldValueTypeMultiSelect:
+	case CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusActive, CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusArchived:
 		return true
 	}
 	return false

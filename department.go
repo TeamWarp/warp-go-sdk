@@ -96,7 +96,7 @@ func (r *DepartmentService) New(ctx context.Context, body DepartmentNewParams, o
 // Parameters:
 //
 //	ctx: Context for the request.
-//	id: Path parameter.
+//	id: The unique public id of the department
 //	body: DepartmentUpdateParams request parameters.
 //	opts: Options to apply to this request.
 //
@@ -178,6 +178,7 @@ func (r departmentListResponseJSON) RawJSON() string {
 }
 
 type DepartmentNewResponse struct {
+	// The unique public id of the department
 	ID        string                    `json:"id" api:"required"`
 	Name      string                    `json:"name" api:"required"`
 	CreatedAt string                    `json:"createdAt" api:"required"`
@@ -202,6 +203,7 @@ func (r departmentNewResponseJSON) RawJSON() string {
 }
 
 type DepartmentUpdateResponse struct {
+	// The unique public id of the department
 	ID        string                       `json:"id" api:"required"`
 	Name      string                       `json:"name" api:"required"`
 	CreatedAt string                       `json:"createdAt" api:"required"`
@@ -226,6 +228,7 @@ func (r departmentUpdateResponseJSON) RawJSON() string {
 }
 
 type DepartmentListResponseData struct {
+	// The unique public id of the department
 	ID        string                         `json:"id" api:"required"`
 	Name      string                         `json:"name" api:"required"`
 	CreatedAt string                         `json:"createdAt" api:"required"`
