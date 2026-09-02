@@ -51,7 +51,7 @@ func main() {
 
 	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
 		Limit:    sdk.F[string]("limit"),
-		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+		Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -88,7 +88,7 @@ Non-success responses return generated API errors. Error objects expose status, 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
 	Limit:    sdk.F[string]("limit"),
-	Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+	Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 })
 if err != nil {
 	var apiErr *sdk.Error

@@ -15,7 +15,6 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // OfferService contains methods and other services that help with interacting
@@ -198,6 +197,106 @@ func (r *OfferService) Resend(ctx context.Context, id string, opts ...option.Req
 	path := fmt.Sprintf("v1/offers/%s/resend", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
+}
+
+type PublicMoneyAmount struct {
+	// Amount in the currency base unit, e.g. cents for USD.
+	Amount   int64                     `json:"amount" api:"required"`
+	Currency PublicMoneyAmountCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                `json:"display" api:"required"`
+	JSON    publicMoneyAmountJSON `json:"-"`
+}
+
+// publicMoneyAmountJSON contains the JSON metadata for the struct [PublicMoneyAmount]
+type publicMoneyAmountJSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicMoneyAmount) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicMoneyAmountJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicMoneyAmountCurrency string
+
+const (
+	PublicMoneyAmountCurrencyUsd PublicMoneyAmountCurrency = "USD"
+	PublicMoneyAmountCurrencyAud PublicMoneyAmountCurrency = "AUD"
+	PublicMoneyAmountCurrencyBgn PublicMoneyAmountCurrency = "BGN"
+	PublicMoneyAmountCurrencyBrl PublicMoneyAmountCurrency = "BRL"
+	PublicMoneyAmountCurrencyCad PublicMoneyAmountCurrency = "CAD"
+	PublicMoneyAmountCurrencyChf PublicMoneyAmountCurrency = "CHF"
+	PublicMoneyAmountCurrencyCzk PublicMoneyAmountCurrency = "CZK"
+	PublicMoneyAmountCurrencyDkk PublicMoneyAmountCurrency = "DKK"
+	PublicMoneyAmountCurrencyEur PublicMoneyAmountCurrency = "EUR"
+	PublicMoneyAmountCurrencyGbp PublicMoneyAmountCurrency = "GBP"
+	PublicMoneyAmountCurrencyHkd PublicMoneyAmountCurrency = "HKD"
+	PublicMoneyAmountCurrencyHuf PublicMoneyAmountCurrency = "HUF"
+	PublicMoneyAmountCurrencyIdr PublicMoneyAmountCurrency = "IDR"
+	PublicMoneyAmountCurrencyInr PublicMoneyAmountCurrency = "INR"
+	PublicMoneyAmountCurrencyJpy PublicMoneyAmountCurrency = "JPY"
+	PublicMoneyAmountCurrencyMyr PublicMoneyAmountCurrency = "MYR"
+	PublicMoneyAmountCurrencyNok PublicMoneyAmountCurrency = "NOK"
+	PublicMoneyAmountCurrencyNzd PublicMoneyAmountCurrency = "NZD"
+	PublicMoneyAmountCurrencyCny PublicMoneyAmountCurrency = "CNY"
+	PublicMoneyAmountCurrencyPln PublicMoneyAmountCurrency = "PLN"
+	PublicMoneyAmountCurrencyRon PublicMoneyAmountCurrency = "RON"
+	PublicMoneyAmountCurrencyTry PublicMoneyAmountCurrency = "TRY"
+	PublicMoneyAmountCurrencySek PublicMoneyAmountCurrency = "SEK"
+	PublicMoneyAmountCurrencySgd PublicMoneyAmountCurrency = "SGD"
+	PublicMoneyAmountCurrencyAed PublicMoneyAmountCurrency = "AED"
+	PublicMoneyAmountCurrencyArs PublicMoneyAmountCurrency = "ARS"
+	PublicMoneyAmountCurrencyBdt PublicMoneyAmountCurrency = "BDT"
+	PublicMoneyAmountCurrencyBwp PublicMoneyAmountCurrency = "BWP"
+	PublicMoneyAmountCurrencyClp PublicMoneyAmountCurrency = "CLP"
+	PublicMoneyAmountCurrencyCop PublicMoneyAmountCurrency = "COP"
+	PublicMoneyAmountCurrencyCrc PublicMoneyAmountCurrency = "CRC"
+	PublicMoneyAmountCurrencyEgp PublicMoneyAmountCurrency = "EGP"
+	PublicMoneyAmountCurrencyFjd PublicMoneyAmountCurrency = "FJD"
+	PublicMoneyAmountCurrencyGel PublicMoneyAmountCurrency = "GEL"
+	PublicMoneyAmountCurrencyGhs PublicMoneyAmountCurrency = "GHS"
+	PublicMoneyAmountCurrencyIls PublicMoneyAmountCurrency = "ILS"
+	PublicMoneyAmountCurrencyKes PublicMoneyAmountCurrency = "KES"
+	PublicMoneyAmountCurrencyKrw PublicMoneyAmountCurrency = "KRW"
+	PublicMoneyAmountCurrencyLkr PublicMoneyAmountCurrency = "LKR"
+	PublicMoneyAmountCurrencyMad PublicMoneyAmountCurrency = "MAD"
+	PublicMoneyAmountCurrencyMxn PublicMoneyAmountCurrency = "MXN"
+	PublicMoneyAmountCurrencyNpr PublicMoneyAmountCurrency = "NPR"
+	PublicMoneyAmountCurrencyPhp PublicMoneyAmountCurrency = "PHP"
+	PublicMoneyAmountCurrencyPkr PublicMoneyAmountCurrency = "PKR"
+	PublicMoneyAmountCurrencyThb PublicMoneyAmountCurrency = "THB"
+	PublicMoneyAmountCurrencyUah PublicMoneyAmountCurrency = "UAH"
+	PublicMoneyAmountCurrencyUgx PublicMoneyAmountCurrency = "UGX"
+	PublicMoneyAmountCurrencyUyu PublicMoneyAmountCurrency = "UYU"
+	PublicMoneyAmountCurrencyVnd PublicMoneyAmountCurrency = "VND"
+	PublicMoneyAmountCurrencyZar PublicMoneyAmountCurrency = "ZAR"
+	PublicMoneyAmountCurrencyZmw PublicMoneyAmountCurrency = "ZMW"
+	PublicMoneyAmountCurrencyTnd PublicMoneyAmountCurrency = "TND"
+	PublicMoneyAmountCurrencyNgn PublicMoneyAmountCurrency = "NGN"
+	PublicMoneyAmountCurrencyRsd PublicMoneyAmountCurrency = "RSD"
+	PublicMoneyAmountCurrencyTwd PublicMoneyAmountCurrency = "TWD"
+	PublicMoneyAmountCurrencyGtq PublicMoneyAmountCurrency = "GTQ"
+	PublicMoneyAmountCurrencyHnl PublicMoneyAmountCurrency = "HNL"
+	PublicMoneyAmountCurrencyDop PublicMoneyAmountCurrency = "DOP"
+	PublicMoneyAmountCurrencySar PublicMoneyAmountCurrency = "SAR"
+	PublicMoneyAmountCurrencyXaf PublicMoneyAmountCurrency = "XAF"
+	PublicMoneyAmountCurrencyPen PublicMoneyAmountCurrency = "PEN"
+)
+
+func (r PublicMoneyAmountCurrency) IsKnown() bool {
+	switch r {
+	case PublicMoneyAmountCurrencyUsd, PublicMoneyAmountCurrencyAud, PublicMoneyAmountCurrencyBgn, PublicMoneyAmountCurrencyBrl, PublicMoneyAmountCurrencyCad, PublicMoneyAmountCurrencyChf, PublicMoneyAmountCurrencyCzk, PublicMoneyAmountCurrencyDkk, PublicMoneyAmountCurrencyEur, PublicMoneyAmountCurrencyGbp, PublicMoneyAmountCurrencyHkd, PublicMoneyAmountCurrencyHuf, PublicMoneyAmountCurrencyIdr, PublicMoneyAmountCurrencyInr, PublicMoneyAmountCurrencyJpy, PublicMoneyAmountCurrencyMyr, PublicMoneyAmountCurrencyNok, PublicMoneyAmountCurrencyNzd, PublicMoneyAmountCurrencyCny, PublicMoneyAmountCurrencyPln, PublicMoneyAmountCurrencyRon, PublicMoneyAmountCurrencyTry, PublicMoneyAmountCurrencySek, PublicMoneyAmountCurrencySgd, PublicMoneyAmountCurrencyAed, PublicMoneyAmountCurrencyArs, PublicMoneyAmountCurrencyBdt, PublicMoneyAmountCurrencyBwp, PublicMoneyAmountCurrencyClp, PublicMoneyAmountCurrencyCop, PublicMoneyAmountCurrencyCrc, PublicMoneyAmountCurrencyEgp, PublicMoneyAmountCurrencyFjd, PublicMoneyAmountCurrencyGel, PublicMoneyAmountCurrencyGhs, PublicMoneyAmountCurrencyIls, PublicMoneyAmountCurrencyKes, PublicMoneyAmountCurrencyKrw, PublicMoneyAmountCurrencyLkr, PublicMoneyAmountCurrencyMad, PublicMoneyAmountCurrencyMxn, PublicMoneyAmountCurrencyNpr, PublicMoneyAmountCurrencyPhp, PublicMoneyAmountCurrencyPkr, PublicMoneyAmountCurrencyThb, PublicMoneyAmountCurrencyUah, PublicMoneyAmountCurrencyUgx, PublicMoneyAmountCurrencyUyu, PublicMoneyAmountCurrencyVnd, PublicMoneyAmountCurrencyZar, PublicMoneyAmountCurrencyZmw, PublicMoneyAmountCurrencyTnd, PublicMoneyAmountCurrencyNgn, PublicMoneyAmountCurrencyRsd, PublicMoneyAmountCurrencyTwd, PublicMoneyAmountCurrencyGtq, PublicMoneyAmountCurrencyHnl, PublicMoneyAmountCurrencyDop, PublicMoneyAmountCurrencySar, PublicMoneyAmountCurrencyXaf, PublicMoneyAmountCurrencyPen:
+		return true
+	}
+	return false
 }
 
 type OfferListParams struct {
@@ -1222,8 +1321,8 @@ func (r offerNewResponseLevelJSON) RawJSON() string {
 
 type OfferNewResponseCompensation struct {
 	BasePay         OfferNewResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount            `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount            `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                   `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                   `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferNewResponseCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerNewResponseCompensationJSON    `json:"-"`
 }
@@ -1430,8 +1529,8 @@ func (r offerVoidResponseLevelJSON) RawJSON() string {
 
 type OfferVoidResponseCompensation struct {
 	BasePay         OfferVoidResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount             `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount             `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                    `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                    `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferVoidResponseCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerVoidResponseCompensationJSON    `json:"-"`
 }
@@ -1638,8 +1737,8 @@ func (r offerExtendDeadlineResponseLevelJSON) RawJSON() string {
 
 type OfferExtendDeadlineResponseCompensation struct {
 	BasePay         OfferExtendDeadlineResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                       `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                       `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                              `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                              `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferExtendDeadlineResponseCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerExtendDeadlineResponseCompensationJSON    `json:"-"`
 }
@@ -1846,8 +1945,8 @@ func (r offerResendResponseLevelJSON) RawJSON() string {
 
 type OfferResendResponseCompensation struct {
 	BasePay         OfferResendResponseCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount               `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount               `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                      `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                      `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferResendResponseCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerResendResponseCompensationJSON    `json:"-"`
 }
@@ -2054,8 +2153,8 @@ func (r offerListResponseDataLevelJSON) RawJSON() string {
 
 type OfferListResponseDataCompensation struct {
 	BasePay         OfferListResponseDataCompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     shared.PublicMoneyAmount                 `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus shared.PublicMoneyAmount                 `json:"relocationBonus" api:"required,nullable"`
+	SignOnBonus     PublicMoneyAmount                        `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                        `json:"relocationBonus" api:"required,nullable"`
 	Stock           OfferListResponseDataCompensationStock   `json:"stock" api:"required,nullable"`
 	JSON            offerListResponseDataCompensationJSON    `json:"-"`
 }
@@ -2381,10 +2480,10 @@ func (r OfferNewResponseLevelTrack) IsKnown() bool {
 
 type OfferNewResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                 `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                        `json:"amount" api:"required"`
 	Basis        OfferNewResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferNewResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                 `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                        `json:"variableRate" api:"required,nullable"`
 	JSON         offerNewResponseCompensationBasePayJSON  `json:"-"`
 }
 
@@ -2733,10 +2832,10 @@ func (r OfferVoidResponseLevelTrack) IsKnown() bool {
 
 type OfferVoidResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                  `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                         `json:"amount" api:"required"`
 	Basis        OfferVoidResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferVoidResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                  `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                         `json:"variableRate" api:"required,nullable"`
 	JSON         offerVoidResponseCompensationBasePayJSON  `json:"-"`
 }
 
@@ -3085,10 +3184,10 @@ func (r OfferExtendDeadlineResponseLevelTrack) IsKnown() bool {
 
 type OfferExtendDeadlineResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                            `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                                   `json:"amount" api:"required"`
 	Basis        OfferExtendDeadlineResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferExtendDeadlineResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                            `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                   `json:"variableRate" api:"required,nullable"`
 	JSON         offerExtendDeadlineResponseCompensationBasePayJSON  `json:"-"`
 }
 
@@ -3437,10 +3536,10 @@ func (r OfferResendResponseLevelTrack) IsKnown() bool {
 
 type OfferResendResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                    `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                           `json:"amount" api:"required"`
 	Basis        OfferResendResponseCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferResendResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                    `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                           `json:"variableRate" api:"required,nullable"`
 	JSON         offerResendResponseCompensationBasePayJSON  `json:"-"`
 }
 
@@ -3789,10 +3888,10 @@ func (r OfferListResponseDataLevelTrack) IsKnown() bool {
 
 type OfferListResponseDataCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       shared.PublicMoneyAmount                      `json:"amount" api:"required"`
+	Amount       PublicMoneyAmount                             `json:"amount" api:"required"`
 	Basis        OfferListResponseDataCompensationBasePayBasis `json:"basis" api:"required"`
 	Type         OfferListResponseDataCompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate shared.PublicMoneyAmount                      `json:"variableRate" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                             `json:"variableRate" api:"required,nullable"`
 	JSON         offerListResponseDataCompensationBasePayJSON  `json:"-"`
 }
 

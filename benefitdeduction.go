@@ -18,7 +18,6 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // BenefitDeductionService contains methods and other services that help with interacting
@@ -53,7 +52,7 @@ func NewBenefitDeductionService(opts ...option.RequestOption) (r *BenefitDeducti
 //
 //	deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
 //		Limit:    sdk.F[string]("limit"),
-//		Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
+//		Statuses: sdk.F[[]sdk.PublicBenefitDeductionStatus]([]sdk.PublicBenefitDeductionStatus{"active"}),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -77,7 +76,7 @@ func (r *BenefitDeductionService) List(ctx context.Context, query BenefitDeducti
 //
 // Returns:
 //
-//	*BenefitDeductionGetResponse: The current version of a stable payroll benefit deduction.
+//	*PublicBenefitDeduction: The current version of a stable payroll benefit deduction.
 //
 // Example:
 //
@@ -87,7 +86,7 @@ func (r *BenefitDeductionService) List(ctx context.Context, query BenefitDeducti
 //	}
 //
 //	fmt.Println(deduction)
-func (r *BenefitDeductionService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *BenefitDeductionGetResponse, err error) {
+func (r *BenefitDeductionService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PublicBenefitDeduction, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -102,7 +101,7 @@ type PublicBenefitDeduction struct {
 	// Stable identifier shared by every internal version of this deduction.
 	ID string `json:"id" api:"required"`
 	// Basic identifying information for a worker associated with another resource.
-	Worker PublicBenefitDeductionWorker `json:"worker" api:"required"`
+	Worker PublicWorkerReference `json:"worker" api:"required"`
 	// The deduction name shown in payroll and benefits surfaces.
 	Name string `json:"name" api:"required"`
 	// The broad reporting category. The type field identifies the specific payroll
@@ -113,7 +112,7 @@ type PublicBenefitDeduction struct {
 	// Whether the deduction recurs or applies once.
 	Recurrence PublicBenefitDeductionRecurrence `json:"recurrence" api:"required"`
 	// The associated benefit plan, or null for a planless payroll deduction.
-	Plan BenefitDeductionGetResponsePlan `json:"plan" api:"required,nullable"`
+	Plan PublicBenefitDeductionPlan2 `json:"plan" api:"required,nullable"`
 	// How the employee and employer contributions are calculated.
 	Calculation        PublicBenefitDeductionCalculation `json:"calculation" api:"required"`
 	EffectiveStartDate string                            `json:"effectiveStartDate" api:"required"`
@@ -150,26 +149,6 @@ func (r *PublicBenefitDeduction) UnmarshalJSON(data []byte) (err error) {
 
 func (r publicBenefitDeductionJSON) RawJSON() string {
 	return r.raw
-}
-
-type PublicBenefitDeductionCategory string
-
-const (
-	PublicBenefitDeductionCategoryHealth        PublicBenefitDeductionCategory = "health"
-	PublicBenefitDeductionCategoryRetirement    PublicBenefitDeductionCategory = "retirement"
-	PublicBenefitDeductionCategoryHealthSavings PublicBenefitDeductionCategory = "health_savings"
-	PublicBenefitDeductionCategoryCommuter      PublicBenefitDeductionCategory = "commuter"
-	PublicBenefitDeductionCategoryVoluntary     PublicBenefitDeductionCategory = "voluntary"
-	PublicBenefitDeductionCategoryPostTax       PublicBenefitDeductionCategory = "post_tax"
-	PublicBenefitDeductionCategoryOther         PublicBenefitDeductionCategory = "other"
-)
-
-func (r PublicBenefitDeductionCategory) IsKnown() bool {
-	switch r {
-	case PublicBenefitDeductionCategoryHealth, PublicBenefitDeductionCategoryRetirement, PublicBenefitDeductionCategoryHealthSavings, PublicBenefitDeductionCategoryCommuter, PublicBenefitDeductionCategoryVoluntary, PublicBenefitDeductionCategoryPostTax, PublicBenefitDeductionCategoryOther:
-		return true
-	}
-	return false
 }
 
 type PublicBenefitDeductionType string
@@ -230,6 +209,53 @@ func (r PublicBenefitDeductionRecurrence) IsKnown() bool {
 	return false
 }
 
+type PublicWorkerReference struct {
+	// The worker id.
+	ID string `json:"id" api:"required"`
+	// The worker first name.
+	FirstName string `json:"firstName" api:"required"`
+	// The worker last name.
+	LastName string                    `json:"lastName" api:"required"`
+	JSON     publicWorkerReferenceJSON `json:"-"`
+}
+
+// publicWorkerReferenceJSON contains the JSON metadata for the struct [PublicWorkerReference]
+type publicWorkerReferenceJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicWorkerReference) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicWorkerReferenceJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicBenefitDeductionCategory string
+
+const (
+	PublicBenefitDeductionCategoryHealth        PublicBenefitDeductionCategory = "health"
+	PublicBenefitDeductionCategoryRetirement    PublicBenefitDeductionCategory = "retirement"
+	PublicBenefitDeductionCategoryHealthSavings PublicBenefitDeductionCategory = "health_savings"
+	PublicBenefitDeductionCategoryCommuter      PublicBenefitDeductionCategory = "commuter"
+	PublicBenefitDeductionCategoryVoluntary     PublicBenefitDeductionCategory = "voluntary"
+	PublicBenefitDeductionCategoryPostTax       PublicBenefitDeductionCategory = "post_tax"
+	PublicBenefitDeductionCategoryOther         PublicBenefitDeductionCategory = "other"
+)
+
+func (r PublicBenefitDeductionCategory) IsKnown() bool {
+	switch r {
+	case PublicBenefitDeductionCategoryHealth, PublicBenefitDeductionCategoryRetirement, PublicBenefitDeductionCategoryHealthSavings, PublicBenefitDeductionCategoryCommuter, PublicBenefitDeductionCategoryVoluntary, PublicBenefitDeductionCategoryPostTax, PublicBenefitDeductionCategoryOther:
+		return true
+	}
+	return false
+}
+
 type PublicBenefitDeductionStatus string
 
 const (
@@ -247,165 +273,217 @@ func (r PublicBenefitDeductionStatus) IsKnown() bool {
 	return false
 }
 
-type BenefitDeductionGetResponse struct {
-	// Stable identifier shared by every internal version of this deduction.
+type HealthPlanReference struct {
+	Type HealthPlanReferenceType `json:"type" api:"required"`
+	// The tag of a company health plan.
 	ID string `json:"id" api:"required"`
-	// Basic identifying information for a worker associated with another resource.
-	Worker BenefitDeductionGetResponseWorker `json:"worker" api:"required"`
-	// The deduction name shown in payroll and benefits surfaces.
-	Name string `json:"name" api:"required"`
-	// The broad reporting category. The type field identifies the specific payroll
-	// deduction.
-	Category BenefitDeductionGetResponseCategory `json:"category" api:"required"`
-	// The specific payroll deduction type within the broader category.
-	Type BenefitDeductionGetResponseType `json:"type" api:"required"`
-	// Whether the deduction recurs or applies once.
-	Recurrence BenefitDeductionGetResponseRecurrence `json:"recurrence" api:"required"`
-	// The associated benefit plan, or null for a planless payroll deduction.
-	Plan BenefitDeductionGetResponsePlan `json:"plan" api:"required,nullable"`
-	// How the employee and employer contributions are calculated.
-	Calculation        BenefitDeductionGetResponseCalculation `json:"calculation" api:"required"`
-	EffectiveStartDate string                                 `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string                                 `json:"effectiveEndDate" api:"required,nullable"`
-	// The public lifecycle status of the current deduction version.
-	Status    BenefitDeductionGetResponseStatus `json:"status" api:"required"`
-	CreatedAt string                            `json:"createdAt" api:"required"`
-	UpdatedAt string                            `json:"updatedAt" api:"required"`
-	JSON      benefitDeductionGetResponseJSON   `json:"-"`
+	// The associated health plan name.
+	Name string                  `json:"name" api:"required"`
+	JSON healthPlanReferenceJSON `json:"-"`
 }
 
-// benefitDeductionGetResponseJSON contains the JSON metadata for the struct [BenefitDeductionGetResponse]
-type benefitDeductionGetResponseJSON struct {
-	ID                 apijson.Field
-	Worker             apijson.Field
-	Name               apijson.Field
-	Category           apijson.Field
-	Type               apijson.Field
-	Recurrence         apijson.Field
-	Plan               apijson.Field
-	Calculation        apijson.Field
-	EffectiveStartDate apijson.Field
-	EffectiveEndDate   apijson.Field
-	Status             apijson.Field
-	CreatedAt          apijson.Field
-	UpdatedAt          apijson.Field
-	raw                string
-	ExtraFields        map[string]apijson.Field
+// healthPlanReferenceJSON contains the JSON metadata for the struct [HealthPlanReference]
+type healthPlanReferenceJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
-func (r *BenefitDeductionGetResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *HealthPlanReference) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r benefitDeductionGetResponseJSON) RawJSON() string {
+func (r healthPlanReferenceJSON) RawJSON() string {
 	return r.raw
 }
 
-type BenefitDeductionGetResponseCategory string
+type HealthPlanReferenceType string
 
 const (
-	BenefitDeductionGetResponseCategoryHealth        BenefitDeductionGetResponseCategory = "health"
-	BenefitDeductionGetResponseCategoryRetirement    BenefitDeductionGetResponseCategory = "retirement"
-	BenefitDeductionGetResponseCategoryHealthSavings BenefitDeductionGetResponseCategory = "health_savings"
-	BenefitDeductionGetResponseCategoryCommuter      BenefitDeductionGetResponseCategory = "commuter"
-	BenefitDeductionGetResponseCategoryVoluntary     BenefitDeductionGetResponseCategory = "voluntary"
-	BenefitDeductionGetResponseCategoryPostTax       BenefitDeductionGetResponseCategory = "post_tax"
-	BenefitDeductionGetResponseCategoryOther         BenefitDeductionGetResponseCategory = "other"
+	HealthPlanReferenceTypeHealthPlan HealthPlanReferenceType = "health_plan"
 )
 
-func (r BenefitDeductionGetResponseCategory) IsKnown() bool {
+func (r HealthPlanReferenceType) IsKnown() bool {
 	switch r {
-	case BenefitDeductionGetResponseCategoryHealth, BenefitDeductionGetResponseCategoryRetirement, BenefitDeductionGetResponseCategoryHealthSavings, BenefitDeductionGetResponseCategoryCommuter, BenefitDeductionGetResponseCategoryVoluntary, BenefitDeductionGetResponseCategoryPostTax, BenefitDeductionGetResponseCategoryOther:
+	case HealthPlanReferenceTypeHealthPlan:
 		return true
 	}
 	return false
 }
 
-type BenefitDeductionGetResponseType string
+type RetirementPlanReference struct {
+	Type RetirementPlanReferenceType `json:"type" api:"required"`
+	// The tag of a company retirement plan.
+	ID string `json:"id" api:"required"`
+	// The associated retirement plan name.
+	Name string                      `json:"name" api:"required"`
+	JSON retirementPlanReferenceJSON `json:"-"`
+}
+
+// retirementPlanReferenceJSON contains the JSON metadata for the struct [RetirementPlanReference]
+type retirementPlanReferenceJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *RetirementPlanReference) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r retirementPlanReferenceJSON) RawJSON() string {
+	return r.raw
+}
+
+type RetirementPlanReferenceType string
 
 const (
-	BenefitDeductionGetResponseTypeMedical             BenefitDeductionGetResponseType = "medical"
-	BenefitDeductionGetResponseTypeDental              BenefitDeductionGetResponseType = "dental"
-	BenefitDeductionGetResponseTypeVision              BenefitDeductionGetResponseType = "vision"
-	BenefitDeductionGetResponseTypeLife                BenefitDeductionGetResponseType = "life"
-	BenefitDeductionGetResponseTypeShortTermDisability BenefitDeductionGetResponseType = "short_term_disability"
-	BenefitDeductionGetResponseTypeLongTermDisability  BenefitDeductionGetResponseType = "long_term_disability"
-	BenefitDeductionGetResponseType401k                BenefitDeductionGetResponseType = "401k"
-	BenefitDeductionGetResponseTypeRoth401k            BenefitDeductionGetResponseType = "roth_401k"
-	BenefitDeductionGetResponseType403b                BenefitDeductionGetResponseType = "403b"
-	BenefitDeductionGetResponseTypeRoth403b            BenefitDeductionGetResponseType = "roth_403b"
-	BenefitDeductionGetResponseType457                 BenefitDeductionGetResponseType = "457"
-	BenefitDeductionGetResponseTypeRoth457             BenefitDeductionGetResponseType = "roth_457"
-	BenefitDeductionGetResponseTypeHsa                 BenefitDeductionGetResponseType = "hsa"
-	BenefitDeductionGetResponseTypeFsaMedical          BenefitDeductionGetResponseType = "fsa_medical"
-	BenefitDeductionGetResponseTypeFsaDependentCare    BenefitDeductionGetResponseType = "fsa_dependent_care"
-	BenefitDeductionGetResponseTypeTransit             BenefitDeductionGetResponseType = "transit"
-	BenefitDeductionGetResponseTypeParking             BenefitDeductionGetResponseType = "parking"
-	BenefitDeductionGetResponseTypeAccident            BenefitDeductionGetResponseType = "accident"
-	BenefitDeductionGetResponseTypeCancer              BenefitDeductionGetResponseType = "cancer"
-	BenefitDeductionGetResponseTypeCriticalIllness     BenefitDeductionGetResponseType = "critical_illness"
-	BenefitDeductionGetResponseTypeHospital            BenefitDeductionGetResponseType = "hospital"
-	BenefitDeductionGetResponseTypeMedicalOther        BenefitDeductionGetResponseType = "medical_other"
-	BenefitDeductionGetResponseTypeSimpleIra           BenefitDeductionGetResponseType = "simple_ira"
-	BenefitDeductionGetResponseTypeRothSimpleIra       BenefitDeductionGetResponseType = "roth_simple_ira"
-	BenefitDeductionGetResponseTypeNqdc                BenefitDeductionGetResponseType = "nqdc"
-	BenefitDeductionGetResponseTypeNontaxableFringe    BenefitDeductionGetResponseType = "nontaxable_fringe"
-	BenefitDeductionGetResponseTypePucc                BenefitDeductionGetResponseType = "pucc"
-	BenefitDeductionGetResponseTypeVoluntary           BenefitDeductionGetResponseType = "voluntary"
-	BenefitDeductionGetResponseTypePostTax             BenefitDeductionGetResponseType = "post_tax"
-	BenefitDeductionGetResponseTypeOther               BenefitDeductionGetResponseType = "other"
+	RetirementPlanReferenceTypeRetirementPlan RetirementPlanReferenceType = "retirement_plan"
 )
 
-func (r BenefitDeductionGetResponseType) IsKnown() bool {
+func (r RetirementPlanReferenceType) IsKnown() bool {
 	switch r {
-	case BenefitDeductionGetResponseTypeMedical, BenefitDeductionGetResponseTypeDental, BenefitDeductionGetResponseTypeVision, BenefitDeductionGetResponseTypeLife, BenefitDeductionGetResponseTypeShortTermDisability, BenefitDeductionGetResponseTypeLongTermDisability, BenefitDeductionGetResponseType401k, BenefitDeductionGetResponseTypeRoth401k, BenefitDeductionGetResponseType403b, BenefitDeductionGetResponseTypeRoth403b, BenefitDeductionGetResponseType457, BenefitDeductionGetResponseTypeRoth457, BenefitDeductionGetResponseTypeHsa, BenefitDeductionGetResponseTypeFsaMedical, BenefitDeductionGetResponseTypeFsaDependentCare, BenefitDeductionGetResponseTypeTransit, BenefitDeductionGetResponseTypeParking, BenefitDeductionGetResponseTypeAccident, BenefitDeductionGetResponseTypeCancer, BenefitDeductionGetResponseTypeCriticalIllness, BenefitDeductionGetResponseTypeHospital, BenefitDeductionGetResponseTypeMedicalOther, BenefitDeductionGetResponseTypeSimpleIra, BenefitDeductionGetResponseTypeRothSimpleIra, BenefitDeductionGetResponseTypeNqdc, BenefitDeductionGetResponseTypeNontaxableFringe, BenefitDeductionGetResponseTypePucc, BenefitDeductionGetResponseTypeVoluntary, BenefitDeductionGetResponseTypePostTax, BenefitDeductionGetResponseTypeOther:
+	case RetirementPlanReferenceTypeRetirementPlan:
 		return true
 	}
 	return false
 }
 
-type BenefitDeductionGetResponseRecurrence string
+type FixedAmountBenefitCalculation struct {
+	Type FixedAmountBenefitCalculationType `json:"type" api:"required"`
+	// The fixed-amount expression frequency. Null for a one-time deduction.
+	Frequency FixedAmountBenefitCalculationFrequency `json:"frequency" api:"required,nullable"`
+	// A monetary amount with its currency and server-formatted display value.
+	EmployeeContribution PublicMoneyAmount `json:"employeeContribution" api:"required"`
+	// A monetary amount with its currency and server-formatted display value.
+	EmployerContribution PublicMoneyAmount                 `json:"employerContribution" api:"required"`
+	JSON                 fixedAmountBenefitCalculationJSON `json:"-"`
+}
+
+// fixedAmountBenefitCalculationJSON contains the JSON metadata for the struct [FixedAmountBenefitCalculation]
+type fixedAmountBenefitCalculationJSON struct {
+	Type                 apijson.Field
+	Frequency            apijson.Field
+	EmployeeContribution apijson.Field
+	EmployerContribution apijson.Field
+	raw                  string
+	ExtraFields          map[string]apijson.Field
+}
+
+func (r *FixedAmountBenefitCalculation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r fixedAmountBenefitCalculationJSON) RawJSON() string {
+	return r.raw
+}
+
+type FixedAmountBenefitCalculationType string
 
 const (
-	BenefitDeductionGetResponseRecurrenceRecurring BenefitDeductionGetResponseRecurrence = "recurring"
-	BenefitDeductionGetResponseRecurrenceOneTime   BenefitDeductionGetResponseRecurrence = "one_time"
+	FixedAmountBenefitCalculationTypeFixedAmount FixedAmountBenefitCalculationType = "fixed_amount"
 )
 
-func (r BenefitDeductionGetResponseRecurrence) IsKnown() bool {
+func (r FixedAmountBenefitCalculationType) IsKnown() bool {
 	switch r {
-	case BenefitDeductionGetResponseRecurrenceRecurring, BenefitDeductionGetResponseRecurrenceOneTime:
+	case FixedAmountBenefitCalculationTypeFixedAmount:
 		return true
 	}
 	return false
 }
 
-type BenefitDeductionGetResponseStatus string
+type FixedAmountBenefitCalculationFrequency string
 
 const (
-	BenefitDeductionGetResponseStatusActive     BenefitDeductionGetResponseStatus = "active"
-	BenefitDeductionGetResponseStatusPending    BenefitDeductionGetResponseStatus = "pending"
-	BenefitDeductionGetResponseStatusSuspended  BenefitDeductionGetResponseStatus = "suspended"
-	BenefitDeductionGetResponseStatusTerminated BenefitDeductionGetResponseStatus = "terminated"
+	FixedAmountBenefitCalculationFrequencyPerPaycheck FixedAmountBenefitCalculationFrequency = "per_paycheck"
+	FixedAmountBenefitCalculationFrequencyMonthly     FixedAmountBenefitCalculationFrequency = "monthly"
 )
 
-func (r BenefitDeductionGetResponseStatus) IsKnown() bool {
+func (r FixedAmountBenefitCalculationFrequency) IsKnown() bool {
 	switch r {
-	case BenefitDeductionGetResponseStatusActive, BenefitDeductionGetResponseStatusPending, BenefitDeductionGetResponseStatusSuspended, BenefitDeductionGetResponseStatusTerminated:
+	case FixedAmountBenefitCalculationFrequencyPerPaycheck, FixedAmountBenefitCalculationFrequencyMonthly:
 		return true
 	}
 	return false
+}
+
+type PercentageBenefitCalculation struct {
+	Type PercentageBenefitCalculationType `json:"type" api:"required"`
+	// A contribution expressed as a percentage of eligible earnings.
+	EmployeeContribution PercentageContribution `json:"employeeContribution" api:"required"`
+	// A contribution expressed as a percentage of eligible earnings.
+	EmployerContribution PercentageContribution           `json:"employerContribution" api:"required"`
+	JSON                 percentageBenefitCalculationJSON `json:"-"`
+}
+
+// percentageBenefitCalculationJSON contains the JSON metadata for the struct [PercentageBenefitCalculation]
+type percentageBenefitCalculationJSON struct {
+	Type                 apijson.Field
+	EmployeeContribution apijson.Field
+	EmployerContribution apijson.Field
+	raw                  string
+	ExtraFields          map[string]apijson.Field
+}
+
+func (r *PercentageBenefitCalculation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r percentageBenefitCalculationJSON) RawJSON() string {
+	return r.raw
+}
+
+type PercentageBenefitCalculationType string
+
+const (
+	PercentageBenefitCalculationTypePercentage PercentageBenefitCalculationType = "percentage"
+)
+
+func (r PercentageBenefitCalculationType) IsKnown() bool {
+	switch r {
+	case PercentageBenefitCalculationTypePercentage:
+		return true
+	}
+	return false
+}
+
+type PercentageContribution struct {
+	Percentage interface{} `json:"percentage" api:"required"`
+	// The server-formatted percentage, for example "3%".
+	Display string                     `json:"display" api:"required"`
+	JSON    percentageContributionJSON `json:"-"`
+}
+
+// percentageContributionJSON contains the JSON metadata for the struct [PercentageContribution]
+type percentageContributionJSON struct {
+	Percentage  apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PercentageContribution) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r percentageContributionJSON) RawJSON() string {
+	return r.raw
 }
 
 type BenefitDeductionListParams struct {
-	Limit             param.Field[string]                               `query:"limit" api:"required"`
-	Statuses          param.Field[[]BenefitDeductionListParamsStatus]   `query:"statuses" api:"required"`
-	AfterID           param.Field[string]                               `query:"afterId"`
-	BeforeID          param.Field[string]                               `query:"beforeId"`
-	Categories        param.Field[[]BenefitDeductionListParamsCategory] `query:"categories"`
-	HealthPlanIDs     param.Field[[]string]                             `query:"healthPlanIds"`
-	RetirementPlanIDs param.Field[[]string]                             `query:"retirementPlanIds"`
-	Types             param.Field[[]BenefitDeductionListParamsType]     `query:"types"`
-	WorkerIDs         param.Field[[]string]                             `query:"workerIds"`
+	Limit             param.Field[string]                           `query:"limit" api:"required"`
+	Statuses          param.Field[[]PublicBenefitDeductionStatus]   `query:"statuses" api:"required"`
+	AfterID           param.Field[string]                           `query:"afterId"`
+	BeforeID          param.Field[string]                           `query:"beforeId"`
+	Categories        param.Field[[]PublicBenefitDeductionCategory] `query:"categories"`
+	HealthPlanIDs     param.Field[[]string]                         `query:"healthPlanIds"`
+	RetirementPlanIDs param.Field[[]string]                         `query:"retirementPlanIds"`
+	Types             param.Field[[]BenefitDeductionListParamsType] `query:"types"`
+	WorkerIDs         param.Field[[]string]                         `query:"workerIds"`
 }
 
 // URLQuery serializes [BenefitDeductionListParams]'s query parameters as `url.Values`.
@@ -414,26 +492,6 @@ func (r BenefitDeductionListParams) URLQuery() (v url.Values) {
 		ArrayFormat:  apiquery.ArrayQueryFormatRepeat,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,
 	})
-}
-
-type BenefitDeductionListParamsCategory string
-
-const (
-	BenefitDeductionListParamsCategoryHealth        BenefitDeductionListParamsCategory = "health"
-	BenefitDeductionListParamsCategoryRetirement    BenefitDeductionListParamsCategory = "retirement"
-	BenefitDeductionListParamsCategoryHealthSavings BenefitDeductionListParamsCategory = "health_savings"
-	BenefitDeductionListParamsCategoryCommuter      BenefitDeductionListParamsCategory = "commuter"
-	BenefitDeductionListParamsCategoryVoluntary     BenefitDeductionListParamsCategory = "voluntary"
-	BenefitDeductionListParamsCategoryPostTax       BenefitDeductionListParamsCategory = "post_tax"
-	BenefitDeductionListParamsCategoryOther         BenefitDeductionListParamsCategory = "other"
-)
-
-func (r BenefitDeductionListParamsCategory) IsKnown() bool {
-	switch r {
-	case BenefitDeductionListParamsCategoryHealth, BenefitDeductionListParamsCategoryRetirement, BenefitDeductionListParamsCategoryHealthSavings, BenefitDeductionListParamsCategoryCommuter, BenefitDeductionListParamsCategoryVoluntary, BenefitDeductionListParamsCategoryPostTax, BenefitDeductionListParamsCategoryOther:
-		return true
-	}
-	return false
 }
 
 type BenefitDeductionListParamsType string
@@ -479,176 +537,6 @@ func (r BenefitDeductionListParamsType) IsKnown() bool {
 	return false
 }
 
-type BenefitDeductionListParamsStatus string
-
-const (
-	BenefitDeductionListParamsStatusActive     BenefitDeductionListParamsStatus = "active"
-	BenefitDeductionListParamsStatusPending    BenefitDeductionListParamsStatus = "pending"
-	BenefitDeductionListParamsStatusSuspended  BenefitDeductionListParamsStatus = "suspended"
-	BenefitDeductionListParamsStatusTerminated BenefitDeductionListParamsStatus = "terminated"
-)
-
-func (r BenefitDeductionListParamsStatus) IsKnown() bool {
-	switch r {
-	case BenefitDeductionListParamsStatusActive, BenefitDeductionListParamsStatusPending, BenefitDeductionListParamsStatusSuspended, BenefitDeductionListParamsStatusTerminated:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionListResponse struct {
-	HasMore bool                             `json:"hasMore" api:"required"`
-	Count   int64                            `json:"count" api:"required"`
-	Data    []PublicBenefitDeduction         `json:"data" api:"required"`
-	JSON    benefitDeductionListResponseJSON `json:"-"`
-}
-
-// benefitDeductionListResponseJSON contains the JSON metadata for the struct [BenefitDeductionListResponse]
-type benefitDeductionListResponseJSON struct {
-	HasMore     apijson.Field
-	Count       apijson.Field
-	Data        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BenefitDeductionListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BenefitDeductionGetResponseWorker struct {
-	// The worker id.
-	ID string `json:"id" api:"required"`
-	// The worker first name.
-	FirstName string `json:"firstName" api:"required"`
-	// The worker last name.
-	LastName string                                `json:"lastName" api:"required"`
-	JSON     benefitDeductionGetResponseWorkerJSON `json:"-"`
-}
-
-// benefitDeductionGetResponseWorkerJSON contains the JSON metadata for the struct [BenefitDeductionGetResponseWorker]
-type benefitDeductionGetResponseWorkerJSON struct {
-	ID          apijson.Field
-	FirstName   apijson.Field
-	LastName    apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BenefitDeductionGetResponseWorker) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponseWorkerJSON) RawJSON() string {
-	return r.raw
-}
-
-type BenefitDeductionGetResponsePlan struct {
-	Type BenefitDeductionGetResponsePlanType `json:"type" api:"required"`
-	// The tag of a company health plan.
-	ID string `json:"id" api:"required"`
-	// The associated health plan name.
-	Name  string                              `json:"name" api:"required"`
-	JSON  benefitDeductionGetResponsePlanJSON `json:"-"`
-	union BenefitDeductionGetResponsePlanUnion
-}
-
-// benefitDeductionGetResponsePlanJSON contains the JSON metadata for the struct [BenefitDeductionGetResponsePlan]
-type benefitDeductionGetResponsePlanJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r benefitDeductionGetResponsePlanJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *BenefitDeductionGetResponsePlan) UnmarshalJSON(data []byte) (err error) {
-	*r = BenefitDeductionGetResponsePlan{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r BenefitDeductionGetResponsePlan) AsUnion() BenefitDeductionGetResponsePlanUnion {
-	return r.union
-}
-
-type BenefitDeductionGetResponseCalculation struct {
-	Type BenefitDeductionGetResponseCalculationType `json:"type" api:"required"`
-	// A monetary amount with its currency and server-formatted display value.
-	EmployeeContribution interface{} `json:"employeeContribution" api:"required"`
-	// A monetary amount with its currency and server-formatted display value.
-	EmployerContribution interface{} `json:"employerContribution" api:"required"`
-	// The fixed-amount expression frequency. Null for a one-time deduction.
-	Frequency BenefitDeductionGetResponseCalculationFrequency `json:"frequency" api:"nullable"`
-	JSON      benefitDeductionGetResponseCalculationJSON      `json:"-"`
-	union     BenefitDeductionGetResponseCalculationUnion
-}
-
-// benefitDeductionGetResponseCalculationJSON contains the JSON metadata for the struct [BenefitDeductionGetResponseCalculation]
-type benefitDeductionGetResponseCalculationJSON struct {
-	Type                 apijson.Field
-	EmployeeContribution apijson.Field
-	EmployerContribution apijson.Field
-	Frequency            apijson.Field
-	raw                  string
-	ExtraFields          map[string]apijson.Field
-}
-
-func (r benefitDeductionGetResponseCalculationJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *BenefitDeductionGetResponseCalculation) UnmarshalJSON(data []byte) (err error) {
-	*r = BenefitDeductionGetResponseCalculation{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r BenefitDeductionGetResponseCalculation) AsUnion() BenefitDeductionGetResponseCalculationUnion {
-	return r.union
-}
-
-type PublicBenefitDeductionWorker struct {
-	// The worker id.
-	ID string `json:"id" api:"required"`
-	// The worker first name.
-	FirstName string `json:"firstName" api:"required"`
-	// The worker last name.
-	LastName string                           `json:"lastName" api:"required"`
-	JSON     publicBenefitDeductionWorkerJSON `json:"-"`
-}
-
-// publicBenefitDeductionWorkerJSON contains the JSON metadata for the struct [PublicBenefitDeductionWorker]
-type publicBenefitDeductionWorkerJSON struct {
-	ID          apijson.Field
-	FirstName   apijson.Field
-	LastName    apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicBenefitDeductionWorker) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicBenefitDeductionWorkerJSON) RawJSON() string {
-	return r.raw
-}
-
 type PublicBenefitDeductionCalculation struct {
 	Type PublicBenefitDeductionCalculationType `json:"type" api:"required"`
 	// A monetary amount with its currency and server-formatted display value.
@@ -688,91 +576,64 @@ func (r PublicBenefitDeductionCalculation) AsUnion() PublicBenefitDeductionCalcu
 	return r.union
 }
 
-type BenefitDeductionGetResponsePlanUnion interface {
-	implementsBenefitDeductionGetResponsePlan()
+type BenefitDeductionListResponse struct {
+	HasMore bool                             `json:"hasMore" api:"required"`
+	Count   int64                            `json:"count" api:"required"`
+	Data    []PublicBenefitDeduction         `json:"data" api:"required"`
+	JSON    benefitDeductionListResponseJSON `json:"-"`
 }
 
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*BenefitDeductionGetResponsePlanUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponsePlanHealthPlanReference{}),
-			DiscriminatorValue: "health_plan",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponsePlanRetirementPlanReference{}),
-			DiscriminatorValue: "retirement_plan",
-		},
-	)
+// benefitDeductionListResponseJSON contains the JSON metadata for the struct [BenefitDeductionListResponse]
+type benefitDeductionListResponseJSON struct {
+	HasMore     apijson.Field
+	Count       apijson.Field
+	Data        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
-type BenefitDeductionGetResponsePlanType string
+func (r *BenefitDeductionListResponse) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
 
-const (
-	BenefitDeductionGetResponsePlanTypeHealthPlan     BenefitDeductionGetResponsePlanType = "health_plan"
-	BenefitDeductionGetResponsePlanTypeRetirementPlan BenefitDeductionGetResponsePlanType = "retirement_plan"
-)
+func (r benefitDeductionListResponseJSON) RawJSON() string {
+	return r.raw
+}
 
-func (r BenefitDeductionGetResponsePlanType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponsePlanTypeHealthPlan, BenefitDeductionGetResponsePlanTypeRetirementPlan:
-		return true
+type PublicBenefitDeductionPlan2 struct {
+	Type PublicBenefitDeductionPlan2Type `json:"type" api:"required"`
+	// The tag of a company health plan.
+	ID string `json:"id" api:"required"`
+	// The associated health plan name.
+	Name  string                          `json:"name" api:"required"`
+	JSON  publicBenefitDeductionPlan2JSON `json:"-"`
+	union PublicBenefitDeductionPlan2Union
+}
+
+// publicBenefitDeductionPlan2JSON contains the JSON metadata for the struct [PublicBenefitDeductionPlan2]
+type publicBenefitDeductionPlan2JSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r publicBenefitDeductionPlan2JSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *PublicBenefitDeductionPlan2) UnmarshalJSON(data []byte) (err error) {
+	*r = PublicBenefitDeductionPlan2{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
 	}
-	return false
+	return apijson.Port(r.union, &r)
 }
 
-type BenefitDeductionGetResponseCalculationUnion interface {
-	implementsBenefitDeductionGetResponseCalculation()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*BenefitDeductionGetResponseCalculationUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation{}),
-			DiscriminatorValue: "fixed_amount",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(BenefitDeductionGetResponseCalculationPercentageBenefitCalculation{}),
-			DiscriminatorValue: "percentage",
-		},
-	)
-}
-
-type BenefitDeductionGetResponseCalculationType string
-
-const (
-	BenefitDeductionGetResponseCalculationTypeFixedAmount BenefitDeductionGetResponseCalculationType = "fixed_amount"
-	BenefitDeductionGetResponseCalculationTypePercentage  BenefitDeductionGetResponseCalculationType = "percentage"
-)
-
-func (r BenefitDeductionGetResponseCalculationType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationTypeFixedAmount, BenefitDeductionGetResponseCalculationTypePercentage:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionGetResponseCalculationFrequency string
-
-const (
-	BenefitDeductionGetResponseCalculationFrequencyPerPaycheck BenefitDeductionGetResponseCalculationFrequency = "per_paycheck"
-	BenefitDeductionGetResponseCalculationFrequencyMonthly     BenefitDeductionGetResponseCalculationFrequency = "monthly"
-)
-
-func (r BenefitDeductionGetResponseCalculationFrequency) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationFrequencyPerPaycheck, BenefitDeductionGetResponseCalculationFrequencyMonthly:
-		return true
-	}
-	return false
+func (r PublicBenefitDeductionPlan2) AsUnion() PublicBenefitDeductionPlan2Union {
+	return r.union
 }
 
 type PublicBenefitDeductionCalculationUnion interface {
@@ -785,12 +646,12 @@ func init() {
 		"type",
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(PublicBenefitDeductionCalculationFixedAmountBenefitCalculation{}),
+			Type:               reflect.TypeOf(FixedAmountBenefitCalculation{}),
 			DiscriminatorValue: "fixed_amount",
 		},
 		apijson.UnionVariant{
 			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(PublicBenefitDeductionCalculationPercentageBenefitCalculation{}),
+			Type:               reflect.TypeOf(PercentageBenefitCalculation{}),
 			DiscriminatorValue: "percentage",
 		},
 	)
@@ -826,388 +687,46 @@ func (r PublicBenefitDeductionCalculationFrequency) IsKnown() bool {
 	return false
 }
 
-type BenefitDeductionGetResponsePlanHealthPlanReference struct {
-	Type BenefitDeductionGetResponsePlanHealthPlanReferenceType `json:"type" api:"required"`
-	// The tag of a company health plan.
-	ID string `json:"id" api:"required"`
-	// The associated health plan name.
-	Name string                                                 `json:"name" api:"required"`
-	JSON benefitDeductionGetResponsePlanHealthPlanReferenceJSON `json:"-"`
+type PublicBenefitDeductionPlan2Union interface {
+	implementsPublicBenefitDeductionPlan2()
 }
 
-// benefitDeductionGetResponsePlanHealthPlanReferenceJSON contains the JSON metadata for the struct [BenefitDeductionGetResponsePlanHealthPlanReference]
-type benefitDeductionGetResponsePlanHealthPlanReferenceJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*PublicBenefitDeductionPlan2Union)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(HealthPlanReference{}),
+			DiscriminatorValue: "health_plan",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(RetirementPlanReference{}),
+			DiscriminatorValue: "retirement_plan",
+		},
+	)
 }
 
-func (r *BenefitDeductionGetResponsePlanHealthPlanReference) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponsePlanHealthPlanReferenceJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r BenefitDeductionGetResponsePlanHealthPlanReference) implementsBenefitDeductionGetResponsePlan() {
-}
-
-type BenefitDeductionGetResponsePlanRetirementPlanReference struct {
-	Type BenefitDeductionGetResponsePlanRetirementPlanReferenceType `json:"type" api:"required"`
-	// The tag of a company retirement plan.
-	ID string `json:"id" api:"required"`
-	// The associated retirement plan name.
-	Name string                                                     `json:"name" api:"required"`
-	JSON benefitDeductionGetResponsePlanRetirementPlanReferenceJSON `json:"-"`
-}
-
-// benefitDeductionGetResponsePlanRetirementPlanReferenceJSON contains the JSON metadata for the struct [BenefitDeductionGetResponsePlanRetirementPlanReference]
-type benefitDeductionGetResponsePlanRetirementPlanReferenceJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BenefitDeductionGetResponsePlanRetirementPlanReference) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponsePlanRetirementPlanReferenceJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r BenefitDeductionGetResponsePlanRetirementPlanReference) implementsBenefitDeductionGetResponsePlan() {
-}
-
-type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation struct {
-	Type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationType `json:"type" api:"required"`
-	// The fixed-amount expression frequency. Null for a one-time deduction.
-	Frequency BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequency `json:"frequency" api:"required,nullable"`
-	// A monetary amount with its currency and server-formatted display value.
-	EmployeeContribution shared.PublicMoneyAmount `json:"employeeContribution" api:"required"`
-	// A monetary amount with its currency and server-formatted display value.
-	EmployerContribution shared.PublicMoneyAmount                                                `json:"employerContribution" api:"required"`
-	JSON                 benefitDeductionGetResponseCalculationFixedAmountBenefitCalculationJSON `json:"-"`
-}
-
-// benefitDeductionGetResponseCalculationFixedAmountBenefitCalculationJSON contains the JSON metadata for the struct [BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation]
-type benefitDeductionGetResponseCalculationFixedAmountBenefitCalculationJSON struct {
-	Type                 apijson.Field
-	Frequency            apijson.Field
-	EmployeeContribution apijson.Field
-	EmployerContribution apijson.Field
-	raw                  string
-	ExtraFields          map[string]apijson.Field
-}
-
-func (r *BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponseCalculationFixedAmountBenefitCalculationJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculation) implementsBenefitDeductionGetResponseCalculation() {
-}
-
-type BenefitDeductionGetResponseCalculationPercentageBenefitCalculation struct {
-	Type BenefitDeductionGetResponseCalculationPercentageBenefitCalculationType `json:"type" api:"required"`
-	// A contribution expressed as a percentage of eligible earnings.
-	EmployeeContribution BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContribution `json:"employeeContribution" api:"required"`
-	// A contribution expressed as a percentage of eligible earnings.
-	EmployerContribution BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContribution `json:"employerContribution" api:"required"`
-	JSON                 benefitDeductionGetResponseCalculationPercentageBenefitCalculationJSON                 `json:"-"`
-}
-
-// benefitDeductionGetResponseCalculationPercentageBenefitCalculationJSON contains the JSON metadata for the struct [BenefitDeductionGetResponseCalculationPercentageBenefitCalculation]
-type benefitDeductionGetResponseCalculationPercentageBenefitCalculationJSON struct {
-	Type                 apijson.Field
-	EmployeeContribution apijson.Field
-	EmployerContribution apijson.Field
-	raw                  string
-	ExtraFields          map[string]apijson.Field
-}
-
-func (r *BenefitDeductionGetResponseCalculationPercentageBenefitCalculation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponseCalculationPercentageBenefitCalculationJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r BenefitDeductionGetResponseCalculationPercentageBenefitCalculation) implementsBenefitDeductionGetResponseCalculation() {
-}
-
-type PublicBenefitDeductionCalculationFixedAmountBenefitCalculation struct {
-	Type PublicBenefitDeductionCalculationFixedAmountBenefitCalculationType `json:"type" api:"required"`
-	// The fixed-amount expression frequency. Null for a one-time deduction.
-	Frequency PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequency `json:"frequency" api:"required,nullable"`
-	// A monetary amount with its currency and server-formatted display value.
-	EmployeeContribution shared.PublicMoneyAmount `json:"employeeContribution" api:"required"`
-	// A monetary amount with its currency and server-formatted display value.
-	EmployerContribution shared.PublicMoneyAmount                                           `json:"employerContribution" api:"required"`
-	JSON                 publicBenefitDeductionCalculationFixedAmountBenefitCalculationJSON `json:"-"`
-}
-
-// publicBenefitDeductionCalculationFixedAmountBenefitCalculationJSON contains the JSON metadata for the struct [PublicBenefitDeductionCalculationFixedAmountBenefitCalculation]
-type publicBenefitDeductionCalculationFixedAmountBenefitCalculationJSON struct {
-	Type                 apijson.Field
-	Frequency            apijson.Field
-	EmployeeContribution apijson.Field
-	EmployerContribution apijson.Field
-	raw                  string
-	ExtraFields          map[string]apijson.Field
-}
-
-func (r *PublicBenefitDeductionCalculationFixedAmountBenefitCalculation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicBenefitDeductionCalculationFixedAmountBenefitCalculationJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r PublicBenefitDeductionCalculationFixedAmountBenefitCalculation) implementsPublicBenefitDeductionCalculation() {
-}
-
-type PublicBenefitDeductionCalculationPercentageBenefitCalculation struct {
-	Type PublicBenefitDeductionCalculationPercentageBenefitCalculationType `json:"type" api:"required"`
-	// A contribution expressed as a percentage of eligible earnings.
-	EmployeeContribution PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContribution `json:"employeeContribution" api:"required"`
-	// A contribution expressed as a percentage of eligible earnings.
-	EmployerContribution PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContribution `json:"employerContribution" api:"required"`
-	JSON                 publicBenefitDeductionCalculationPercentageBenefitCalculationJSON                 `json:"-"`
-}
-
-// publicBenefitDeductionCalculationPercentageBenefitCalculationJSON contains the JSON metadata for the struct [PublicBenefitDeductionCalculationPercentageBenefitCalculation]
-type publicBenefitDeductionCalculationPercentageBenefitCalculationJSON struct {
-	Type                 apijson.Field
-	EmployeeContribution apijson.Field
-	EmployerContribution apijson.Field
-	raw                  string
-	ExtraFields          map[string]apijson.Field
-}
-
-func (r *PublicBenefitDeductionCalculationPercentageBenefitCalculation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicBenefitDeductionCalculationPercentageBenefitCalculationJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r PublicBenefitDeductionCalculationPercentageBenefitCalculation) implementsPublicBenefitDeductionCalculation() {
-}
-
-type BenefitDeductionGetResponsePlanHealthPlanReferenceType string
+type PublicBenefitDeductionPlan2Type string
 
 const (
-	BenefitDeductionGetResponsePlanHealthPlanReferenceTypeHealthPlan BenefitDeductionGetResponsePlanHealthPlanReferenceType = "health_plan"
+	PublicBenefitDeductionPlan2TypeHealthPlan     PublicBenefitDeductionPlan2Type = "health_plan"
+	PublicBenefitDeductionPlan2TypeRetirementPlan PublicBenefitDeductionPlan2Type = "retirement_plan"
 )
 
-func (r BenefitDeductionGetResponsePlanHealthPlanReferenceType) IsKnown() bool {
+func (r PublicBenefitDeductionPlan2Type) IsKnown() bool {
 	switch r {
-	case BenefitDeductionGetResponsePlanHealthPlanReferenceTypeHealthPlan:
+	case PublicBenefitDeductionPlan2TypeHealthPlan, PublicBenefitDeductionPlan2TypeRetirementPlan:
 		return true
 	}
 	return false
 }
 
-type BenefitDeductionGetResponsePlanRetirementPlanReferenceType string
+func (r FixedAmountBenefitCalculation) implementsPublicBenefitDeductionCalculation() {}
 
-const (
-	BenefitDeductionGetResponsePlanRetirementPlanReferenceTypeRetirementPlan BenefitDeductionGetResponsePlanRetirementPlanReferenceType = "retirement_plan"
-)
+func (r PercentageBenefitCalculation) implementsPublicBenefitDeductionCalculation() {}
 
-func (r BenefitDeductionGetResponsePlanRetirementPlanReferenceType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponsePlanRetirementPlanReferenceTypeRetirementPlan:
-		return true
-	}
-	return false
-}
+func (r HealthPlanReference) implementsPublicBenefitDeductionPlan2() {}
 
-type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationType string
-
-const (
-	BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationTypeFixedAmount BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationType = "fixed_amount"
-)
-
-func (r BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationTypeFixedAmount:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequency string
-
-const (
-	BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequencyPerPaycheck BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequency = "per_paycheck"
-	BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequencyMonthly     BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequency = "monthly"
-)
-
-func (r BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequency) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequencyPerPaycheck, BenefitDeductionGetResponseCalculationFixedAmountBenefitCalculationFrequencyMonthly:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionGetResponseCalculationPercentageBenefitCalculationType string
-
-const (
-	BenefitDeductionGetResponseCalculationPercentageBenefitCalculationTypePercentage BenefitDeductionGetResponseCalculationPercentageBenefitCalculationType = "percentage"
-)
-
-func (r BenefitDeductionGetResponseCalculationPercentageBenefitCalculationType) IsKnown() bool {
-	switch r {
-	case BenefitDeductionGetResponseCalculationPercentageBenefitCalculationTypePercentage:
-		return true
-	}
-	return false
-}
-
-type BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContribution struct {
-	Percentage interface{} `json:"percentage" api:"required"`
-	// The server-formatted percentage, for example "3%".
-	Display string                                                                                     `json:"display" api:"required"`
-	JSON    benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContributionJSON `json:"-"`
-}
-
-// benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContributionJSON contains the JSON metadata for the struct [BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContribution]
-type benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContributionJSON struct {
-	Percentage  apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContribution) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployeeContributionJSON) RawJSON() string {
-	return r.raw
-}
-
-type BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContribution struct {
-	Percentage interface{} `json:"percentage" api:"required"`
-	// The server-formatted percentage, for example "3%".
-	Display string                                                                                     `json:"display" api:"required"`
-	JSON    benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContributionJSON `json:"-"`
-}
-
-// benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContributionJSON contains the JSON metadata for the struct [BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContribution]
-type benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContributionJSON struct {
-	Percentage  apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BenefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContribution) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitDeductionGetResponseCalculationPercentageBenefitCalculationEmployerContributionJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicBenefitDeductionCalculationFixedAmountBenefitCalculationType string
-
-const (
-	PublicBenefitDeductionCalculationFixedAmountBenefitCalculationTypeFixedAmount PublicBenefitDeductionCalculationFixedAmountBenefitCalculationType = "fixed_amount"
-)
-
-func (r PublicBenefitDeductionCalculationFixedAmountBenefitCalculationType) IsKnown() bool {
-	switch r {
-	case PublicBenefitDeductionCalculationFixedAmountBenefitCalculationTypeFixedAmount:
-		return true
-	}
-	return false
-}
-
-type PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequency string
-
-const (
-	PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequencyPerPaycheck PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequency = "per_paycheck"
-	PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequencyMonthly     PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequency = "monthly"
-)
-
-func (r PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequency) IsKnown() bool {
-	switch r {
-	case PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequencyPerPaycheck, PublicBenefitDeductionCalculationFixedAmountBenefitCalculationFrequencyMonthly:
-		return true
-	}
-	return false
-}
-
-type PublicBenefitDeductionCalculationPercentageBenefitCalculationType string
-
-const (
-	PublicBenefitDeductionCalculationPercentageBenefitCalculationTypePercentage PublicBenefitDeductionCalculationPercentageBenefitCalculationType = "percentage"
-)
-
-func (r PublicBenefitDeductionCalculationPercentageBenefitCalculationType) IsKnown() bool {
-	switch r {
-	case PublicBenefitDeductionCalculationPercentageBenefitCalculationTypePercentage:
-		return true
-	}
-	return false
-}
-
-type PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContribution struct {
-	Percentage interface{} `json:"percentage" api:"required"`
-	// The server-formatted percentage, for example "3%".
-	Display string                                                                                `json:"display" api:"required"`
-	JSON    publicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContributionJSON `json:"-"`
-}
-
-// publicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContributionJSON contains the JSON metadata for the struct [PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContribution]
-type publicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContributionJSON struct {
-	Percentage  apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContribution) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicBenefitDeductionCalculationPercentageBenefitCalculationEmployeeContributionJSON) RawJSON() string {
-	return r.raw
-}
-
-type PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContribution struct {
-	Percentage interface{} `json:"percentage" api:"required"`
-	// The server-formatted percentage, for example "3%".
-	Display string                                                                                `json:"display" api:"required"`
-	JSON    publicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContributionJSON `json:"-"`
-}
-
-// publicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContributionJSON contains the JSON metadata for the struct [PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContribution]
-type publicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContributionJSON struct {
-	Percentage  apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PublicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContribution) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r publicBenefitDeductionCalculationPercentageBenefitCalculationEmployerContributionJSON) RawJSON() string {
-	return r.raw
-}
+func (r RetirementPlanReference) implementsPublicBenefitDeductionPlan2() {}

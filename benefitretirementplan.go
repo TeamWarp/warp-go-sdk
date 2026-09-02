@@ -49,7 +49,7 @@ func NewBenefitRetirementPlanService(opts ...option.RequestOption) (r *BenefitRe
 //
 //	retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
 //		Limit:    sdk.F[string]("limit"),
-//		Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
+//		Statuses: sdk.F[[]sdk.PublicRetirementPlanStatus]([]sdk.PublicRetirementPlanStatus{"active"}),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -73,7 +73,7 @@ func (r *BenefitRetirementPlanService) List(ctx context.Context, query BenefitRe
 //
 // Returns:
 //
-//	*BenefitRetirementPlanGetResponse: A company retirement plan available through Warp.
+//	*PublicRetirementPlan: A company retirement plan available through Warp.
 //
 // Example:
 //
@@ -83,7 +83,7 @@ func (r *BenefitRetirementPlanService) List(ctx context.Context, query BenefitRe
 //	}
 //
 //	fmt.Println(retirementPlan)
-func (r *BenefitRetirementPlanService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *BenefitRetirementPlanGetResponse, err error) {
+func (r *BenefitRetirementPlanService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PublicRetirementPlan, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -188,106 +188,12 @@ func (r PublicRetirementPlanStatus) IsKnown() bool {
 	return false
 }
 
-type BenefitRetirementPlanGetResponse struct {
-	// The tag of a company retirement plan.
-	ID string `json:"id" api:"required"`
-	// The retirement plan type.
-	Type BenefitRetirementPlanGetResponseType `json:"type" api:"required"`
-	// The company-facing plan name.
-	Name string `json:"name" api:"required"`
-	// The system administering the plan. Manual plans are administered by the company
-	// outside a connected provider.
-	Provider           BenefitRetirementPlanGetResponseProvider `json:"provider" api:"required"`
-	EffectiveStartDate string                                   `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string                                   `json:"effectiveEndDate" api:"required,nullable"`
-	// The public lifecycle status of a retirement plan.
-	Status    BenefitRetirementPlanGetResponseStatus `json:"status" api:"required"`
-	CreatedAt string                                 `json:"createdAt" api:"required"`
-	UpdatedAt string                                 `json:"updatedAt" api:"required"`
-	JSON      benefitRetirementPlanGetResponseJSON   `json:"-"`
-}
-
-// benefitRetirementPlanGetResponseJSON contains the JSON metadata for the struct [BenefitRetirementPlanGetResponse]
-type benefitRetirementPlanGetResponseJSON struct {
-	ID                 apijson.Field
-	Type               apijson.Field
-	Name               apijson.Field
-	Provider           apijson.Field
-	EffectiveStartDate apijson.Field
-	EffectiveEndDate   apijson.Field
-	Status             apijson.Field
-	CreatedAt          apijson.Field
-	UpdatedAt          apijson.Field
-	raw                string
-	ExtraFields        map[string]apijson.Field
-}
-
-func (r *BenefitRetirementPlanGetResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitRetirementPlanGetResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BenefitRetirementPlanGetResponseType string
-
-const (
-	BenefitRetirementPlanGetResponseType401k          BenefitRetirementPlanGetResponseType = "401k"
-	BenefitRetirementPlanGetResponseTypeRoth401k      BenefitRetirementPlanGetResponseType = "roth_401k"
-	BenefitRetirementPlanGetResponseType403b          BenefitRetirementPlanGetResponseType = "403b"
-	BenefitRetirementPlanGetResponseTypeRoth403b      BenefitRetirementPlanGetResponseType = "roth_403b"
-	BenefitRetirementPlanGetResponseType457           BenefitRetirementPlanGetResponseType = "457"
-	BenefitRetirementPlanGetResponseTypeRoth457       BenefitRetirementPlanGetResponseType = "roth_457"
-	BenefitRetirementPlanGetResponseTypeSimpleIra     BenefitRetirementPlanGetResponseType = "simple_ira"
-	BenefitRetirementPlanGetResponseTypeRothSimpleIra BenefitRetirementPlanGetResponseType = "roth_simple_ira"
-)
-
-func (r BenefitRetirementPlanGetResponseType) IsKnown() bool {
-	switch r {
-	case BenefitRetirementPlanGetResponseType401k, BenefitRetirementPlanGetResponseTypeRoth401k, BenefitRetirementPlanGetResponseType403b, BenefitRetirementPlanGetResponseTypeRoth403b, BenefitRetirementPlanGetResponseType457, BenefitRetirementPlanGetResponseTypeRoth457, BenefitRetirementPlanGetResponseTypeSimpleIra, BenefitRetirementPlanGetResponseTypeRothSimpleIra:
-		return true
-	}
-	return false
-}
-
-type BenefitRetirementPlanGetResponseProvider string
-
-const (
-	BenefitRetirementPlanGetResponseProviderManual        BenefitRetirementPlanGetResponseProvider = "manual"
-	BenefitRetirementPlanGetResponseProviderHumanInterest BenefitRetirementPlanGetResponseProvider = "human_interest"
-	BenefitRetirementPlanGetResponseProviderAccrue        BenefitRetirementPlanGetResponseProvider = "accrue"
-)
-
-func (r BenefitRetirementPlanGetResponseProvider) IsKnown() bool {
-	switch r {
-	case BenefitRetirementPlanGetResponseProviderManual, BenefitRetirementPlanGetResponseProviderHumanInterest, BenefitRetirementPlanGetResponseProviderAccrue:
-		return true
-	}
-	return false
-}
-
-type BenefitRetirementPlanGetResponseStatus string
-
-const (
-	BenefitRetirementPlanGetResponseStatusActive     BenefitRetirementPlanGetResponseStatus = "active"
-	BenefitRetirementPlanGetResponseStatusTerminated BenefitRetirementPlanGetResponseStatus = "terminated"
-)
-
-func (r BenefitRetirementPlanGetResponseStatus) IsKnown() bool {
-	switch r {
-	case BenefitRetirementPlanGetResponseStatusActive, BenefitRetirementPlanGetResponseStatusTerminated:
-		return true
-	}
-	return false
-}
-
 type BenefitRetirementPlanListParams struct {
-	Limit    param.Field[string]                                  `query:"limit" api:"required"`
-	Statuses param.Field[[]BenefitRetirementPlanListParamsStatus] `query:"statuses" api:"required"`
-	AfterID  param.Field[string]                                  `query:"afterId"`
-	BeforeID param.Field[string]                                  `query:"beforeId"`
-	Types    param.Field[[]BenefitRetirementPlanListParamsType]   `query:"types"`
+	Limit    param.Field[string]                                `query:"limit" api:"required"`
+	Statuses param.Field[[]PublicRetirementPlanStatus]          `query:"statuses" api:"required"`
+	AfterID  param.Field[string]                                `query:"afterId"`
+	BeforeID param.Field[string]                                `query:"beforeId"`
+	Types    param.Field[[]BenefitRetirementPlanListParamsType] `query:"types"`
 }
 
 // URLQuery serializes [BenefitRetirementPlanListParams]'s query parameters as `url.Values`.
@@ -314,21 +220,6 @@ const (
 func (r BenefitRetirementPlanListParamsType) IsKnown() bool {
 	switch r {
 	case BenefitRetirementPlanListParamsType401k, BenefitRetirementPlanListParamsTypeRoth401k, BenefitRetirementPlanListParamsType403b, BenefitRetirementPlanListParamsTypeRoth403b, BenefitRetirementPlanListParamsType457, BenefitRetirementPlanListParamsTypeRoth457, BenefitRetirementPlanListParamsTypeSimpleIra, BenefitRetirementPlanListParamsTypeRothSimpleIra:
-		return true
-	}
-	return false
-}
-
-type BenefitRetirementPlanListParamsStatus string
-
-const (
-	BenefitRetirementPlanListParamsStatusActive     BenefitRetirementPlanListParamsStatus = "active"
-	BenefitRetirementPlanListParamsStatusTerminated BenefitRetirementPlanListParamsStatus = "terminated"
-)
-
-func (r BenefitRetirementPlanListParamsStatus) IsKnown() bool {
-	switch r {
-	case BenefitRetirementPlanListParamsStatusActive, BenefitRetirementPlanListParamsStatusTerminated:
 		return true
 	}
 	return false

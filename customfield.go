@@ -400,6 +400,371 @@ func (r *CustomFieldService) ClearValue(ctx context.Context, body CustomFieldCle
 	return err
 }
 
+type TextCustomFieldValue struct {
+	Type  TextCustomFieldValueType `json:"type" api:"required"`
+	Value string                   `json:"value" api:"required"`
+	JSON  textCustomFieldValueJSON `json:"-"`
+}
+
+// textCustomFieldValueJSON contains the JSON metadata for the struct [TextCustomFieldValue]
+type textCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *TextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r textCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type TextCustomFieldValueType string
+
+const (
+	TextCustomFieldValueTypeText TextCustomFieldValueType = "text"
+)
+
+func (r TextCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case TextCustomFieldValueTypeText:
+		return true
+	}
+	return false
+}
+
+type NumberCustomFieldValue struct {
+	Type  NumberCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                `json:"value" api:"required"`
+	JSON  numberCustomFieldValueJSON `json:"-"`
+}
+
+// numberCustomFieldValueJSON contains the JSON metadata for the struct [NumberCustomFieldValue]
+type numberCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *NumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r numberCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type NumberCustomFieldValueType string
+
+const (
+	NumberCustomFieldValueTypeNumber NumberCustomFieldValueType = "number"
+)
+
+func (r NumberCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case NumberCustomFieldValueTypeNumber:
+		return true
+	}
+	return false
+}
+
+type DateCustomFieldValue struct {
+	Type  DateCustomFieldValueType `json:"type" api:"required"`
+	Value string                   `json:"value" api:"required"`
+	JSON  dateCustomFieldValueJSON `json:"-"`
+}
+
+// dateCustomFieldValueJSON contains the JSON metadata for the struct [DateCustomFieldValue]
+type dateCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *DateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r dateCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type DateCustomFieldValueType string
+
+const (
+	DateCustomFieldValueTypeDate DateCustomFieldValueType = "date"
+)
+
+func (r DateCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case DateCustomFieldValueTypeDate:
+		return true
+	}
+	return false
+}
+
+type BooleanCustomFieldValue struct {
+	Type  BooleanCustomFieldValueType `json:"type" api:"required"`
+	Value bool                        `json:"value" api:"required"`
+	JSON  booleanCustomFieldValueJSON `json:"-"`
+}
+
+// booleanCustomFieldValueJSON contains the JSON metadata for the struct [BooleanCustomFieldValue]
+type booleanCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *BooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r booleanCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type BooleanCustomFieldValueType string
+
+const (
+	BooleanCustomFieldValueTypeBoolean BooleanCustomFieldValueType = "boolean"
+)
+
+func (r BooleanCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case BooleanCustomFieldValueTypeBoolean:
+		return true
+	}
+	return false
+}
+
+type CurrencyCustomFieldValue struct {
+	Type CurrencyCustomFieldValueType `json:"type" api:"required"`
+	// Integer base units of currencyCode (e.g. cents).
+	Amount       int64                                `json:"amount" api:"required"`
+	CurrencyCode CurrencyCustomFieldValueCurrencyCode `json:"currencyCode" api:"required"`
+	JSON         currencyCustomFieldValueJSON         `json:"-"`
+}
+
+// currencyCustomFieldValueJSON contains the JSON metadata for the struct [CurrencyCustomFieldValue]
+type currencyCustomFieldValueJSON struct {
+	Type         apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *CurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r currencyCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type CurrencyCustomFieldValueType string
+
+const (
+	CurrencyCustomFieldValueTypeCurrency CurrencyCustomFieldValueType = "currency"
+)
+
+func (r CurrencyCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case CurrencyCustomFieldValueTypeCurrency:
+		return true
+	}
+	return false
+}
+
+type CurrencyCustomFieldValueCurrencyCode string
+
+const (
+	CurrencyCustomFieldValueCurrencyCodeUsd CurrencyCustomFieldValueCurrencyCode = "USD"
+	CurrencyCustomFieldValueCurrencyCodeAud CurrencyCustomFieldValueCurrencyCode = "AUD"
+	CurrencyCustomFieldValueCurrencyCodeBgn CurrencyCustomFieldValueCurrencyCode = "BGN"
+	CurrencyCustomFieldValueCurrencyCodeBrl CurrencyCustomFieldValueCurrencyCode = "BRL"
+	CurrencyCustomFieldValueCurrencyCodeCad CurrencyCustomFieldValueCurrencyCode = "CAD"
+	CurrencyCustomFieldValueCurrencyCodeChf CurrencyCustomFieldValueCurrencyCode = "CHF"
+	CurrencyCustomFieldValueCurrencyCodeCzk CurrencyCustomFieldValueCurrencyCode = "CZK"
+	CurrencyCustomFieldValueCurrencyCodeDkk CurrencyCustomFieldValueCurrencyCode = "DKK"
+	CurrencyCustomFieldValueCurrencyCodeEur CurrencyCustomFieldValueCurrencyCode = "EUR"
+	CurrencyCustomFieldValueCurrencyCodeGbp CurrencyCustomFieldValueCurrencyCode = "GBP"
+	CurrencyCustomFieldValueCurrencyCodeHkd CurrencyCustomFieldValueCurrencyCode = "HKD"
+	CurrencyCustomFieldValueCurrencyCodeHuf CurrencyCustomFieldValueCurrencyCode = "HUF"
+	CurrencyCustomFieldValueCurrencyCodeIdr CurrencyCustomFieldValueCurrencyCode = "IDR"
+	CurrencyCustomFieldValueCurrencyCodeInr CurrencyCustomFieldValueCurrencyCode = "INR"
+	CurrencyCustomFieldValueCurrencyCodeJpy CurrencyCustomFieldValueCurrencyCode = "JPY"
+	CurrencyCustomFieldValueCurrencyCodeMyr CurrencyCustomFieldValueCurrencyCode = "MYR"
+	CurrencyCustomFieldValueCurrencyCodeNok CurrencyCustomFieldValueCurrencyCode = "NOK"
+	CurrencyCustomFieldValueCurrencyCodeNzd CurrencyCustomFieldValueCurrencyCode = "NZD"
+	CurrencyCustomFieldValueCurrencyCodeCny CurrencyCustomFieldValueCurrencyCode = "CNY"
+	CurrencyCustomFieldValueCurrencyCodePln CurrencyCustomFieldValueCurrencyCode = "PLN"
+	CurrencyCustomFieldValueCurrencyCodeRon CurrencyCustomFieldValueCurrencyCode = "RON"
+	CurrencyCustomFieldValueCurrencyCodeTry CurrencyCustomFieldValueCurrencyCode = "TRY"
+	CurrencyCustomFieldValueCurrencyCodeSek CurrencyCustomFieldValueCurrencyCode = "SEK"
+	CurrencyCustomFieldValueCurrencyCodeSgd CurrencyCustomFieldValueCurrencyCode = "SGD"
+	CurrencyCustomFieldValueCurrencyCodeAed CurrencyCustomFieldValueCurrencyCode = "AED"
+	CurrencyCustomFieldValueCurrencyCodeArs CurrencyCustomFieldValueCurrencyCode = "ARS"
+	CurrencyCustomFieldValueCurrencyCodeBdt CurrencyCustomFieldValueCurrencyCode = "BDT"
+	CurrencyCustomFieldValueCurrencyCodeBwp CurrencyCustomFieldValueCurrencyCode = "BWP"
+	CurrencyCustomFieldValueCurrencyCodeClp CurrencyCustomFieldValueCurrencyCode = "CLP"
+	CurrencyCustomFieldValueCurrencyCodeCop CurrencyCustomFieldValueCurrencyCode = "COP"
+	CurrencyCustomFieldValueCurrencyCodeCrc CurrencyCustomFieldValueCurrencyCode = "CRC"
+	CurrencyCustomFieldValueCurrencyCodeEgp CurrencyCustomFieldValueCurrencyCode = "EGP"
+	CurrencyCustomFieldValueCurrencyCodeFjd CurrencyCustomFieldValueCurrencyCode = "FJD"
+	CurrencyCustomFieldValueCurrencyCodeGel CurrencyCustomFieldValueCurrencyCode = "GEL"
+	CurrencyCustomFieldValueCurrencyCodeGhs CurrencyCustomFieldValueCurrencyCode = "GHS"
+	CurrencyCustomFieldValueCurrencyCodeIls CurrencyCustomFieldValueCurrencyCode = "ILS"
+	CurrencyCustomFieldValueCurrencyCodeKes CurrencyCustomFieldValueCurrencyCode = "KES"
+	CurrencyCustomFieldValueCurrencyCodeKrw CurrencyCustomFieldValueCurrencyCode = "KRW"
+	CurrencyCustomFieldValueCurrencyCodeLkr CurrencyCustomFieldValueCurrencyCode = "LKR"
+	CurrencyCustomFieldValueCurrencyCodeMad CurrencyCustomFieldValueCurrencyCode = "MAD"
+	CurrencyCustomFieldValueCurrencyCodeMxn CurrencyCustomFieldValueCurrencyCode = "MXN"
+	CurrencyCustomFieldValueCurrencyCodeNpr CurrencyCustomFieldValueCurrencyCode = "NPR"
+	CurrencyCustomFieldValueCurrencyCodePhp CurrencyCustomFieldValueCurrencyCode = "PHP"
+	CurrencyCustomFieldValueCurrencyCodePkr CurrencyCustomFieldValueCurrencyCode = "PKR"
+	CurrencyCustomFieldValueCurrencyCodeThb CurrencyCustomFieldValueCurrencyCode = "THB"
+	CurrencyCustomFieldValueCurrencyCodeUah CurrencyCustomFieldValueCurrencyCode = "UAH"
+	CurrencyCustomFieldValueCurrencyCodeUgx CurrencyCustomFieldValueCurrencyCode = "UGX"
+	CurrencyCustomFieldValueCurrencyCodeUyu CurrencyCustomFieldValueCurrencyCode = "UYU"
+	CurrencyCustomFieldValueCurrencyCodeVnd CurrencyCustomFieldValueCurrencyCode = "VND"
+	CurrencyCustomFieldValueCurrencyCodeZar CurrencyCustomFieldValueCurrencyCode = "ZAR"
+	CurrencyCustomFieldValueCurrencyCodeZmw CurrencyCustomFieldValueCurrencyCode = "ZMW"
+	CurrencyCustomFieldValueCurrencyCodeTnd CurrencyCustomFieldValueCurrencyCode = "TND"
+	CurrencyCustomFieldValueCurrencyCodeNgn CurrencyCustomFieldValueCurrencyCode = "NGN"
+	CurrencyCustomFieldValueCurrencyCodeRsd CurrencyCustomFieldValueCurrencyCode = "RSD"
+	CurrencyCustomFieldValueCurrencyCodeTwd CurrencyCustomFieldValueCurrencyCode = "TWD"
+	CurrencyCustomFieldValueCurrencyCodeGtq CurrencyCustomFieldValueCurrencyCode = "GTQ"
+	CurrencyCustomFieldValueCurrencyCodeHnl CurrencyCustomFieldValueCurrencyCode = "HNL"
+	CurrencyCustomFieldValueCurrencyCodeDop CurrencyCustomFieldValueCurrencyCode = "DOP"
+	CurrencyCustomFieldValueCurrencyCodeSar CurrencyCustomFieldValueCurrencyCode = "SAR"
+	CurrencyCustomFieldValueCurrencyCodeXaf CurrencyCustomFieldValueCurrencyCode = "XAF"
+	CurrencyCustomFieldValueCurrencyCodePen CurrencyCustomFieldValueCurrencyCode = "PEN"
+)
+
+func (r CurrencyCustomFieldValueCurrencyCode) IsKnown() bool {
+	switch r {
+	case CurrencyCustomFieldValueCurrencyCodeUsd, CurrencyCustomFieldValueCurrencyCodeAud, CurrencyCustomFieldValueCurrencyCodeBgn, CurrencyCustomFieldValueCurrencyCodeBrl, CurrencyCustomFieldValueCurrencyCodeCad, CurrencyCustomFieldValueCurrencyCodeChf, CurrencyCustomFieldValueCurrencyCodeCzk, CurrencyCustomFieldValueCurrencyCodeDkk, CurrencyCustomFieldValueCurrencyCodeEur, CurrencyCustomFieldValueCurrencyCodeGbp, CurrencyCustomFieldValueCurrencyCodeHkd, CurrencyCustomFieldValueCurrencyCodeHuf, CurrencyCustomFieldValueCurrencyCodeIdr, CurrencyCustomFieldValueCurrencyCodeInr, CurrencyCustomFieldValueCurrencyCodeJpy, CurrencyCustomFieldValueCurrencyCodeMyr, CurrencyCustomFieldValueCurrencyCodeNok, CurrencyCustomFieldValueCurrencyCodeNzd, CurrencyCustomFieldValueCurrencyCodeCny, CurrencyCustomFieldValueCurrencyCodePln, CurrencyCustomFieldValueCurrencyCodeRon, CurrencyCustomFieldValueCurrencyCodeTry, CurrencyCustomFieldValueCurrencyCodeSek, CurrencyCustomFieldValueCurrencyCodeSgd, CurrencyCustomFieldValueCurrencyCodeAed, CurrencyCustomFieldValueCurrencyCodeArs, CurrencyCustomFieldValueCurrencyCodeBdt, CurrencyCustomFieldValueCurrencyCodeBwp, CurrencyCustomFieldValueCurrencyCodeClp, CurrencyCustomFieldValueCurrencyCodeCop, CurrencyCustomFieldValueCurrencyCodeCrc, CurrencyCustomFieldValueCurrencyCodeEgp, CurrencyCustomFieldValueCurrencyCodeFjd, CurrencyCustomFieldValueCurrencyCodeGel, CurrencyCustomFieldValueCurrencyCodeGhs, CurrencyCustomFieldValueCurrencyCodeIls, CurrencyCustomFieldValueCurrencyCodeKes, CurrencyCustomFieldValueCurrencyCodeKrw, CurrencyCustomFieldValueCurrencyCodeLkr, CurrencyCustomFieldValueCurrencyCodeMad, CurrencyCustomFieldValueCurrencyCodeMxn, CurrencyCustomFieldValueCurrencyCodeNpr, CurrencyCustomFieldValueCurrencyCodePhp, CurrencyCustomFieldValueCurrencyCodePkr, CurrencyCustomFieldValueCurrencyCodeThb, CurrencyCustomFieldValueCurrencyCodeUah, CurrencyCustomFieldValueCurrencyCodeUgx, CurrencyCustomFieldValueCurrencyCodeUyu, CurrencyCustomFieldValueCurrencyCodeVnd, CurrencyCustomFieldValueCurrencyCodeZar, CurrencyCustomFieldValueCurrencyCodeZmw, CurrencyCustomFieldValueCurrencyCodeTnd, CurrencyCustomFieldValueCurrencyCodeNgn, CurrencyCustomFieldValueCurrencyCodeRsd, CurrencyCustomFieldValueCurrencyCodeTwd, CurrencyCustomFieldValueCurrencyCodeGtq, CurrencyCustomFieldValueCurrencyCodeHnl, CurrencyCustomFieldValueCurrencyCodeDop, CurrencyCustomFieldValueCurrencyCodeSar, CurrencyCustomFieldValueCurrencyCodeXaf, CurrencyCustomFieldValueCurrencyCodePen:
+		return true
+	}
+	return false
+}
+
+type PercentageCustomFieldValue struct {
+	Type  PercentageCustomFieldValueType `json:"type" api:"required"`
+	Value interface{}                    `json:"value" api:"required"`
+	JSON  percentageCustomFieldValueJSON `json:"-"`
+}
+
+// percentageCustomFieldValueJSON contains the JSON metadata for the struct [PercentageCustomFieldValue]
+type percentageCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r percentageCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type PercentageCustomFieldValueType string
+
+const (
+	PercentageCustomFieldValueTypePercentage PercentageCustomFieldValueType = "percentage"
+)
+
+func (r PercentageCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case PercentageCustomFieldValueTypePercentage:
+		return true
+	}
+	return false
+}
+
+type SelectCustomFieldValue struct {
+	Type   SelectCustomFieldValueType   `json:"type" api:"required"`
+	Option SelectCustomFieldValueOption `json:"option" api:"required"`
+	JSON   selectCustomFieldValueJSON   `json:"-"`
+}
+
+// selectCustomFieldValueJSON contains the JSON metadata for the struct [SelectCustomFieldValue]
+type selectCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *SelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r selectCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type SelectCustomFieldValueType string
+
+const (
+	SelectCustomFieldValueTypeSelect SelectCustomFieldValueType = "select"
+)
+
+func (r SelectCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case SelectCustomFieldValueTypeSelect:
+		return true
+	}
+	return false
+}
+
+type MultiSelectCustomFieldValue struct {
+	Type    MultiSelectCustomFieldValueType     `json:"type" api:"required"`
+	Options []MultiSelectCustomFieldValueOption `json:"options" api:"required"`
+	JSON    multiSelectCustomFieldValueJSON     `json:"-"`
+}
+
+// multiSelectCustomFieldValueJSON contains the JSON metadata for the struct [MultiSelectCustomFieldValue]
+type multiSelectCustomFieldValueJSON struct {
+	Type        apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *MultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r multiSelectCustomFieldValueJSON) RawJSON() string {
+	return r.raw
+}
+
+type MultiSelectCustomFieldValueType string
+
+const (
+	MultiSelectCustomFieldValueTypeMultiSelect MultiSelectCustomFieldValueType = "multi_select"
+)
+
+func (r MultiSelectCustomFieldValueType) IsKnown() bool {
+	switch r {
+	case MultiSelectCustomFieldValueTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
 type CustomFieldNewParams struct {
 	Category    param.Field[CustomFieldNewParamsCategory]    `json:"category" api:"required"`
 	Name        param.Field[string]                          `json:"name" api:"required"`
@@ -1216,10 +1581,10 @@ type CustomFieldListValuesResponse struct {
 	// The id of the worker.
 	WorkerID string `json:"workerId" api:"required"`
 	// The tag of a company custom worker field.
-	FieldID   string                             `json:"fieldId" api:"required"`
-	Value     CustomFieldListValuesResponseValue `json:"value" api:"required"`
-	UpdatedAt string                             `json:"updatedAt" api:"required"`
-	JSON      customFieldListValuesResponseJSON  `json:"-"`
+	FieldID   string                            `json:"fieldId" api:"required"`
+	Value     PublicCustomFieldValueOutput      `json:"value" api:"required"`
+	UpdatedAt string                            `json:"updatedAt" api:"required"`
+	JSON      customFieldListValuesResponseJSON `json:"-"`
 }
 
 // customFieldListValuesResponseJSON contains the JSON metadata for the struct [CustomFieldListValuesResponse]
@@ -1247,10 +1612,10 @@ type CustomFieldUpsertValueResponse struct {
 	// The id of the worker.
 	WorkerID string `json:"workerId" api:"required"`
 	// The tag of a company custom worker field.
-	FieldID   string                              `json:"fieldId" api:"required"`
-	Value     CustomFieldUpsertValueResponseValue `json:"value" api:"required"`
-	UpdatedAt string                              `json:"updatedAt" api:"required"`
-	JSON      customFieldUpsertValueResponseJSON  `json:"-"`
+	FieldID   string                             `json:"fieldId" api:"required"`
+	Value     PublicCustomFieldValueOutput       `json:"value" api:"required"`
+	UpdatedAt string                             `json:"updatedAt" api:"required"`
+	JSON      customFieldUpsertValueResponseJSON `json:"-"`
 }
 
 // customFieldUpsertValueResponseJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponse]
@@ -1270,6 +1635,109 @@ func (r *CustomFieldUpsertValueResponse) UnmarshalJSON(data []byte) (err error) 
 
 func (r customFieldUpsertValueResponseJSON) RawJSON() string {
 	return r.raw
+}
+
+type SelectCustomFieldValueOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                             `json:"id" api:"required"`
+	Label     string                             `json:"label" api:"required"`
+	Value     string                             `json:"value" api:"required"`
+	SortOrder interface{}                        `json:"sortOrder" api:"required"`
+	Status    SelectCustomFieldValueOptionStatus `json:"status" api:"required"`
+	CreatedAt string                             `json:"createdAt" api:"required"`
+	JSON      selectCustomFieldValueOptionJSON   `json:"-"`
+}
+
+// selectCustomFieldValueOptionJSON contains the JSON metadata for the struct [SelectCustomFieldValueOption]
+type selectCustomFieldValueOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *SelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r selectCustomFieldValueOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type MultiSelectCustomFieldValueOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                   `json:"id" api:"required"`
+	Label     string                                   `json:"label" api:"required"`
+	Value     string                                   `json:"value" api:"required"`
+	SortOrder interface{}                              `json:"sortOrder" api:"required"`
+	Status    MultiSelectCustomFieldValueOptionsStatus `json:"status" api:"required"`
+	CreatedAt string                                   `json:"createdAt" api:"required"`
+	JSON      multiSelectCustomFieldValueOptionJSON    `json:"-"`
+}
+
+// multiSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [MultiSelectCustomFieldValueOption]
+type multiSelectCustomFieldValueOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *MultiSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r multiSelectCustomFieldValueOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCustomFieldValueOutput struct {
+	Type  PublicCustomFieldValueOutputType `json:"type" api:"required"`
+	Value interface{}                      `json:"value"`
+	// Integer base units of currencyCode (e.g. cents).
+	Amount       int64                                    `json:"amount"`
+	CurrencyCode PublicCustomFieldValueOutputCurrencyCode `json:"currencyCode"`
+	Option       interface{}                              `json:"option"`
+	Options      interface{}                              `json:"options"`
+	JSON         publicCustomFieldValueOutputJSON         `json:"-"`
+	union        PublicCustomFieldValueOutputUnion
+}
+
+// publicCustomFieldValueOutputJSON contains the JSON metadata for the struct [PublicCustomFieldValueOutput]
+type publicCustomFieldValueOutputJSON struct {
+	Type         apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r publicCustomFieldValueOutputJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *PublicCustomFieldValueOutput) UnmarshalJSON(data []byte) (err error) {
+	*r = PublicCustomFieldValueOutput{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r PublicCustomFieldValueOutput) AsUnion() PublicCustomFieldValueOutputUnion {
+	return r.union
 }
 
 type CustomFieldListResponseType string
@@ -1778,86 +2246,180 @@ func (r CustomFieldArchiveOptionResponseStatus) IsKnown() bool {
 	return false
 }
 
-type CustomFieldListValuesResponseValue struct {
-	Type  CustomFieldListValuesResponseValueType `json:"type" api:"required"`
-	Value interface{}                            `json:"value"`
-	// Integer base units of currencyCode (e.g. cents).
-	Amount       int64                                          `json:"amount"`
-	CurrencyCode CustomFieldListValuesResponseValueCurrencyCode `json:"currencyCode"`
-	Option       interface{}                                    `json:"option"`
-	Options      interface{}                                    `json:"options"`
-	JSON         customFieldListValuesResponseValueJSON         `json:"-"`
-	union        CustomFieldListValuesResponseValueUnion
-}
+type SelectCustomFieldValueOptionStatus string
 
-// customFieldListValuesResponseValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValue]
-type customFieldListValuesResponseValueJSON struct {
-	Type         apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
+const (
+	SelectCustomFieldValueOptionStatusActive   SelectCustomFieldValueOptionStatus = "active"
+	SelectCustomFieldValueOptionStatusArchived SelectCustomFieldValueOptionStatus = "archived"
+)
 
-func (r customFieldListValuesResponseValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *CustomFieldListValuesResponseValue) UnmarshalJSON(data []byte) (err error) {
-	*r = CustomFieldListValuesResponseValue{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
+func (r SelectCustomFieldValueOptionStatus) IsKnown() bool {
+	switch r {
+	case SelectCustomFieldValueOptionStatusActive, SelectCustomFieldValueOptionStatusArchived:
+		return true
 	}
-	return apijson.Port(r.union, &r)
+	return false
 }
 
-func (r CustomFieldListValuesResponseValue) AsUnion() CustomFieldListValuesResponseValueUnion {
-	return r.union
-}
+type MultiSelectCustomFieldValueOptionsStatus string
 
-type CustomFieldUpsertValueResponseValue struct {
-	Type  CustomFieldUpsertValueResponseValueType `json:"type" api:"required"`
-	Value interface{}                             `json:"value"`
-	// Integer base units of currencyCode (e.g. cents).
-	Amount       int64                                           `json:"amount"`
-	CurrencyCode CustomFieldUpsertValueResponseValueCurrencyCode `json:"currencyCode"`
-	Option       interface{}                                     `json:"option"`
-	Options      interface{}                                     `json:"options"`
-	JSON         customFieldUpsertValueResponseValueJSON         `json:"-"`
-	union        CustomFieldUpsertValueResponseValueUnion
-}
+const (
+	MultiSelectCustomFieldValueOptionsStatusActive   MultiSelectCustomFieldValueOptionsStatus = "active"
+	MultiSelectCustomFieldValueOptionsStatusArchived MultiSelectCustomFieldValueOptionsStatus = "archived"
+)
 
-// customFieldUpsertValueResponseValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValue]
-type customFieldUpsertValueResponseValueJSON struct {
-	Type         apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r customFieldUpsertValueResponseValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *CustomFieldUpsertValueResponseValue) UnmarshalJSON(data []byte) (err error) {
-	*r = CustomFieldUpsertValueResponseValue{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
+func (r MultiSelectCustomFieldValueOptionsStatus) IsKnown() bool {
+	switch r {
+	case MultiSelectCustomFieldValueOptionsStatusActive, MultiSelectCustomFieldValueOptionsStatusArchived:
+		return true
 	}
-	return apijson.Port(r.union, &r)
+	return false
 }
 
-func (r CustomFieldUpsertValueResponseValue) AsUnion() CustomFieldUpsertValueResponseValueUnion {
-	return r.union
+type PublicCustomFieldValueOutputUnion interface {
+	implementsPublicCustomFieldValueOutput()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*PublicCustomFieldValueOutputUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(TextCustomFieldValue{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(NumberCustomFieldValue{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(DateCustomFieldValue{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(BooleanCustomFieldValue{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(CurrencyCustomFieldValue{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PercentageCustomFieldValue{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(SelectCustomFieldValue{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(MultiSelectCustomFieldValue{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type PublicCustomFieldValueOutputType string
+
+const (
+	PublicCustomFieldValueOutputTypeText        PublicCustomFieldValueOutputType = "text"
+	PublicCustomFieldValueOutputTypeNumber      PublicCustomFieldValueOutputType = "number"
+	PublicCustomFieldValueOutputTypeDate        PublicCustomFieldValueOutputType = "date"
+	PublicCustomFieldValueOutputTypeBoolean     PublicCustomFieldValueOutputType = "boolean"
+	PublicCustomFieldValueOutputTypeCurrency    PublicCustomFieldValueOutputType = "currency"
+	PublicCustomFieldValueOutputTypePercentage  PublicCustomFieldValueOutputType = "percentage"
+	PublicCustomFieldValueOutputTypeSelect      PublicCustomFieldValueOutputType = "select"
+	PublicCustomFieldValueOutputTypeMultiSelect PublicCustomFieldValueOutputType = "multi_select"
+)
+
+func (r PublicCustomFieldValueOutputType) IsKnown() bool {
+	switch r {
+	case PublicCustomFieldValueOutputTypeText, PublicCustomFieldValueOutputTypeNumber, PublicCustomFieldValueOutputTypeDate, PublicCustomFieldValueOutputTypeBoolean, PublicCustomFieldValueOutputTypeCurrency, PublicCustomFieldValueOutputTypePercentage, PublicCustomFieldValueOutputTypeSelect, PublicCustomFieldValueOutputTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type PublicCustomFieldValueOutputCurrencyCode string
+
+const (
+	PublicCustomFieldValueOutputCurrencyCodeUsd PublicCustomFieldValueOutputCurrencyCode = "USD"
+	PublicCustomFieldValueOutputCurrencyCodeAud PublicCustomFieldValueOutputCurrencyCode = "AUD"
+	PublicCustomFieldValueOutputCurrencyCodeBgn PublicCustomFieldValueOutputCurrencyCode = "BGN"
+	PublicCustomFieldValueOutputCurrencyCodeBrl PublicCustomFieldValueOutputCurrencyCode = "BRL"
+	PublicCustomFieldValueOutputCurrencyCodeCad PublicCustomFieldValueOutputCurrencyCode = "CAD"
+	PublicCustomFieldValueOutputCurrencyCodeChf PublicCustomFieldValueOutputCurrencyCode = "CHF"
+	PublicCustomFieldValueOutputCurrencyCodeCzk PublicCustomFieldValueOutputCurrencyCode = "CZK"
+	PublicCustomFieldValueOutputCurrencyCodeDkk PublicCustomFieldValueOutputCurrencyCode = "DKK"
+	PublicCustomFieldValueOutputCurrencyCodeEur PublicCustomFieldValueOutputCurrencyCode = "EUR"
+	PublicCustomFieldValueOutputCurrencyCodeGbp PublicCustomFieldValueOutputCurrencyCode = "GBP"
+	PublicCustomFieldValueOutputCurrencyCodeHkd PublicCustomFieldValueOutputCurrencyCode = "HKD"
+	PublicCustomFieldValueOutputCurrencyCodeHuf PublicCustomFieldValueOutputCurrencyCode = "HUF"
+	PublicCustomFieldValueOutputCurrencyCodeIdr PublicCustomFieldValueOutputCurrencyCode = "IDR"
+	PublicCustomFieldValueOutputCurrencyCodeInr PublicCustomFieldValueOutputCurrencyCode = "INR"
+	PublicCustomFieldValueOutputCurrencyCodeJpy PublicCustomFieldValueOutputCurrencyCode = "JPY"
+	PublicCustomFieldValueOutputCurrencyCodeMyr PublicCustomFieldValueOutputCurrencyCode = "MYR"
+	PublicCustomFieldValueOutputCurrencyCodeNok PublicCustomFieldValueOutputCurrencyCode = "NOK"
+	PublicCustomFieldValueOutputCurrencyCodeNzd PublicCustomFieldValueOutputCurrencyCode = "NZD"
+	PublicCustomFieldValueOutputCurrencyCodeCny PublicCustomFieldValueOutputCurrencyCode = "CNY"
+	PublicCustomFieldValueOutputCurrencyCodePln PublicCustomFieldValueOutputCurrencyCode = "PLN"
+	PublicCustomFieldValueOutputCurrencyCodeRon PublicCustomFieldValueOutputCurrencyCode = "RON"
+	PublicCustomFieldValueOutputCurrencyCodeTry PublicCustomFieldValueOutputCurrencyCode = "TRY"
+	PublicCustomFieldValueOutputCurrencyCodeSek PublicCustomFieldValueOutputCurrencyCode = "SEK"
+	PublicCustomFieldValueOutputCurrencyCodeSgd PublicCustomFieldValueOutputCurrencyCode = "SGD"
+	PublicCustomFieldValueOutputCurrencyCodeAed PublicCustomFieldValueOutputCurrencyCode = "AED"
+	PublicCustomFieldValueOutputCurrencyCodeArs PublicCustomFieldValueOutputCurrencyCode = "ARS"
+	PublicCustomFieldValueOutputCurrencyCodeBdt PublicCustomFieldValueOutputCurrencyCode = "BDT"
+	PublicCustomFieldValueOutputCurrencyCodeBwp PublicCustomFieldValueOutputCurrencyCode = "BWP"
+	PublicCustomFieldValueOutputCurrencyCodeClp PublicCustomFieldValueOutputCurrencyCode = "CLP"
+	PublicCustomFieldValueOutputCurrencyCodeCop PublicCustomFieldValueOutputCurrencyCode = "COP"
+	PublicCustomFieldValueOutputCurrencyCodeCrc PublicCustomFieldValueOutputCurrencyCode = "CRC"
+	PublicCustomFieldValueOutputCurrencyCodeEgp PublicCustomFieldValueOutputCurrencyCode = "EGP"
+	PublicCustomFieldValueOutputCurrencyCodeFjd PublicCustomFieldValueOutputCurrencyCode = "FJD"
+	PublicCustomFieldValueOutputCurrencyCodeGel PublicCustomFieldValueOutputCurrencyCode = "GEL"
+	PublicCustomFieldValueOutputCurrencyCodeGhs PublicCustomFieldValueOutputCurrencyCode = "GHS"
+	PublicCustomFieldValueOutputCurrencyCodeIls PublicCustomFieldValueOutputCurrencyCode = "ILS"
+	PublicCustomFieldValueOutputCurrencyCodeKes PublicCustomFieldValueOutputCurrencyCode = "KES"
+	PublicCustomFieldValueOutputCurrencyCodeKrw PublicCustomFieldValueOutputCurrencyCode = "KRW"
+	PublicCustomFieldValueOutputCurrencyCodeLkr PublicCustomFieldValueOutputCurrencyCode = "LKR"
+	PublicCustomFieldValueOutputCurrencyCodeMad PublicCustomFieldValueOutputCurrencyCode = "MAD"
+	PublicCustomFieldValueOutputCurrencyCodeMxn PublicCustomFieldValueOutputCurrencyCode = "MXN"
+	PublicCustomFieldValueOutputCurrencyCodeNpr PublicCustomFieldValueOutputCurrencyCode = "NPR"
+	PublicCustomFieldValueOutputCurrencyCodePhp PublicCustomFieldValueOutputCurrencyCode = "PHP"
+	PublicCustomFieldValueOutputCurrencyCodePkr PublicCustomFieldValueOutputCurrencyCode = "PKR"
+	PublicCustomFieldValueOutputCurrencyCodeThb PublicCustomFieldValueOutputCurrencyCode = "THB"
+	PublicCustomFieldValueOutputCurrencyCodeUah PublicCustomFieldValueOutputCurrencyCode = "UAH"
+	PublicCustomFieldValueOutputCurrencyCodeUgx PublicCustomFieldValueOutputCurrencyCode = "UGX"
+	PublicCustomFieldValueOutputCurrencyCodeUyu PublicCustomFieldValueOutputCurrencyCode = "UYU"
+	PublicCustomFieldValueOutputCurrencyCodeVnd PublicCustomFieldValueOutputCurrencyCode = "VND"
+	PublicCustomFieldValueOutputCurrencyCodeZar PublicCustomFieldValueOutputCurrencyCode = "ZAR"
+	PublicCustomFieldValueOutputCurrencyCodeZmw PublicCustomFieldValueOutputCurrencyCode = "ZMW"
+	PublicCustomFieldValueOutputCurrencyCodeTnd PublicCustomFieldValueOutputCurrencyCode = "TND"
+	PublicCustomFieldValueOutputCurrencyCodeNgn PublicCustomFieldValueOutputCurrencyCode = "NGN"
+	PublicCustomFieldValueOutputCurrencyCodeRsd PublicCustomFieldValueOutputCurrencyCode = "RSD"
+	PublicCustomFieldValueOutputCurrencyCodeTwd PublicCustomFieldValueOutputCurrencyCode = "TWD"
+	PublicCustomFieldValueOutputCurrencyCodeGtq PublicCustomFieldValueOutputCurrencyCode = "GTQ"
+	PublicCustomFieldValueOutputCurrencyCodeHnl PublicCustomFieldValueOutputCurrencyCode = "HNL"
+	PublicCustomFieldValueOutputCurrencyCodeDop PublicCustomFieldValueOutputCurrencyCode = "DOP"
+	PublicCustomFieldValueOutputCurrencyCodeSar PublicCustomFieldValueOutputCurrencyCode = "SAR"
+	PublicCustomFieldValueOutputCurrencyCodeXaf PublicCustomFieldValueOutputCurrencyCode = "XAF"
+	PublicCustomFieldValueOutputCurrencyCodePen PublicCustomFieldValueOutputCurrencyCode = "PEN"
+)
+
+func (r PublicCustomFieldValueOutputCurrencyCode) IsKnown() bool {
+	switch r {
+	case PublicCustomFieldValueOutputCurrencyCodeUsd, PublicCustomFieldValueOutputCurrencyCodeAud, PublicCustomFieldValueOutputCurrencyCodeBgn, PublicCustomFieldValueOutputCurrencyCodeBrl, PublicCustomFieldValueOutputCurrencyCodeCad, PublicCustomFieldValueOutputCurrencyCodeChf, PublicCustomFieldValueOutputCurrencyCodeCzk, PublicCustomFieldValueOutputCurrencyCodeDkk, PublicCustomFieldValueOutputCurrencyCodeEur, PublicCustomFieldValueOutputCurrencyCodeGbp, PublicCustomFieldValueOutputCurrencyCodeHkd, PublicCustomFieldValueOutputCurrencyCodeHuf, PublicCustomFieldValueOutputCurrencyCodeIdr, PublicCustomFieldValueOutputCurrencyCodeInr, PublicCustomFieldValueOutputCurrencyCodeJpy, PublicCustomFieldValueOutputCurrencyCodeMyr, PublicCustomFieldValueOutputCurrencyCodeNok, PublicCustomFieldValueOutputCurrencyCodeNzd, PublicCustomFieldValueOutputCurrencyCodeCny, PublicCustomFieldValueOutputCurrencyCodePln, PublicCustomFieldValueOutputCurrencyCodeRon, PublicCustomFieldValueOutputCurrencyCodeTry, PublicCustomFieldValueOutputCurrencyCodeSek, PublicCustomFieldValueOutputCurrencyCodeSgd, PublicCustomFieldValueOutputCurrencyCodeAed, PublicCustomFieldValueOutputCurrencyCodeArs, PublicCustomFieldValueOutputCurrencyCodeBdt, PublicCustomFieldValueOutputCurrencyCodeBwp, PublicCustomFieldValueOutputCurrencyCodeClp, PublicCustomFieldValueOutputCurrencyCodeCop, PublicCustomFieldValueOutputCurrencyCodeCrc, PublicCustomFieldValueOutputCurrencyCodeEgp, PublicCustomFieldValueOutputCurrencyCodeFjd, PublicCustomFieldValueOutputCurrencyCodeGel, PublicCustomFieldValueOutputCurrencyCodeGhs, PublicCustomFieldValueOutputCurrencyCodeIls, PublicCustomFieldValueOutputCurrencyCodeKes, PublicCustomFieldValueOutputCurrencyCodeKrw, PublicCustomFieldValueOutputCurrencyCodeLkr, PublicCustomFieldValueOutputCurrencyCodeMad, PublicCustomFieldValueOutputCurrencyCodeMxn, PublicCustomFieldValueOutputCurrencyCodeNpr, PublicCustomFieldValueOutputCurrencyCodePhp, PublicCustomFieldValueOutputCurrencyCodePkr, PublicCustomFieldValueOutputCurrencyCodeThb, PublicCustomFieldValueOutputCurrencyCodeUah, PublicCustomFieldValueOutputCurrencyCodeUgx, PublicCustomFieldValueOutputCurrencyCodeUyu, PublicCustomFieldValueOutputCurrencyCodeVnd, PublicCustomFieldValueOutputCurrencyCodeZar, PublicCustomFieldValueOutputCurrencyCodeZmw, PublicCustomFieldValueOutputCurrencyCodeTnd, PublicCustomFieldValueOutputCurrencyCodeNgn, PublicCustomFieldValueOutputCurrencyCodeRsd, PublicCustomFieldValueOutputCurrencyCodeTwd, PublicCustomFieldValueOutputCurrencyCodeGtq, PublicCustomFieldValueOutputCurrencyCodeHnl, PublicCustomFieldValueOutputCurrencyCodeDop, PublicCustomFieldValueOutputCurrencyCodeSar, PublicCustomFieldValueOutputCurrencyCodeXaf, PublicCustomFieldValueOutputCurrencyCodePen:
+		return true
+	}
+	return false
 }
 
 type CustomFieldGetResponseOptionsStatus string
@@ -1875,1256 +2437,18 @@ func (r CustomFieldGetResponseOptionsStatus) IsKnown() bool {
 	return false
 }
 
-type CustomFieldListValuesResponseValueUnion interface {
-	implementsCustomFieldListValuesResponseValue()
-}
+func (r TextCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*CustomFieldListValuesResponseValueUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueTextCustomFieldValue{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueNumberCustomFieldValue{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueDateCustomFieldValue{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueBooleanCustomFieldValue{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueCurrencyCustomFieldValue{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValuePercentageCustomFieldValue{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueSelectCustomFieldValue{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldListValuesResponseValueMultiSelectCustomFieldValue{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
+func (r NumberCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-type CustomFieldListValuesResponseValueType string
+func (r DateCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-const (
-	CustomFieldListValuesResponseValueTypeText        CustomFieldListValuesResponseValueType = "text"
-	CustomFieldListValuesResponseValueTypeNumber      CustomFieldListValuesResponseValueType = "number"
-	CustomFieldListValuesResponseValueTypeDate        CustomFieldListValuesResponseValueType = "date"
-	CustomFieldListValuesResponseValueTypeBoolean     CustomFieldListValuesResponseValueType = "boolean"
-	CustomFieldListValuesResponseValueTypeCurrency    CustomFieldListValuesResponseValueType = "currency"
-	CustomFieldListValuesResponseValueTypePercentage  CustomFieldListValuesResponseValueType = "percentage"
-	CustomFieldListValuesResponseValueTypeSelect      CustomFieldListValuesResponseValueType = "select"
-	CustomFieldListValuesResponseValueTypeMultiSelect CustomFieldListValuesResponseValueType = "multi_select"
-)
+func (r BooleanCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-func (r CustomFieldListValuesResponseValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueTypeText, CustomFieldListValuesResponseValueTypeNumber, CustomFieldListValuesResponseValueTypeDate, CustomFieldListValuesResponseValueTypeBoolean, CustomFieldListValuesResponseValueTypeCurrency, CustomFieldListValuesResponseValueTypePercentage, CustomFieldListValuesResponseValueTypeSelect, CustomFieldListValuesResponseValueTypeMultiSelect:
-		return true
-	}
-	return false
-}
+func (r CurrencyCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-type CustomFieldListValuesResponseValueCurrencyCode string
+func (r PercentageCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-const (
-	CustomFieldListValuesResponseValueCurrencyCodeUsd CustomFieldListValuesResponseValueCurrencyCode = "USD"
-	CustomFieldListValuesResponseValueCurrencyCodeAud CustomFieldListValuesResponseValueCurrencyCode = "AUD"
-	CustomFieldListValuesResponseValueCurrencyCodeBgn CustomFieldListValuesResponseValueCurrencyCode = "BGN"
-	CustomFieldListValuesResponseValueCurrencyCodeBrl CustomFieldListValuesResponseValueCurrencyCode = "BRL"
-	CustomFieldListValuesResponseValueCurrencyCodeCad CustomFieldListValuesResponseValueCurrencyCode = "CAD"
-	CustomFieldListValuesResponseValueCurrencyCodeChf CustomFieldListValuesResponseValueCurrencyCode = "CHF"
-	CustomFieldListValuesResponseValueCurrencyCodeCzk CustomFieldListValuesResponseValueCurrencyCode = "CZK"
-	CustomFieldListValuesResponseValueCurrencyCodeDkk CustomFieldListValuesResponseValueCurrencyCode = "DKK"
-	CustomFieldListValuesResponseValueCurrencyCodeEur CustomFieldListValuesResponseValueCurrencyCode = "EUR"
-	CustomFieldListValuesResponseValueCurrencyCodeGbp CustomFieldListValuesResponseValueCurrencyCode = "GBP"
-	CustomFieldListValuesResponseValueCurrencyCodeHkd CustomFieldListValuesResponseValueCurrencyCode = "HKD"
-	CustomFieldListValuesResponseValueCurrencyCodeHuf CustomFieldListValuesResponseValueCurrencyCode = "HUF"
-	CustomFieldListValuesResponseValueCurrencyCodeIdr CustomFieldListValuesResponseValueCurrencyCode = "IDR"
-	CustomFieldListValuesResponseValueCurrencyCodeInr CustomFieldListValuesResponseValueCurrencyCode = "INR"
-	CustomFieldListValuesResponseValueCurrencyCodeJpy CustomFieldListValuesResponseValueCurrencyCode = "JPY"
-	CustomFieldListValuesResponseValueCurrencyCodeMyr CustomFieldListValuesResponseValueCurrencyCode = "MYR"
-	CustomFieldListValuesResponseValueCurrencyCodeNok CustomFieldListValuesResponseValueCurrencyCode = "NOK"
-	CustomFieldListValuesResponseValueCurrencyCodeNzd CustomFieldListValuesResponseValueCurrencyCode = "NZD"
-	CustomFieldListValuesResponseValueCurrencyCodeCny CustomFieldListValuesResponseValueCurrencyCode = "CNY"
-	CustomFieldListValuesResponseValueCurrencyCodePln CustomFieldListValuesResponseValueCurrencyCode = "PLN"
-	CustomFieldListValuesResponseValueCurrencyCodeRon CustomFieldListValuesResponseValueCurrencyCode = "RON"
-	CustomFieldListValuesResponseValueCurrencyCodeTry CustomFieldListValuesResponseValueCurrencyCode = "TRY"
-	CustomFieldListValuesResponseValueCurrencyCodeSek CustomFieldListValuesResponseValueCurrencyCode = "SEK"
-	CustomFieldListValuesResponseValueCurrencyCodeSgd CustomFieldListValuesResponseValueCurrencyCode = "SGD"
-	CustomFieldListValuesResponseValueCurrencyCodeAed CustomFieldListValuesResponseValueCurrencyCode = "AED"
-	CustomFieldListValuesResponseValueCurrencyCodeArs CustomFieldListValuesResponseValueCurrencyCode = "ARS"
-	CustomFieldListValuesResponseValueCurrencyCodeBdt CustomFieldListValuesResponseValueCurrencyCode = "BDT"
-	CustomFieldListValuesResponseValueCurrencyCodeBwp CustomFieldListValuesResponseValueCurrencyCode = "BWP"
-	CustomFieldListValuesResponseValueCurrencyCodeClp CustomFieldListValuesResponseValueCurrencyCode = "CLP"
-	CustomFieldListValuesResponseValueCurrencyCodeCop CustomFieldListValuesResponseValueCurrencyCode = "COP"
-	CustomFieldListValuesResponseValueCurrencyCodeCrc CustomFieldListValuesResponseValueCurrencyCode = "CRC"
-	CustomFieldListValuesResponseValueCurrencyCodeEgp CustomFieldListValuesResponseValueCurrencyCode = "EGP"
-	CustomFieldListValuesResponseValueCurrencyCodeFjd CustomFieldListValuesResponseValueCurrencyCode = "FJD"
-	CustomFieldListValuesResponseValueCurrencyCodeGel CustomFieldListValuesResponseValueCurrencyCode = "GEL"
-	CustomFieldListValuesResponseValueCurrencyCodeGhs CustomFieldListValuesResponseValueCurrencyCode = "GHS"
-	CustomFieldListValuesResponseValueCurrencyCodeIls CustomFieldListValuesResponseValueCurrencyCode = "ILS"
-	CustomFieldListValuesResponseValueCurrencyCodeKes CustomFieldListValuesResponseValueCurrencyCode = "KES"
-	CustomFieldListValuesResponseValueCurrencyCodeKrw CustomFieldListValuesResponseValueCurrencyCode = "KRW"
-	CustomFieldListValuesResponseValueCurrencyCodeLkr CustomFieldListValuesResponseValueCurrencyCode = "LKR"
-	CustomFieldListValuesResponseValueCurrencyCodeMad CustomFieldListValuesResponseValueCurrencyCode = "MAD"
-	CustomFieldListValuesResponseValueCurrencyCodeMxn CustomFieldListValuesResponseValueCurrencyCode = "MXN"
-	CustomFieldListValuesResponseValueCurrencyCodeNpr CustomFieldListValuesResponseValueCurrencyCode = "NPR"
-	CustomFieldListValuesResponseValueCurrencyCodePhp CustomFieldListValuesResponseValueCurrencyCode = "PHP"
-	CustomFieldListValuesResponseValueCurrencyCodePkr CustomFieldListValuesResponseValueCurrencyCode = "PKR"
-	CustomFieldListValuesResponseValueCurrencyCodeThb CustomFieldListValuesResponseValueCurrencyCode = "THB"
-	CustomFieldListValuesResponseValueCurrencyCodeUah CustomFieldListValuesResponseValueCurrencyCode = "UAH"
-	CustomFieldListValuesResponseValueCurrencyCodeUgx CustomFieldListValuesResponseValueCurrencyCode = "UGX"
-	CustomFieldListValuesResponseValueCurrencyCodeUyu CustomFieldListValuesResponseValueCurrencyCode = "UYU"
-	CustomFieldListValuesResponseValueCurrencyCodeVnd CustomFieldListValuesResponseValueCurrencyCode = "VND"
-	CustomFieldListValuesResponseValueCurrencyCodeZar CustomFieldListValuesResponseValueCurrencyCode = "ZAR"
-	CustomFieldListValuesResponseValueCurrencyCodeZmw CustomFieldListValuesResponseValueCurrencyCode = "ZMW"
-	CustomFieldListValuesResponseValueCurrencyCodeTnd CustomFieldListValuesResponseValueCurrencyCode = "TND"
-	CustomFieldListValuesResponseValueCurrencyCodeNgn CustomFieldListValuesResponseValueCurrencyCode = "NGN"
-	CustomFieldListValuesResponseValueCurrencyCodeRsd CustomFieldListValuesResponseValueCurrencyCode = "RSD"
-	CustomFieldListValuesResponseValueCurrencyCodeTwd CustomFieldListValuesResponseValueCurrencyCode = "TWD"
-	CustomFieldListValuesResponseValueCurrencyCodeGtq CustomFieldListValuesResponseValueCurrencyCode = "GTQ"
-	CustomFieldListValuesResponseValueCurrencyCodeHnl CustomFieldListValuesResponseValueCurrencyCode = "HNL"
-	CustomFieldListValuesResponseValueCurrencyCodeDop CustomFieldListValuesResponseValueCurrencyCode = "DOP"
-	CustomFieldListValuesResponseValueCurrencyCodeSar CustomFieldListValuesResponseValueCurrencyCode = "SAR"
-	CustomFieldListValuesResponseValueCurrencyCodeXaf CustomFieldListValuesResponseValueCurrencyCode = "XAF"
-	CustomFieldListValuesResponseValueCurrencyCodePen CustomFieldListValuesResponseValueCurrencyCode = "PEN"
-)
+func (r SelectCustomFieldValue) implementsPublicCustomFieldValueOutput() {}
 
-func (r CustomFieldListValuesResponseValueCurrencyCode) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueCurrencyCodeUsd, CustomFieldListValuesResponseValueCurrencyCodeAud, CustomFieldListValuesResponseValueCurrencyCodeBgn, CustomFieldListValuesResponseValueCurrencyCodeBrl, CustomFieldListValuesResponseValueCurrencyCodeCad, CustomFieldListValuesResponseValueCurrencyCodeChf, CustomFieldListValuesResponseValueCurrencyCodeCzk, CustomFieldListValuesResponseValueCurrencyCodeDkk, CustomFieldListValuesResponseValueCurrencyCodeEur, CustomFieldListValuesResponseValueCurrencyCodeGbp, CustomFieldListValuesResponseValueCurrencyCodeHkd, CustomFieldListValuesResponseValueCurrencyCodeHuf, CustomFieldListValuesResponseValueCurrencyCodeIdr, CustomFieldListValuesResponseValueCurrencyCodeInr, CustomFieldListValuesResponseValueCurrencyCodeJpy, CustomFieldListValuesResponseValueCurrencyCodeMyr, CustomFieldListValuesResponseValueCurrencyCodeNok, CustomFieldListValuesResponseValueCurrencyCodeNzd, CustomFieldListValuesResponseValueCurrencyCodeCny, CustomFieldListValuesResponseValueCurrencyCodePln, CustomFieldListValuesResponseValueCurrencyCodeRon, CustomFieldListValuesResponseValueCurrencyCodeTry, CustomFieldListValuesResponseValueCurrencyCodeSek, CustomFieldListValuesResponseValueCurrencyCodeSgd, CustomFieldListValuesResponseValueCurrencyCodeAed, CustomFieldListValuesResponseValueCurrencyCodeArs, CustomFieldListValuesResponseValueCurrencyCodeBdt, CustomFieldListValuesResponseValueCurrencyCodeBwp, CustomFieldListValuesResponseValueCurrencyCodeClp, CustomFieldListValuesResponseValueCurrencyCodeCop, CustomFieldListValuesResponseValueCurrencyCodeCrc, CustomFieldListValuesResponseValueCurrencyCodeEgp, CustomFieldListValuesResponseValueCurrencyCodeFjd, CustomFieldListValuesResponseValueCurrencyCodeGel, CustomFieldListValuesResponseValueCurrencyCodeGhs, CustomFieldListValuesResponseValueCurrencyCodeIls, CustomFieldListValuesResponseValueCurrencyCodeKes, CustomFieldListValuesResponseValueCurrencyCodeKrw, CustomFieldListValuesResponseValueCurrencyCodeLkr, CustomFieldListValuesResponseValueCurrencyCodeMad, CustomFieldListValuesResponseValueCurrencyCodeMxn, CustomFieldListValuesResponseValueCurrencyCodeNpr, CustomFieldListValuesResponseValueCurrencyCodePhp, CustomFieldListValuesResponseValueCurrencyCodePkr, CustomFieldListValuesResponseValueCurrencyCodeThb, CustomFieldListValuesResponseValueCurrencyCodeUah, CustomFieldListValuesResponseValueCurrencyCodeUgx, CustomFieldListValuesResponseValueCurrencyCodeUyu, CustomFieldListValuesResponseValueCurrencyCodeVnd, CustomFieldListValuesResponseValueCurrencyCodeZar, CustomFieldListValuesResponseValueCurrencyCodeZmw, CustomFieldListValuesResponseValueCurrencyCodeTnd, CustomFieldListValuesResponseValueCurrencyCodeNgn, CustomFieldListValuesResponseValueCurrencyCodeRsd, CustomFieldListValuesResponseValueCurrencyCodeTwd, CustomFieldListValuesResponseValueCurrencyCodeGtq, CustomFieldListValuesResponseValueCurrencyCodeHnl, CustomFieldListValuesResponseValueCurrencyCodeDop, CustomFieldListValuesResponseValueCurrencyCodeSar, CustomFieldListValuesResponseValueCurrencyCodeXaf, CustomFieldListValuesResponseValueCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueUnion interface {
-	implementsCustomFieldUpsertValueResponseValue()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*CustomFieldUpsertValueResponseValueUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueTextCustomFieldValue{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueNumberCustomFieldValue{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueDateCustomFieldValue{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueBooleanCustomFieldValue{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValuePercentageCustomFieldValue{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueSelectCustomFieldValue{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type CustomFieldUpsertValueResponseValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueTypeText        CustomFieldUpsertValueResponseValueType = "text"
-	CustomFieldUpsertValueResponseValueTypeNumber      CustomFieldUpsertValueResponseValueType = "number"
-	CustomFieldUpsertValueResponseValueTypeDate        CustomFieldUpsertValueResponseValueType = "date"
-	CustomFieldUpsertValueResponseValueTypeBoolean     CustomFieldUpsertValueResponseValueType = "boolean"
-	CustomFieldUpsertValueResponseValueTypeCurrency    CustomFieldUpsertValueResponseValueType = "currency"
-	CustomFieldUpsertValueResponseValueTypePercentage  CustomFieldUpsertValueResponseValueType = "percentage"
-	CustomFieldUpsertValueResponseValueTypeSelect      CustomFieldUpsertValueResponseValueType = "select"
-	CustomFieldUpsertValueResponseValueTypeMultiSelect CustomFieldUpsertValueResponseValueType = "multi_select"
-)
-
-func (r CustomFieldUpsertValueResponseValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueTypeText, CustomFieldUpsertValueResponseValueTypeNumber, CustomFieldUpsertValueResponseValueTypeDate, CustomFieldUpsertValueResponseValueTypeBoolean, CustomFieldUpsertValueResponseValueTypeCurrency, CustomFieldUpsertValueResponseValueTypePercentage, CustomFieldUpsertValueResponseValueTypeSelect, CustomFieldUpsertValueResponseValueTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueCurrencyCode string
-
-const (
-	CustomFieldUpsertValueResponseValueCurrencyCodeUsd CustomFieldUpsertValueResponseValueCurrencyCode = "USD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeAud CustomFieldUpsertValueResponseValueCurrencyCode = "AUD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeBgn CustomFieldUpsertValueResponseValueCurrencyCode = "BGN"
-	CustomFieldUpsertValueResponseValueCurrencyCodeBrl CustomFieldUpsertValueResponseValueCurrencyCode = "BRL"
-	CustomFieldUpsertValueResponseValueCurrencyCodeCad CustomFieldUpsertValueResponseValueCurrencyCode = "CAD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeChf CustomFieldUpsertValueResponseValueCurrencyCode = "CHF"
-	CustomFieldUpsertValueResponseValueCurrencyCodeCzk CustomFieldUpsertValueResponseValueCurrencyCode = "CZK"
-	CustomFieldUpsertValueResponseValueCurrencyCodeDkk CustomFieldUpsertValueResponseValueCurrencyCode = "DKK"
-	CustomFieldUpsertValueResponseValueCurrencyCodeEur CustomFieldUpsertValueResponseValueCurrencyCode = "EUR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeGbp CustomFieldUpsertValueResponseValueCurrencyCode = "GBP"
-	CustomFieldUpsertValueResponseValueCurrencyCodeHkd CustomFieldUpsertValueResponseValueCurrencyCode = "HKD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeHuf CustomFieldUpsertValueResponseValueCurrencyCode = "HUF"
-	CustomFieldUpsertValueResponseValueCurrencyCodeIdr CustomFieldUpsertValueResponseValueCurrencyCode = "IDR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeInr CustomFieldUpsertValueResponseValueCurrencyCode = "INR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeJpy CustomFieldUpsertValueResponseValueCurrencyCode = "JPY"
-	CustomFieldUpsertValueResponseValueCurrencyCodeMyr CustomFieldUpsertValueResponseValueCurrencyCode = "MYR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeNok CustomFieldUpsertValueResponseValueCurrencyCode = "NOK"
-	CustomFieldUpsertValueResponseValueCurrencyCodeNzd CustomFieldUpsertValueResponseValueCurrencyCode = "NZD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeCny CustomFieldUpsertValueResponseValueCurrencyCode = "CNY"
-	CustomFieldUpsertValueResponseValueCurrencyCodePln CustomFieldUpsertValueResponseValueCurrencyCode = "PLN"
-	CustomFieldUpsertValueResponseValueCurrencyCodeRon CustomFieldUpsertValueResponseValueCurrencyCode = "RON"
-	CustomFieldUpsertValueResponseValueCurrencyCodeTry CustomFieldUpsertValueResponseValueCurrencyCode = "TRY"
-	CustomFieldUpsertValueResponseValueCurrencyCodeSek CustomFieldUpsertValueResponseValueCurrencyCode = "SEK"
-	CustomFieldUpsertValueResponseValueCurrencyCodeSgd CustomFieldUpsertValueResponseValueCurrencyCode = "SGD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeAed CustomFieldUpsertValueResponseValueCurrencyCode = "AED"
-	CustomFieldUpsertValueResponseValueCurrencyCodeArs CustomFieldUpsertValueResponseValueCurrencyCode = "ARS"
-	CustomFieldUpsertValueResponseValueCurrencyCodeBdt CustomFieldUpsertValueResponseValueCurrencyCode = "BDT"
-	CustomFieldUpsertValueResponseValueCurrencyCodeBwp CustomFieldUpsertValueResponseValueCurrencyCode = "BWP"
-	CustomFieldUpsertValueResponseValueCurrencyCodeClp CustomFieldUpsertValueResponseValueCurrencyCode = "CLP"
-	CustomFieldUpsertValueResponseValueCurrencyCodeCop CustomFieldUpsertValueResponseValueCurrencyCode = "COP"
-	CustomFieldUpsertValueResponseValueCurrencyCodeCrc CustomFieldUpsertValueResponseValueCurrencyCode = "CRC"
-	CustomFieldUpsertValueResponseValueCurrencyCodeEgp CustomFieldUpsertValueResponseValueCurrencyCode = "EGP"
-	CustomFieldUpsertValueResponseValueCurrencyCodeFjd CustomFieldUpsertValueResponseValueCurrencyCode = "FJD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeGel CustomFieldUpsertValueResponseValueCurrencyCode = "GEL"
-	CustomFieldUpsertValueResponseValueCurrencyCodeGhs CustomFieldUpsertValueResponseValueCurrencyCode = "GHS"
-	CustomFieldUpsertValueResponseValueCurrencyCodeIls CustomFieldUpsertValueResponseValueCurrencyCode = "ILS"
-	CustomFieldUpsertValueResponseValueCurrencyCodeKes CustomFieldUpsertValueResponseValueCurrencyCode = "KES"
-	CustomFieldUpsertValueResponseValueCurrencyCodeKrw CustomFieldUpsertValueResponseValueCurrencyCode = "KRW"
-	CustomFieldUpsertValueResponseValueCurrencyCodeLkr CustomFieldUpsertValueResponseValueCurrencyCode = "LKR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeMad CustomFieldUpsertValueResponseValueCurrencyCode = "MAD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeMxn CustomFieldUpsertValueResponseValueCurrencyCode = "MXN"
-	CustomFieldUpsertValueResponseValueCurrencyCodeNpr CustomFieldUpsertValueResponseValueCurrencyCode = "NPR"
-	CustomFieldUpsertValueResponseValueCurrencyCodePhp CustomFieldUpsertValueResponseValueCurrencyCode = "PHP"
-	CustomFieldUpsertValueResponseValueCurrencyCodePkr CustomFieldUpsertValueResponseValueCurrencyCode = "PKR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeThb CustomFieldUpsertValueResponseValueCurrencyCode = "THB"
-	CustomFieldUpsertValueResponseValueCurrencyCodeUah CustomFieldUpsertValueResponseValueCurrencyCode = "UAH"
-	CustomFieldUpsertValueResponseValueCurrencyCodeUgx CustomFieldUpsertValueResponseValueCurrencyCode = "UGX"
-	CustomFieldUpsertValueResponseValueCurrencyCodeUyu CustomFieldUpsertValueResponseValueCurrencyCode = "UYU"
-	CustomFieldUpsertValueResponseValueCurrencyCodeVnd CustomFieldUpsertValueResponseValueCurrencyCode = "VND"
-	CustomFieldUpsertValueResponseValueCurrencyCodeZar CustomFieldUpsertValueResponseValueCurrencyCode = "ZAR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeZmw CustomFieldUpsertValueResponseValueCurrencyCode = "ZMW"
-	CustomFieldUpsertValueResponseValueCurrencyCodeTnd CustomFieldUpsertValueResponseValueCurrencyCode = "TND"
-	CustomFieldUpsertValueResponseValueCurrencyCodeNgn CustomFieldUpsertValueResponseValueCurrencyCode = "NGN"
-	CustomFieldUpsertValueResponseValueCurrencyCodeRsd CustomFieldUpsertValueResponseValueCurrencyCode = "RSD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeTwd CustomFieldUpsertValueResponseValueCurrencyCode = "TWD"
-	CustomFieldUpsertValueResponseValueCurrencyCodeGtq CustomFieldUpsertValueResponseValueCurrencyCode = "GTQ"
-	CustomFieldUpsertValueResponseValueCurrencyCodeHnl CustomFieldUpsertValueResponseValueCurrencyCode = "HNL"
-	CustomFieldUpsertValueResponseValueCurrencyCodeDop CustomFieldUpsertValueResponseValueCurrencyCode = "DOP"
-	CustomFieldUpsertValueResponseValueCurrencyCodeSar CustomFieldUpsertValueResponseValueCurrencyCode = "SAR"
-	CustomFieldUpsertValueResponseValueCurrencyCodeXaf CustomFieldUpsertValueResponseValueCurrencyCode = "XAF"
-	CustomFieldUpsertValueResponseValueCurrencyCodePen CustomFieldUpsertValueResponseValueCurrencyCode = "PEN"
-)
-
-func (r CustomFieldUpsertValueResponseValueCurrencyCode) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueCurrencyCodeUsd, CustomFieldUpsertValueResponseValueCurrencyCodeAud, CustomFieldUpsertValueResponseValueCurrencyCodeBgn, CustomFieldUpsertValueResponseValueCurrencyCodeBrl, CustomFieldUpsertValueResponseValueCurrencyCodeCad, CustomFieldUpsertValueResponseValueCurrencyCodeChf, CustomFieldUpsertValueResponseValueCurrencyCodeCzk, CustomFieldUpsertValueResponseValueCurrencyCodeDkk, CustomFieldUpsertValueResponseValueCurrencyCodeEur, CustomFieldUpsertValueResponseValueCurrencyCodeGbp, CustomFieldUpsertValueResponseValueCurrencyCodeHkd, CustomFieldUpsertValueResponseValueCurrencyCodeHuf, CustomFieldUpsertValueResponseValueCurrencyCodeIdr, CustomFieldUpsertValueResponseValueCurrencyCodeInr, CustomFieldUpsertValueResponseValueCurrencyCodeJpy, CustomFieldUpsertValueResponseValueCurrencyCodeMyr, CustomFieldUpsertValueResponseValueCurrencyCodeNok, CustomFieldUpsertValueResponseValueCurrencyCodeNzd, CustomFieldUpsertValueResponseValueCurrencyCodeCny, CustomFieldUpsertValueResponseValueCurrencyCodePln, CustomFieldUpsertValueResponseValueCurrencyCodeRon, CustomFieldUpsertValueResponseValueCurrencyCodeTry, CustomFieldUpsertValueResponseValueCurrencyCodeSek, CustomFieldUpsertValueResponseValueCurrencyCodeSgd, CustomFieldUpsertValueResponseValueCurrencyCodeAed, CustomFieldUpsertValueResponseValueCurrencyCodeArs, CustomFieldUpsertValueResponseValueCurrencyCodeBdt, CustomFieldUpsertValueResponseValueCurrencyCodeBwp, CustomFieldUpsertValueResponseValueCurrencyCodeClp, CustomFieldUpsertValueResponseValueCurrencyCodeCop, CustomFieldUpsertValueResponseValueCurrencyCodeCrc, CustomFieldUpsertValueResponseValueCurrencyCodeEgp, CustomFieldUpsertValueResponseValueCurrencyCodeFjd, CustomFieldUpsertValueResponseValueCurrencyCodeGel, CustomFieldUpsertValueResponseValueCurrencyCodeGhs, CustomFieldUpsertValueResponseValueCurrencyCodeIls, CustomFieldUpsertValueResponseValueCurrencyCodeKes, CustomFieldUpsertValueResponseValueCurrencyCodeKrw, CustomFieldUpsertValueResponseValueCurrencyCodeLkr, CustomFieldUpsertValueResponseValueCurrencyCodeMad, CustomFieldUpsertValueResponseValueCurrencyCodeMxn, CustomFieldUpsertValueResponseValueCurrencyCodeNpr, CustomFieldUpsertValueResponseValueCurrencyCodePhp, CustomFieldUpsertValueResponseValueCurrencyCodePkr, CustomFieldUpsertValueResponseValueCurrencyCodeThb, CustomFieldUpsertValueResponseValueCurrencyCodeUah, CustomFieldUpsertValueResponseValueCurrencyCodeUgx, CustomFieldUpsertValueResponseValueCurrencyCodeUyu, CustomFieldUpsertValueResponseValueCurrencyCodeVnd, CustomFieldUpsertValueResponseValueCurrencyCodeZar, CustomFieldUpsertValueResponseValueCurrencyCodeZmw, CustomFieldUpsertValueResponseValueCurrencyCodeTnd, CustomFieldUpsertValueResponseValueCurrencyCodeNgn, CustomFieldUpsertValueResponseValueCurrencyCodeRsd, CustomFieldUpsertValueResponseValueCurrencyCodeTwd, CustomFieldUpsertValueResponseValueCurrencyCodeGtq, CustomFieldUpsertValueResponseValueCurrencyCodeHnl, CustomFieldUpsertValueResponseValueCurrencyCodeDop, CustomFieldUpsertValueResponseValueCurrencyCodeSar, CustomFieldUpsertValueResponseValueCurrencyCodeXaf, CustomFieldUpsertValueResponseValueCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueTextCustomFieldValue struct {
-	Type  CustomFieldListValuesResponseValueTextCustomFieldValueType `json:"type" api:"required"`
-	Value string                                                     `json:"value" api:"required"`
-	JSON  customFieldListValuesResponseValueTextCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldListValuesResponseValueTextCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueTextCustomFieldValue]
-type customFieldListValuesResponseValueTextCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueTextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueTextCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueTextCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueNumberCustomFieldValue struct {
-	Type  CustomFieldListValuesResponseValueNumberCustomFieldValueType `json:"type" api:"required"`
-	Value interface{}                                                  `json:"value" api:"required"`
-	JSON  customFieldListValuesResponseValueNumberCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldListValuesResponseValueNumberCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueNumberCustomFieldValue]
-type customFieldListValuesResponseValueNumberCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueNumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueNumberCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueNumberCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueDateCustomFieldValue struct {
-	Type  CustomFieldListValuesResponseValueDateCustomFieldValueType `json:"type" api:"required"`
-	Value string                                                     `json:"value" api:"required"`
-	JSON  customFieldListValuesResponseValueDateCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldListValuesResponseValueDateCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueDateCustomFieldValue]
-type customFieldListValuesResponseValueDateCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueDateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueDateCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueDateCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueBooleanCustomFieldValue struct {
-	Type  CustomFieldListValuesResponseValueBooleanCustomFieldValueType `json:"type" api:"required"`
-	Value bool                                                          `json:"value" api:"required"`
-	JSON  customFieldListValuesResponseValueBooleanCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldListValuesResponseValueBooleanCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueBooleanCustomFieldValue]
-type customFieldListValuesResponseValueBooleanCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueBooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueBooleanCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueBooleanCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueCurrencyCustomFieldValue struct {
-	Type CustomFieldListValuesResponseValueCurrencyCustomFieldValueType `json:"type" api:"required"`
-	// Integer base units of currencyCode (e.g. cents).
-	Amount       int64                                                                  `json:"amount" api:"required"`
-	CurrencyCode CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode `json:"currencyCode" api:"required"`
-	JSON         customFieldListValuesResponseValueCurrencyCustomFieldValueJSON         `json:"-"`
-}
-
-// customFieldListValuesResponseValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueCurrencyCustomFieldValue]
-type customFieldListValuesResponseValueCurrencyCustomFieldValueJSON struct {
-	Type         apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueCurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueCurrencyCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueCurrencyCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValuePercentageCustomFieldValue struct {
-	Type  CustomFieldListValuesResponseValuePercentageCustomFieldValueType `json:"type" api:"required"`
-	Value interface{}                                                      `json:"value" api:"required"`
-	JSON  customFieldListValuesResponseValuePercentageCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldListValuesResponseValuePercentageCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValuePercentageCustomFieldValue]
-type customFieldListValuesResponseValuePercentageCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValuePercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValuePercentageCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValuePercentageCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueSelectCustomFieldValue struct {
-	Type   CustomFieldListValuesResponseValueSelectCustomFieldValueType   `json:"type" api:"required"`
-	Option CustomFieldListValuesResponseValueSelectCustomFieldValueOption `json:"option" api:"required"`
-	JSON   customFieldListValuesResponseValueSelectCustomFieldValueJSON   `json:"-"`
-}
-
-// customFieldListValuesResponseValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueSelectCustomFieldValue]
-type customFieldListValuesResponseValueSelectCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueSelectCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueSelectCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueMultiSelectCustomFieldValue struct {
-	Type    CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType     `json:"type" api:"required"`
-	Options []CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption `json:"options" api:"required"`
-	JSON    customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON     `json:"-"`
-}
-
-// customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueMultiSelectCustomFieldValue]
-type customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueMultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueMultiSelectCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldListValuesResponseValueMultiSelectCustomFieldValue) implementsCustomFieldListValuesResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueTextCustomFieldValue struct {
-	Type  CustomFieldUpsertValueResponseValueTextCustomFieldValueType `json:"type" api:"required"`
-	Value string                                                      `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueTextCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueTextCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueTextCustomFieldValue]
-type customFieldUpsertValueResponseValueTextCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueTextCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueTextCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueTextCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueNumberCustomFieldValue struct {
-	Type  CustomFieldUpsertValueResponseValueNumberCustomFieldValueType `json:"type" api:"required"`
-	Value interface{}                                                   `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueNumberCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueNumberCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueNumberCustomFieldValue]
-type customFieldUpsertValueResponseValueNumberCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueNumberCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueNumberCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueNumberCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueDateCustomFieldValue struct {
-	Type  CustomFieldUpsertValueResponseValueDateCustomFieldValueType `json:"type" api:"required"`
-	Value string                                                      `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueDateCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueDateCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueDateCustomFieldValue]
-type customFieldUpsertValueResponseValueDateCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueDateCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueDateCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueDateCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueBooleanCustomFieldValue struct {
-	Type  CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType `json:"type" api:"required"`
-	Value bool                                                           `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueBooleanCustomFieldValue]
-type customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueBooleanCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueBooleanCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueBooleanCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue struct {
-	Type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType `json:"type" api:"required"`
-	// Integer base units of currencyCode (e.g. cents).
-	Amount       int64                                                                   `json:"amount" api:"required"`
-	CurrencyCode CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode `json:"currencyCode" api:"required"`
-	JSON         customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON         `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue]
-type customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON struct {
-	Type         apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueCurrencyCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValuePercentageCustomFieldValue struct {
-	Type  CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType `json:"type" api:"required"`
-	Value interface{}                                                       `json:"value" api:"required"`
-	JSON  customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON `json:"-"`
-}
-
-// customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValuePercentageCustomFieldValue]
-type customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValuePercentageCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValuePercentageCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValuePercentageCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueSelectCustomFieldValue struct {
-	Type   CustomFieldUpsertValueResponseValueSelectCustomFieldValueType   `json:"type" api:"required"`
-	Option CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption `json:"option" api:"required"`
-	JSON   customFieldUpsertValueResponseValueSelectCustomFieldValueJSON   `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueSelectCustomFieldValue]
-type customFieldUpsertValueResponseValueSelectCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueSelectCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue struct {
-	Type    CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType     `json:"type" api:"required"`
-	Options []CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption `json:"options" api:"required"`
-	JSON    customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON     `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue]
-type customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON struct {
-	Type        apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueMultiSelectCustomFieldValueJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValue) implementsCustomFieldUpsertValueResponseValue() {
-}
-
-type CustomFieldListValuesResponseValueTextCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueTextCustomFieldValueTypeText CustomFieldListValuesResponseValueTextCustomFieldValueType = "text"
-)
-
-func (r CustomFieldListValuesResponseValueTextCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueTextCustomFieldValueTypeText:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueNumberCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueNumberCustomFieldValueTypeNumber CustomFieldListValuesResponseValueNumberCustomFieldValueType = "number"
-)
-
-func (r CustomFieldListValuesResponseValueNumberCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueNumberCustomFieldValueTypeNumber:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueDateCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueDateCustomFieldValueTypeDate CustomFieldListValuesResponseValueDateCustomFieldValueType = "date"
-)
-
-func (r CustomFieldListValuesResponseValueDateCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueDateCustomFieldValueTypeDate:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueBooleanCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueBooleanCustomFieldValueTypeBoolean CustomFieldListValuesResponseValueBooleanCustomFieldValueType = "boolean"
-)
-
-func (r CustomFieldListValuesResponseValueBooleanCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueBooleanCustomFieldValueTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueCurrencyCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueTypeCurrency CustomFieldListValuesResponseValueCurrencyCustomFieldValueType = "currency"
-)
-
-func (r CustomFieldListValuesResponseValueCurrencyCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueCurrencyCustomFieldValueTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode string
-
-const (
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUsd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "USD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAud CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "AUD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBgn CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BGN"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBrl CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BRL"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCad CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CAD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeChf CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CHF"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCzk CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CZK"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDkk CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "DKK"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEur CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "EUR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGbp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GBP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHkd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "HKD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHuf CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "HUF"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIdr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "IDR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeInr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "INR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeJpy CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "JPY"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMyr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "MYR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNok CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NOK"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNzd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NZD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCny CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CNY"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePln CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PLN"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRon CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "RON"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTry CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "TRY"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSek CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "SEK"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSgd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "SGD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAed CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "AED"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeArs CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ARS"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBdt CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BDT"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBwp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "BWP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeClp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CLP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCop CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "COP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCrc CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "CRC"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEgp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "EGP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeFjd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "FJD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGel CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GEL"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGhs CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GHS"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIls CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ILS"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKes CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "KES"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKrw CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "KRW"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeLkr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "LKR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMad CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "MAD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMxn CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "MXN"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNpr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NPR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePhp CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PHP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePkr CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PKR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeThb CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "THB"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUah CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "UAH"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUgx CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "UGX"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUyu CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "UYU"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeVnd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "VND"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZar CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ZAR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZmw CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "ZMW"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTnd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "TND"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNgn CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "NGN"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRsd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "RSD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTwd CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "TWD"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGtq CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "GTQ"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHnl CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "HNL"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDop CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "DOP"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSar CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "SAR"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeXaf CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "XAF"
-	CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePen CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode = "PEN"
-)
-
-func (r CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCode) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUsd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAud, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBgn, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBrl, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCad, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeChf, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCzk, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDkk, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEur, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGbp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHkd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHuf, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIdr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeInr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeJpy, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMyr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNok, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNzd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCny, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePln, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRon, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTry, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSek, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSgd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeAed, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeArs, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBdt, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeBwp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeClp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCop, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeCrc, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeEgp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeFjd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGel, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGhs, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeIls, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKes, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeKrw, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeLkr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMad, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeMxn, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNpr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePhp, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePkr, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeThb, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUah, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUgx, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeUyu, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeVnd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZar, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeZmw, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTnd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeNgn, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeRsd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeTwd, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeGtq, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeHnl, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeDop, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeSar, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodeXaf, CustomFieldListValuesResponseValueCurrencyCustomFieldValueCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValuePercentageCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValuePercentageCustomFieldValueTypePercentage CustomFieldListValuesResponseValuePercentageCustomFieldValueType = "percentage"
-)
-
-func (r CustomFieldListValuesResponseValuePercentageCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValuePercentageCustomFieldValueTypePercentage:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueSelectCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueSelectCustomFieldValueTypeSelect CustomFieldListValuesResponseValueSelectCustomFieldValueType = "select"
-)
-
-func (r CustomFieldListValuesResponseValueSelectCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueSelectCustomFieldValueTypeSelect:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType string
-
-const (
-	CustomFieldListValuesResponseValueMultiSelectCustomFieldValueTypeMultiSelect CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType = "multi_select"
-)
-
-func (r CustomFieldListValuesResponseValueMultiSelectCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueMultiSelectCustomFieldValueTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueSelectCustomFieldValueOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                               `json:"id" api:"required"`
-	Label     string                                                               `json:"label" api:"required"`
-	Value     string                                                               `json:"value" api:"required"`
-	SortOrder interface{}                                                          `json:"sortOrder" api:"required"`
-	Status    CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                               `json:"createdAt" api:"required"`
-	JSON      customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON   `json:"-"`
-}
-
-// customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueSelectCustomFieldValueOption]
-type customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueSelectCustomFieldValueOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                     `json:"id" api:"required"`
-	Label     string                                                                     `json:"label" api:"required"`
-	Value     string                                                                     `json:"value" api:"required"`
-	SortOrder interface{}                                                                `json:"sortOrder" api:"required"`
-	Status    CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                     `json:"createdAt" api:"required"`
-	JSON      customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON    `json:"-"`
-}
-
-// customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption]
-type customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldListValuesResponseValueMultiSelectCustomFieldValueOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type CustomFieldUpsertValueResponseValueTextCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueTextCustomFieldValueTypeText CustomFieldUpsertValueResponseValueTextCustomFieldValueType = "text"
-)
-
-func (r CustomFieldUpsertValueResponseValueTextCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueTextCustomFieldValueTypeText:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueNumberCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueNumberCustomFieldValueTypeNumber CustomFieldUpsertValueResponseValueNumberCustomFieldValueType = "number"
-)
-
-func (r CustomFieldUpsertValueResponseValueNumberCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueNumberCustomFieldValueTypeNumber:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueDateCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueDateCustomFieldValueTypeDate CustomFieldUpsertValueResponseValueDateCustomFieldValueType = "date"
-)
-
-func (r CustomFieldUpsertValueResponseValueDateCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueDateCustomFieldValueTypeDate:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueBooleanCustomFieldValueTypeBoolean CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType = "boolean"
-)
-
-func (r CustomFieldUpsertValueResponseValueBooleanCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueBooleanCustomFieldValueTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueTypeCurrency CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType = "currency"
-)
-
-func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode string
-
-const (
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUsd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "USD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAud CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "AUD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBgn CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BGN"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBrl CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BRL"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCad CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CAD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeChf CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CHF"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCzk CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CZK"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDkk CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "DKK"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEur CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "EUR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGbp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GBP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHkd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "HKD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHuf CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "HUF"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIdr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "IDR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeInr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "INR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeJpy CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "JPY"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMyr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "MYR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNok CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NOK"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNzd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NZD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCny CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CNY"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePln CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PLN"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRon CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "RON"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTry CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "TRY"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSek CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "SEK"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSgd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "SGD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAed CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "AED"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeArs CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ARS"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBdt CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BDT"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBwp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "BWP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeClp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CLP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCop CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "COP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCrc CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "CRC"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEgp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "EGP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeFjd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "FJD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGel CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GEL"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGhs CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GHS"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIls CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ILS"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKes CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "KES"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKrw CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "KRW"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeLkr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "LKR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMad CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "MAD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMxn CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "MXN"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNpr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NPR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePhp CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PHP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePkr CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PKR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeThb CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "THB"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUah CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "UAH"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUgx CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "UGX"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUyu CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "UYU"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeVnd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "VND"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZar CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ZAR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZmw CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "ZMW"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTnd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "TND"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNgn CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "NGN"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRsd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "RSD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTwd CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "TWD"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGtq CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "GTQ"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHnl CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "HNL"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDop CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "DOP"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSar CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "SAR"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeXaf CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "XAF"
-	CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePen CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode = "PEN"
-)
-
-func (r CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCode) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUsd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAud, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBgn, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBrl, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCad, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeChf, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCzk, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDkk, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEur, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGbp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHkd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHuf, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIdr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeInr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeJpy, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMyr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNok, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNzd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCny, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePln, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRon, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTry, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSek, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSgd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeAed, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeArs, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBdt, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeBwp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeClp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCop, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeCrc, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeEgp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeFjd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGel, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGhs, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeIls, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKes, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeKrw, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeLkr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMad, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeMxn, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNpr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePhp, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePkr, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeThb, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUah, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUgx, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeUyu, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeVnd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZar, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeZmw, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTnd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeNgn, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeRsd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeTwd, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeGtq, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeHnl, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeDop, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeSar, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodeXaf, CustomFieldUpsertValueResponseValueCurrencyCustomFieldValueCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValuePercentageCustomFieldValueTypePercentage CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType = "percentage"
-)
-
-func (r CustomFieldUpsertValueResponseValuePercentageCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValuePercentageCustomFieldValueTypePercentage:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueSelectCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueSelectCustomFieldValueTypeSelect CustomFieldUpsertValueResponseValueSelectCustomFieldValueType = "select"
-)
-
-func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueSelectCustomFieldValueTypeSelect:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType string
-
-const (
-	CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueTypeMultiSelect CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType = "multi_select"
-)
-
-func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueType) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                `json:"id" api:"required"`
-	Label     string                                                                `json:"label" api:"required"`
-	Value     string                                                                `json:"value" api:"required"`
-	SortOrder interface{}                                                           `json:"sortOrder" api:"required"`
-	Status    CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                `json:"createdAt" api:"required"`
-	JSON      customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON   `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption]
-type customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueSelectCustomFieldValueOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                      `json:"id" api:"required"`
-	Label     string                                                                      `json:"label" api:"required"`
-	Value     string                                                                      `json:"value" api:"required"`
-	SortOrder interface{}                                                                 `json:"sortOrder" api:"required"`
-	Status    CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                      `json:"createdAt" api:"required"`
-	JSON      customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON    `json:"-"`
-}
-
-// customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON contains the JSON metadata for the struct [CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption]
-type customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r customFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus string
-
-const (
-	CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusActive   CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus = "active"
-	CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusArchived CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus = "archived"
-)
-
-func (r CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatus) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusActive, CustomFieldListValuesResponseValueSelectCustomFieldValueOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus string
-
-const (
-	CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusActive   CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus = "active"
-	CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusArchived CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus = "archived"
-)
-
-func (r CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatus) IsKnown() bool {
-	switch r {
-	case CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusActive, CustomFieldListValuesResponseValueMultiSelectCustomFieldValueOptionsStatusArchived:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus string
-
-const (
-	CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusActive   CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus = "active"
-	CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusArchived CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus = "archived"
-)
-
-func (r CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatus) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusActive, CustomFieldUpsertValueResponseValueSelectCustomFieldValueOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus string
-
-const (
-	CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusActive   CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus = "active"
-	CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusArchived CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus = "archived"
-)
-
-func (r CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatus) IsKnown() bool {
-	switch r {
-	case CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusActive, CustomFieldUpsertValueResponseValueMultiSelectCustomFieldValueOptionsStatusArchived:
-		return true
-	}
-	return false
-}
+func (r MultiSelectCustomFieldValue) implementsPublicCustomFieldValueOutput() {}

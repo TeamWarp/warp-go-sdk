@@ -18,7 +18,6 @@ import (
 	"github.com/TeamWarp/warp-go-sdk/internal/param"
 	"github.com/TeamWarp/warp-go-sdk/internal/requestconfig"
 	"github.com/TeamWarp/warp-go-sdk/option"
-	"github.com/TeamWarp/warp-go-sdk/shared"
 )
 
 // WorkerService contains methods and other services that help with interacting
@@ -232,6 +231,606 @@ func (r *WorkerService) Invite(ctx context.Context, id string, opts ...option.Re
 	path := fmt.Sprintf("v1/workers/%s/invite", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
+}
+
+type PublicWorkerCompensation struct {
+	// The id of the regular pay rate represented here.
+	PayRateID string `json:"payRateId" api:"required"`
+	// The period represented by the pay rate amount.
+	Per PublicPayRatePer `json:"per" api:"required"`
+	// Amount in the currency base unit, e.g. cents for USD.
+	Amount   int64                            `json:"amount" api:"required"`
+	Currency PublicWorkerCompensationCurrency `json:"currency" api:"required"`
+	// The server-formatted pay rate, including its period.
+	Display string                       `json:"display" api:"required"`
+	JSON    publicWorkerCompensationJSON `json:"-"`
+}
+
+// publicWorkerCompensationJSON contains the JSON metadata for the struct [PublicWorkerCompensation]
+type publicWorkerCompensationJSON struct {
+	PayRateID   apijson.Field
+	Per         apijson.Field
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicWorkerCompensation) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicWorkerCompensationJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicWorkerCompensationCurrency string
+
+const (
+	PublicWorkerCompensationCurrencyUsd PublicWorkerCompensationCurrency = "USD"
+	PublicWorkerCompensationCurrencyAud PublicWorkerCompensationCurrency = "AUD"
+	PublicWorkerCompensationCurrencyBgn PublicWorkerCompensationCurrency = "BGN"
+	PublicWorkerCompensationCurrencyBrl PublicWorkerCompensationCurrency = "BRL"
+	PublicWorkerCompensationCurrencyCad PublicWorkerCompensationCurrency = "CAD"
+	PublicWorkerCompensationCurrencyChf PublicWorkerCompensationCurrency = "CHF"
+	PublicWorkerCompensationCurrencyCzk PublicWorkerCompensationCurrency = "CZK"
+	PublicWorkerCompensationCurrencyDkk PublicWorkerCompensationCurrency = "DKK"
+	PublicWorkerCompensationCurrencyEur PublicWorkerCompensationCurrency = "EUR"
+	PublicWorkerCompensationCurrencyGbp PublicWorkerCompensationCurrency = "GBP"
+	PublicWorkerCompensationCurrencyHkd PublicWorkerCompensationCurrency = "HKD"
+	PublicWorkerCompensationCurrencyHuf PublicWorkerCompensationCurrency = "HUF"
+	PublicWorkerCompensationCurrencyIdr PublicWorkerCompensationCurrency = "IDR"
+	PublicWorkerCompensationCurrencyInr PublicWorkerCompensationCurrency = "INR"
+	PublicWorkerCompensationCurrencyJpy PublicWorkerCompensationCurrency = "JPY"
+	PublicWorkerCompensationCurrencyMyr PublicWorkerCompensationCurrency = "MYR"
+	PublicWorkerCompensationCurrencyNok PublicWorkerCompensationCurrency = "NOK"
+	PublicWorkerCompensationCurrencyNzd PublicWorkerCompensationCurrency = "NZD"
+	PublicWorkerCompensationCurrencyCny PublicWorkerCompensationCurrency = "CNY"
+	PublicWorkerCompensationCurrencyPln PublicWorkerCompensationCurrency = "PLN"
+	PublicWorkerCompensationCurrencyRon PublicWorkerCompensationCurrency = "RON"
+	PublicWorkerCompensationCurrencyTry PublicWorkerCompensationCurrency = "TRY"
+	PublicWorkerCompensationCurrencySek PublicWorkerCompensationCurrency = "SEK"
+	PublicWorkerCompensationCurrencySgd PublicWorkerCompensationCurrency = "SGD"
+	PublicWorkerCompensationCurrencyAed PublicWorkerCompensationCurrency = "AED"
+	PublicWorkerCompensationCurrencyArs PublicWorkerCompensationCurrency = "ARS"
+	PublicWorkerCompensationCurrencyBdt PublicWorkerCompensationCurrency = "BDT"
+	PublicWorkerCompensationCurrencyBwp PublicWorkerCompensationCurrency = "BWP"
+	PublicWorkerCompensationCurrencyClp PublicWorkerCompensationCurrency = "CLP"
+	PublicWorkerCompensationCurrencyCop PublicWorkerCompensationCurrency = "COP"
+	PublicWorkerCompensationCurrencyCrc PublicWorkerCompensationCurrency = "CRC"
+	PublicWorkerCompensationCurrencyEgp PublicWorkerCompensationCurrency = "EGP"
+	PublicWorkerCompensationCurrencyFjd PublicWorkerCompensationCurrency = "FJD"
+	PublicWorkerCompensationCurrencyGel PublicWorkerCompensationCurrency = "GEL"
+	PublicWorkerCompensationCurrencyGhs PublicWorkerCompensationCurrency = "GHS"
+	PublicWorkerCompensationCurrencyIls PublicWorkerCompensationCurrency = "ILS"
+	PublicWorkerCompensationCurrencyKes PublicWorkerCompensationCurrency = "KES"
+	PublicWorkerCompensationCurrencyKrw PublicWorkerCompensationCurrency = "KRW"
+	PublicWorkerCompensationCurrencyLkr PublicWorkerCompensationCurrency = "LKR"
+	PublicWorkerCompensationCurrencyMad PublicWorkerCompensationCurrency = "MAD"
+	PublicWorkerCompensationCurrencyMxn PublicWorkerCompensationCurrency = "MXN"
+	PublicWorkerCompensationCurrencyNpr PublicWorkerCompensationCurrency = "NPR"
+	PublicWorkerCompensationCurrencyPhp PublicWorkerCompensationCurrency = "PHP"
+	PublicWorkerCompensationCurrencyPkr PublicWorkerCompensationCurrency = "PKR"
+	PublicWorkerCompensationCurrencyThb PublicWorkerCompensationCurrency = "THB"
+	PublicWorkerCompensationCurrencyUah PublicWorkerCompensationCurrency = "UAH"
+	PublicWorkerCompensationCurrencyUgx PublicWorkerCompensationCurrency = "UGX"
+	PublicWorkerCompensationCurrencyUyu PublicWorkerCompensationCurrency = "UYU"
+	PublicWorkerCompensationCurrencyVnd PublicWorkerCompensationCurrency = "VND"
+	PublicWorkerCompensationCurrencyZar PublicWorkerCompensationCurrency = "ZAR"
+	PublicWorkerCompensationCurrencyZmw PublicWorkerCompensationCurrency = "ZMW"
+	PublicWorkerCompensationCurrencyTnd PublicWorkerCompensationCurrency = "TND"
+	PublicWorkerCompensationCurrencyNgn PublicWorkerCompensationCurrency = "NGN"
+	PublicWorkerCompensationCurrencyRsd PublicWorkerCompensationCurrency = "RSD"
+	PublicWorkerCompensationCurrencyTwd PublicWorkerCompensationCurrency = "TWD"
+	PublicWorkerCompensationCurrencyGtq PublicWorkerCompensationCurrency = "GTQ"
+	PublicWorkerCompensationCurrencyHnl PublicWorkerCompensationCurrency = "HNL"
+	PublicWorkerCompensationCurrencyDop PublicWorkerCompensationCurrency = "DOP"
+	PublicWorkerCompensationCurrencySar PublicWorkerCompensationCurrency = "SAR"
+	PublicWorkerCompensationCurrencyXaf PublicWorkerCompensationCurrency = "XAF"
+	PublicWorkerCompensationCurrencyPen PublicWorkerCompensationCurrency = "PEN"
+)
+
+func (r PublicWorkerCompensationCurrency) IsKnown() bool {
+	switch r {
+	case PublicWorkerCompensationCurrencyUsd, PublicWorkerCompensationCurrencyAud, PublicWorkerCompensationCurrencyBgn, PublicWorkerCompensationCurrencyBrl, PublicWorkerCompensationCurrencyCad, PublicWorkerCompensationCurrencyChf, PublicWorkerCompensationCurrencyCzk, PublicWorkerCompensationCurrencyDkk, PublicWorkerCompensationCurrencyEur, PublicWorkerCompensationCurrencyGbp, PublicWorkerCompensationCurrencyHkd, PublicWorkerCompensationCurrencyHuf, PublicWorkerCompensationCurrencyIdr, PublicWorkerCompensationCurrencyInr, PublicWorkerCompensationCurrencyJpy, PublicWorkerCompensationCurrencyMyr, PublicWorkerCompensationCurrencyNok, PublicWorkerCompensationCurrencyNzd, PublicWorkerCompensationCurrencyCny, PublicWorkerCompensationCurrencyPln, PublicWorkerCompensationCurrencyRon, PublicWorkerCompensationCurrencyTry, PublicWorkerCompensationCurrencySek, PublicWorkerCompensationCurrencySgd, PublicWorkerCompensationCurrencyAed, PublicWorkerCompensationCurrencyArs, PublicWorkerCompensationCurrencyBdt, PublicWorkerCompensationCurrencyBwp, PublicWorkerCompensationCurrencyClp, PublicWorkerCompensationCurrencyCop, PublicWorkerCompensationCurrencyCrc, PublicWorkerCompensationCurrencyEgp, PublicWorkerCompensationCurrencyFjd, PublicWorkerCompensationCurrencyGel, PublicWorkerCompensationCurrencyGhs, PublicWorkerCompensationCurrencyIls, PublicWorkerCompensationCurrencyKes, PublicWorkerCompensationCurrencyKrw, PublicWorkerCompensationCurrencyLkr, PublicWorkerCompensationCurrencyMad, PublicWorkerCompensationCurrencyMxn, PublicWorkerCompensationCurrencyNpr, PublicWorkerCompensationCurrencyPhp, PublicWorkerCompensationCurrencyPkr, PublicWorkerCompensationCurrencyThb, PublicWorkerCompensationCurrencyUah, PublicWorkerCompensationCurrencyUgx, PublicWorkerCompensationCurrencyUyu, PublicWorkerCompensationCurrencyVnd, PublicWorkerCompensationCurrencyZar, PublicWorkerCompensationCurrencyZmw, PublicWorkerCompensationCurrencyTnd, PublicWorkerCompensationCurrencyNgn, PublicWorkerCompensationCurrencyRsd, PublicWorkerCompensationCurrencyTwd, PublicWorkerCompensationCurrencyGtq, PublicWorkerCompensationCurrencyHnl, PublicWorkerCompensationCurrencyDop, PublicWorkerCompensationCurrencySar, PublicWorkerCompensationCurrencyXaf, PublicWorkerCompensationCurrencyPen:
+		return true
+	}
+	return false
+}
+
+type PublicTextWorkerCustomField struct {
+	Type PublicTextWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s text; null when unset or when the field is redacted for this API
+	// key.
+	Value string                          `json:"value" api:"required,nullable"`
+	JSON  publicTextWorkerCustomFieldJSON `json:"-"`
+}
+
+// publicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicTextWorkerCustomField]
+type publicTextWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicTextWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicTextWorkerCustomFieldType string
+
+const (
+	PublicTextWorkerCustomFieldTypeText PublicTextWorkerCustomFieldType = "text"
+)
+
+func (r PublicTextWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicTextWorkerCustomFieldTypeText:
+		return true
+	}
+	return false
+}
+
+type PublicNumberWorkerCustomField struct {
+	Type PublicNumberWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s number; null when unset or when the field is redacted for this API
+	// key.
+	Value interface{}                       `json:"value" api:"required,nullable"`
+	JSON  publicNumberWorkerCustomFieldJSON `json:"-"`
+}
+
+// publicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicNumberWorkerCustomField]
+type publicNumberWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicNumberWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicNumberWorkerCustomFieldType string
+
+const (
+	PublicNumberWorkerCustomFieldTypeNumber PublicNumberWorkerCustomFieldType = "number"
+)
+
+func (r PublicNumberWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicNumberWorkerCustomFieldTypeNumber:
+		return true
+	}
+	return false
+}
+
+type PublicDateWorkerCustomField struct {
+	Type PublicDateWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s date; null when unset or when the field is redacted for this API
+	// key.
+	Value string                          `json:"value" api:"required,nullable"`
+	JSON  publicDateWorkerCustomFieldJSON `json:"-"`
+}
+
+// publicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicDateWorkerCustomField]
+type publicDateWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicDateWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicDateWorkerCustomFieldType string
+
+const (
+	PublicDateWorkerCustomFieldTypeDate PublicDateWorkerCustomFieldType = "date"
+)
+
+func (r PublicDateWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicDateWorkerCustomFieldTypeDate:
+		return true
+	}
+	return false
+}
+
+type PublicBooleanWorkerCustomField struct {
+	Type PublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s answer; null when unset or when the field is redacted for this API
+	// key.
+	Value bool                               `json:"value" api:"required,nullable"`
+	JSON  publicBooleanWorkerCustomFieldJSON `json:"-"`
+}
+
+// publicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicBooleanWorkerCustomField]
+type publicBooleanWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicBooleanWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicBooleanWorkerCustomFieldType string
+
+const (
+	PublicBooleanWorkerCustomFieldTypeBoolean PublicBooleanWorkerCustomFieldType = "boolean"
+)
+
+func (r PublicBooleanWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicBooleanWorkerCustomFieldTypeBoolean:
+		return true
+	}
+	return false
+}
+
+type PublicCurrencyWorkerCustomField struct {
+	Type PublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The amount in integer base units of currencyCode (e.g. cents); null when unset
+	// or when the field is redacted for this API key.
+	Amount int64 `json:"amount" api:"required,nullable"`
+	// The amount’s currency; null when unset or when the field is redacted for this
+	// API key.
+	CurrencyCode PublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
+	JSON         publicCurrencyWorkerCustomFieldJSON         `json:"-"`
+}
+
+// publicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicCurrencyWorkerCustomField]
+type publicCurrencyWorkerCustomFieldJSON struct {
+	Type         apijson.Field
+	ID           apijson.Field
+	Name         apijson.Field
+	Redacted     apijson.Field
+	Display      apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r *PublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicCurrencyWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicCurrencyWorkerCustomFieldType string
+
+const (
+	PublicCurrencyWorkerCustomFieldTypeCurrency PublicCurrencyWorkerCustomFieldType = "currency"
+)
+
+func (r PublicCurrencyWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicCurrencyWorkerCustomFieldTypeCurrency:
+		return true
+	}
+	return false
+}
+
+type PublicCurrencyWorkerCustomFieldCurrencyCode string
+
+const (
+	PublicCurrencyWorkerCustomFieldCurrencyCodeUsd PublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeAud PublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeBgn PublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeBrl PublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeCad PublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeChf PublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeCzk PublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeDkk PublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeEur PublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeGbp PublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeHkd PublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeHuf PublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeIdr PublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeInr PublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeJpy PublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeMyr PublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeNok PublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeNzd PublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeCny PublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
+	PublicCurrencyWorkerCustomFieldCurrencyCodePln PublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeRon PublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeTry PublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeSek PublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeSgd PublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeAed PublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeArs PublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeBdt PublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeBwp PublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeClp PublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeCop PublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeCrc PublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeEgp PublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeFjd PublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeGel PublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeGhs PublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeIls PublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeKes PublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeKrw PublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeLkr PublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeMad PublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeMxn PublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeNpr PublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodePhp PublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodePkr PublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeThb PublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeUah PublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeUgx PublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeUyu PublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeVnd PublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeZar PublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeZmw PublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeTnd PublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeNgn PublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeRsd PublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeTwd PublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeGtq PublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeHnl PublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeDop PublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeSar PublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
+	PublicCurrencyWorkerCustomFieldCurrencyCodeXaf PublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
+	PublicCurrencyWorkerCustomFieldCurrencyCodePen PublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
+)
+
+func (r PublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
+	switch r {
+	case PublicCurrencyWorkerCustomFieldCurrencyCodeUsd, PublicCurrencyWorkerCustomFieldCurrencyCodeAud, PublicCurrencyWorkerCustomFieldCurrencyCodeBgn, PublicCurrencyWorkerCustomFieldCurrencyCodeBrl, PublicCurrencyWorkerCustomFieldCurrencyCodeCad, PublicCurrencyWorkerCustomFieldCurrencyCodeChf, PublicCurrencyWorkerCustomFieldCurrencyCodeCzk, PublicCurrencyWorkerCustomFieldCurrencyCodeDkk, PublicCurrencyWorkerCustomFieldCurrencyCodeEur, PublicCurrencyWorkerCustomFieldCurrencyCodeGbp, PublicCurrencyWorkerCustomFieldCurrencyCodeHkd, PublicCurrencyWorkerCustomFieldCurrencyCodeHuf, PublicCurrencyWorkerCustomFieldCurrencyCodeIdr, PublicCurrencyWorkerCustomFieldCurrencyCodeInr, PublicCurrencyWorkerCustomFieldCurrencyCodeJpy, PublicCurrencyWorkerCustomFieldCurrencyCodeMyr, PublicCurrencyWorkerCustomFieldCurrencyCodeNok, PublicCurrencyWorkerCustomFieldCurrencyCodeNzd, PublicCurrencyWorkerCustomFieldCurrencyCodeCny, PublicCurrencyWorkerCustomFieldCurrencyCodePln, PublicCurrencyWorkerCustomFieldCurrencyCodeRon, PublicCurrencyWorkerCustomFieldCurrencyCodeTry, PublicCurrencyWorkerCustomFieldCurrencyCodeSek, PublicCurrencyWorkerCustomFieldCurrencyCodeSgd, PublicCurrencyWorkerCustomFieldCurrencyCodeAed, PublicCurrencyWorkerCustomFieldCurrencyCodeArs, PublicCurrencyWorkerCustomFieldCurrencyCodeBdt, PublicCurrencyWorkerCustomFieldCurrencyCodeBwp, PublicCurrencyWorkerCustomFieldCurrencyCodeClp, PublicCurrencyWorkerCustomFieldCurrencyCodeCop, PublicCurrencyWorkerCustomFieldCurrencyCodeCrc, PublicCurrencyWorkerCustomFieldCurrencyCodeEgp, PublicCurrencyWorkerCustomFieldCurrencyCodeFjd, PublicCurrencyWorkerCustomFieldCurrencyCodeGel, PublicCurrencyWorkerCustomFieldCurrencyCodeGhs, PublicCurrencyWorkerCustomFieldCurrencyCodeIls, PublicCurrencyWorkerCustomFieldCurrencyCodeKes, PublicCurrencyWorkerCustomFieldCurrencyCodeKrw, PublicCurrencyWorkerCustomFieldCurrencyCodeLkr, PublicCurrencyWorkerCustomFieldCurrencyCodeMad, PublicCurrencyWorkerCustomFieldCurrencyCodeMxn, PublicCurrencyWorkerCustomFieldCurrencyCodeNpr, PublicCurrencyWorkerCustomFieldCurrencyCodePhp, PublicCurrencyWorkerCustomFieldCurrencyCodePkr, PublicCurrencyWorkerCustomFieldCurrencyCodeThb, PublicCurrencyWorkerCustomFieldCurrencyCodeUah, PublicCurrencyWorkerCustomFieldCurrencyCodeUgx, PublicCurrencyWorkerCustomFieldCurrencyCodeUyu, PublicCurrencyWorkerCustomFieldCurrencyCodeVnd, PublicCurrencyWorkerCustomFieldCurrencyCodeZar, PublicCurrencyWorkerCustomFieldCurrencyCodeZmw, PublicCurrencyWorkerCustomFieldCurrencyCodeTnd, PublicCurrencyWorkerCustomFieldCurrencyCodeNgn, PublicCurrencyWorkerCustomFieldCurrencyCodeRsd, PublicCurrencyWorkerCustomFieldCurrencyCodeTwd, PublicCurrencyWorkerCustomFieldCurrencyCodeGtq, PublicCurrencyWorkerCustomFieldCurrencyCodeHnl, PublicCurrencyWorkerCustomFieldCurrencyCodeDop, PublicCurrencyWorkerCustomFieldCurrencyCodeSar, PublicCurrencyWorkerCustomFieldCurrencyCodeXaf, PublicCurrencyWorkerCustomFieldCurrencyCodePen:
+		return true
+	}
+	return false
+}
+
+type PublicPercentageWorkerCustomField struct {
+	Type PublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s percentage; null when unset or when the field is redacted for this
+	// API key.
+	Value interface{}                           `json:"value" api:"required,nullable"`
+	JSON  publicPercentageWorkerCustomFieldJSON `json:"-"`
+}
+
+// publicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicPercentageWorkerCustomField]
+type publicPercentageWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Value       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicPercentageWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicPercentageWorkerCustomFieldType string
+
+const (
+	PublicPercentageWorkerCustomFieldTypePercentage PublicPercentageWorkerCustomFieldType = "percentage"
+)
+
+func (r PublicPercentageWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicPercentageWorkerCustomFieldTypePercentage:
+		return true
+	}
+	return false
+}
+
+type PublicSelectWorkerCustomField struct {
+	Type PublicSelectWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The selected option; null when unset or when the field is redacted for this API
+	// key.
+	Option PublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
+	JSON   publicSelectWorkerCustomFieldJSON   `json:"-"`
+}
+
+// publicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicSelectWorkerCustomField]
+type publicSelectWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Option      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicSelectWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicSelectWorkerCustomFieldType string
+
+const (
+	PublicSelectWorkerCustomFieldTypeSelect PublicSelectWorkerCustomFieldType = "select"
+)
+
+func (r PublicSelectWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicSelectWorkerCustomFieldTypeSelect:
+		return true
+	}
+	return false
+}
+
+type PublicMultiSelectWorkerCustomField struct {
+	Type PublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The selected options; null when unset or when the field is redacted for this API
+	// key.
+	Options []PublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
+	JSON    publicMultiSelectWorkerCustomFieldJSON     `json:"-"`
+}
+
+// publicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicMultiSelectWorkerCustomField]
+type publicMultiSelectWorkerCustomFieldJSON struct {
+	Type        apijson.Field
+	ID          apijson.Field
+	Name        apijson.Field
+	Redacted    apijson.Field
+	Display     apijson.Field
+	Options     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicMultiSelectWorkerCustomFieldType string
+
+const (
+	PublicMultiSelectWorkerCustomFieldTypeMultiSelect PublicMultiSelectWorkerCustomFieldType = "multi_select"
+)
+
+func (r PublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicMultiSelectWorkerCustomFieldTypeMultiSelect:
+		return true
+	}
+	return false
 }
 
 type OfficeWorkLocationParam struct {
@@ -1088,12 +1687,12 @@ type WorkerGetResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerGetResponseLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerGetResponseCustomField `json:"customFields" api:"nullable"`
-	JSON         workerGetResponseJSON          `json:"-"`
+	Level        WorkerGetResponseLevel    `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField `json:"customFields" api:"nullable"`
+	JSON         workerGetResponseJSON     `json:"-"`
 }
 
 // workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
@@ -1155,12 +1754,12 @@ type WorkerNewEmployeeResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerNewEmployeeResponseLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerNewEmployeeResponseCustomField `json:"customFields" api:"nullable"`
-	JSON         workerNewEmployeeResponseJSON          `json:"-"`
+	Level        WorkerNewEmployeeResponseLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField      `json:"customFields" api:"nullable"`
+	JSON         workerNewEmployeeResponseJSON  `json:"-"`
 }
 
 // workerNewEmployeeResponseJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponse]
@@ -1222,12 +1821,12 @@ type WorkerNewContractorResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerNewContractorResponseLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerNewContractorResponseCustomField `json:"customFields" api:"nullable"`
-	JSON         workerNewContractorResponseJSON          `json:"-"`
+	Level        WorkerNewContractorResponseLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField        `json:"customFields" api:"nullable"`
+	JSON         workerNewContractorResponseJSON  `json:"-"`
 }
 
 // workerNewContractorResponseJSON contains the JSON metadata for the struct [WorkerNewContractorResponse]
@@ -1289,12 +1888,12 @@ type WorkerInviteResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerInviteResponseLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerInviteResponseCustomField `json:"customFields" api:"nullable"`
-	JSON         workerInviteResponseJSON          `json:"-"`
+	Level        WorkerInviteResponseLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField `json:"customFields" api:"nullable"`
+	JSON         workerInviteResponseJSON  `json:"-"`
 }
 
 // workerInviteResponseJSON contains the JSON metadata for the struct [WorkerInviteResponse]
@@ -1330,6 +1929,132 @@ func (r workerInviteResponseJSON) RawJSON() string {
 	return r.raw
 }
 
+type PublicSelectWorkerCustomFieldOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                    `json:"id" api:"required"`
+	Label     string                                    `json:"label" api:"required"`
+	Value     string                                    `json:"value" api:"required"`
+	SortOrder interface{}                               `json:"sortOrder" api:"required"`
+	Status    PublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
+	CreatedAt string                                    `json:"createdAt" api:"required"`
+	JSON      publicSelectWorkerCustomFieldOptionJSON   `json:"-"`
+}
+
+// publicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [PublicSelectWorkerCustomFieldOption]
+type publicSelectWorkerCustomFieldOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicMultiSelectWorkerCustomFieldOption struct {
+	// The tag of a company custom worker field option.
+	ID        string                                          `json:"id" api:"required"`
+	Label     string                                          `json:"label" api:"required"`
+	Value     string                                          `json:"value" api:"required"`
+	SortOrder interface{}                                     `json:"sortOrder" api:"required"`
+	Status    PublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
+	CreatedAt string                                          `json:"createdAt" api:"required"`
+	JSON      publicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
+}
+
+// publicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [PublicMultiSelectWorkerCustomFieldOption]
+type publicMultiSelectWorkerCustomFieldOptionJSON struct {
+	ID          apijson.Field
+	Label       apijson.Field
+	Value       apijson.Field
+	SortOrder   apijson.Field
+	Status      apijson.Field
+	CreatedAt   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicWorkerCustomField struct {
+	Type PublicWorkerCustomFieldType `json:"type" api:"required"`
+	// The tag of a company custom worker field.
+	ID   string `json:"id" api:"required"`
+	Name string `json:"name" api:"required"`
+	// True when this API key’s permission scopes cannot read the field’s category. The
+	// value fields are withheld (null), not absent — null does not imply the worker
+	// has no value.
+	Redacted bool `json:"redacted" api:"required"`
+	// The value rendered as the Warp dashboard displays it; null when unset or
+	// redacted.
+	Display string `json:"display" api:"required,nullable"`
+	// The worker’s text; null when unset or when the field is redacted for this API
+	// key.
+	Value interface{} `json:"value" api:"nullable"`
+	// The amount in integer base units of currencyCode (e.g. cents); null when unset
+	// or when the field is redacted for this API key.
+	Amount int64 `json:"amount" api:"nullable"`
+	// The amount’s currency; null when unset or when the field is redacted for this
+	// API key.
+	CurrencyCode PublicWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"nullable"`
+	// The selected option; null when unset or when the field is redacted for this API
+	// key.
+	Option interface{} `json:"option" api:"nullable"`
+	// The selected options; null when unset or when the field is redacted for this API
+	// key.
+	Options interface{}                 `json:"options" api:"nullable"`
+	JSON    publicWorkerCustomFieldJSON `json:"-"`
+	union   PublicWorkerCustomFieldUnion
+}
+
+// publicWorkerCustomFieldJSON contains the JSON metadata for the struct [PublicWorkerCustomField]
+type publicWorkerCustomFieldJSON struct {
+	Type         apijson.Field
+	ID           apijson.Field
+	Name         apijson.Field
+	Redacted     apijson.Field
+	Display      apijson.Field
+	Value        apijson.Field
+	Amount       apijson.Field
+	CurrencyCode apijson.Field
+	Option       apijson.Field
+	Options      apijson.Field
+	raw          string
+	ExtraFields  map[string]apijson.Field
+}
+
+func (r publicWorkerCustomFieldJSON) RawJSON() string {
+	return r.raw
+}
+
+func (r *PublicWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
+	*r = PublicWorkerCustomField{}
+	err = apijson.UnmarshalRoot(data, &r.union)
+	if err != nil {
+		return err
+	}
+	return apijson.Port(r.union, &r)
+}
+
+func (r PublicWorkerCustomField) AsUnion() PublicWorkerCustomFieldUnion {
+	return r.union
+}
+
 type WorkerListResponseData struct {
 	// The id of the worker.
 	ID           string                       `json:"id" api:"required"`
@@ -1356,12 +2081,12 @@ type WorkerListResponseData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
-	Level        WorkerListResponseDataLevel         `json:"level" api:"nullable"`
-	CustomFields []WorkerListResponseDataCustomField `json:"customFields" api:"nullable"`
-	JSON         workerListResponseDataJSON          `json:"-"`
+	Level        WorkerListResponseDataLevel `json:"level" api:"nullable"`
+	CustomFields []PublicWorkerCustomField   `json:"customFields" api:"nullable"`
+	JSON         workerListResponseDataJSON  `json:"-"`
 }
 
 // workerListResponseDataJSON contains the JSON metadata for the struct [WorkerListResponseData]
@@ -1481,70 +2206,6 @@ func (r workerGetResponseLevelJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerGetResponseCustomField struct {
-	Type WorkerGetResponseCustomFieldsType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerGetResponseCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option interface{} `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                      `json:"options" api:"nullable"`
-	JSON    workerGetResponseCustomFieldJSON `json:"-"`
-	union   WorkerGetResponseCustomFieldsUnion
-}
-
-// workerGetResponseCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomField]
-type workerGetResponseCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r workerGetResponseCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerGetResponseCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerGetResponseCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r WorkerGetResponseCustomField) AsUnion() WorkerGetResponseCustomFieldsUnion {
-	return r.union
-}
-
 type WorkerNewEmployeeResponseType string
 
 const (
@@ -1627,70 +2288,6 @@ func (r *WorkerNewEmployeeResponseLevel) UnmarshalJSON(data []byte) (err error) 
 
 func (r workerNewEmployeeResponseLevelJSON) RawJSON() string {
 	return r.raw
-}
-
-type WorkerNewEmployeeResponseCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerNewEmployeeResponseCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option interface{} `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                              `json:"options" api:"nullable"`
-	JSON    workerNewEmployeeResponseCustomFieldJSON `json:"-"`
-	union   WorkerNewEmployeeResponseCustomFieldsUnion
-}
-
-// workerNewEmployeeResponseCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomField]
-type workerNewEmployeeResponseCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r workerNewEmployeeResponseCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerNewEmployeeResponseCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerNewEmployeeResponseCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r WorkerNewEmployeeResponseCustomField) AsUnion() WorkerNewEmployeeResponseCustomFieldsUnion {
-	return r.union
 }
 
 type WorkerNewContractorResponseType string
@@ -1777,70 +2374,6 @@ func (r workerNewContractorResponseLevelJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerNewContractorResponseCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerNewContractorResponseCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option interface{} `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                                `json:"options" api:"nullable"`
-	JSON    workerNewContractorResponseCustomFieldJSON `json:"-"`
-	union   WorkerNewContractorResponseCustomFieldsUnion
-}
-
-// workerNewContractorResponseCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomField]
-type workerNewContractorResponseCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r workerNewContractorResponseCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerNewContractorResponseCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerNewContractorResponseCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r WorkerNewContractorResponseCustomField) AsUnion() WorkerNewContractorResponseCustomFieldsUnion {
-	return r.union
-}
-
 type WorkerInviteResponseType string
 
 const (
@@ -1925,68 +2458,180 @@ func (r workerInviteResponseLevelJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerInviteResponseCustomField struct {
-	Type WorkerInviteResponseCustomFieldsType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerInviteResponseCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option interface{} `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                         `json:"options" api:"nullable"`
-	JSON    workerInviteResponseCustomFieldJSON `json:"-"`
-	union   WorkerInviteResponseCustomFieldsUnion
-}
+type PublicSelectWorkerCustomFieldOptionStatus string
 
-// workerInviteResponseCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomField]
-type workerInviteResponseCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
+const (
+	PublicSelectWorkerCustomFieldOptionStatusActive   PublicSelectWorkerCustomFieldOptionStatus = "active"
+	PublicSelectWorkerCustomFieldOptionStatusArchived PublicSelectWorkerCustomFieldOptionStatus = "archived"
+)
 
-func (r workerInviteResponseCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerInviteResponseCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerInviteResponseCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
+func (r PublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
+	switch r {
+	case PublicSelectWorkerCustomFieldOptionStatusActive, PublicSelectWorkerCustomFieldOptionStatusArchived:
+		return true
 	}
-	return apijson.Port(r.union, &r)
+	return false
 }
 
-func (r WorkerInviteResponseCustomField) AsUnion() WorkerInviteResponseCustomFieldsUnion {
-	return r.union
+type PublicMultiSelectWorkerCustomFieldOptionsStatus string
+
+const (
+	PublicMultiSelectWorkerCustomFieldOptionsStatusActive   PublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
+	PublicMultiSelectWorkerCustomFieldOptionsStatusArchived PublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
+)
+
+func (r PublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
+	switch r {
+	case PublicMultiSelectWorkerCustomFieldOptionsStatusActive, PublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
+		return true
+	}
+	return false
+}
+
+type PublicWorkerCustomFieldUnion interface {
+	implementsPublicWorkerCustomField()
+}
+
+func init() {
+	apijson.RegisterUnion(
+		reflect.TypeOf((*PublicWorkerCustomFieldUnion)(nil)).Elem(),
+		"type",
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicTextWorkerCustomField{}),
+			DiscriminatorValue: "text",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicNumberWorkerCustomField{}),
+			DiscriminatorValue: "number",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicDateWorkerCustomField{}),
+			DiscriminatorValue: "date",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicBooleanWorkerCustomField{}),
+			DiscriminatorValue: "boolean",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicCurrencyWorkerCustomField{}),
+			DiscriminatorValue: "currency",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicPercentageWorkerCustomField{}),
+			DiscriminatorValue: "percentage",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicSelectWorkerCustomField{}),
+			DiscriminatorValue: "select",
+		},
+		apijson.UnionVariant{
+			TypeFilter:         gjson.JSON,
+			Type:               reflect.TypeOf(PublicMultiSelectWorkerCustomField{}),
+			DiscriminatorValue: "multi_select",
+		},
+	)
+}
+
+type PublicWorkerCustomFieldType string
+
+const (
+	PublicWorkerCustomFieldTypeText        PublicWorkerCustomFieldType = "text"
+	PublicWorkerCustomFieldTypeNumber      PublicWorkerCustomFieldType = "number"
+	PublicWorkerCustomFieldTypeDate        PublicWorkerCustomFieldType = "date"
+	PublicWorkerCustomFieldTypeBoolean     PublicWorkerCustomFieldType = "boolean"
+	PublicWorkerCustomFieldTypeCurrency    PublicWorkerCustomFieldType = "currency"
+	PublicWorkerCustomFieldTypePercentage  PublicWorkerCustomFieldType = "percentage"
+	PublicWorkerCustomFieldTypeSelect      PublicWorkerCustomFieldType = "select"
+	PublicWorkerCustomFieldTypeMultiSelect PublicWorkerCustomFieldType = "multi_select"
+)
+
+func (r PublicWorkerCustomFieldType) IsKnown() bool {
+	switch r {
+	case PublicWorkerCustomFieldTypeText, PublicWorkerCustomFieldTypeNumber, PublicWorkerCustomFieldTypeDate, PublicWorkerCustomFieldTypeBoolean, PublicWorkerCustomFieldTypeCurrency, PublicWorkerCustomFieldTypePercentage, PublicWorkerCustomFieldTypeSelect, PublicWorkerCustomFieldTypeMultiSelect:
+		return true
+	}
+	return false
+}
+
+type PublicWorkerCustomFieldCurrencyCode string
+
+const (
+	PublicWorkerCustomFieldCurrencyCodeUsd PublicWorkerCustomFieldCurrencyCode = "USD"
+	PublicWorkerCustomFieldCurrencyCodeAud PublicWorkerCustomFieldCurrencyCode = "AUD"
+	PublicWorkerCustomFieldCurrencyCodeBgn PublicWorkerCustomFieldCurrencyCode = "BGN"
+	PublicWorkerCustomFieldCurrencyCodeBrl PublicWorkerCustomFieldCurrencyCode = "BRL"
+	PublicWorkerCustomFieldCurrencyCodeCad PublicWorkerCustomFieldCurrencyCode = "CAD"
+	PublicWorkerCustomFieldCurrencyCodeChf PublicWorkerCustomFieldCurrencyCode = "CHF"
+	PublicWorkerCustomFieldCurrencyCodeCzk PublicWorkerCustomFieldCurrencyCode = "CZK"
+	PublicWorkerCustomFieldCurrencyCodeDkk PublicWorkerCustomFieldCurrencyCode = "DKK"
+	PublicWorkerCustomFieldCurrencyCodeEur PublicWorkerCustomFieldCurrencyCode = "EUR"
+	PublicWorkerCustomFieldCurrencyCodeGbp PublicWorkerCustomFieldCurrencyCode = "GBP"
+	PublicWorkerCustomFieldCurrencyCodeHkd PublicWorkerCustomFieldCurrencyCode = "HKD"
+	PublicWorkerCustomFieldCurrencyCodeHuf PublicWorkerCustomFieldCurrencyCode = "HUF"
+	PublicWorkerCustomFieldCurrencyCodeIdr PublicWorkerCustomFieldCurrencyCode = "IDR"
+	PublicWorkerCustomFieldCurrencyCodeInr PublicWorkerCustomFieldCurrencyCode = "INR"
+	PublicWorkerCustomFieldCurrencyCodeJpy PublicWorkerCustomFieldCurrencyCode = "JPY"
+	PublicWorkerCustomFieldCurrencyCodeMyr PublicWorkerCustomFieldCurrencyCode = "MYR"
+	PublicWorkerCustomFieldCurrencyCodeNok PublicWorkerCustomFieldCurrencyCode = "NOK"
+	PublicWorkerCustomFieldCurrencyCodeNzd PublicWorkerCustomFieldCurrencyCode = "NZD"
+	PublicWorkerCustomFieldCurrencyCodeCny PublicWorkerCustomFieldCurrencyCode = "CNY"
+	PublicWorkerCustomFieldCurrencyCodePln PublicWorkerCustomFieldCurrencyCode = "PLN"
+	PublicWorkerCustomFieldCurrencyCodeRon PublicWorkerCustomFieldCurrencyCode = "RON"
+	PublicWorkerCustomFieldCurrencyCodeTry PublicWorkerCustomFieldCurrencyCode = "TRY"
+	PublicWorkerCustomFieldCurrencyCodeSek PublicWorkerCustomFieldCurrencyCode = "SEK"
+	PublicWorkerCustomFieldCurrencyCodeSgd PublicWorkerCustomFieldCurrencyCode = "SGD"
+	PublicWorkerCustomFieldCurrencyCodeAed PublicWorkerCustomFieldCurrencyCode = "AED"
+	PublicWorkerCustomFieldCurrencyCodeArs PublicWorkerCustomFieldCurrencyCode = "ARS"
+	PublicWorkerCustomFieldCurrencyCodeBdt PublicWorkerCustomFieldCurrencyCode = "BDT"
+	PublicWorkerCustomFieldCurrencyCodeBwp PublicWorkerCustomFieldCurrencyCode = "BWP"
+	PublicWorkerCustomFieldCurrencyCodeClp PublicWorkerCustomFieldCurrencyCode = "CLP"
+	PublicWorkerCustomFieldCurrencyCodeCop PublicWorkerCustomFieldCurrencyCode = "COP"
+	PublicWorkerCustomFieldCurrencyCodeCrc PublicWorkerCustomFieldCurrencyCode = "CRC"
+	PublicWorkerCustomFieldCurrencyCodeEgp PublicWorkerCustomFieldCurrencyCode = "EGP"
+	PublicWorkerCustomFieldCurrencyCodeFjd PublicWorkerCustomFieldCurrencyCode = "FJD"
+	PublicWorkerCustomFieldCurrencyCodeGel PublicWorkerCustomFieldCurrencyCode = "GEL"
+	PublicWorkerCustomFieldCurrencyCodeGhs PublicWorkerCustomFieldCurrencyCode = "GHS"
+	PublicWorkerCustomFieldCurrencyCodeIls PublicWorkerCustomFieldCurrencyCode = "ILS"
+	PublicWorkerCustomFieldCurrencyCodeKes PublicWorkerCustomFieldCurrencyCode = "KES"
+	PublicWorkerCustomFieldCurrencyCodeKrw PublicWorkerCustomFieldCurrencyCode = "KRW"
+	PublicWorkerCustomFieldCurrencyCodeLkr PublicWorkerCustomFieldCurrencyCode = "LKR"
+	PublicWorkerCustomFieldCurrencyCodeMad PublicWorkerCustomFieldCurrencyCode = "MAD"
+	PublicWorkerCustomFieldCurrencyCodeMxn PublicWorkerCustomFieldCurrencyCode = "MXN"
+	PublicWorkerCustomFieldCurrencyCodeNpr PublicWorkerCustomFieldCurrencyCode = "NPR"
+	PublicWorkerCustomFieldCurrencyCodePhp PublicWorkerCustomFieldCurrencyCode = "PHP"
+	PublicWorkerCustomFieldCurrencyCodePkr PublicWorkerCustomFieldCurrencyCode = "PKR"
+	PublicWorkerCustomFieldCurrencyCodeThb PublicWorkerCustomFieldCurrencyCode = "THB"
+	PublicWorkerCustomFieldCurrencyCodeUah PublicWorkerCustomFieldCurrencyCode = "UAH"
+	PublicWorkerCustomFieldCurrencyCodeUgx PublicWorkerCustomFieldCurrencyCode = "UGX"
+	PublicWorkerCustomFieldCurrencyCodeUyu PublicWorkerCustomFieldCurrencyCode = "UYU"
+	PublicWorkerCustomFieldCurrencyCodeVnd PublicWorkerCustomFieldCurrencyCode = "VND"
+	PublicWorkerCustomFieldCurrencyCodeZar PublicWorkerCustomFieldCurrencyCode = "ZAR"
+	PublicWorkerCustomFieldCurrencyCodeZmw PublicWorkerCustomFieldCurrencyCode = "ZMW"
+	PublicWorkerCustomFieldCurrencyCodeTnd PublicWorkerCustomFieldCurrencyCode = "TND"
+	PublicWorkerCustomFieldCurrencyCodeNgn PublicWorkerCustomFieldCurrencyCode = "NGN"
+	PublicWorkerCustomFieldCurrencyCodeRsd PublicWorkerCustomFieldCurrencyCode = "RSD"
+	PublicWorkerCustomFieldCurrencyCodeTwd PublicWorkerCustomFieldCurrencyCode = "TWD"
+	PublicWorkerCustomFieldCurrencyCodeGtq PublicWorkerCustomFieldCurrencyCode = "GTQ"
+	PublicWorkerCustomFieldCurrencyCodeHnl PublicWorkerCustomFieldCurrencyCode = "HNL"
+	PublicWorkerCustomFieldCurrencyCodeDop PublicWorkerCustomFieldCurrencyCode = "DOP"
+	PublicWorkerCustomFieldCurrencyCodeSar PublicWorkerCustomFieldCurrencyCode = "SAR"
+	PublicWorkerCustomFieldCurrencyCodeXaf PublicWorkerCustomFieldCurrencyCode = "XAF"
+	PublicWorkerCustomFieldCurrencyCodePen PublicWorkerCustomFieldCurrencyCode = "PEN"
+)
+
+func (r PublicWorkerCustomFieldCurrencyCode) IsKnown() bool {
+	switch r {
+	case PublicWorkerCustomFieldCurrencyCodeUsd, PublicWorkerCustomFieldCurrencyCodeAud, PublicWorkerCustomFieldCurrencyCodeBgn, PublicWorkerCustomFieldCurrencyCodeBrl, PublicWorkerCustomFieldCurrencyCodeCad, PublicWorkerCustomFieldCurrencyCodeChf, PublicWorkerCustomFieldCurrencyCodeCzk, PublicWorkerCustomFieldCurrencyCodeDkk, PublicWorkerCustomFieldCurrencyCodeEur, PublicWorkerCustomFieldCurrencyCodeGbp, PublicWorkerCustomFieldCurrencyCodeHkd, PublicWorkerCustomFieldCurrencyCodeHuf, PublicWorkerCustomFieldCurrencyCodeIdr, PublicWorkerCustomFieldCurrencyCodeInr, PublicWorkerCustomFieldCurrencyCodeJpy, PublicWorkerCustomFieldCurrencyCodeMyr, PublicWorkerCustomFieldCurrencyCodeNok, PublicWorkerCustomFieldCurrencyCodeNzd, PublicWorkerCustomFieldCurrencyCodeCny, PublicWorkerCustomFieldCurrencyCodePln, PublicWorkerCustomFieldCurrencyCodeRon, PublicWorkerCustomFieldCurrencyCodeTry, PublicWorkerCustomFieldCurrencyCodeSek, PublicWorkerCustomFieldCurrencyCodeSgd, PublicWorkerCustomFieldCurrencyCodeAed, PublicWorkerCustomFieldCurrencyCodeArs, PublicWorkerCustomFieldCurrencyCodeBdt, PublicWorkerCustomFieldCurrencyCodeBwp, PublicWorkerCustomFieldCurrencyCodeClp, PublicWorkerCustomFieldCurrencyCodeCop, PublicWorkerCustomFieldCurrencyCodeCrc, PublicWorkerCustomFieldCurrencyCodeEgp, PublicWorkerCustomFieldCurrencyCodeFjd, PublicWorkerCustomFieldCurrencyCodeGel, PublicWorkerCustomFieldCurrencyCodeGhs, PublicWorkerCustomFieldCurrencyCodeIls, PublicWorkerCustomFieldCurrencyCodeKes, PublicWorkerCustomFieldCurrencyCodeKrw, PublicWorkerCustomFieldCurrencyCodeLkr, PublicWorkerCustomFieldCurrencyCodeMad, PublicWorkerCustomFieldCurrencyCodeMxn, PublicWorkerCustomFieldCurrencyCodeNpr, PublicWorkerCustomFieldCurrencyCodePhp, PublicWorkerCustomFieldCurrencyCodePkr, PublicWorkerCustomFieldCurrencyCodeThb, PublicWorkerCustomFieldCurrencyCodeUah, PublicWorkerCustomFieldCurrencyCodeUgx, PublicWorkerCustomFieldCurrencyCodeUyu, PublicWorkerCustomFieldCurrencyCodeVnd, PublicWorkerCustomFieldCurrencyCodeZar, PublicWorkerCustomFieldCurrencyCodeZmw, PublicWorkerCustomFieldCurrencyCodeTnd, PublicWorkerCustomFieldCurrencyCodeNgn, PublicWorkerCustomFieldCurrencyCodeRsd, PublicWorkerCustomFieldCurrencyCodeTwd, PublicWorkerCustomFieldCurrencyCodeGtq, PublicWorkerCustomFieldCurrencyCodeHnl, PublicWorkerCustomFieldCurrencyCodeDop, PublicWorkerCustomFieldCurrencyCodeSar, PublicWorkerCustomFieldCurrencyCodeXaf, PublicWorkerCustomFieldCurrencyCodePen:
+		return true
+	}
+	return false
 }
 
 type WorkerListResponseDataType string
@@ -2073,70 +2718,6 @@ func (r workerListResponseDataLevelJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerListResponseDataCustomField struct {
-	Type WorkerListResponseDataCustomFieldsType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerListResponseDataCustomFieldsCurrencyCode `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option interface{} `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                           `json:"options" api:"nullable"`
-	JSON    workerListResponseDataCustomFieldJSON `json:"-"`
-	union   WorkerListResponseDataCustomFieldsUnion
-}
-
-// workerListResponseDataCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomField]
-type workerListResponseDataCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r workerListResponseDataCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerListResponseDataCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerListResponseDataCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r WorkerListResponseDataCustomField) AsUnion() WorkerListResponseDataCustomFieldsUnion {
-	return r.union
-}
-
 type WorkerGetResponseLevelTrack string
 
 const (
@@ -2148,152 +2729,6 @@ const (
 func (r WorkerGetResponseLevelTrack) IsKnown() bool {
 	switch r {
 	case WorkerGetResponseLevelTrackIc, WorkerGetResponseLevelTrackManager, WorkerGetResponseLevelTrackExecutive:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsUnion interface {
-	implementsWorkerGetResponseCustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerGetResponseCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type WorkerGetResponseCustomFieldsType string
-
-const (
-	WorkerGetResponseCustomFieldsTypeText        WorkerGetResponseCustomFieldsType = "text"
-	WorkerGetResponseCustomFieldsTypeNumber      WorkerGetResponseCustomFieldsType = "number"
-	WorkerGetResponseCustomFieldsTypeDate        WorkerGetResponseCustomFieldsType = "date"
-	WorkerGetResponseCustomFieldsTypeBoolean     WorkerGetResponseCustomFieldsType = "boolean"
-	WorkerGetResponseCustomFieldsTypeCurrency    WorkerGetResponseCustomFieldsType = "currency"
-	WorkerGetResponseCustomFieldsTypePercentage  WorkerGetResponseCustomFieldsType = "percentage"
-	WorkerGetResponseCustomFieldsTypeSelect      WorkerGetResponseCustomFieldsType = "select"
-	WorkerGetResponseCustomFieldsTypeMultiSelect WorkerGetResponseCustomFieldsType = "multi_select"
-)
-
-func (r WorkerGetResponseCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsTypeText, WorkerGetResponseCustomFieldsTypeNumber, WorkerGetResponseCustomFieldsTypeDate, WorkerGetResponseCustomFieldsTypeBoolean, WorkerGetResponseCustomFieldsTypeCurrency, WorkerGetResponseCustomFieldsTypePercentage, WorkerGetResponseCustomFieldsTypeSelect, WorkerGetResponseCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsCurrencyCode string
-
-const (
-	WorkerGetResponseCustomFieldsCurrencyCodeUsd WorkerGetResponseCustomFieldsCurrencyCode = "USD"
-	WorkerGetResponseCustomFieldsCurrencyCodeAud WorkerGetResponseCustomFieldsCurrencyCode = "AUD"
-	WorkerGetResponseCustomFieldsCurrencyCodeBgn WorkerGetResponseCustomFieldsCurrencyCode = "BGN"
-	WorkerGetResponseCustomFieldsCurrencyCodeBrl WorkerGetResponseCustomFieldsCurrencyCode = "BRL"
-	WorkerGetResponseCustomFieldsCurrencyCodeCad WorkerGetResponseCustomFieldsCurrencyCode = "CAD"
-	WorkerGetResponseCustomFieldsCurrencyCodeChf WorkerGetResponseCustomFieldsCurrencyCode = "CHF"
-	WorkerGetResponseCustomFieldsCurrencyCodeCzk WorkerGetResponseCustomFieldsCurrencyCode = "CZK"
-	WorkerGetResponseCustomFieldsCurrencyCodeDkk WorkerGetResponseCustomFieldsCurrencyCode = "DKK"
-	WorkerGetResponseCustomFieldsCurrencyCodeEur WorkerGetResponseCustomFieldsCurrencyCode = "EUR"
-	WorkerGetResponseCustomFieldsCurrencyCodeGbp WorkerGetResponseCustomFieldsCurrencyCode = "GBP"
-	WorkerGetResponseCustomFieldsCurrencyCodeHkd WorkerGetResponseCustomFieldsCurrencyCode = "HKD"
-	WorkerGetResponseCustomFieldsCurrencyCodeHuf WorkerGetResponseCustomFieldsCurrencyCode = "HUF"
-	WorkerGetResponseCustomFieldsCurrencyCodeIdr WorkerGetResponseCustomFieldsCurrencyCode = "IDR"
-	WorkerGetResponseCustomFieldsCurrencyCodeInr WorkerGetResponseCustomFieldsCurrencyCode = "INR"
-	WorkerGetResponseCustomFieldsCurrencyCodeJpy WorkerGetResponseCustomFieldsCurrencyCode = "JPY"
-	WorkerGetResponseCustomFieldsCurrencyCodeMyr WorkerGetResponseCustomFieldsCurrencyCode = "MYR"
-	WorkerGetResponseCustomFieldsCurrencyCodeNok WorkerGetResponseCustomFieldsCurrencyCode = "NOK"
-	WorkerGetResponseCustomFieldsCurrencyCodeNzd WorkerGetResponseCustomFieldsCurrencyCode = "NZD"
-	WorkerGetResponseCustomFieldsCurrencyCodeCny WorkerGetResponseCustomFieldsCurrencyCode = "CNY"
-	WorkerGetResponseCustomFieldsCurrencyCodePln WorkerGetResponseCustomFieldsCurrencyCode = "PLN"
-	WorkerGetResponseCustomFieldsCurrencyCodeRon WorkerGetResponseCustomFieldsCurrencyCode = "RON"
-	WorkerGetResponseCustomFieldsCurrencyCodeTry WorkerGetResponseCustomFieldsCurrencyCode = "TRY"
-	WorkerGetResponseCustomFieldsCurrencyCodeSek WorkerGetResponseCustomFieldsCurrencyCode = "SEK"
-	WorkerGetResponseCustomFieldsCurrencyCodeSgd WorkerGetResponseCustomFieldsCurrencyCode = "SGD"
-	WorkerGetResponseCustomFieldsCurrencyCodeAed WorkerGetResponseCustomFieldsCurrencyCode = "AED"
-	WorkerGetResponseCustomFieldsCurrencyCodeArs WorkerGetResponseCustomFieldsCurrencyCode = "ARS"
-	WorkerGetResponseCustomFieldsCurrencyCodeBdt WorkerGetResponseCustomFieldsCurrencyCode = "BDT"
-	WorkerGetResponseCustomFieldsCurrencyCodeBwp WorkerGetResponseCustomFieldsCurrencyCode = "BWP"
-	WorkerGetResponseCustomFieldsCurrencyCodeClp WorkerGetResponseCustomFieldsCurrencyCode = "CLP"
-	WorkerGetResponseCustomFieldsCurrencyCodeCop WorkerGetResponseCustomFieldsCurrencyCode = "COP"
-	WorkerGetResponseCustomFieldsCurrencyCodeCrc WorkerGetResponseCustomFieldsCurrencyCode = "CRC"
-	WorkerGetResponseCustomFieldsCurrencyCodeEgp WorkerGetResponseCustomFieldsCurrencyCode = "EGP"
-	WorkerGetResponseCustomFieldsCurrencyCodeFjd WorkerGetResponseCustomFieldsCurrencyCode = "FJD"
-	WorkerGetResponseCustomFieldsCurrencyCodeGel WorkerGetResponseCustomFieldsCurrencyCode = "GEL"
-	WorkerGetResponseCustomFieldsCurrencyCodeGhs WorkerGetResponseCustomFieldsCurrencyCode = "GHS"
-	WorkerGetResponseCustomFieldsCurrencyCodeIls WorkerGetResponseCustomFieldsCurrencyCode = "ILS"
-	WorkerGetResponseCustomFieldsCurrencyCodeKes WorkerGetResponseCustomFieldsCurrencyCode = "KES"
-	WorkerGetResponseCustomFieldsCurrencyCodeKrw WorkerGetResponseCustomFieldsCurrencyCode = "KRW"
-	WorkerGetResponseCustomFieldsCurrencyCodeLkr WorkerGetResponseCustomFieldsCurrencyCode = "LKR"
-	WorkerGetResponseCustomFieldsCurrencyCodeMad WorkerGetResponseCustomFieldsCurrencyCode = "MAD"
-	WorkerGetResponseCustomFieldsCurrencyCodeMxn WorkerGetResponseCustomFieldsCurrencyCode = "MXN"
-	WorkerGetResponseCustomFieldsCurrencyCodeNpr WorkerGetResponseCustomFieldsCurrencyCode = "NPR"
-	WorkerGetResponseCustomFieldsCurrencyCodePhp WorkerGetResponseCustomFieldsCurrencyCode = "PHP"
-	WorkerGetResponseCustomFieldsCurrencyCodePkr WorkerGetResponseCustomFieldsCurrencyCode = "PKR"
-	WorkerGetResponseCustomFieldsCurrencyCodeThb WorkerGetResponseCustomFieldsCurrencyCode = "THB"
-	WorkerGetResponseCustomFieldsCurrencyCodeUah WorkerGetResponseCustomFieldsCurrencyCode = "UAH"
-	WorkerGetResponseCustomFieldsCurrencyCodeUgx WorkerGetResponseCustomFieldsCurrencyCode = "UGX"
-	WorkerGetResponseCustomFieldsCurrencyCodeUyu WorkerGetResponseCustomFieldsCurrencyCode = "UYU"
-	WorkerGetResponseCustomFieldsCurrencyCodeVnd WorkerGetResponseCustomFieldsCurrencyCode = "VND"
-	WorkerGetResponseCustomFieldsCurrencyCodeZar WorkerGetResponseCustomFieldsCurrencyCode = "ZAR"
-	WorkerGetResponseCustomFieldsCurrencyCodeZmw WorkerGetResponseCustomFieldsCurrencyCode = "ZMW"
-	WorkerGetResponseCustomFieldsCurrencyCodeTnd WorkerGetResponseCustomFieldsCurrencyCode = "TND"
-	WorkerGetResponseCustomFieldsCurrencyCodeNgn WorkerGetResponseCustomFieldsCurrencyCode = "NGN"
-	WorkerGetResponseCustomFieldsCurrencyCodeRsd WorkerGetResponseCustomFieldsCurrencyCode = "RSD"
-	WorkerGetResponseCustomFieldsCurrencyCodeTwd WorkerGetResponseCustomFieldsCurrencyCode = "TWD"
-	WorkerGetResponseCustomFieldsCurrencyCodeGtq WorkerGetResponseCustomFieldsCurrencyCode = "GTQ"
-	WorkerGetResponseCustomFieldsCurrencyCodeHnl WorkerGetResponseCustomFieldsCurrencyCode = "HNL"
-	WorkerGetResponseCustomFieldsCurrencyCodeDop WorkerGetResponseCustomFieldsCurrencyCode = "DOP"
-	WorkerGetResponseCustomFieldsCurrencyCodeSar WorkerGetResponseCustomFieldsCurrencyCode = "SAR"
-	WorkerGetResponseCustomFieldsCurrencyCodeXaf WorkerGetResponseCustomFieldsCurrencyCode = "XAF"
-	WorkerGetResponseCustomFieldsCurrencyCodePen WorkerGetResponseCustomFieldsCurrencyCode = "PEN"
-)
-
-func (r WorkerGetResponseCustomFieldsCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsCurrencyCodeUsd, WorkerGetResponseCustomFieldsCurrencyCodeAud, WorkerGetResponseCustomFieldsCurrencyCodeBgn, WorkerGetResponseCustomFieldsCurrencyCodeBrl, WorkerGetResponseCustomFieldsCurrencyCodeCad, WorkerGetResponseCustomFieldsCurrencyCodeChf, WorkerGetResponseCustomFieldsCurrencyCodeCzk, WorkerGetResponseCustomFieldsCurrencyCodeDkk, WorkerGetResponseCustomFieldsCurrencyCodeEur, WorkerGetResponseCustomFieldsCurrencyCodeGbp, WorkerGetResponseCustomFieldsCurrencyCodeHkd, WorkerGetResponseCustomFieldsCurrencyCodeHuf, WorkerGetResponseCustomFieldsCurrencyCodeIdr, WorkerGetResponseCustomFieldsCurrencyCodeInr, WorkerGetResponseCustomFieldsCurrencyCodeJpy, WorkerGetResponseCustomFieldsCurrencyCodeMyr, WorkerGetResponseCustomFieldsCurrencyCodeNok, WorkerGetResponseCustomFieldsCurrencyCodeNzd, WorkerGetResponseCustomFieldsCurrencyCodeCny, WorkerGetResponseCustomFieldsCurrencyCodePln, WorkerGetResponseCustomFieldsCurrencyCodeRon, WorkerGetResponseCustomFieldsCurrencyCodeTry, WorkerGetResponseCustomFieldsCurrencyCodeSek, WorkerGetResponseCustomFieldsCurrencyCodeSgd, WorkerGetResponseCustomFieldsCurrencyCodeAed, WorkerGetResponseCustomFieldsCurrencyCodeArs, WorkerGetResponseCustomFieldsCurrencyCodeBdt, WorkerGetResponseCustomFieldsCurrencyCodeBwp, WorkerGetResponseCustomFieldsCurrencyCodeClp, WorkerGetResponseCustomFieldsCurrencyCodeCop, WorkerGetResponseCustomFieldsCurrencyCodeCrc, WorkerGetResponseCustomFieldsCurrencyCodeEgp, WorkerGetResponseCustomFieldsCurrencyCodeFjd, WorkerGetResponseCustomFieldsCurrencyCodeGel, WorkerGetResponseCustomFieldsCurrencyCodeGhs, WorkerGetResponseCustomFieldsCurrencyCodeIls, WorkerGetResponseCustomFieldsCurrencyCodeKes, WorkerGetResponseCustomFieldsCurrencyCodeKrw, WorkerGetResponseCustomFieldsCurrencyCodeLkr, WorkerGetResponseCustomFieldsCurrencyCodeMad, WorkerGetResponseCustomFieldsCurrencyCodeMxn, WorkerGetResponseCustomFieldsCurrencyCodeNpr, WorkerGetResponseCustomFieldsCurrencyCodePhp, WorkerGetResponseCustomFieldsCurrencyCodePkr, WorkerGetResponseCustomFieldsCurrencyCodeThb, WorkerGetResponseCustomFieldsCurrencyCodeUah, WorkerGetResponseCustomFieldsCurrencyCodeUgx, WorkerGetResponseCustomFieldsCurrencyCodeUyu, WorkerGetResponseCustomFieldsCurrencyCodeVnd, WorkerGetResponseCustomFieldsCurrencyCodeZar, WorkerGetResponseCustomFieldsCurrencyCodeZmw, WorkerGetResponseCustomFieldsCurrencyCodeTnd, WorkerGetResponseCustomFieldsCurrencyCodeNgn, WorkerGetResponseCustomFieldsCurrencyCodeRsd, WorkerGetResponseCustomFieldsCurrencyCodeTwd, WorkerGetResponseCustomFieldsCurrencyCodeGtq, WorkerGetResponseCustomFieldsCurrencyCodeHnl, WorkerGetResponseCustomFieldsCurrencyCodeDop, WorkerGetResponseCustomFieldsCurrencyCodeSar, WorkerGetResponseCustomFieldsCurrencyCodeXaf, WorkerGetResponseCustomFieldsCurrencyCodePen:
 		return true
 	}
 	return false
@@ -2315,152 +2750,6 @@ func (r WorkerNewEmployeeResponseLevelTrack) IsKnown() bool {
 	return false
 }
 
-type WorkerNewEmployeeResponseCustomFieldsUnion interface {
-	implementsWorkerNewEmployeeResponseCustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerNewEmployeeResponseCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type WorkerNewEmployeeResponseCustomFieldsType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsTypeText        WorkerNewEmployeeResponseCustomFieldsType = "text"
-	WorkerNewEmployeeResponseCustomFieldsTypeNumber      WorkerNewEmployeeResponseCustomFieldsType = "number"
-	WorkerNewEmployeeResponseCustomFieldsTypeDate        WorkerNewEmployeeResponseCustomFieldsType = "date"
-	WorkerNewEmployeeResponseCustomFieldsTypeBoolean     WorkerNewEmployeeResponseCustomFieldsType = "boolean"
-	WorkerNewEmployeeResponseCustomFieldsTypeCurrency    WorkerNewEmployeeResponseCustomFieldsType = "currency"
-	WorkerNewEmployeeResponseCustomFieldsTypePercentage  WorkerNewEmployeeResponseCustomFieldsType = "percentage"
-	WorkerNewEmployeeResponseCustomFieldsTypeSelect      WorkerNewEmployeeResponseCustomFieldsType = "select"
-	WorkerNewEmployeeResponseCustomFieldsTypeMultiSelect WorkerNewEmployeeResponseCustomFieldsType = "multi_select"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsTypeText, WorkerNewEmployeeResponseCustomFieldsTypeNumber, WorkerNewEmployeeResponseCustomFieldsTypeDate, WorkerNewEmployeeResponseCustomFieldsTypeBoolean, WorkerNewEmployeeResponseCustomFieldsTypeCurrency, WorkerNewEmployeeResponseCustomFieldsTypePercentage, WorkerNewEmployeeResponseCustomFieldsTypeSelect, WorkerNewEmployeeResponseCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsCurrencyCode string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUsd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "USD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeAud WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "AUD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBgn WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "BGN"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBrl WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "BRL"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCad WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "CAD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeChf WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "CHF"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCzk WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "CZK"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeDkk WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "DKK"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeEur WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "EUR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGbp WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "GBP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeHkd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "HKD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeHuf WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "HUF"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeIdr WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "IDR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeInr WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "INR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeJpy WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "JPY"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeMyr WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "MYR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNok WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "NOK"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNzd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "NZD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCny WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "CNY"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodePln WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "PLN"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeRon WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "RON"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeTry WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "TRY"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeSek WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "SEK"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeSgd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "SGD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeAed WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "AED"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeArs WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "ARS"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBdt WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "BDT"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBwp WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "BWP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeClp WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "CLP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCop WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "COP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCrc WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "CRC"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeEgp WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "EGP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeFjd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "FJD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGel WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "GEL"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGhs WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "GHS"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeIls WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "ILS"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeKes WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "KES"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeKrw WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "KRW"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeLkr WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "LKR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeMad WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "MAD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeMxn WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "MXN"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNpr WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "NPR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodePhp WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "PHP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodePkr WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "PKR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeThb WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "THB"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUah WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "UAH"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUgx WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "UGX"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUyu WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "UYU"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeVnd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "VND"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeZar WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "ZAR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeZmw WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "ZMW"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeTnd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "TND"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNgn WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "NGN"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeRsd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "RSD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeTwd WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "TWD"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGtq WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "GTQ"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeHnl WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "HNL"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeDop WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "DOP"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeSar WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "SAR"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodeXaf WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "XAF"
-	WorkerNewEmployeeResponseCustomFieldsCurrencyCodePen WorkerNewEmployeeResponseCustomFieldsCurrencyCode = "PEN"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUsd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeAud, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBgn, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBrl, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCad, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeChf, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCzk, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeDkk, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeEur, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGbp, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeHkd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeHuf, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeIdr, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeInr, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeJpy, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeMyr, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNok, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNzd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCny, WorkerNewEmployeeResponseCustomFieldsCurrencyCodePln, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeRon, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeTry, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeSek, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeSgd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeAed, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeArs, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBdt, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeBwp, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeClp, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCop, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeCrc, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeEgp, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeFjd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGel, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGhs, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeIls, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeKes, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeKrw, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeLkr, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeMad, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeMxn, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNpr, WorkerNewEmployeeResponseCustomFieldsCurrencyCodePhp, WorkerNewEmployeeResponseCustomFieldsCurrencyCodePkr, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeThb, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUah, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUgx, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeUyu, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeVnd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeZar, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeZmw, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeTnd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeNgn, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeRsd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeTwd, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeGtq, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeHnl, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeDop, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeSar, WorkerNewEmployeeResponseCustomFieldsCurrencyCodeXaf, WorkerNewEmployeeResponseCustomFieldsCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
 type WorkerNewContractorResponseLevelTrack string
 
 const (
@@ -2472,152 +2761,6 @@ const (
 func (r WorkerNewContractorResponseLevelTrack) IsKnown() bool {
 	switch r {
 	case WorkerNewContractorResponseLevelTrackIc, WorkerNewContractorResponseLevelTrackManager, WorkerNewContractorResponseLevelTrackExecutive:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsUnion interface {
-	implementsWorkerNewContractorResponseCustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerNewContractorResponseCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type WorkerNewContractorResponseCustomFieldsType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsTypeText        WorkerNewContractorResponseCustomFieldsType = "text"
-	WorkerNewContractorResponseCustomFieldsTypeNumber      WorkerNewContractorResponseCustomFieldsType = "number"
-	WorkerNewContractorResponseCustomFieldsTypeDate        WorkerNewContractorResponseCustomFieldsType = "date"
-	WorkerNewContractorResponseCustomFieldsTypeBoolean     WorkerNewContractorResponseCustomFieldsType = "boolean"
-	WorkerNewContractorResponseCustomFieldsTypeCurrency    WorkerNewContractorResponseCustomFieldsType = "currency"
-	WorkerNewContractorResponseCustomFieldsTypePercentage  WorkerNewContractorResponseCustomFieldsType = "percentage"
-	WorkerNewContractorResponseCustomFieldsTypeSelect      WorkerNewContractorResponseCustomFieldsType = "select"
-	WorkerNewContractorResponseCustomFieldsTypeMultiSelect WorkerNewContractorResponseCustomFieldsType = "multi_select"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsTypeText, WorkerNewContractorResponseCustomFieldsTypeNumber, WorkerNewContractorResponseCustomFieldsTypeDate, WorkerNewContractorResponseCustomFieldsTypeBoolean, WorkerNewContractorResponseCustomFieldsTypeCurrency, WorkerNewContractorResponseCustomFieldsTypePercentage, WorkerNewContractorResponseCustomFieldsTypeSelect, WorkerNewContractorResponseCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsCurrencyCode string
-
-const (
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeUsd WorkerNewContractorResponseCustomFieldsCurrencyCode = "USD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeAud WorkerNewContractorResponseCustomFieldsCurrencyCode = "AUD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeBgn WorkerNewContractorResponseCustomFieldsCurrencyCode = "BGN"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeBrl WorkerNewContractorResponseCustomFieldsCurrencyCode = "BRL"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeCad WorkerNewContractorResponseCustomFieldsCurrencyCode = "CAD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeChf WorkerNewContractorResponseCustomFieldsCurrencyCode = "CHF"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeCzk WorkerNewContractorResponseCustomFieldsCurrencyCode = "CZK"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeDkk WorkerNewContractorResponseCustomFieldsCurrencyCode = "DKK"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeEur WorkerNewContractorResponseCustomFieldsCurrencyCode = "EUR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeGbp WorkerNewContractorResponseCustomFieldsCurrencyCode = "GBP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeHkd WorkerNewContractorResponseCustomFieldsCurrencyCode = "HKD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeHuf WorkerNewContractorResponseCustomFieldsCurrencyCode = "HUF"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeIdr WorkerNewContractorResponseCustomFieldsCurrencyCode = "IDR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeInr WorkerNewContractorResponseCustomFieldsCurrencyCode = "INR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeJpy WorkerNewContractorResponseCustomFieldsCurrencyCode = "JPY"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeMyr WorkerNewContractorResponseCustomFieldsCurrencyCode = "MYR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeNok WorkerNewContractorResponseCustomFieldsCurrencyCode = "NOK"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeNzd WorkerNewContractorResponseCustomFieldsCurrencyCode = "NZD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeCny WorkerNewContractorResponseCustomFieldsCurrencyCode = "CNY"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodePln WorkerNewContractorResponseCustomFieldsCurrencyCode = "PLN"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeRon WorkerNewContractorResponseCustomFieldsCurrencyCode = "RON"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeTry WorkerNewContractorResponseCustomFieldsCurrencyCode = "TRY"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeSek WorkerNewContractorResponseCustomFieldsCurrencyCode = "SEK"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeSgd WorkerNewContractorResponseCustomFieldsCurrencyCode = "SGD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeAed WorkerNewContractorResponseCustomFieldsCurrencyCode = "AED"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeArs WorkerNewContractorResponseCustomFieldsCurrencyCode = "ARS"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeBdt WorkerNewContractorResponseCustomFieldsCurrencyCode = "BDT"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeBwp WorkerNewContractorResponseCustomFieldsCurrencyCode = "BWP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeClp WorkerNewContractorResponseCustomFieldsCurrencyCode = "CLP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeCop WorkerNewContractorResponseCustomFieldsCurrencyCode = "COP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeCrc WorkerNewContractorResponseCustomFieldsCurrencyCode = "CRC"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeEgp WorkerNewContractorResponseCustomFieldsCurrencyCode = "EGP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeFjd WorkerNewContractorResponseCustomFieldsCurrencyCode = "FJD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeGel WorkerNewContractorResponseCustomFieldsCurrencyCode = "GEL"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeGhs WorkerNewContractorResponseCustomFieldsCurrencyCode = "GHS"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeIls WorkerNewContractorResponseCustomFieldsCurrencyCode = "ILS"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeKes WorkerNewContractorResponseCustomFieldsCurrencyCode = "KES"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeKrw WorkerNewContractorResponseCustomFieldsCurrencyCode = "KRW"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeLkr WorkerNewContractorResponseCustomFieldsCurrencyCode = "LKR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeMad WorkerNewContractorResponseCustomFieldsCurrencyCode = "MAD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeMxn WorkerNewContractorResponseCustomFieldsCurrencyCode = "MXN"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeNpr WorkerNewContractorResponseCustomFieldsCurrencyCode = "NPR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodePhp WorkerNewContractorResponseCustomFieldsCurrencyCode = "PHP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodePkr WorkerNewContractorResponseCustomFieldsCurrencyCode = "PKR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeThb WorkerNewContractorResponseCustomFieldsCurrencyCode = "THB"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeUah WorkerNewContractorResponseCustomFieldsCurrencyCode = "UAH"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeUgx WorkerNewContractorResponseCustomFieldsCurrencyCode = "UGX"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeUyu WorkerNewContractorResponseCustomFieldsCurrencyCode = "UYU"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeVnd WorkerNewContractorResponseCustomFieldsCurrencyCode = "VND"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeZar WorkerNewContractorResponseCustomFieldsCurrencyCode = "ZAR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeZmw WorkerNewContractorResponseCustomFieldsCurrencyCode = "ZMW"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeTnd WorkerNewContractorResponseCustomFieldsCurrencyCode = "TND"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeNgn WorkerNewContractorResponseCustomFieldsCurrencyCode = "NGN"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeRsd WorkerNewContractorResponseCustomFieldsCurrencyCode = "RSD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeTwd WorkerNewContractorResponseCustomFieldsCurrencyCode = "TWD"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeGtq WorkerNewContractorResponseCustomFieldsCurrencyCode = "GTQ"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeHnl WorkerNewContractorResponseCustomFieldsCurrencyCode = "HNL"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeDop WorkerNewContractorResponseCustomFieldsCurrencyCode = "DOP"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeSar WorkerNewContractorResponseCustomFieldsCurrencyCode = "SAR"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodeXaf WorkerNewContractorResponseCustomFieldsCurrencyCode = "XAF"
-	WorkerNewContractorResponseCustomFieldsCurrencyCodePen WorkerNewContractorResponseCustomFieldsCurrencyCode = "PEN"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsCurrencyCodeUsd, WorkerNewContractorResponseCustomFieldsCurrencyCodeAud, WorkerNewContractorResponseCustomFieldsCurrencyCodeBgn, WorkerNewContractorResponseCustomFieldsCurrencyCodeBrl, WorkerNewContractorResponseCustomFieldsCurrencyCodeCad, WorkerNewContractorResponseCustomFieldsCurrencyCodeChf, WorkerNewContractorResponseCustomFieldsCurrencyCodeCzk, WorkerNewContractorResponseCustomFieldsCurrencyCodeDkk, WorkerNewContractorResponseCustomFieldsCurrencyCodeEur, WorkerNewContractorResponseCustomFieldsCurrencyCodeGbp, WorkerNewContractorResponseCustomFieldsCurrencyCodeHkd, WorkerNewContractorResponseCustomFieldsCurrencyCodeHuf, WorkerNewContractorResponseCustomFieldsCurrencyCodeIdr, WorkerNewContractorResponseCustomFieldsCurrencyCodeInr, WorkerNewContractorResponseCustomFieldsCurrencyCodeJpy, WorkerNewContractorResponseCustomFieldsCurrencyCodeMyr, WorkerNewContractorResponseCustomFieldsCurrencyCodeNok, WorkerNewContractorResponseCustomFieldsCurrencyCodeNzd, WorkerNewContractorResponseCustomFieldsCurrencyCodeCny, WorkerNewContractorResponseCustomFieldsCurrencyCodePln, WorkerNewContractorResponseCustomFieldsCurrencyCodeRon, WorkerNewContractorResponseCustomFieldsCurrencyCodeTry, WorkerNewContractorResponseCustomFieldsCurrencyCodeSek, WorkerNewContractorResponseCustomFieldsCurrencyCodeSgd, WorkerNewContractorResponseCustomFieldsCurrencyCodeAed, WorkerNewContractorResponseCustomFieldsCurrencyCodeArs, WorkerNewContractorResponseCustomFieldsCurrencyCodeBdt, WorkerNewContractorResponseCustomFieldsCurrencyCodeBwp, WorkerNewContractorResponseCustomFieldsCurrencyCodeClp, WorkerNewContractorResponseCustomFieldsCurrencyCodeCop, WorkerNewContractorResponseCustomFieldsCurrencyCodeCrc, WorkerNewContractorResponseCustomFieldsCurrencyCodeEgp, WorkerNewContractorResponseCustomFieldsCurrencyCodeFjd, WorkerNewContractorResponseCustomFieldsCurrencyCodeGel, WorkerNewContractorResponseCustomFieldsCurrencyCodeGhs, WorkerNewContractorResponseCustomFieldsCurrencyCodeIls, WorkerNewContractorResponseCustomFieldsCurrencyCodeKes, WorkerNewContractorResponseCustomFieldsCurrencyCodeKrw, WorkerNewContractorResponseCustomFieldsCurrencyCodeLkr, WorkerNewContractorResponseCustomFieldsCurrencyCodeMad, WorkerNewContractorResponseCustomFieldsCurrencyCodeMxn, WorkerNewContractorResponseCustomFieldsCurrencyCodeNpr, WorkerNewContractorResponseCustomFieldsCurrencyCodePhp, WorkerNewContractorResponseCustomFieldsCurrencyCodePkr, WorkerNewContractorResponseCustomFieldsCurrencyCodeThb, WorkerNewContractorResponseCustomFieldsCurrencyCodeUah, WorkerNewContractorResponseCustomFieldsCurrencyCodeUgx, WorkerNewContractorResponseCustomFieldsCurrencyCodeUyu, WorkerNewContractorResponseCustomFieldsCurrencyCodeVnd, WorkerNewContractorResponseCustomFieldsCurrencyCodeZar, WorkerNewContractorResponseCustomFieldsCurrencyCodeZmw, WorkerNewContractorResponseCustomFieldsCurrencyCodeTnd, WorkerNewContractorResponseCustomFieldsCurrencyCodeNgn, WorkerNewContractorResponseCustomFieldsCurrencyCodeRsd, WorkerNewContractorResponseCustomFieldsCurrencyCodeTwd, WorkerNewContractorResponseCustomFieldsCurrencyCodeGtq, WorkerNewContractorResponseCustomFieldsCurrencyCodeHnl, WorkerNewContractorResponseCustomFieldsCurrencyCodeDop, WorkerNewContractorResponseCustomFieldsCurrencyCodeSar, WorkerNewContractorResponseCustomFieldsCurrencyCodeXaf, WorkerNewContractorResponseCustomFieldsCurrencyCodePen:
 		return true
 	}
 	return false
@@ -2639,151 +2782,21 @@ func (r WorkerInviteResponseLevelTrack) IsKnown() bool {
 	return false
 }
 
-type WorkerInviteResponseCustomFieldsUnion interface {
-	implementsWorkerInviteResponseCustomField()
-}
+func (r PublicTextWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerInviteResponseCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
+func (r PublicNumberWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-type WorkerInviteResponseCustomFieldsType string
+func (r PublicDateWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-const (
-	WorkerInviteResponseCustomFieldsTypeText        WorkerInviteResponseCustomFieldsType = "text"
-	WorkerInviteResponseCustomFieldsTypeNumber      WorkerInviteResponseCustomFieldsType = "number"
-	WorkerInviteResponseCustomFieldsTypeDate        WorkerInviteResponseCustomFieldsType = "date"
-	WorkerInviteResponseCustomFieldsTypeBoolean     WorkerInviteResponseCustomFieldsType = "boolean"
-	WorkerInviteResponseCustomFieldsTypeCurrency    WorkerInviteResponseCustomFieldsType = "currency"
-	WorkerInviteResponseCustomFieldsTypePercentage  WorkerInviteResponseCustomFieldsType = "percentage"
-	WorkerInviteResponseCustomFieldsTypeSelect      WorkerInviteResponseCustomFieldsType = "select"
-	WorkerInviteResponseCustomFieldsTypeMultiSelect WorkerInviteResponseCustomFieldsType = "multi_select"
-)
+func (r PublicBooleanWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-func (r WorkerInviteResponseCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsTypeText, WorkerInviteResponseCustomFieldsTypeNumber, WorkerInviteResponseCustomFieldsTypeDate, WorkerInviteResponseCustomFieldsTypeBoolean, WorkerInviteResponseCustomFieldsTypeCurrency, WorkerInviteResponseCustomFieldsTypePercentage, WorkerInviteResponseCustomFieldsTypeSelect, WorkerInviteResponseCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
+func (r PublicCurrencyWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-type WorkerInviteResponseCustomFieldsCurrencyCode string
+func (r PublicPercentageWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-const (
-	WorkerInviteResponseCustomFieldsCurrencyCodeUsd WorkerInviteResponseCustomFieldsCurrencyCode = "USD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeAud WorkerInviteResponseCustomFieldsCurrencyCode = "AUD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeBgn WorkerInviteResponseCustomFieldsCurrencyCode = "BGN"
-	WorkerInviteResponseCustomFieldsCurrencyCodeBrl WorkerInviteResponseCustomFieldsCurrencyCode = "BRL"
-	WorkerInviteResponseCustomFieldsCurrencyCodeCad WorkerInviteResponseCustomFieldsCurrencyCode = "CAD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeChf WorkerInviteResponseCustomFieldsCurrencyCode = "CHF"
-	WorkerInviteResponseCustomFieldsCurrencyCodeCzk WorkerInviteResponseCustomFieldsCurrencyCode = "CZK"
-	WorkerInviteResponseCustomFieldsCurrencyCodeDkk WorkerInviteResponseCustomFieldsCurrencyCode = "DKK"
-	WorkerInviteResponseCustomFieldsCurrencyCodeEur WorkerInviteResponseCustomFieldsCurrencyCode = "EUR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeGbp WorkerInviteResponseCustomFieldsCurrencyCode = "GBP"
-	WorkerInviteResponseCustomFieldsCurrencyCodeHkd WorkerInviteResponseCustomFieldsCurrencyCode = "HKD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeHuf WorkerInviteResponseCustomFieldsCurrencyCode = "HUF"
-	WorkerInviteResponseCustomFieldsCurrencyCodeIdr WorkerInviteResponseCustomFieldsCurrencyCode = "IDR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeInr WorkerInviteResponseCustomFieldsCurrencyCode = "INR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeJpy WorkerInviteResponseCustomFieldsCurrencyCode = "JPY"
-	WorkerInviteResponseCustomFieldsCurrencyCodeMyr WorkerInviteResponseCustomFieldsCurrencyCode = "MYR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeNok WorkerInviteResponseCustomFieldsCurrencyCode = "NOK"
-	WorkerInviteResponseCustomFieldsCurrencyCodeNzd WorkerInviteResponseCustomFieldsCurrencyCode = "NZD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeCny WorkerInviteResponseCustomFieldsCurrencyCode = "CNY"
-	WorkerInviteResponseCustomFieldsCurrencyCodePln WorkerInviteResponseCustomFieldsCurrencyCode = "PLN"
-	WorkerInviteResponseCustomFieldsCurrencyCodeRon WorkerInviteResponseCustomFieldsCurrencyCode = "RON"
-	WorkerInviteResponseCustomFieldsCurrencyCodeTry WorkerInviteResponseCustomFieldsCurrencyCode = "TRY"
-	WorkerInviteResponseCustomFieldsCurrencyCodeSek WorkerInviteResponseCustomFieldsCurrencyCode = "SEK"
-	WorkerInviteResponseCustomFieldsCurrencyCodeSgd WorkerInviteResponseCustomFieldsCurrencyCode = "SGD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeAed WorkerInviteResponseCustomFieldsCurrencyCode = "AED"
-	WorkerInviteResponseCustomFieldsCurrencyCodeArs WorkerInviteResponseCustomFieldsCurrencyCode = "ARS"
-	WorkerInviteResponseCustomFieldsCurrencyCodeBdt WorkerInviteResponseCustomFieldsCurrencyCode = "BDT"
-	WorkerInviteResponseCustomFieldsCurrencyCodeBwp WorkerInviteResponseCustomFieldsCurrencyCode = "BWP"
-	WorkerInviteResponseCustomFieldsCurrencyCodeClp WorkerInviteResponseCustomFieldsCurrencyCode = "CLP"
-	WorkerInviteResponseCustomFieldsCurrencyCodeCop WorkerInviteResponseCustomFieldsCurrencyCode = "COP"
-	WorkerInviteResponseCustomFieldsCurrencyCodeCrc WorkerInviteResponseCustomFieldsCurrencyCode = "CRC"
-	WorkerInviteResponseCustomFieldsCurrencyCodeEgp WorkerInviteResponseCustomFieldsCurrencyCode = "EGP"
-	WorkerInviteResponseCustomFieldsCurrencyCodeFjd WorkerInviteResponseCustomFieldsCurrencyCode = "FJD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeGel WorkerInviteResponseCustomFieldsCurrencyCode = "GEL"
-	WorkerInviteResponseCustomFieldsCurrencyCodeGhs WorkerInviteResponseCustomFieldsCurrencyCode = "GHS"
-	WorkerInviteResponseCustomFieldsCurrencyCodeIls WorkerInviteResponseCustomFieldsCurrencyCode = "ILS"
-	WorkerInviteResponseCustomFieldsCurrencyCodeKes WorkerInviteResponseCustomFieldsCurrencyCode = "KES"
-	WorkerInviteResponseCustomFieldsCurrencyCodeKrw WorkerInviteResponseCustomFieldsCurrencyCode = "KRW"
-	WorkerInviteResponseCustomFieldsCurrencyCodeLkr WorkerInviteResponseCustomFieldsCurrencyCode = "LKR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeMad WorkerInviteResponseCustomFieldsCurrencyCode = "MAD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeMxn WorkerInviteResponseCustomFieldsCurrencyCode = "MXN"
-	WorkerInviteResponseCustomFieldsCurrencyCodeNpr WorkerInviteResponseCustomFieldsCurrencyCode = "NPR"
-	WorkerInviteResponseCustomFieldsCurrencyCodePhp WorkerInviteResponseCustomFieldsCurrencyCode = "PHP"
-	WorkerInviteResponseCustomFieldsCurrencyCodePkr WorkerInviteResponseCustomFieldsCurrencyCode = "PKR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeThb WorkerInviteResponseCustomFieldsCurrencyCode = "THB"
-	WorkerInviteResponseCustomFieldsCurrencyCodeUah WorkerInviteResponseCustomFieldsCurrencyCode = "UAH"
-	WorkerInviteResponseCustomFieldsCurrencyCodeUgx WorkerInviteResponseCustomFieldsCurrencyCode = "UGX"
-	WorkerInviteResponseCustomFieldsCurrencyCodeUyu WorkerInviteResponseCustomFieldsCurrencyCode = "UYU"
-	WorkerInviteResponseCustomFieldsCurrencyCodeVnd WorkerInviteResponseCustomFieldsCurrencyCode = "VND"
-	WorkerInviteResponseCustomFieldsCurrencyCodeZar WorkerInviteResponseCustomFieldsCurrencyCode = "ZAR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeZmw WorkerInviteResponseCustomFieldsCurrencyCode = "ZMW"
-	WorkerInviteResponseCustomFieldsCurrencyCodeTnd WorkerInviteResponseCustomFieldsCurrencyCode = "TND"
-	WorkerInviteResponseCustomFieldsCurrencyCodeNgn WorkerInviteResponseCustomFieldsCurrencyCode = "NGN"
-	WorkerInviteResponseCustomFieldsCurrencyCodeRsd WorkerInviteResponseCustomFieldsCurrencyCode = "RSD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeTwd WorkerInviteResponseCustomFieldsCurrencyCode = "TWD"
-	WorkerInviteResponseCustomFieldsCurrencyCodeGtq WorkerInviteResponseCustomFieldsCurrencyCode = "GTQ"
-	WorkerInviteResponseCustomFieldsCurrencyCodeHnl WorkerInviteResponseCustomFieldsCurrencyCode = "HNL"
-	WorkerInviteResponseCustomFieldsCurrencyCodeDop WorkerInviteResponseCustomFieldsCurrencyCode = "DOP"
-	WorkerInviteResponseCustomFieldsCurrencyCodeSar WorkerInviteResponseCustomFieldsCurrencyCode = "SAR"
-	WorkerInviteResponseCustomFieldsCurrencyCodeXaf WorkerInviteResponseCustomFieldsCurrencyCode = "XAF"
-	WorkerInviteResponseCustomFieldsCurrencyCodePen WorkerInviteResponseCustomFieldsCurrencyCode = "PEN"
-)
+func (r PublicSelectWorkerCustomField) implementsPublicWorkerCustomField() {}
 
-func (r WorkerInviteResponseCustomFieldsCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsCurrencyCodeUsd, WorkerInviteResponseCustomFieldsCurrencyCodeAud, WorkerInviteResponseCustomFieldsCurrencyCodeBgn, WorkerInviteResponseCustomFieldsCurrencyCodeBrl, WorkerInviteResponseCustomFieldsCurrencyCodeCad, WorkerInviteResponseCustomFieldsCurrencyCodeChf, WorkerInviteResponseCustomFieldsCurrencyCodeCzk, WorkerInviteResponseCustomFieldsCurrencyCodeDkk, WorkerInviteResponseCustomFieldsCurrencyCodeEur, WorkerInviteResponseCustomFieldsCurrencyCodeGbp, WorkerInviteResponseCustomFieldsCurrencyCodeHkd, WorkerInviteResponseCustomFieldsCurrencyCodeHuf, WorkerInviteResponseCustomFieldsCurrencyCodeIdr, WorkerInviteResponseCustomFieldsCurrencyCodeInr, WorkerInviteResponseCustomFieldsCurrencyCodeJpy, WorkerInviteResponseCustomFieldsCurrencyCodeMyr, WorkerInviteResponseCustomFieldsCurrencyCodeNok, WorkerInviteResponseCustomFieldsCurrencyCodeNzd, WorkerInviteResponseCustomFieldsCurrencyCodeCny, WorkerInviteResponseCustomFieldsCurrencyCodePln, WorkerInviteResponseCustomFieldsCurrencyCodeRon, WorkerInviteResponseCustomFieldsCurrencyCodeTry, WorkerInviteResponseCustomFieldsCurrencyCodeSek, WorkerInviteResponseCustomFieldsCurrencyCodeSgd, WorkerInviteResponseCustomFieldsCurrencyCodeAed, WorkerInviteResponseCustomFieldsCurrencyCodeArs, WorkerInviteResponseCustomFieldsCurrencyCodeBdt, WorkerInviteResponseCustomFieldsCurrencyCodeBwp, WorkerInviteResponseCustomFieldsCurrencyCodeClp, WorkerInviteResponseCustomFieldsCurrencyCodeCop, WorkerInviteResponseCustomFieldsCurrencyCodeCrc, WorkerInviteResponseCustomFieldsCurrencyCodeEgp, WorkerInviteResponseCustomFieldsCurrencyCodeFjd, WorkerInviteResponseCustomFieldsCurrencyCodeGel, WorkerInviteResponseCustomFieldsCurrencyCodeGhs, WorkerInviteResponseCustomFieldsCurrencyCodeIls, WorkerInviteResponseCustomFieldsCurrencyCodeKes, WorkerInviteResponseCustomFieldsCurrencyCodeKrw, WorkerInviteResponseCustomFieldsCurrencyCodeLkr, WorkerInviteResponseCustomFieldsCurrencyCodeMad, WorkerInviteResponseCustomFieldsCurrencyCodeMxn, WorkerInviteResponseCustomFieldsCurrencyCodeNpr, WorkerInviteResponseCustomFieldsCurrencyCodePhp, WorkerInviteResponseCustomFieldsCurrencyCodePkr, WorkerInviteResponseCustomFieldsCurrencyCodeThb, WorkerInviteResponseCustomFieldsCurrencyCodeUah, WorkerInviteResponseCustomFieldsCurrencyCodeUgx, WorkerInviteResponseCustomFieldsCurrencyCodeUyu, WorkerInviteResponseCustomFieldsCurrencyCodeVnd, WorkerInviteResponseCustomFieldsCurrencyCodeZar, WorkerInviteResponseCustomFieldsCurrencyCodeZmw, WorkerInviteResponseCustomFieldsCurrencyCodeTnd, WorkerInviteResponseCustomFieldsCurrencyCodeNgn, WorkerInviteResponseCustomFieldsCurrencyCodeRsd, WorkerInviteResponseCustomFieldsCurrencyCodeTwd, WorkerInviteResponseCustomFieldsCurrencyCodeGtq, WorkerInviteResponseCustomFieldsCurrencyCodeHnl, WorkerInviteResponseCustomFieldsCurrencyCodeDop, WorkerInviteResponseCustomFieldsCurrencyCodeSar, WorkerInviteResponseCustomFieldsCurrencyCodeXaf, WorkerInviteResponseCustomFieldsCurrencyCodePen:
-		return true
-	}
-	return false
-}
+func (r PublicMultiSelectWorkerCustomField) implementsPublicWorkerCustomField() {}
 
 type WorkerListResponseDataLevelTrack string
 
@@ -2796,3202 +2809,6 @@ const (
 func (r WorkerListResponseDataLevelTrack) IsKnown() bool {
 	switch r {
 	case WorkerListResponseDataLevelTrackIc, WorkerListResponseDataLevelTrackManager, WorkerListResponseDataLevelTrackExecutive:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsUnion interface {
-	implementsWorkerListResponseDataCustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerListResponseDataCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type WorkerListResponseDataCustomFieldsType string
-
-const (
-	WorkerListResponseDataCustomFieldsTypeText        WorkerListResponseDataCustomFieldsType = "text"
-	WorkerListResponseDataCustomFieldsTypeNumber      WorkerListResponseDataCustomFieldsType = "number"
-	WorkerListResponseDataCustomFieldsTypeDate        WorkerListResponseDataCustomFieldsType = "date"
-	WorkerListResponseDataCustomFieldsTypeBoolean     WorkerListResponseDataCustomFieldsType = "boolean"
-	WorkerListResponseDataCustomFieldsTypeCurrency    WorkerListResponseDataCustomFieldsType = "currency"
-	WorkerListResponseDataCustomFieldsTypePercentage  WorkerListResponseDataCustomFieldsType = "percentage"
-	WorkerListResponseDataCustomFieldsTypeSelect      WorkerListResponseDataCustomFieldsType = "select"
-	WorkerListResponseDataCustomFieldsTypeMultiSelect WorkerListResponseDataCustomFieldsType = "multi_select"
-)
-
-func (r WorkerListResponseDataCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsTypeText, WorkerListResponseDataCustomFieldsTypeNumber, WorkerListResponseDataCustomFieldsTypeDate, WorkerListResponseDataCustomFieldsTypeBoolean, WorkerListResponseDataCustomFieldsTypeCurrency, WorkerListResponseDataCustomFieldsTypePercentage, WorkerListResponseDataCustomFieldsTypeSelect, WorkerListResponseDataCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsCurrencyCode string
-
-const (
-	WorkerListResponseDataCustomFieldsCurrencyCodeUsd WorkerListResponseDataCustomFieldsCurrencyCode = "USD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeAud WorkerListResponseDataCustomFieldsCurrencyCode = "AUD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeBgn WorkerListResponseDataCustomFieldsCurrencyCode = "BGN"
-	WorkerListResponseDataCustomFieldsCurrencyCodeBrl WorkerListResponseDataCustomFieldsCurrencyCode = "BRL"
-	WorkerListResponseDataCustomFieldsCurrencyCodeCad WorkerListResponseDataCustomFieldsCurrencyCode = "CAD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeChf WorkerListResponseDataCustomFieldsCurrencyCode = "CHF"
-	WorkerListResponseDataCustomFieldsCurrencyCodeCzk WorkerListResponseDataCustomFieldsCurrencyCode = "CZK"
-	WorkerListResponseDataCustomFieldsCurrencyCodeDkk WorkerListResponseDataCustomFieldsCurrencyCode = "DKK"
-	WorkerListResponseDataCustomFieldsCurrencyCodeEur WorkerListResponseDataCustomFieldsCurrencyCode = "EUR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeGbp WorkerListResponseDataCustomFieldsCurrencyCode = "GBP"
-	WorkerListResponseDataCustomFieldsCurrencyCodeHkd WorkerListResponseDataCustomFieldsCurrencyCode = "HKD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeHuf WorkerListResponseDataCustomFieldsCurrencyCode = "HUF"
-	WorkerListResponseDataCustomFieldsCurrencyCodeIdr WorkerListResponseDataCustomFieldsCurrencyCode = "IDR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeInr WorkerListResponseDataCustomFieldsCurrencyCode = "INR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeJpy WorkerListResponseDataCustomFieldsCurrencyCode = "JPY"
-	WorkerListResponseDataCustomFieldsCurrencyCodeMyr WorkerListResponseDataCustomFieldsCurrencyCode = "MYR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeNok WorkerListResponseDataCustomFieldsCurrencyCode = "NOK"
-	WorkerListResponseDataCustomFieldsCurrencyCodeNzd WorkerListResponseDataCustomFieldsCurrencyCode = "NZD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeCny WorkerListResponseDataCustomFieldsCurrencyCode = "CNY"
-	WorkerListResponseDataCustomFieldsCurrencyCodePln WorkerListResponseDataCustomFieldsCurrencyCode = "PLN"
-	WorkerListResponseDataCustomFieldsCurrencyCodeRon WorkerListResponseDataCustomFieldsCurrencyCode = "RON"
-	WorkerListResponseDataCustomFieldsCurrencyCodeTry WorkerListResponseDataCustomFieldsCurrencyCode = "TRY"
-	WorkerListResponseDataCustomFieldsCurrencyCodeSek WorkerListResponseDataCustomFieldsCurrencyCode = "SEK"
-	WorkerListResponseDataCustomFieldsCurrencyCodeSgd WorkerListResponseDataCustomFieldsCurrencyCode = "SGD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeAed WorkerListResponseDataCustomFieldsCurrencyCode = "AED"
-	WorkerListResponseDataCustomFieldsCurrencyCodeArs WorkerListResponseDataCustomFieldsCurrencyCode = "ARS"
-	WorkerListResponseDataCustomFieldsCurrencyCodeBdt WorkerListResponseDataCustomFieldsCurrencyCode = "BDT"
-	WorkerListResponseDataCustomFieldsCurrencyCodeBwp WorkerListResponseDataCustomFieldsCurrencyCode = "BWP"
-	WorkerListResponseDataCustomFieldsCurrencyCodeClp WorkerListResponseDataCustomFieldsCurrencyCode = "CLP"
-	WorkerListResponseDataCustomFieldsCurrencyCodeCop WorkerListResponseDataCustomFieldsCurrencyCode = "COP"
-	WorkerListResponseDataCustomFieldsCurrencyCodeCrc WorkerListResponseDataCustomFieldsCurrencyCode = "CRC"
-	WorkerListResponseDataCustomFieldsCurrencyCodeEgp WorkerListResponseDataCustomFieldsCurrencyCode = "EGP"
-	WorkerListResponseDataCustomFieldsCurrencyCodeFjd WorkerListResponseDataCustomFieldsCurrencyCode = "FJD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeGel WorkerListResponseDataCustomFieldsCurrencyCode = "GEL"
-	WorkerListResponseDataCustomFieldsCurrencyCodeGhs WorkerListResponseDataCustomFieldsCurrencyCode = "GHS"
-	WorkerListResponseDataCustomFieldsCurrencyCodeIls WorkerListResponseDataCustomFieldsCurrencyCode = "ILS"
-	WorkerListResponseDataCustomFieldsCurrencyCodeKes WorkerListResponseDataCustomFieldsCurrencyCode = "KES"
-	WorkerListResponseDataCustomFieldsCurrencyCodeKrw WorkerListResponseDataCustomFieldsCurrencyCode = "KRW"
-	WorkerListResponseDataCustomFieldsCurrencyCodeLkr WorkerListResponseDataCustomFieldsCurrencyCode = "LKR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeMad WorkerListResponseDataCustomFieldsCurrencyCode = "MAD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeMxn WorkerListResponseDataCustomFieldsCurrencyCode = "MXN"
-	WorkerListResponseDataCustomFieldsCurrencyCodeNpr WorkerListResponseDataCustomFieldsCurrencyCode = "NPR"
-	WorkerListResponseDataCustomFieldsCurrencyCodePhp WorkerListResponseDataCustomFieldsCurrencyCode = "PHP"
-	WorkerListResponseDataCustomFieldsCurrencyCodePkr WorkerListResponseDataCustomFieldsCurrencyCode = "PKR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeThb WorkerListResponseDataCustomFieldsCurrencyCode = "THB"
-	WorkerListResponseDataCustomFieldsCurrencyCodeUah WorkerListResponseDataCustomFieldsCurrencyCode = "UAH"
-	WorkerListResponseDataCustomFieldsCurrencyCodeUgx WorkerListResponseDataCustomFieldsCurrencyCode = "UGX"
-	WorkerListResponseDataCustomFieldsCurrencyCodeUyu WorkerListResponseDataCustomFieldsCurrencyCode = "UYU"
-	WorkerListResponseDataCustomFieldsCurrencyCodeVnd WorkerListResponseDataCustomFieldsCurrencyCode = "VND"
-	WorkerListResponseDataCustomFieldsCurrencyCodeZar WorkerListResponseDataCustomFieldsCurrencyCode = "ZAR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeZmw WorkerListResponseDataCustomFieldsCurrencyCode = "ZMW"
-	WorkerListResponseDataCustomFieldsCurrencyCodeTnd WorkerListResponseDataCustomFieldsCurrencyCode = "TND"
-	WorkerListResponseDataCustomFieldsCurrencyCodeNgn WorkerListResponseDataCustomFieldsCurrencyCode = "NGN"
-	WorkerListResponseDataCustomFieldsCurrencyCodeRsd WorkerListResponseDataCustomFieldsCurrencyCode = "RSD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeTwd WorkerListResponseDataCustomFieldsCurrencyCode = "TWD"
-	WorkerListResponseDataCustomFieldsCurrencyCodeGtq WorkerListResponseDataCustomFieldsCurrencyCode = "GTQ"
-	WorkerListResponseDataCustomFieldsCurrencyCodeHnl WorkerListResponseDataCustomFieldsCurrencyCode = "HNL"
-	WorkerListResponseDataCustomFieldsCurrencyCodeDop WorkerListResponseDataCustomFieldsCurrencyCode = "DOP"
-	WorkerListResponseDataCustomFieldsCurrencyCodeSar WorkerListResponseDataCustomFieldsCurrencyCode = "SAR"
-	WorkerListResponseDataCustomFieldsCurrencyCodeXaf WorkerListResponseDataCustomFieldsCurrencyCode = "XAF"
-	WorkerListResponseDataCustomFieldsCurrencyCodePen WorkerListResponseDataCustomFieldsCurrencyCode = "PEN"
-)
-
-func (r WorkerListResponseDataCustomFieldsCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsCurrencyCodeUsd, WorkerListResponseDataCustomFieldsCurrencyCodeAud, WorkerListResponseDataCustomFieldsCurrencyCodeBgn, WorkerListResponseDataCustomFieldsCurrencyCodeBrl, WorkerListResponseDataCustomFieldsCurrencyCodeCad, WorkerListResponseDataCustomFieldsCurrencyCodeChf, WorkerListResponseDataCustomFieldsCurrencyCodeCzk, WorkerListResponseDataCustomFieldsCurrencyCodeDkk, WorkerListResponseDataCustomFieldsCurrencyCodeEur, WorkerListResponseDataCustomFieldsCurrencyCodeGbp, WorkerListResponseDataCustomFieldsCurrencyCodeHkd, WorkerListResponseDataCustomFieldsCurrencyCodeHuf, WorkerListResponseDataCustomFieldsCurrencyCodeIdr, WorkerListResponseDataCustomFieldsCurrencyCodeInr, WorkerListResponseDataCustomFieldsCurrencyCodeJpy, WorkerListResponseDataCustomFieldsCurrencyCodeMyr, WorkerListResponseDataCustomFieldsCurrencyCodeNok, WorkerListResponseDataCustomFieldsCurrencyCodeNzd, WorkerListResponseDataCustomFieldsCurrencyCodeCny, WorkerListResponseDataCustomFieldsCurrencyCodePln, WorkerListResponseDataCustomFieldsCurrencyCodeRon, WorkerListResponseDataCustomFieldsCurrencyCodeTry, WorkerListResponseDataCustomFieldsCurrencyCodeSek, WorkerListResponseDataCustomFieldsCurrencyCodeSgd, WorkerListResponseDataCustomFieldsCurrencyCodeAed, WorkerListResponseDataCustomFieldsCurrencyCodeArs, WorkerListResponseDataCustomFieldsCurrencyCodeBdt, WorkerListResponseDataCustomFieldsCurrencyCodeBwp, WorkerListResponseDataCustomFieldsCurrencyCodeClp, WorkerListResponseDataCustomFieldsCurrencyCodeCop, WorkerListResponseDataCustomFieldsCurrencyCodeCrc, WorkerListResponseDataCustomFieldsCurrencyCodeEgp, WorkerListResponseDataCustomFieldsCurrencyCodeFjd, WorkerListResponseDataCustomFieldsCurrencyCodeGel, WorkerListResponseDataCustomFieldsCurrencyCodeGhs, WorkerListResponseDataCustomFieldsCurrencyCodeIls, WorkerListResponseDataCustomFieldsCurrencyCodeKes, WorkerListResponseDataCustomFieldsCurrencyCodeKrw, WorkerListResponseDataCustomFieldsCurrencyCodeLkr, WorkerListResponseDataCustomFieldsCurrencyCodeMad, WorkerListResponseDataCustomFieldsCurrencyCodeMxn, WorkerListResponseDataCustomFieldsCurrencyCodeNpr, WorkerListResponseDataCustomFieldsCurrencyCodePhp, WorkerListResponseDataCustomFieldsCurrencyCodePkr, WorkerListResponseDataCustomFieldsCurrencyCodeThb, WorkerListResponseDataCustomFieldsCurrencyCodeUah, WorkerListResponseDataCustomFieldsCurrencyCodeUgx, WorkerListResponseDataCustomFieldsCurrencyCodeUyu, WorkerListResponseDataCustomFieldsCurrencyCodeVnd, WorkerListResponseDataCustomFieldsCurrencyCodeZar, WorkerListResponseDataCustomFieldsCurrencyCodeZmw, WorkerListResponseDataCustomFieldsCurrencyCodeTnd, WorkerListResponseDataCustomFieldsCurrencyCodeNgn, WorkerListResponseDataCustomFieldsCurrencyCodeRsd, WorkerListResponseDataCustomFieldsCurrencyCodeTwd, WorkerListResponseDataCustomFieldsCurrencyCodeGtq, WorkerListResponseDataCustomFieldsCurrencyCodeHnl, WorkerListResponseDataCustomFieldsCurrencyCodeDop, WorkerListResponseDataCustomFieldsCurrencyCodeSar, WorkerListResponseDataCustomFieldsCurrencyCodeXaf, WorkerListResponseDataCustomFieldsCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                       `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicTextWorkerCustomField]
-type workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicTextWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                    `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField]
-type workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                       `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicDateWorkerCustomField]
-type workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicDateWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                            `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField]
-type workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
-	JSON         workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField]
-type workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                        `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField]
-type workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
-	JSON   workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField]
-type workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
-	JSON    workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                               `json:"value" api:"required,nullable"`
-	JSON  workerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                            `json:"value" api:"required,nullable"`
-	JSON  workerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                               `json:"value" api:"required,nullable"`
-	JSON  workerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                                    `json:"value" api:"required,nullable"`
-	JSON  workerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
-	JSON         workerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                                `json:"value" api:"required,nullable"`
-	JSON  workerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
-	JSON   workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
-	JSON    workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerNewEmployeeResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                                 `json:"value" api:"required,nullable"`
-	JSON  workerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                              `json:"value" api:"required,nullable"`
-	JSON  workerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                                 `json:"value" api:"required,nullable"`
-	JSON  workerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                                      `json:"value" api:"required,nullable"`
-	JSON  workerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
-	JSON         workerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                                  `json:"value" api:"required,nullable"`
-	JSON  workerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
-	JSON   workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
-	JSON    workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerNewContractorResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                          `json:"value" api:"required,nullable"`
-	JSON  workerInviteResponseCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicTextWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicTextWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                       `json:"value" api:"required,nullable"`
-	JSON  workerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                          `json:"value" api:"required,nullable"`
-	JSON  workerInviteResponseCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicDateWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicDateWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                               `json:"value" api:"required,nullable"`
-	JSON  workerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
-	JSON         workerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                           `json:"value" api:"required,nullable"`
-	JSON  workerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
-	JSON   workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
-	JSON    workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                            `json:"value" api:"required,nullable"`
-	JSON  workerListResponseDataCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicTextWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicTextWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                         `json:"value" api:"required,nullable"`
-	JSON  workerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                            `json:"value" api:"required,nullable"`
-	JSON  workerListResponseDataCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicDateWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicDateWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                                 `json:"value" api:"required,nullable"`
-	JSON  workerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode `json:"currencyCode" api:"required,nullable"`
-	JSON         workerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldJSON         `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                             `json:"value" api:"required,nullable"`
-	JSON  workerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOption `json:"option" api:"required,nullable"`
-	JSON   workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldJSON   `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	// The tag of a company custom worker field.
-	ID   string `json:"id" api:"required"`
-	Name string `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOption `json:"options" api:"required,nullable"`
-	JSON    workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldJSON     `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerListResponseDataCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode string
-
-const (
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf, WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                 `json:"id" api:"required"`
-	Label     string                                                                 `json:"label" api:"required"`
-	Value     string                                                                 `json:"value" api:"required"`
-	SortOrder interface{}                                                            `json:"sortOrder" api:"required"`
-	Status    WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                 `json:"createdAt" api:"required"`
-	JSON      workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOption]
-type workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                       `json:"id" api:"required"`
-	Label     string                                                                       `json:"label" api:"required"`
-	Value     string                                                                       `json:"value" api:"required"`
-	SortOrder interface{}                                                                  `json:"sortOrder" api:"required"`
-	Status    WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                       `json:"createdAt" api:"required"`
-	JSON      workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
-type workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
-	WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf, WorkerNewEmployeeResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                         `json:"id" api:"required"`
-	Label     string                                                                         `json:"label" api:"required"`
-	Value     string                                                                         `json:"value" api:"required"`
-	SortOrder interface{}                                                                    `json:"sortOrder" api:"required"`
-	Status    WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                         `json:"createdAt" api:"required"`
-	JSON      workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOption]
-type workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                               `json:"id" api:"required"`
-	Label     string                                                                               `json:"label" api:"required"`
-	Value     string                                                                               `json:"value" api:"required"`
-	SortOrder interface{}                                                                          `json:"sortOrder" api:"required"`
-	Status    WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                               `json:"createdAt" api:"required"`
-	JSON      workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
-}
-
-// workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
-type workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
-	WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf, WorkerNewContractorResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                           `json:"id" api:"required"`
-	Label     string                                                                           `json:"label" api:"required"`
-	Value     string                                                                           `json:"value" api:"required"`
-	SortOrder interface{}                                                                      `json:"sortOrder" api:"required"`
-	Status    WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                           `json:"createdAt" api:"required"`
-	JSON      workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOption]
-type workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                                 `json:"id" api:"required"`
-	Label     string                                                                                 `json:"label" api:"required"`
-	Value     string                                                                                 `json:"value" api:"required"`
-	SortOrder interface{}                                                                            `json:"sortOrder" api:"required"`
-	Status    WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                                 `json:"createdAt" api:"required"`
-	JSON      workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
-}
-
-// workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
-type workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerInviteResponseCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerInviteResponseCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerInviteResponseCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
-	WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf, WorkerInviteResponseCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                    `json:"id" api:"required"`
-	Label     string                                                                    `json:"label" api:"required"`
-	Value     string                                                                    `json:"value" api:"required"`
-	SortOrder interface{}                                                               `json:"sortOrder" api:"required"`
-	Status    WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                    `json:"createdAt" api:"required"`
-	JSON      workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOption]
-type workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                          `json:"id" api:"required"`
-	Label     string                                                                          `json:"label" api:"required"`
-	Value     string                                                                          `json:"value" api:"required"`
-	SortOrder interface{}                                                                     `json:"sortOrder" api:"required"`
-	Status    WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                          `json:"createdAt" api:"required"`
-	JSON      workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
-}
-
-// workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
-type workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerListResponseDataCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerListResponseDataCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerListResponseDataCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "USD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AUD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BGN"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BRL"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CAD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CHF"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CZK"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DKK"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EUR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GBP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HKD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HUF"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "IDR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "INR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "JPY"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MYR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NOK"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NZD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CNY"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PLN"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RON"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TRY"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SEK"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SGD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "AED"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ARS"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BDT"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "BWP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CLP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "COP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "CRC"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "EGP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "FJD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GEL"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GHS"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ILS"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KES"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "KRW"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "LKR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MAD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "MXN"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NPR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PHP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PKR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "THB"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UAH"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UGX"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "UYU"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "VND"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZAR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "ZMW"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TND"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "NGN"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "RSD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "TWD"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "GTQ"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "HNL"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "DOP"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "SAR"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "XAF"
-	WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode = "PEN"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCode) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUsd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAud, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBgn, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBrl, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCad, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeChf, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCzk, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDkk, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEur, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGbp, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHkd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHuf, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIdr, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeInr, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeJpy, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMyr, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNok, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNzd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCny, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePln, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRon, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTry, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSek, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSgd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeAed, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeArs, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBdt, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeBwp, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeClp, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCop, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeCrc, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeEgp, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeFjd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGel, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGhs, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeIls, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKes, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeKrw, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeLkr, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMad, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeMxn, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNpr, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePhp, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePkr, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeThb, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUah, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUgx, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeUyu, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeVnd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZar, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeZmw, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTnd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeNgn, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeRsd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeTwd, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeGtq, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeHnl, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeDop, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeSar, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodeXaf, WorkerListResponseDataCustomFieldsPublicCurrencyWorkerCustomFieldCurrencyCodePen:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                      `json:"id" api:"required"`
-	Label     string                                                                      `json:"label" api:"required"`
-	Value     string                                                                      `json:"value" api:"required"`
-	SortOrder interface{}                                                                 `json:"sortOrder" api:"required"`
-	Status    WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatus `json:"status" api:"required"`
-	CreatedAt string                                                                      `json:"createdAt" api:"required"`
-	JSON      workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionJSON   `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOption]
-type workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOption struct {
-	// The tag of a company custom worker field option.
-	ID        string                                                                            `json:"id" api:"required"`
-	Label     string                                                                            `json:"label" api:"required"`
-	Value     string                                                                            `json:"value" api:"required"`
-	SortOrder interface{}                                                                       `json:"sortOrder" api:"required"`
-	Status    WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus `json:"status" api:"required"`
-	CreatedAt string                                                                            `json:"createdAt" api:"required"`
-	JSON      workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON    `json:"-"`
-}
-
-// workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON contains the JSON metadata for the struct [WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOption]
-type workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON struct {
-	ID          apijson.Field
-	Label       apijson.Field
-	Value       apijson.Field
-	SortOrder   apijson.Field
-	Status      apijson.Field
-	CreatedAt   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOption) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
-
-const (
-	WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
-	WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
-
-const (
-	WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
-	WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
-	WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerNewEmployeeResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
-
-const (
-	WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
-	WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
-)
-
-func (r WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
-	switch r {
-	case WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerNewEmployeeResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
-	WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerNewContractorResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
-
-const (
-	WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
-	WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
-)
-
-func (r WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
-	switch r {
-	case WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerNewContractorResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
-	WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerInviteResponseCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
-
-const (
-	WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
-	WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
-)
-
-func (r WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
-	switch r {
-	case WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatus string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive   WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "active"
-	WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatus = "archived"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatus) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatusActive, WorkerListResponseDataCustomFieldsPublicSelectWorkerCustomFieldOptionStatusArchived:
-		return true
-	}
-	return false
-}
-
-type WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus string
-
-const (
-	WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive   WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "active"
-	WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus = "archived"
-)
-
-func (r WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatus) IsKnown() bool {
-	switch r {
-	case WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusActive, WorkerListResponseDataCustomFieldsPublicMultiSelectWorkerCustomFieldOptionsStatusArchived:
 		return true
 	}
 	return false
