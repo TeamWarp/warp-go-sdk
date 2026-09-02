@@ -766,6 +766,48 @@ func (r DepartmentNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
+type Objects5 struct {
+	ID    string        `json:"id" api:"required"`
+	Code  string        `json:"code" api:"required"`
+	Name  string        `json:"name" api:"required"`
+	Track Objects5Track `json:"track" api:"required"`
+	JSON  objects5JSON  `json:"-"`
+}
+
+// objects5JSON contains the JSON metadata for the struct [Objects5]
+type objects5JSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Objects5) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r objects5JSON) RawJSON() string {
+	return r.raw
+}
+
+type Objects5Track string
+
+const (
+	Objects5TrackIc        Objects5Track = "ic"
+	Objects5TrackManager   Objects5Track = "manager"
+	Objects5TrackExecutive Objects5Track = "executive"
+)
+
+func (r Objects5Track) IsKnown() bool {
+	switch r {
+	case Objects5TrackIc, Objects5TrackManager, Objects5TrackExecutive:
+		return true
+	}
+	return false
+}
+
 type Union13 string
 
 const (
@@ -778,584 +820,6 @@ const (
 func (r Union13) IsKnown() bool {
 	switch r {
 	case Union13Draft, Union13Sent, Union13Accepted, Union13Void:
-		return true
-	}
-	return false
-}
-
-type Objects5 struct {
-	ID         string             `json:"id" api:"required"`
-	Status     Union13            `json:"status" api:"required"`
-	WorkerType Objects5WorkerType `json:"workerType" api:"required"`
-	Candidate  Objects5Candidate  `json:"candidate" api:"required"`
-	Position   Objects5Position   `json:"position" api:"required"`
-	Department Objects5Department `json:"department" api:"required,nullable"`
-	Workplace  Objects5Workplace  `json:"workplace" api:"required,nullable"`
-	Manager    Objects5Manager    `json:"manager" api:"required,nullable"`
-	// Display name of the person or company that sent the offer. Null for offers not
-	// yet sent.
-	SentBy       string               `json:"sentBy" api:"required,nullable"`
-	Compensation Objects5Compensation `json:"compensation" api:"required"`
-	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string       `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string       `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string       `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string       `json:"createdAt" api:"required"`
-	JSON           objects5JSON `json:"-"`
-}
-
-// objects5JSON contains the JSON metadata for the struct [Objects5]
-type objects5JSON struct {
-	ID             apijson.Field
-	Status         apijson.Field
-	WorkerType     apijson.Field
-	Candidate      apijson.Field
-	Position       apijson.Field
-	Department     apijson.Field
-	Workplace      apijson.Field
-	Manager        apijson.Field
-	SentBy         apijson.Field
-	Compensation   apijson.Field
-	OfferURL       apijson.Field
-	ExpirationTime apijson.Field
-	LastViewedAt   apijson.Field
-	CreatedAt      apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *Objects5) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5JSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5Candidate struct {
-	FirstName         string                             `json:"firstName" api:"required"`
-	LastName          string                             `json:"lastName" api:"required"`
-	Email             string                             `json:"email" api:"required" format:"email"`
-	ContractorDetails Objects5CandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
-	JSON              objects5CandidateJSON              `json:"-"`
-}
-
-// objects5CandidateJSON contains the JSON metadata for the struct [Objects5Candidate]
-type objects5CandidateJSON struct {
-	FirstName         apijson.Field
-	LastName          apijson.Field
-	Email             apijson.Field
-	ContractorDetails apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *Objects5Candidate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5CandidateJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5CandidateContractorDetails struct {
-	IsBusiness        bool                                   `json:"isBusiness" api:"required"`
-	LegalBusinessName string                                 `json:"legalBusinessName" api:"required,nullable"`
-	JSON              objects5CandidateContractorDetailsJSON `json:"-"`
-}
-
-// objects5CandidateContractorDetailsJSON contains the JSON metadata for the struct [Objects5CandidateContractorDetails]
-type objects5CandidateContractorDetailsJSON struct {
-	IsBusiness        apijson.Field
-	LegalBusinessName apijson.Field
-	raw               string
-	ExtraFields       map[string]apijson.Field
-}
-
-func (r *Objects5CandidateContractorDetails) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5CandidateContractorDetailsJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5Position struct {
-	Title       string                  `json:"title" api:"required"`
-	StartDate   string                  `json:"startDate" api:"required"`
-	Country     Objects5PositionCountry `json:"country" api:"required"`
-	ScopeOfWork string                  `json:"scopeOfWork" api:"required,nullable"`
-	JSON        objects5PositionJSON    `json:"-"`
-}
-
-// objects5PositionJSON contains the JSON metadata for the struct [Objects5Position]
-type objects5PositionJSON struct {
-	Title       apijson.Field
-	StartDate   apijson.Field
-	Country     apijson.Field
-	ScopeOfWork apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects5Position) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5PositionJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5PositionCountry string
-
-const (
-	Objects5PositionCountryAd Objects5PositionCountry = "AD"
-	Objects5PositionCountryAe Objects5PositionCountry = "AE"
-	Objects5PositionCountryAf Objects5PositionCountry = "AF"
-	Objects5PositionCountryAg Objects5PositionCountry = "AG"
-	Objects5PositionCountryAI Objects5PositionCountry = "AI"
-	Objects5PositionCountryAl Objects5PositionCountry = "AL"
-	Objects5PositionCountryAm Objects5PositionCountry = "AM"
-	Objects5PositionCountryAo Objects5PositionCountry = "AO"
-	Objects5PositionCountryAq Objects5PositionCountry = "AQ"
-	Objects5PositionCountryAr Objects5PositionCountry = "AR"
-	Objects5PositionCountryAs Objects5PositionCountry = "AS"
-	Objects5PositionCountryAt Objects5PositionCountry = "AT"
-	Objects5PositionCountryAu Objects5PositionCountry = "AU"
-	Objects5PositionCountryAw Objects5PositionCountry = "AW"
-	Objects5PositionCountryAx Objects5PositionCountry = "AX"
-	Objects5PositionCountryAz Objects5PositionCountry = "AZ"
-	Objects5PositionCountryBa Objects5PositionCountry = "BA"
-	Objects5PositionCountryBb Objects5PositionCountry = "BB"
-	Objects5PositionCountryBd Objects5PositionCountry = "BD"
-	Objects5PositionCountryBe Objects5PositionCountry = "BE"
-	Objects5PositionCountryBf Objects5PositionCountry = "BF"
-	Objects5PositionCountryBg Objects5PositionCountry = "BG"
-	Objects5PositionCountryBh Objects5PositionCountry = "BH"
-	Objects5PositionCountryBi Objects5PositionCountry = "BI"
-	Objects5PositionCountryBj Objects5PositionCountry = "BJ"
-	Objects5PositionCountryBl Objects5PositionCountry = "BL"
-	Objects5PositionCountryBm Objects5PositionCountry = "BM"
-	Objects5PositionCountryBn Objects5PositionCountry = "BN"
-	Objects5PositionCountryBo Objects5PositionCountry = "BO"
-	Objects5PositionCountryBq Objects5PositionCountry = "BQ"
-	Objects5PositionCountryBr Objects5PositionCountry = "BR"
-	Objects5PositionCountryBs Objects5PositionCountry = "BS"
-	Objects5PositionCountryBt Objects5PositionCountry = "BT"
-	Objects5PositionCountryBv Objects5PositionCountry = "BV"
-	Objects5PositionCountryBw Objects5PositionCountry = "BW"
-	Objects5PositionCountryBy Objects5PositionCountry = "BY"
-	Objects5PositionCountryBz Objects5PositionCountry = "BZ"
-	Objects5PositionCountryCa Objects5PositionCountry = "CA"
-	Objects5PositionCountryCc Objects5PositionCountry = "CC"
-	Objects5PositionCountryCd Objects5PositionCountry = "CD"
-	Objects5PositionCountryCf Objects5PositionCountry = "CF"
-	Objects5PositionCountryCg Objects5PositionCountry = "CG"
-	Objects5PositionCountryCh Objects5PositionCountry = "CH"
-	Objects5PositionCountryCi Objects5PositionCountry = "CI"
-	Objects5PositionCountryCk Objects5PositionCountry = "CK"
-	Objects5PositionCountryCl Objects5PositionCountry = "CL"
-	Objects5PositionCountryCm Objects5PositionCountry = "CM"
-	Objects5PositionCountryCn Objects5PositionCountry = "CN"
-	Objects5PositionCountryCo Objects5PositionCountry = "CO"
-	Objects5PositionCountryCr Objects5PositionCountry = "CR"
-	Objects5PositionCountryCu Objects5PositionCountry = "CU"
-	Objects5PositionCountryCv Objects5PositionCountry = "CV"
-	Objects5PositionCountryCw Objects5PositionCountry = "CW"
-	Objects5PositionCountryCx Objects5PositionCountry = "CX"
-	Objects5PositionCountryCy Objects5PositionCountry = "CY"
-	Objects5PositionCountryCz Objects5PositionCountry = "CZ"
-	Objects5PositionCountryDe Objects5PositionCountry = "DE"
-	Objects5PositionCountryDj Objects5PositionCountry = "DJ"
-	Objects5PositionCountryDk Objects5PositionCountry = "DK"
-	Objects5PositionCountryDm Objects5PositionCountry = "DM"
-	Objects5PositionCountryDo Objects5PositionCountry = "DO"
-	Objects5PositionCountryDz Objects5PositionCountry = "DZ"
-	Objects5PositionCountryEc Objects5PositionCountry = "EC"
-	Objects5PositionCountryEe Objects5PositionCountry = "EE"
-	Objects5PositionCountryEg Objects5PositionCountry = "EG"
-	Objects5PositionCountryEh Objects5PositionCountry = "EH"
-	Objects5PositionCountryEr Objects5PositionCountry = "ER"
-	Objects5PositionCountryEs Objects5PositionCountry = "ES"
-	Objects5PositionCountryEt Objects5PositionCountry = "ET"
-	Objects5PositionCountryFi Objects5PositionCountry = "FI"
-	Objects5PositionCountryFj Objects5PositionCountry = "FJ"
-	Objects5PositionCountryFk Objects5PositionCountry = "FK"
-	Objects5PositionCountryFm Objects5PositionCountry = "FM"
-	Objects5PositionCountryFo Objects5PositionCountry = "FO"
-	Objects5PositionCountryFr Objects5PositionCountry = "FR"
-	Objects5PositionCountryGa Objects5PositionCountry = "GA"
-	Objects5PositionCountryGB Objects5PositionCountry = "GB"
-	Objects5PositionCountryGd Objects5PositionCountry = "GD"
-	Objects5PositionCountryGe Objects5PositionCountry = "GE"
-	Objects5PositionCountryGf Objects5PositionCountry = "GF"
-	Objects5PositionCountryGg Objects5PositionCountry = "GG"
-	Objects5PositionCountryGh Objects5PositionCountry = "GH"
-	Objects5PositionCountryGi Objects5PositionCountry = "GI"
-	Objects5PositionCountryGl Objects5PositionCountry = "GL"
-	Objects5PositionCountryGm Objects5PositionCountry = "GM"
-	Objects5PositionCountryGn Objects5PositionCountry = "GN"
-	Objects5PositionCountryGp Objects5PositionCountry = "GP"
-	Objects5PositionCountryGq Objects5PositionCountry = "GQ"
-	Objects5PositionCountryGr Objects5PositionCountry = "GR"
-	Objects5PositionCountryGs Objects5PositionCountry = "GS"
-	Objects5PositionCountryGt Objects5PositionCountry = "GT"
-	Objects5PositionCountryGu Objects5PositionCountry = "GU"
-	Objects5PositionCountryGw Objects5PositionCountry = "GW"
-	Objects5PositionCountryGy Objects5PositionCountry = "GY"
-	Objects5PositionCountryHk Objects5PositionCountry = "HK"
-	Objects5PositionCountryHm Objects5PositionCountry = "HM"
-	Objects5PositionCountryHn Objects5PositionCountry = "HN"
-	Objects5PositionCountryHr Objects5PositionCountry = "HR"
-	Objects5PositionCountryHt Objects5PositionCountry = "HT"
-	Objects5PositionCountryHu Objects5PositionCountry = "HU"
-	Objects5PositionCountryID Objects5PositionCountry = "ID"
-	Objects5PositionCountryIe Objects5PositionCountry = "IE"
-	Objects5PositionCountryIl Objects5PositionCountry = "IL"
-	Objects5PositionCountryIm Objects5PositionCountry = "IM"
-	Objects5PositionCountryIn Objects5PositionCountry = "IN"
-	Objects5PositionCountryIo Objects5PositionCountry = "IO"
-	Objects5PositionCountryIq Objects5PositionCountry = "IQ"
-	Objects5PositionCountryIr Objects5PositionCountry = "IR"
-	Objects5PositionCountryIs Objects5PositionCountry = "IS"
-	Objects5PositionCountryIt Objects5PositionCountry = "IT"
-	Objects5PositionCountryJe Objects5PositionCountry = "JE"
-	Objects5PositionCountryJm Objects5PositionCountry = "JM"
-	Objects5PositionCountryJo Objects5PositionCountry = "JO"
-	Objects5PositionCountryJp Objects5PositionCountry = "JP"
-	Objects5PositionCountryKe Objects5PositionCountry = "KE"
-	Objects5PositionCountryKg Objects5PositionCountry = "KG"
-	Objects5PositionCountryKh Objects5PositionCountry = "KH"
-	Objects5PositionCountryKi Objects5PositionCountry = "KI"
-	Objects5PositionCountryKm Objects5PositionCountry = "KM"
-	Objects5PositionCountryKn Objects5PositionCountry = "KN"
-	Objects5PositionCountryKp Objects5PositionCountry = "KP"
-	Objects5PositionCountryKr Objects5PositionCountry = "KR"
-	Objects5PositionCountryKw Objects5PositionCountry = "KW"
-	Objects5PositionCountryKy Objects5PositionCountry = "KY"
-	Objects5PositionCountryKz Objects5PositionCountry = "KZ"
-	Objects5PositionCountryLa Objects5PositionCountry = "LA"
-	Objects5PositionCountryLb Objects5PositionCountry = "LB"
-	Objects5PositionCountryLc Objects5PositionCountry = "LC"
-	Objects5PositionCountryLi Objects5PositionCountry = "LI"
-	Objects5PositionCountryLk Objects5PositionCountry = "LK"
-	Objects5PositionCountryLr Objects5PositionCountry = "LR"
-	Objects5PositionCountryLs Objects5PositionCountry = "LS"
-	Objects5PositionCountryLt Objects5PositionCountry = "LT"
-	Objects5PositionCountryLu Objects5PositionCountry = "LU"
-	Objects5PositionCountryLv Objects5PositionCountry = "LV"
-	Objects5PositionCountryLy Objects5PositionCountry = "LY"
-	Objects5PositionCountryMa Objects5PositionCountry = "MA"
-	Objects5PositionCountryMc Objects5PositionCountry = "MC"
-	Objects5PositionCountryMd Objects5PositionCountry = "MD"
-	Objects5PositionCountryMe Objects5PositionCountry = "ME"
-	Objects5PositionCountryMf Objects5PositionCountry = "MF"
-	Objects5PositionCountryMg Objects5PositionCountry = "MG"
-	Objects5PositionCountryMh Objects5PositionCountry = "MH"
-	Objects5PositionCountryMk Objects5PositionCountry = "MK"
-	Objects5PositionCountryMl Objects5PositionCountry = "ML"
-	Objects5PositionCountryMm Objects5PositionCountry = "MM"
-	Objects5PositionCountryMn Objects5PositionCountry = "MN"
-	Objects5PositionCountryMo Objects5PositionCountry = "MO"
-	Objects5PositionCountryMp Objects5PositionCountry = "MP"
-	Objects5PositionCountryMq Objects5PositionCountry = "MQ"
-	Objects5PositionCountryMr Objects5PositionCountry = "MR"
-	Objects5PositionCountryMs Objects5PositionCountry = "MS"
-	Objects5PositionCountryMt Objects5PositionCountry = "MT"
-	Objects5PositionCountryMu Objects5PositionCountry = "MU"
-	Objects5PositionCountryMv Objects5PositionCountry = "MV"
-	Objects5PositionCountryMw Objects5PositionCountry = "MW"
-	Objects5PositionCountryMx Objects5PositionCountry = "MX"
-	Objects5PositionCountryMy Objects5PositionCountry = "MY"
-	Objects5PositionCountryMz Objects5PositionCountry = "MZ"
-	Objects5PositionCountryNa Objects5PositionCountry = "NA"
-	Objects5PositionCountryNc Objects5PositionCountry = "NC"
-	Objects5PositionCountryNe Objects5PositionCountry = "NE"
-	Objects5PositionCountryNf Objects5PositionCountry = "NF"
-	Objects5PositionCountryNg Objects5PositionCountry = "NG"
-	Objects5PositionCountryNi Objects5PositionCountry = "NI"
-	Objects5PositionCountryNl Objects5PositionCountry = "NL"
-	Objects5PositionCountryNo Objects5PositionCountry = "NO"
-	Objects5PositionCountryNp Objects5PositionCountry = "NP"
-	Objects5PositionCountryNr Objects5PositionCountry = "NR"
-	Objects5PositionCountryNu Objects5PositionCountry = "NU"
-	Objects5PositionCountryNz Objects5PositionCountry = "NZ"
-	Objects5PositionCountryOm Objects5PositionCountry = "OM"
-	Objects5PositionCountryPa Objects5PositionCountry = "PA"
-	Objects5PositionCountryPe Objects5PositionCountry = "PE"
-	Objects5PositionCountryPf Objects5PositionCountry = "PF"
-	Objects5PositionCountryPg Objects5PositionCountry = "PG"
-	Objects5PositionCountryPh Objects5PositionCountry = "PH"
-	Objects5PositionCountryPk Objects5PositionCountry = "PK"
-	Objects5PositionCountryPl Objects5PositionCountry = "PL"
-	Objects5PositionCountryPm Objects5PositionCountry = "PM"
-	Objects5PositionCountryPn Objects5PositionCountry = "PN"
-	Objects5PositionCountryPr Objects5PositionCountry = "PR"
-	Objects5PositionCountryPs Objects5PositionCountry = "PS"
-	Objects5PositionCountryPt Objects5PositionCountry = "PT"
-	Objects5PositionCountryPw Objects5PositionCountry = "PW"
-	Objects5PositionCountryPy Objects5PositionCountry = "PY"
-	Objects5PositionCountryQa Objects5PositionCountry = "QA"
-	Objects5PositionCountryRe Objects5PositionCountry = "RE"
-	Objects5PositionCountryRo Objects5PositionCountry = "RO"
-	Objects5PositionCountryRs Objects5PositionCountry = "RS"
-	Objects5PositionCountryRu Objects5PositionCountry = "RU"
-	Objects5PositionCountryRw Objects5PositionCountry = "RW"
-	Objects5PositionCountrySa Objects5PositionCountry = "SA"
-	Objects5PositionCountrySb Objects5PositionCountry = "SB"
-	Objects5PositionCountrySc Objects5PositionCountry = "SC"
-	Objects5PositionCountrySd Objects5PositionCountry = "SD"
-	Objects5PositionCountrySe Objects5PositionCountry = "SE"
-	Objects5PositionCountrySg Objects5PositionCountry = "SG"
-	Objects5PositionCountrySh Objects5PositionCountry = "SH"
-	Objects5PositionCountrySi Objects5PositionCountry = "SI"
-	Objects5PositionCountrySj Objects5PositionCountry = "SJ"
-	Objects5PositionCountrySk Objects5PositionCountry = "SK"
-	Objects5PositionCountrySl Objects5PositionCountry = "SL"
-	Objects5PositionCountrySm Objects5PositionCountry = "SM"
-	Objects5PositionCountrySn Objects5PositionCountry = "SN"
-	Objects5PositionCountrySo Objects5PositionCountry = "SO"
-	Objects5PositionCountrySr Objects5PositionCountry = "SR"
-	Objects5PositionCountrySS Objects5PositionCountry = "SS"
-	Objects5PositionCountrySt Objects5PositionCountry = "ST"
-	Objects5PositionCountrySv Objects5PositionCountry = "SV"
-	Objects5PositionCountrySx Objects5PositionCountry = "SX"
-	Objects5PositionCountrySy Objects5PositionCountry = "SY"
-	Objects5PositionCountrySz Objects5PositionCountry = "SZ"
-	Objects5PositionCountryTc Objects5PositionCountry = "TC"
-	Objects5PositionCountryTd Objects5PositionCountry = "TD"
-	Objects5PositionCountryTf Objects5PositionCountry = "TF"
-	Objects5PositionCountryTg Objects5PositionCountry = "TG"
-	Objects5PositionCountryTh Objects5PositionCountry = "TH"
-	Objects5PositionCountryTj Objects5PositionCountry = "TJ"
-	Objects5PositionCountryTk Objects5PositionCountry = "TK"
-	Objects5PositionCountryTl Objects5PositionCountry = "TL"
-	Objects5PositionCountryTm Objects5PositionCountry = "TM"
-	Objects5PositionCountryTn Objects5PositionCountry = "TN"
-	Objects5PositionCountryTo Objects5PositionCountry = "TO"
-	Objects5PositionCountryTr Objects5PositionCountry = "TR"
-	Objects5PositionCountryTt Objects5PositionCountry = "TT"
-	Objects5PositionCountryTv Objects5PositionCountry = "TV"
-	Objects5PositionCountryTw Objects5PositionCountry = "TW"
-	Objects5PositionCountryTz Objects5PositionCountry = "TZ"
-	Objects5PositionCountryUa Objects5PositionCountry = "UA"
-	Objects5PositionCountryUg Objects5PositionCountry = "UG"
-	Objects5PositionCountryUm Objects5PositionCountry = "UM"
-	Objects5PositionCountryUs Objects5PositionCountry = "US"
-	Objects5PositionCountryUy Objects5PositionCountry = "UY"
-	Objects5PositionCountryUz Objects5PositionCountry = "UZ"
-	Objects5PositionCountryVa Objects5PositionCountry = "VA"
-	Objects5PositionCountryVc Objects5PositionCountry = "VC"
-	Objects5PositionCountryVe Objects5PositionCountry = "VE"
-	Objects5PositionCountryVg Objects5PositionCountry = "VG"
-	Objects5PositionCountryVi Objects5PositionCountry = "VI"
-	Objects5PositionCountryVn Objects5PositionCountry = "VN"
-	Objects5PositionCountryVu Objects5PositionCountry = "VU"
-	Objects5PositionCountryWf Objects5PositionCountry = "WF"
-	Objects5PositionCountryWs Objects5PositionCountry = "WS"
-	Objects5PositionCountryXk Objects5PositionCountry = "XK"
-	Objects5PositionCountryYe Objects5PositionCountry = "YE"
-	Objects5PositionCountryYt Objects5PositionCountry = "YT"
-	Objects5PositionCountryZa Objects5PositionCountry = "ZA"
-	Objects5PositionCountryZm Objects5PositionCountry = "ZM"
-	Objects5PositionCountryZw Objects5PositionCountry = "ZW"
-)
-
-func (r Objects5PositionCountry) IsKnown() bool {
-	switch r {
-	case Objects5PositionCountryAd, Objects5PositionCountryAe, Objects5PositionCountryAf, Objects5PositionCountryAg, Objects5PositionCountryAI, Objects5PositionCountryAl, Objects5PositionCountryAm, Objects5PositionCountryAo, Objects5PositionCountryAq, Objects5PositionCountryAr, Objects5PositionCountryAs, Objects5PositionCountryAt, Objects5PositionCountryAu, Objects5PositionCountryAw, Objects5PositionCountryAx, Objects5PositionCountryAz, Objects5PositionCountryBa, Objects5PositionCountryBb, Objects5PositionCountryBd, Objects5PositionCountryBe, Objects5PositionCountryBf, Objects5PositionCountryBg, Objects5PositionCountryBh, Objects5PositionCountryBi, Objects5PositionCountryBj, Objects5PositionCountryBl, Objects5PositionCountryBm, Objects5PositionCountryBn, Objects5PositionCountryBo, Objects5PositionCountryBq, Objects5PositionCountryBr, Objects5PositionCountryBs, Objects5PositionCountryBt, Objects5PositionCountryBv, Objects5PositionCountryBw, Objects5PositionCountryBy, Objects5PositionCountryBz, Objects5PositionCountryCa, Objects5PositionCountryCc, Objects5PositionCountryCd, Objects5PositionCountryCf, Objects5PositionCountryCg, Objects5PositionCountryCh, Objects5PositionCountryCi, Objects5PositionCountryCk, Objects5PositionCountryCl, Objects5PositionCountryCm, Objects5PositionCountryCn, Objects5PositionCountryCo, Objects5PositionCountryCr, Objects5PositionCountryCu, Objects5PositionCountryCv, Objects5PositionCountryCw, Objects5PositionCountryCx, Objects5PositionCountryCy, Objects5PositionCountryCz, Objects5PositionCountryDe, Objects5PositionCountryDj, Objects5PositionCountryDk, Objects5PositionCountryDm, Objects5PositionCountryDo, Objects5PositionCountryDz, Objects5PositionCountryEc, Objects5PositionCountryEe, Objects5PositionCountryEg, Objects5PositionCountryEh, Objects5PositionCountryEr, Objects5PositionCountryEs, Objects5PositionCountryEt, Objects5PositionCountryFi, Objects5PositionCountryFj, Objects5PositionCountryFk, Objects5PositionCountryFm, Objects5PositionCountryFo, Objects5PositionCountryFr, Objects5PositionCountryGa, Objects5PositionCountryGB, Objects5PositionCountryGd, Objects5PositionCountryGe, Objects5PositionCountryGf, Objects5PositionCountryGg, Objects5PositionCountryGh, Objects5PositionCountryGi, Objects5PositionCountryGl, Objects5PositionCountryGm, Objects5PositionCountryGn, Objects5PositionCountryGp, Objects5PositionCountryGq, Objects5PositionCountryGr, Objects5PositionCountryGs, Objects5PositionCountryGt, Objects5PositionCountryGu, Objects5PositionCountryGw, Objects5PositionCountryGy, Objects5PositionCountryHk, Objects5PositionCountryHm, Objects5PositionCountryHn, Objects5PositionCountryHr, Objects5PositionCountryHt, Objects5PositionCountryHu, Objects5PositionCountryID, Objects5PositionCountryIe, Objects5PositionCountryIl, Objects5PositionCountryIm, Objects5PositionCountryIn, Objects5PositionCountryIo, Objects5PositionCountryIq, Objects5PositionCountryIr, Objects5PositionCountryIs, Objects5PositionCountryIt, Objects5PositionCountryJe, Objects5PositionCountryJm, Objects5PositionCountryJo, Objects5PositionCountryJp, Objects5PositionCountryKe, Objects5PositionCountryKg, Objects5PositionCountryKh, Objects5PositionCountryKi, Objects5PositionCountryKm, Objects5PositionCountryKn, Objects5PositionCountryKp, Objects5PositionCountryKr, Objects5PositionCountryKw, Objects5PositionCountryKy, Objects5PositionCountryKz, Objects5PositionCountryLa, Objects5PositionCountryLb, Objects5PositionCountryLc, Objects5PositionCountryLi, Objects5PositionCountryLk, Objects5PositionCountryLr, Objects5PositionCountryLs, Objects5PositionCountryLt, Objects5PositionCountryLu, Objects5PositionCountryLv, Objects5PositionCountryLy, Objects5PositionCountryMa, Objects5PositionCountryMc, Objects5PositionCountryMd, Objects5PositionCountryMe, Objects5PositionCountryMf, Objects5PositionCountryMg, Objects5PositionCountryMh, Objects5PositionCountryMk, Objects5PositionCountryMl, Objects5PositionCountryMm, Objects5PositionCountryMn, Objects5PositionCountryMo, Objects5PositionCountryMp, Objects5PositionCountryMq, Objects5PositionCountryMr, Objects5PositionCountryMs, Objects5PositionCountryMt, Objects5PositionCountryMu, Objects5PositionCountryMv, Objects5PositionCountryMw, Objects5PositionCountryMx, Objects5PositionCountryMy, Objects5PositionCountryMz, Objects5PositionCountryNa, Objects5PositionCountryNc, Objects5PositionCountryNe, Objects5PositionCountryNf, Objects5PositionCountryNg, Objects5PositionCountryNi, Objects5PositionCountryNl, Objects5PositionCountryNo, Objects5PositionCountryNp, Objects5PositionCountryNr, Objects5PositionCountryNu, Objects5PositionCountryNz, Objects5PositionCountryOm, Objects5PositionCountryPa, Objects5PositionCountryPe, Objects5PositionCountryPf, Objects5PositionCountryPg, Objects5PositionCountryPh, Objects5PositionCountryPk, Objects5PositionCountryPl, Objects5PositionCountryPm, Objects5PositionCountryPn, Objects5PositionCountryPr, Objects5PositionCountryPs, Objects5PositionCountryPt, Objects5PositionCountryPw, Objects5PositionCountryPy, Objects5PositionCountryQa, Objects5PositionCountryRe, Objects5PositionCountryRo, Objects5PositionCountryRs, Objects5PositionCountryRu, Objects5PositionCountryRw, Objects5PositionCountrySa, Objects5PositionCountrySb, Objects5PositionCountrySc, Objects5PositionCountrySd, Objects5PositionCountrySe, Objects5PositionCountrySg, Objects5PositionCountrySh, Objects5PositionCountrySi, Objects5PositionCountrySj, Objects5PositionCountrySk, Objects5PositionCountrySl, Objects5PositionCountrySm, Objects5PositionCountrySn, Objects5PositionCountrySo, Objects5PositionCountrySr, Objects5PositionCountrySS, Objects5PositionCountrySt, Objects5PositionCountrySv, Objects5PositionCountrySx, Objects5PositionCountrySy, Objects5PositionCountrySz, Objects5PositionCountryTc, Objects5PositionCountryTd, Objects5PositionCountryTf, Objects5PositionCountryTg, Objects5PositionCountryTh, Objects5PositionCountryTj, Objects5PositionCountryTk, Objects5PositionCountryTl, Objects5PositionCountryTm, Objects5PositionCountryTn, Objects5PositionCountryTo, Objects5PositionCountryTr, Objects5PositionCountryTt, Objects5PositionCountryTv, Objects5PositionCountryTw, Objects5PositionCountryTz, Objects5PositionCountryUa, Objects5PositionCountryUg, Objects5PositionCountryUm, Objects5PositionCountryUs, Objects5PositionCountryUy, Objects5PositionCountryUz, Objects5PositionCountryVa, Objects5PositionCountryVc, Objects5PositionCountryVe, Objects5PositionCountryVg, Objects5PositionCountryVi, Objects5PositionCountryVn, Objects5PositionCountryVu, Objects5PositionCountryWf, Objects5PositionCountryWs, Objects5PositionCountryXk, Objects5PositionCountryYe, Objects5PositionCountryYt, Objects5PositionCountryZa, Objects5PositionCountryZm, Objects5PositionCountryZw:
-		return true
-	}
-	return false
-}
-
-type Objects5Department struct {
-	ID   string                 `json:"id" api:"required"`
-	Name string                 `json:"name" api:"required"`
-	JSON objects5DepartmentJSON `json:"-"`
-}
-
-// objects5DepartmentJSON contains the JSON metadata for the struct [Objects5Department]
-type objects5DepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects5Department) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5DepartmentJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5Workplace struct {
-	ID   string                `json:"id" api:"required"`
-	Name string                `json:"name" api:"required"`
-	JSON objects5WorkplaceJSON `json:"-"`
-}
-
-// objects5WorkplaceJSON contains the JSON metadata for the struct [Objects5Workplace]
-type objects5WorkplaceJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects5Workplace) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5WorkplaceJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5Manager struct {
-	ID   string              `json:"id" api:"required"`
-	Name string              `json:"name" api:"required,nullable"`
-	JSON objects5ManagerJSON `json:"-"`
-}
-
-// objects5ManagerJSON contains the JSON metadata for the struct [Objects5Manager]
-type objects5ManagerJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects5Manager) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5ManagerJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5Compensation struct {
-	BasePay         Objects5CompensationBasePay `json:"basePay" api:"required"`
-	SignOnBonus     PublicMoneyAmount           `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus PublicMoneyAmount           `json:"relocationBonus" api:"required,nullable"`
-	Stock           Objects5CompensationStock   `json:"stock" api:"required,nullable"`
-	JSON            objects5CompensationJSON    `json:"-"`
-}
-
-// objects5CompensationJSON contains the JSON metadata for the struct [Objects5Compensation]
-type objects5CompensationJSON struct {
-	BasePay         apijson.Field
-	SignOnBonus     apijson.Field
-	RelocationBonus apijson.Field
-	Stock           apijson.Field
-	raw             string
-	ExtraFields     map[string]apijson.Field
-}
-
-func (r *Objects5Compensation) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5CompensationJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5CompensationBasePay struct {
-	// A monetary amount with its currency and server-formatted display value.
-	Amount       PublicMoneyAmount                `json:"amount" api:"required"`
-	Basis        Objects5CompensationBasePayBasis `json:"basis" api:"required"`
-	Type         Objects5CompensationBasePayType  `json:"type" api:"required,nullable"`
-	VariableRate PublicMoneyAmount                `json:"variableRate" api:"required,nullable"`
-	JSON         objects5CompensationBasePayJSON  `json:"-"`
-}
-
-// objects5CompensationBasePayJSON contains the JSON metadata for the struct [Objects5CompensationBasePay]
-type objects5CompensationBasePayJSON struct {
-	Amount       apijson.Field
-	Basis        apijson.Field
-	Type         apijson.Field
-	VariableRate apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *Objects5CompensationBasePay) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5CompensationBasePayJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5CompensationBasePayBasis string
-
-const (
-	Objects5CompensationBasePayBasisYear     Objects5CompensationBasePayBasis = "year"
-	Objects5CompensationBasePayBasisMonth    Objects5CompensationBasePayBasis = "month"
-	Objects5CompensationBasePayBasisWeek     Objects5CompensationBasePayBasis = "week"
-	Objects5CompensationBasePayBasisHour     Objects5CompensationBasePayBasis = "hour"
-	Objects5CompensationBasePayBasisVariable Objects5CompensationBasePayBasis = "variable"
-)
-
-func (r Objects5CompensationBasePayBasis) IsKnown() bool {
-	switch r {
-	case Objects5CompensationBasePayBasisYear, Objects5CompensationBasePayBasisMonth, Objects5CompensationBasePayBasisWeek, Objects5CompensationBasePayBasisHour, Objects5CompensationBasePayBasisVariable:
-		return true
-	}
-	return false
-}
-
-type Objects5CompensationBasePayType string
-
-const (
-	Objects5CompensationBasePayTypeFixed      Objects5CompensationBasePayType = "fixed"
-	Objects5CompensationBasePayTypePayAsYouGo Objects5CompensationBasePayType = "pay_as_you_go"
-)
-
-func (r Objects5CompensationBasePayType) IsKnown() bool {
-	switch r {
-	case Objects5CompensationBasePayTypeFixed, Objects5CompensationBasePayTypePayAsYouGo:
-		return true
-	}
-	return false
-}
-
-type Objects5CompensationStock struct {
-	Options               int64                         `json:"options" api:"required"`
-	VestingScheduleMonths int64                         `json:"vestingScheduleMonths" api:"required,nullable"`
-	CliffMonths           int64                         `json:"cliffMonths" api:"required,nullable"`
-	JSON                  objects5CompensationStockJSON `json:"-"`
-}
-
-// objects5CompensationStockJSON contains the JSON metadata for the struct [Objects5CompensationStock]
-type objects5CompensationStockJSON struct {
-	Options               apijson.Field
-	VestingScheduleMonths apijson.Field
-	CliffMonths           apijson.Field
-	raw                   string
-	ExtraFields           map[string]apijson.Field
-}
-
-func (r *Objects5CompensationStock) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects5CompensationStockJSON) RawJSON() string {
-	return r.raw
-}
-
-type Objects5WorkerType string
-
-const (
-	Objects5WorkerTypeEmployee         Objects5WorkerType = "employee"
-	Objects5WorkerTypeUsContractor     Objects5WorkerType = "us_contractor"
-	Objects5WorkerTypeGlobalContractor Objects5WorkerType = "global_contractor"
-)
-
-func (r Objects5WorkerType) IsKnown() bool {
-	switch r {
-	case Objects5WorkerTypeEmployee, Objects5WorkerTypeUsContractor, Objects5WorkerTypeGlobalContractor:
 		return true
 	}
 	return false
@@ -1590,7 +1054,7 @@ func (r PublicPayFrequency) IsKnown() bool {
 	return false
 }
 
-type Union20 = string
+type Union21 = string
 
 type PublicPayrollCurrency string
 
@@ -1689,22 +1153,6 @@ func (r publicPayPeriodJSON) RawJSON() string {
 	return r.raw
 }
 
-type Union21 string
-
-const (
-	Union21UsW2             Union21 = "us_w2"
-	Union21Us1099           Union21 = "us_1099"
-	Union21GlobalContractor Union21 = "global_contractor"
-)
-
-func (r Union21) IsKnown() bool {
-	switch r {
-	case Union21UsW2, Union21Us1099, Union21GlobalContractor:
-		return true
-	}
-	return false
-}
-
 type PublicPaycheckStatus string
 
 const (
@@ -1780,40 +1228,21 @@ func (r TimeOffPolicyNotFoundEncodedTag) IsKnown() bool {
 	return false
 }
 
-type Union23 = string
-
 type Union24 = string
 
-type Union25 string
-
-const (
-	Union25Pending  Union25 = "pending"
-	Union25Approved Union25 = "approved"
-	Union25Denied   Union25 = "denied"
-)
-
-func (r Union25) IsKnown() bool {
-	switch r {
-	case Union25Pending, Union25Approved, Union25Denied:
-		return true
-	}
-	return false
-}
+type Union25 = string
 
 type Union26 string
 
 const (
-	Union26Draft       Union26 = "draft"
-	Union26Invited     Union26 = "invited"
-	Union26Onboarding  Union26 = "onboarding"
-	Union26Active      Union26 = "active"
-	Union26Offboarding Union26 = "offboarding"
-	Union26Inactive    Union26 = "inactive"
+	Union26Pending  Union26 = "pending"
+	Union26Approved Union26 = "approved"
+	Union26Denied   Union26 = "denied"
 )
 
 func (r Union26) IsKnown() bool {
 	switch r {
-	case Union26Draft, Union26Invited, Union26Onboarding, Union26Active, Union26Offboarding, Union26Inactive:
+	case Union26Pending, Union26Approved, Union26Denied:
 		return true
 	}
 	return false
@@ -1822,29 +1251,48 @@ func (r Union26) IsKnown() bool {
 type Union27 string
 
 const (
-	Union27Employee   Union27 = "employee"
-	Union27Contractor Union27 = "contractor"
+	Union27Draft       Union27 = "draft"
+	Union27Invited     Union27 = "invited"
+	Union27Onboarding  Union27 = "onboarding"
+	Union27Active      Union27 = "active"
+	Union27Offboarding Union27 = "offboarding"
+	Union27Inactive    Union27 = "inactive"
 )
 
 func (r Union27) IsKnown() bool {
 	switch r {
-	case Union27Employee, Union27Contractor:
+	case Union27Draft, Union27Invited, Union27Onboarding, Union27Active, Union27Offboarding, Union27Inactive:
 		return true
 	}
 	return false
 }
 
-type Union28 = string
+type Union28 string
 
-type Union29 = bool
+const (
+	Union28Employee   Union28 = "employee"
+	Union28Contractor Union28 = "contractor"
+)
 
-type Union30 = string
+func (r Union28) IsKnown() bool {
+	switch r {
+	case Union28Employee, Union28Contractor:
+		return true
+	}
+	return false
+}
+
+type Union29 = string
+
+type Union30 = bool
 
 type Union31 = string
 
 type Union32 = string
 
 type Union33 = string
+
+type Union34 = string
 
 type WorkerNotFoundErrorEncoded struct {
 	Tag     WorkerNotFoundErrorEncodedTag  `json:"_tag" api:"required"`

@@ -76,7 +76,7 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 //
 // Returns:
 //
-//	*WorkerGetResponse: Success
+//	*Objects11: Success
 //
 // Example:
 //
@@ -86,7 +86,7 @@ func (r *WorkerService) List(ctx context.Context, query WorkerListParams, opts .
 //	}
 //
 //	fmt.Println(worker)
-func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *WorkerGetResponse, err error) {
+func (r *WorkerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *Objects11, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -345,168 +345,12 @@ func (r RemoteWorkLocationState) IsKnown() bool {
 	return false
 }
 
-type Objects10 struct {
-	ID            string  `json:"id" api:"required"`
-	Position      string  `json:"position" api:"required"`
-	Type          Union27 `json:"type" api:"required"`
-	Status        Union26 `json:"status" api:"required"`
-	StartDate     string  `json:"startDate" api:"required"`
-	EndDate       string  `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string  `json:"businessName" api:"required,nullable"`
-	FirstName     string  `json:"firstName" api:"required"`
-	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required" format:"email"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string  `json:"preferredName" api:"required,nullable"`
-	// The "ui" name of a worker. If it's a business contractor business name is used.
-	// Otherwise we default to preferred name, then first-last.
-	DisplayName string `json:"displayName" api:"required"`
-	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
-	// The worker's current regular compensation, or the rate effective on a future
-	// start date. Null when the worker has no applicable regular pay rate or the API
-	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
-	CustomFields []Objects10CustomField          `json:"customFields" api:"nullable"`
-	JSON         objects10JSON                   `json:"-"`
-}
-
-// objects10JSON contains the JSON metadata for the struct [Objects10]
-type objects10JSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
-}
-
-func (r *Objects10) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10JSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponse struct {
-	ID            string  `json:"id" api:"required"`
-	Position      string  `json:"position" api:"required"`
-	Type          Union27 `json:"type" api:"required"`
-	Status        Union26 `json:"status" api:"required"`
-	StartDate     string  `json:"startDate" api:"required"`
-	EndDate       string  `json:"endDate" api:"required,nullable"`
-	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
-	BusinessName  string  `json:"businessName" api:"required,nullable"`
-	FirstName     string  `json:"firstName" api:"required"`
-	LastName      string  `json:"lastName" api:"required"`
-	Email         string  `json:"email" api:"required" format:"email"`
-	WorkEmail     string  `json:"workEmail" api:"required,nullable" format:"email"`
-	PreferredName string  `json:"preferredName" api:"required,nullable"`
-	// The "ui" name of a worker. If it's a business contractor business name is used.
-	// Otherwise we default to preferred name, then first-last.
-	DisplayName string `json:"displayName" api:"required"`
-	// The IANA timezone of the worker (e.g., America/New_York).
-	TimeZone string `json:"timeZone" api:"required,nullable"`
-	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
-	// The worker's current regular compensation, or the rate effective on a future
-	// start date. Null when the worker has no applicable regular pay rate or the API
-	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
-	CustomFields []WorkerGetResponseCustomField  `json:"customFields" api:"nullable"`
-	JSON         workerGetResponseJSON           `json:"-"`
-}
-
-// workerGetResponseJSON contains the JSON metadata for the struct [WorkerGetResponse]
-type workerGetResponseJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
-}
-
-func (r *WorkerGetResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseType string
-
-const (
-	WorkerGetResponseTypeEmployee   WorkerGetResponseType = "employee"
-	WorkerGetResponseTypeContractor WorkerGetResponseType = "contractor"
-)
-
-func (r WorkerGetResponseType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseTypeEmployee, WorkerGetResponseTypeContractor:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseStatus string
-
-const (
-	WorkerGetResponseStatusDraft       WorkerGetResponseStatus = "draft"
-	WorkerGetResponseStatusInvited     WorkerGetResponseStatus = "invited"
-	WorkerGetResponseStatusOnboarding  WorkerGetResponseStatus = "onboarding"
-	WorkerGetResponseStatusActive      WorkerGetResponseStatus = "active"
-	WorkerGetResponseStatusOffboarding WorkerGetResponseStatus = "offboarding"
-	WorkerGetResponseStatusInactive    WorkerGetResponseStatus = "inactive"
-)
-
-func (r WorkerGetResponseStatus) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseStatusDraft, WorkerGetResponseStatusInvited, WorkerGetResponseStatusOnboarding, WorkerGetResponseStatusActive, WorkerGetResponseStatusOffboarding, WorkerGetResponseStatusInactive:
-		return true
-	}
-	return false
-}
-
 type WorkerListParams struct {
 	Limit     param.Field[string]    `query:"limit" api:"required"`
 	AfterID   param.Field[string]    `query:"afterId"`
 	BeforeID  param.Field[string]    `query:"beforeId"`
-	Statuses  param.Field[[]Union26] `query:"statuses"`
-	Types     param.Field[[]Union27] `query:"types"`
+	Statuses  param.Field[[]Union27] `query:"statuses"`
+	Types     param.Field[[]Union28] `query:"types"`
 	WorkEmail param.Field[string]    `query:"workEmail"`
 }
 
@@ -530,7 +374,10 @@ type WorkerNewEmployeeParams struct {
 	StartDate    param.Field[string]                              `json:"startDate" api:"required"`
 	// Where the employee will work. Either an existing company workplace or a remote
 	// US state.
-	WorkLocation      param.Field[WorkerNewEmployeeParamsWorkLocationUnion] `json:"workLocation" api:"required"`
+	WorkLocation param.Field[WorkerNewEmployeeParamsWorkLocationUnion] `json:"workLocation" api:"required"`
+	// The job level to assign this employee to, or null to leave unassigned. Omit this
+	// field when job levels are not enabled.
+	LevelID           param.Field[string]                                   `json:"levelId"`
 	PaySchedule       param.Field[WorkerNewEmployeeParamsPaySchedule]       `json:"paySchedule"`
 	RequireI9         param.Field[bool]                                     `json:"requireI9"`
 	StateRegistration param.Field[WorkerNewEmployeeParamsStateRegistration] `json:"stateRegistration"`
@@ -736,9 +583,12 @@ type WorkerNewContractorParams struct {
 	WorkCountry  param.Field[WorkerNewContractorParamsWorkCountry]  `json:"workCountry" api:"required"`
 	BusinessName param.Field[string]                                `json:"businessName"`
 	Compensation param.Field[WorkerNewContractorParamsCompensation] `json:"compensation"`
-	PaySchedule  param.Field[WorkerNewContractorParamsPaySchedule]  `json:"paySchedule"`
-	ScopeOfWork  param.Field[string]                                `json:"scopeOfWork"`
-	WorkEmail    param.Field[string]                                `json:"workEmail" format:"email"`
+	// The job level to assign this contractor to, or null to leave unassigned. Omit
+	// this field when job levels are not enabled.
+	LevelID     param.Field[string]                               `json:"levelId"`
+	PaySchedule param.Field[WorkerNewContractorParamsPaySchedule] `json:"paySchedule"`
+	ScopeOfWork param.Field[string]                               `json:"scopeOfWork"`
+	WorkEmail   param.Field[string]                               `json:"workEmail" format:"email"`
 }
 
 func (r WorkerNewContractorParams) MarshalJSON() (data []byte, err error) {
@@ -1147,7 +997,7 @@ func (r WorkerNewContractorParamsPaySchedule) IsKnown() bool {
 type WorkerListResponse struct {
 	HasMore bool                   `json:"hasMore" api:"required"`
 	Count   int64                  `json:"count" api:"required"`
-	Data    []Objects10            `json:"data" api:"required"`
+	Data    []Objects11            `json:"data" api:"required"`
 	JSON    workerListResponseJSON `json:"-"`
 }
 
@@ -1168,96 +1018,11 @@ func (r workerListResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type WorkerGetResponseDepartment struct {
-	ID   string                          `json:"id" api:"required"`
-	Name string                          `json:"name" api:"required"`
-	JSON workerGetResponseDepartmentJSON `json:"-"`
-}
-
-// workerGetResponseDepartmentJSON contains the JSON metadata for the struct [WorkerGetResponseDepartment]
-type workerGetResponseDepartmentJSON struct {
-	ID          apijson.Field
-	Name        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseDepartment) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseDepartmentJSON) RawJSON() string {
-	return r.raw
-}
-
-type WorkerGetResponseCustomField struct {
-	Type WorkerGetResponseCustomFieldsType `json:"type" api:"required"`
-	ID   string                            `json:"id" api:"required"`
-	Name string                            `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode Union1 `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option shared.Objects3 `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}                      `json:"options" api:"nullable"`
-	JSON    workerGetResponseCustomFieldJSON `json:"-"`
-	union   WorkerGetResponseCustomFieldsUnion
-}
-
-// workerGetResponseCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomField]
-type workerGetResponseCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r workerGetResponseCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r *WorkerGetResponseCustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = WorkerGetResponseCustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r WorkerGetResponseCustomField) AsUnion() WorkerGetResponseCustomFieldsUnion {
-	return r.union
-}
-
 type WorkerNewEmployeeResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union27 `json:"type" api:"required"`
-	Status        Union26 `json:"status" api:"required"`
+	Type          Union28 `json:"type" api:"required"`
+	Status        Union27 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
@@ -1273,11 +1038,14 @@ type WorkerNewEmployeeResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation        `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        shared.Objects5                        `json:"level" api:"nullable"`
 	CustomFields []WorkerNewEmployeeResponseCustomField `json:"customFields" api:"nullable"`
 	JSON         workerNewEmployeeResponseJSON          `json:"-"`
 }
@@ -1301,6 +1069,7 @@ type workerNewEmployeeResponseJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -1317,8 +1086,8 @@ func (r workerNewEmployeeResponseJSON) RawJSON() string {
 type WorkerNewContractorResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union27 `json:"type" api:"required"`
-	Status        Union26 `json:"status" api:"required"`
+	Type          Union28 `json:"type" api:"required"`
+	Status        Union27 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
@@ -1334,11 +1103,14 @@ type WorkerNewContractorResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation          `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        shared.Objects5                          `json:"level" api:"nullable"`
 	CustomFields []WorkerNewContractorResponseCustomField `json:"customFields" api:"nullable"`
 	JSON         workerNewContractorResponseJSON          `json:"-"`
 }
@@ -1362,6 +1134,7 @@ type workerNewContractorResponseJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -1378,8 +1151,8 @@ func (r workerNewContractorResponseJSON) RawJSON() string {
 type WorkerInviteResponse struct {
 	ID            string  `json:"id" api:"required"`
 	Position      string  `json:"position" api:"required"`
-	Type          Union27 `json:"type" api:"required"`
-	Status        Union26 `json:"status" api:"required"`
+	Type          Union28 `json:"type" api:"required"`
+	Status        Union27 `json:"status" api:"required"`
 	StartDate     string  `json:"startDate" api:"required"`
 	EndDate       string  `json:"endDate" api:"required,nullable"`
 	IsBusiness    bool    `json:"isBusiness" api:"required,nullable"`
@@ -1395,11 +1168,14 @@ type WorkerInviteResponse struct {
 	// The IANA timezone of the worker (e.g., America/New_York).
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
-	Department WorkerGetResponseDepartment `json:"department" api:"required,nullable"`
+	Department WorkerNewEmployeeResponseDepartment `json:"department" api:"required,nullable"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation   `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        shared.Objects5                   `json:"level" api:"nullable"`
 	CustomFields []WorkerInviteResponseCustomField `json:"customFields" api:"nullable"`
 	JSON         workerInviteResponseJSON          `json:"-"`
 }
@@ -1423,6 +1199,7 @@ type workerInviteResponseJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -1436,139 +1213,26 @@ func (r workerInviteResponseJSON) RawJSON() string {
 	return r.raw
 }
 
-type Objects10CustomField struct {
-	Type Objects10CustomFieldsType `json:"type" api:"required"`
-	ID   string                    `json:"id" api:"required"`
-	Name string                    `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{} `json:"value" api:"nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode Union1 `json:"currencyCode" api:"nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option shared.Objects3 `json:"option" api:"nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options interface{}              `json:"options" api:"nullable"`
-	JSON    objects10CustomFieldJSON `json:"-"`
-	union   Objects10CustomFieldsUnion
+type WorkerNewEmployeeResponseDepartment struct {
+	ID   string                                  `json:"id" api:"required"`
+	Name string                                  `json:"name" api:"required"`
+	JSON workerNewEmployeeResponseDepartmentJSON `json:"-"`
 }
 
-// objects10CustomFieldJSON contains the JSON metadata for the struct [Objects10CustomField]
-type objects10CustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Value        apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	Option       apijson.Field
-	Options      apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
+// workerNewEmployeeResponseDepartmentJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseDepartment]
+type workerNewEmployeeResponseDepartmentJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
-func (r objects10CustomFieldJSON) RawJSON() string {
+func (r *WorkerNewEmployeeResponseDepartment) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewEmployeeResponseDepartmentJSON) RawJSON() string {
 	return r.raw
-}
-
-func (r *Objects10CustomField) UnmarshalJSON(data []byte) (err error) {
-	*r = Objects10CustomField{}
-	err = apijson.UnmarshalRoot(data, &r.union)
-	if err != nil {
-		return err
-	}
-	return apijson.Port(r.union, &r)
-}
-
-func (r Objects10CustomField) AsUnion() Objects10CustomFieldsUnion {
-	return r.union
-}
-
-type WorkerGetResponseCustomFieldsUnion interface {
-	implementsWorkerGetResponseCustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*WorkerGetResponseCustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type WorkerGetResponseCustomFieldsType string
-
-const (
-	WorkerGetResponseCustomFieldsTypeText        WorkerGetResponseCustomFieldsType = "text"
-	WorkerGetResponseCustomFieldsTypeNumber      WorkerGetResponseCustomFieldsType = "number"
-	WorkerGetResponseCustomFieldsTypeDate        WorkerGetResponseCustomFieldsType = "date"
-	WorkerGetResponseCustomFieldsTypeBoolean     WorkerGetResponseCustomFieldsType = "boolean"
-	WorkerGetResponseCustomFieldsTypeCurrency    WorkerGetResponseCustomFieldsType = "currency"
-	WorkerGetResponseCustomFieldsTypePercentage  WorkerGetResponseCustomFieldsType = "percentage"
-	WorkerGetResponseCustomFieldsTypeSelect      WorkerGetResponseCustomFieldsType = "select"
-	WorkerGetResponseCustomFieldsTypeMultiSelect WorkerGetResponseCustomFieldsType = "multi_select"
-)
-
-func (r WorkerGetResponseCustomFieldsType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsTypeText, WorkerGetResponseCustomFieldsTypeNumber, WorkerGetResponseCustomFieldsTypeDate, WorkerGetResponseCustomFieldsTypeBoolean, WorkerGetResponseCustomFieldsTypeCurrency, WorkerGetResponseCustomFieldsTypePercentage, WorkerGetResponseCustomFieldsTypeSelect, WorkerGetResponseCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
 }
 
 type WorkerNewEmployeeResponseCustomField struct {
@@ -1758,402 +1422,6 @@ func (r *WorkerInviteResponseCustomField) UnmarshalJSON(data []byte) (err error)
 
 func (r WorkerInviteResponseCustomField) AsUnion() WorkerInviteResponseCustomFieldsUnion {
 	return r.union
-}
-
-type Objects10CustomFieldsUnion interface {
-	implementsObjects10CustomField()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*Objects10CustomFieldsUnion)(nil)).Elem(),
-		"type",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicTextWorkerCustomField{}),
-			DiscriminatorValue: "text",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicNumberWorkerCustomField{}),
-			DiscriminatorValue: "number",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicDateWorkerCustomField{}),
-			DiscriminatorValue: "date",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicBooleanWorkerCustomField{}),
-			DiscriminatorValue: "boolean",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicCurrencyWorkerCustomField{}),
-			DiscriminatorValue: "currency",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicPercentageWorkerCustomField{}),
-			DiscriminatorValue: "percentage",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicSelectWorkerCustomField{}),
-			DiscriminatorValue: "select",
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			Type:               reflect.TypeOf(Objects10CustomFieldsPublicMultiSelectWorkerCustomField{}),
-			DiscriminatorValue: "multi_select",
-		},
-	)
-}
-
-type Objects10CustomFieldsType string
-
-const (
-	Objects10CustomFieldsTypeText        Objects10CustomFieldsType = "text"
-	Objects10CustomFieldsTypeNumber      Objects10CustomFieldsType = "number"
-	Objects10CustomFieldsTypeDate        Objects10CustomFieldsType = "date"
-	Objects10CustomFieldsTypeBoolean     Objects10CustomFieldsType = "boolean"
-	Objects10CustomFieldsTypeCurrency    Objects10CustomFieldsType = "currency"
-	Objects10CustomFieldsTypePercentage  Objects10CustomFieldsType = "percentage"
-	Objects10CustomFieldsTypeSelect      Objects10CustomFieldsType = "select"
-	Objects10CustomFieldsTypeMultiSelect Objects10CustomFieldsType = "multi_select"
-)
-
-func (r Objects10CustomFieldsType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsTypeText, Objects10CustomFieldsTypeNumber, Objects10CustomFieldsTypeDate, Objects10CustomFieldsTypeBoolean, Objects10CustomFieldsTypeCurrency, Objects10CustomFieldsTypePercentage, Objects10CustomFieldsTypeSelect, Objects10CustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicTextWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                       `json:"id" api:"required"`
-	Name string                                                       `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                       `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicTextWorkerCustomField]
-type workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicTextWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                         `json:"id" api:"required"`
-	Name string                                                         `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                                    `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField]
-type workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicNumberWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicDateWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                       `json:"id" api:"required"`
-	Name string                                                       `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                                       `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicDateWorkerCustomField]
-type workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicDateWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                          `json:"id" api:"required"`
-	Name string                                                          `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                            `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField]
-type workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                           `json:"id" api:"required"`
-	Name string                                                           `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode Union1                                                           `json:"currencyCode" api:"required,nullable"`
-	JSON         workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField]
-type workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                             `json:"id" api:"required"`
-	Name string                                                             `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                        `json:"value" api:"required,nullable"`
-	JSON  workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField]
-type workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                         `json:"id" api:"required"`
-	Name string                                                         `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option shared.Objects3                                                `json:"option" api:"required,nullable"`
-	JSON   workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField]
-type workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicSelectWorkerCustomField) implementsWorkerGetResponseCustomField() {
-}
-
-type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                              `json:"id" api:"required"`
-	Name string                                                              `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []shared.Objects3                                                   `json:"options" api:"required,nullable"`
-	JSON    workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON `json:"-"`
-}
-
-// workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField]
-type workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r workerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerGetResponseCustomField() {
 }
 
 type WorkerNewEmployeeResponseCustomFieldsUnion interface {
@@ -2367,434 +1635,6 @@ const (
 func (r WorkerInviteResponseCustomFieldsType) IsKnown() bool {
 	switch r {
 	case WorkerInviteResponseCustomFieldsTypeText, WorkerInviteResponseCustomFieldsTypeNumber, WorkerInviteResponseCustomFieldsTypeDate, WorkerInviteResponseCustomFieldsTypeBoolean, WorkerInviteResponseCustomFieldsTypeCurrency, WorkerInviteResponseCustomFieldsTypePercentage, WorkerInviteResponseCustomFieldsTypeSelect, WorkerInviteResponseCustomFieldsTypeMultiSelect:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicTextWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicTextWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                               `json:"id" api:"required"`
-	Name string                                               `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s text; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                               `json:"value" api:"required,nullable"`
-	JSON  objects10CustomFieldsPublicTextWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicTextWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicTextWorkerCustomField]
-type objects10CustomFieldsPublicTextWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicTextWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicTextWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicTextWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicNumberWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicNumberWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                 `json:"id" api:"required"`
-	Name string                                                 `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s number; null when unset or when the field is redacted for this API
-	// key.
-	Value interface{}                                            `json:"value" api:"required,nullable"`
-	JSON  objects10CustomFieldsPublicNumberWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicNumberWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicNumberWorkerCustomField]
-type objects10CustomFieldsPublicNumberWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicNumberWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicNumberWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicNumberWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicDateWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicDateWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                               `json:"id" api:"required"`
-	Name string                                               `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s date; null when unset or when the field is redacted for this API
-	// key.
-	Value string                                               `json:"value" api:"required,nullable"`
-	JSON  objects10CustomFieldsPublicDateWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicDateWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicDateWorkerCustomField]
-type objects10CustomFieldsPublicDateWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicDateWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicDateWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicDateWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicBooleanWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicBooleanWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                  `json:"id" api:"required"`
-	Name string                                                  `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s answer; null when unset or when the field is redacted for this API
-	// key.
-	Value bool                                                    `json:"value" api:"required,nullable"`
-	JSON  objects10CustomFieldsPublicBooleanWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicBooleanWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicBooleanWorkerCustomField]
-type objects10CustomFieldsPublicBooleanWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicBooleanWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicBooleanWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicBooleanWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicCurrencyWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicCurrencyWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                   `json:"id" api:"required"`
-	Name string                                                   `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The amount in integer base units of currencyCode (e.g. cents); null when unset
-	// or when the field is redacted for this API key.
-	Amount int64 `json:"amount" api:"required,nullable"`
-	// The amount’s currency; null when unset or when the field is redacted for this
-	// API key.
-	CurrencyCode Union1                                                   `json:"currencyCode" api:"required,nullable"`
-	JSON         objects10CustomFieldsPublicCurrencyWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicCurrencyWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicCurrencyWorkerCustomField]
-type objects10CustomFieldsPublicCurrencyWorkerCustomFieldJSON struct {
-	Type         apijson.Field
-	ID           apijson.Field
-	Name         apijson.Field
-	Redacted     apijson.Field
-	Display      apijson.Field
-	Amount       apijson.Field
-	CurrencyCode apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicCurrencyWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicCurrencyWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicCurrencyWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicPercentageWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicPercentageWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                     `json:"id" api:"required"`
-	Name string                                                     `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The worker’s percentage; null when unset or when the field is redacted for this
-	// API key.
-	Value interface{}                                                `json:"value" api:"required,nullable"`
-	JSON  objects10CustomFieldsPublicPercentageWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicPercentageWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicPercentageWorkerCustomField]
-type objects10CustomFieldsPublicPercentageWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Value       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicPercentageWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicPercentageWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicPercentageWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicSelectWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicSelectWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                 `json:"id" api:"required"`
-	Name string                                                 `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected option; null when unset or when the field is redacted for this API
-	// key.
-	Option shared.Objects3                                        `json:"option" api:"required,nullable"`
-	JSON   objects10CustomFieldsPublicSelectWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicSelectWorkerCustomField]
-type objects10CustomFieldsPublicSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Option      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicSelectWorkerCustomField) implementsObjects10CustomField() {}
-
-type Objects10CustomFieldsPublicMultiSelectWorkerCustomField struct {
-	Type Objects10CustomFieldsPublicMultiSelectWorkerCustomFieldType `json:"type" api:"required"`
-	ID   string                                                      `json:"id" api:"required"`
-	Name string                                                      `json:"name" api:"required"`
-	// True when this API key’s permission scopes cannot read the field’s category. The
-	// value fields are withheld (null), not absent — null does not imply the worker
-	// has no value.
-	Redacted bool `json:"redacted" api:"required"`
-	// The value rendered as the Warp dashboard displays it; null when unset or
-	// redacted.
-	Display string `json:"display" api:"required,nullable"`
-	// The selected options; null when unset or when the field is redacted for this API
-	// key.
-	Options []shared.Objects3                                           `json:"options" api:"required,nullable"`
-	JSON    objects10CustomFieldsPublicMultiSelectWorkerCustomFieldJSON `json:"-"`
-}
-
-// objects10CustomFieldsPublicMultiSelectWorkerCustomFieldJSON contains the JSON metadata for the struct [Objects10CustomFieldsPublicMultiSelectWorkerCustomField]
-type objects10CustomFieldsPublicMultiSelectWorkerCustomFieldJSON struct {
-	Type        apijson.Field
-	ID          apijson.Field
-	Name        apijson.Field
-	Redacted    apijson.Field
-	Display     apijson.Field
-	Options     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Objects10CustomFieldsPublicMultiSelectWorkerCustomField) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r objects10CustomFieldsPublicMultiSelectWorkerCustomFieldJSON) RawJSON() string {
-	return r.raw
-}
-
-func (r Objects10CustomFieldsPublicMultiSelectWorkerCustomField) implementsObjects10CustomField() {}
-
-type WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldTypeText WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case WorkerGetResponseCustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
 		return true
 	}
 	return false
@@ -3770,118 +2610,6 @@ func (r workerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomFieldJSON) 
 }
 
 func (r WorkerInviteResponseCustomFieldsPublicMultiSelectWorkerCustomField) implementsWorkerInviteResponseCustomField() {
-}
-
-type Objects10CustomFieldsPublicTextWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicTextWorkerCustomFieldTypeText Objects10CustomFieldsPublicTextWorkerCustomFieldType = "text"
-)
-
-func (r Objects10CustomFieldsPublicTextWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicTextWorkerCustomFieldTypeText:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicNumberWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicNumberWorkerCustomFieldTypeNumber Objects10CustomFieldsPublicNumberWorkerCustomFieldType = "number"
-)
-
-func (r Objects10CustomFieldsPublicNumberWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicNumberWorkerCustomFieldTypeNumber:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicDateWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicDateWorkerCustomFieldTypeDate Objects10CustomFieldsPublicDateWorkerCustomFieldType = "date"
-)
-
-func (r Objects10CustomFieldsPublicDateWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicDateWorkerCustomFieldTypeDate:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicBooleanWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean Objects10CustomFieldsPublicBooleanWorkerCustomFieldType = "boolean"
-)
-
-func (r Objects10CustomFieldsPublicBooleanWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicBooleanWorkerCustomFieldTypeBoolean:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicCurrencyWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency Objects10CustomFieldsPublicCurrencyWorkerCustomFieldType = "currency"
-)
-
-func (r Objects10CustomFieldsPublicCurrencyWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicCurrencyWorkerCustomFieldTypeCurrency:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicPercentageWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicPercentageWorkerCustomFieldTypePercentage Objects10CustomFieldsPublicPercentageWorkerCustomFieldType = "percentage"
-)
-
-func (r Objects10CustomFieldsPublicPercentageWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicPercentageWorkerCustomFieldTypePercentage:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicSelectWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicSelectWorkerCustomFieldTypeSelect Objects10CustomFieldsPublicSelectWorkerCustomFieldType = "select"
-)
-
-func (r Objects10CustomFieldsPublicSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicSelectWorkerCustomFieldTypeSelect:
-		return true
-	}
-	return false
-}
-
-type Objects10CustomFieldsPublicMultiSelectWorkerCustomFieldType string
-
-const (
-	Objects10CustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect Objects10CustomFieldsPublicMultiSelectWorkerCustomFieldType = "multi_select"
-)
-
-func (r Objects10CustomFieldsPublicMultiSelectWorkerCustomFieldType) IsKnown() bool {
-	switch r {
-	case Objects10CustomFieldsPublicMultiSelectWorkerCustomFieldTypeMultiSelect:
-		return true
-	}
-	return false
 }
 
 type WorkerNewEmployeeResponseCustomFieldsPublicTextWorkerCustomFieldType string

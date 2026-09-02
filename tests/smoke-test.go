@@ -467,6 +467,7 @@ func _smokeCase34() {
 		}),
 		DepartmentID:   sdk.F[string]("dpt_1234"),
 		ExpirationTime: sdk.F[string](""),
+		LevelID:        sdk.F[string]("jlvl_1234"),
 		ManagerID:      sdk.F[string]("wrk_1234"),
 		WorkplaceID:    sdk.F[string]("wkp_1234"),
 	})
@@ -629,7 +630,7 @@ func _smokeCase47() {
 		PolicyIDs:       sdk.F[[]string]([]string{"top_1234"}),
 		StartsBefore:    sdk.F[string](""),
 		StartsOnOrAfter: sdk.F[string](""),
-		Statuses:        sdk.F[[]sdk.Union25]([]sdk.Union25{"pending"}),
+		Statuses:        sdk.F[[]sdk.Union26]([]sdk.Union26{"pending"}),
 		WorkerIDs:       sdk.F[[]string]([]string{"wrk_1234"}),
 	})
 	if err != nil {
@@ -688,8 +689,8 @@ func _smokeCase52() {
 		Limit:     sdk.F[string]("limit"),
 		AfterID:   sdk.F[string]("wrk_1234"),
 		BeforeID:  sdk.F[string]("wrk_1234"),
-		Statuses:  sdk.F[[]sdk.Union26]([]sdk.Union26{"draft"}),
-		Types:     sdk.F[[]sdk.Union27]([]sdk.Union27{"employee"}),
+		Statuses:  sdk.F[[]sdk.Union27]([]sdk.Union27{"draft"}),
+		Types:     sdk.F[[]sdk.Union28]([]sdk.Union28{"employee"}),
 		WorkEmail: sdk.F[string](""),
 	})
 	if err != nil {
@@ -753,6 +754,7 @@ func _smokeCase56() {
 		WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
 			WorkplaceID: sdk.F[string]("wkp_1234"),
 		}),
+		LevelID:      sdk.F[string]("jlvl_1234"),
 		RequireI9:    sdk.F[bool](false),
 		StockOptions: sdk.F[interface{}](0),
 		WorkEmail:    sdk.F[string]("john@joinwarp.com"),
@@ -794,6 +796,7 @@ func _smokeCase58() {
 		Compensation: sdk.F[sdk.WorkerNewContractorParamsCompensation](sdk.WorkerNewContractorParamsCompensation{
 			Amount: sdk.F[float64](0),
 		}),
+		LevelID:     sdk.F[string]("jlvl_1234"),
 		ScopeOfWork: sdk.F[string](""),
 		WorkEmail:   sdk.F[string]("john@joinwarp.com"),
 	})
@@ -839,7 +842,7 @@ func _smokeCase61() {
 
 func _smokeCase62() {
 	workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewParams{
-		Address: sdk.F[sdk.Objects11Param](sdk.Objects11Param{
+		Address: sdk.F[sdk.WorkplaceNewParamsAddress](sdk.WorkplaceNewParamsAddress{
 			Line1:      sdk.F[string]("x"),
 			City:       sdk.F[string](""),
 			PostalCode: sdk.F[string](""),
@@ -898,7 +901,7 @@ func _smokeCase66() {
 		PayrollTypes:           sdk.F[[]sdk.PublicPayrollType]([]sdk.PublicPayrollType{"us"}),
 		Statuses:               sdk.F[[]sdk.PublicPaycheckStatus]([]sdk.PublicPaycheckStatus{"processing"}),
 		WorkerIDs:              sdk.F[[]string]([]string{"wrk_1234"}),
-		WorkerTypes:            sdk.F[[]sdk.Union21]([]sdk.Union21{"us_w2"}),
+		WorkerTypes:            sdk.F[[]sdk.PayrollListPaychecksParamsWorkerType]([]sdk.PayrollListPaychecksParamsWorkerType{"us_w2"}),
 	})
 	if err != nil {
 		panic(err)

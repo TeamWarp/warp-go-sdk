@@ -93,24 +93,24 @@ func (r *TimeOffPolicyService) Get(ctx context.Context, id string, opts ...optio
 	return res, err
 }
 
-type Objects9 struct {
-	ID                  string           `json:"id" api:"required"`
-	TimeOffTypeID       string           `json:"timeOffTypeId" api:"required"`
-	TimeOffTypeName     string           `json:"timeOffTypeName" api:"required"`
-	Paid                bool             `json:"paid" api:"required"`
-	IsUnlimited         bool             `json:"isUnlimited" api:"required"`
-	Schedule            Objects9Schedule `json:"schedule" api:"required"`
-	Unit                Objects9Unit     `json:"unit" api:"required"`
-	Name                string           `json:"name" api:"required"`
-	Description         string           `json:"description" api:"required,nullable"`
-	HoursWorkedPerChunk interface{}      `json:"hoursWorkedPerChunk" api:"required,nullable"`
-	MinutesPerChunk     interface{}      `json:"minutesPerChunk" api:"required,nullable"`
-	MinutesPerPeriod    interface{}      `json:"minutesPerPeriod" api:"required,nullable"`
-	JSON                objects9JSON     `json:"-"`
+type Objects10 struct {
+	ID                  string            `json:"id" api:"required"`
+	TimeOffTypeID       string            `json:"timeOffTypeId" api:"required"`
+	TimeOffTypeName     string            `json:"timeOffTypeName" api:"required"`
+	Paid                bool              `json:"paid" api:"required"`
+	IsUnlimited         bool              `json:"isUnlimited" api:"required"`
+	Schedule            Objects10Schedule `json:"schedule" api:"required"`
+	Unit                Objects10Unit     `json:"unit" api:"required"`
+	Name                string            `json:"name" api:"required"`
+	Description         string            `json:"description" api:"required,nullable"`
+	HoursWorkedPerChunk interface{}       `json:"hoursWorkedPerChunk" api:"required,nullable"`
+	MinutesPerChunk     interface{}       `json:"minutesPerChunk" api:"required,nullable"`
+	MinutesPerPeriod    interface{}       `json:"minutesPerPeriod" api:"required,nullable"`
+	JSON                objects10JSON     `json:"-"`
 }
 
-// objects9JSON contains the JSON metadata for the struct [Objects9]
-type objects9JSON struct {
+// objects10JSON contains the JSON metadata for the struct [Objects10]
+type objects10JSON struct {
 	ID                  apijson.Field
 	TimeOffTypeID       apijson.Field
 	TimeOffTypeName     apijson.Field
@@ -127,41 +127,41 @@ type objects9JSON struct {
 	ExtraFields         map[string]apijson.Field
 }
 
-func (r *Objects9) UnmarshalJSON(data []byte) (err error) {
+func (r *Objects10) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r objects9JSON) RawJSON() string {
+func (r objects10JSON) RawJSON() string {
 	return r.raw
 }
 
-type Objects9Schedule string
+type Objects10Schedule string
 
 const (
-	Objects9SchedulePerHourWorked Objects9Schedule = "per_hour_worked"
-	Objects9ScheduleMonthly       Objects9Schedule = "monthly"
-	Objects9ScheduleYearly        Objects9Schedule = "yearly"
-	Objects9ScheduleUnlimited     Objects9Schedule = "unlimited"
+	Objects10SchedulePerHourWorked Objects10Schedule = "per_hour_worked"
+	Objects10ScheduleMonthly       Objects10Schedule = "monthly"
+	Objects10ScheduleYearly        Objects10Schedule = "yearly"
+	Objects10ScheduleUnlimited     Objects10Schedule = "unlimited"
 )
 
-func (r Objects9Schedule) IsKnown() bool {
+func (r Objects10Schedule) IsKnown() bool {
 	switch r {
-	case Objects9SchedulePerHourWorked, Objects9ScheduleMonthly, Objects9ScheduleYearly, Objects9ScheduleUnlimited:
+	case Objects10SchedulePerHourWorked, Objects10ScheduleMonthly, Objects10ScheduleYearly, Objects10ScheduleUnlimited:
 		return true
 	}
 	return false
 }
 
-type Objects9Unit string
+type Objects10Unit string
 
 const (
-	Objects9UnitHour Objects9Unit = "hour"
-	Objects9UnitDay  Objects9Unit = "day"
+	Objects10UnitHour Objects10Unit = "hour"
+	Objects10UnitDay  Objects10Unit = "day"
 )
 
-func (r Objects9Unit) IsKnown() bool {
+func (r Objects10Unit) IsKnown() bool {
 	switch r {
-	case Objects9UnitHour, Objects9UnitDay:
+	case Objects10UnitHour, Objects10UnitDay:
 		return true
 	}
 	return false
@@ -258,7 +258,7 @@ func (r TimeOffPolicyListParams) URLQuery() (v url.Values) {
 type TimeOffPolicyListResponse struct {
 	HasMore bool                          `json:"hasMore" api:"required"`
 	Count   int64                         `json:"count" api:"required"`
-	Data    []Objects9                    `json:"data" api:"required"`
+	Data    []Objects10                   `json:"data" api:"required"`
 	JSON    timeOffPolicyListResponseJSON `json:"-"`
 }
 

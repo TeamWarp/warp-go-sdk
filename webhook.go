@@ -601,7 +601,10 @@ type WorkerCreatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerCreatedWebhookEventPayloadLevel         `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerCreatedWebhookEventPayloadJSON          `json:"-"`
 }
@@ -625,6 +628,7 @@ type workerCreatedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -692,6 +696,48 @@ func (r *WorkerCreatedWebhookEventPayloadDepartment) UnmarshalJSON(data []byte) 
 
 func (r workerCreatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadLevel struct {
+	ID    string                                     `json:"id" api:"required"`
+	Code  string                                     `json:"code" api:"required"`
+	Name  string                                     `json:"name" api:"required"`
+	Track WorkerCreatedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerCreatedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerCreatedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventPayloadLevel]
+type workerCreatedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerCreatedWebhookEventPayloadLevelTrackIc        WorkerCreatedWebhookEventPayloadLevelTrack = "ic"
+	WorkerCreatedWebhookEventPayloadLevelTrackManager   WorkerCreatedWebhookEventPayloadLevelTrack = "manager"
+	WorkerCreatedWebhookEventPayloadLevelTrackExecutive WorkerCreatedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerCreatedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventPayloadLevelTrackIc, WorkerCreatedWebhookEventPayloadLevelTrackManager, WorkerCreatedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
 }
 
 type WorkerCreatedWebhookEventPayloadCustomField struct {
@@ -1480,7 +1526,10 @@ type WorkerUpdatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerUpdatedWebhookEventPayloadLevel         `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerUpdatedWebhookEventPayloadJSON          `json:"-"`
 }
@@ -1504,6 +1553,7 @@ type workerUpdatedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -1573,6 +1623,48 @@ func (r workerUpdatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerUpdatedWebhookEventPayloadLevel struct {
+	ID    string                                     `json:"id" api:"required"`
+	Code  string                                     `json:"code" api:"required"`
+	Name  string                                     `json:"name" api:"required"`
+	Track WorkerUpdatedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerUpdatedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerUpdatedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventPayloadLevel]
+type workerUpdatedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerUpdatedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerUpdatedWebhookEventPayloadLevelTrackIc        WorkerUpdatedWebhookEventPayloadLevelTrack = "ic"
+	WorkerUpdatedWebhookEventPayloadLevelTrackManager   WorkerUpdatedWebhookEventPayloadLevelTrack = "manager"
+	WorkerUpdatedWebhookEventPayloadLevelTrackExecutive WorkerUpdatedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerUpdatedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventPayloadLevelTrackIc, WorkerUpdatedWebhookEventPayloadLevelTrackManager, WorkerUpdatedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerDeletedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1640,7 +1732,10 @@ type WorkerDeletedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerDeletedWebhookEventPayloadLevel         `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerDeletedWebhookEventPayloadJSON          `json:"-"`
 }
@@ -1664,6 +1759,7 @@ type workerDeletedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -1733,6 +1829,48 @@ func (r workerDeletedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerDeletedWebhookEventPayloadLevel struct {
+	ID    string                                     `json:"id" api:"required"`
+	Code  string                                     `json:"code" api:"required"`
+	Name  string                                     `json:"name" api:"required"`
+	Track WorkerDeletedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerDeletedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerDeletedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventPayloadLevel]
+type workerDeletedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerDeletedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerDeletedWebhookEventPayloadLevelTrackIc        WorkerDeletedWebhookEventPayloadLevelTrack = "ic"
+	WorkerDeletedWebhookEventPayloadLevelTrackManager   WorkerDeletedWebhookEventPayloadLevelTrack = "manager"
+	WorkerDeletedWebhookEventPayloadLevelTrackExecutive WorkerDeletedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerDeletedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventPayloadLevelTrackIc, WorkerDeletedWebhookEventPayloadLevelTrackManager, WorkerDeletedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteSentWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1800,7 +1938,10 @@ type WorkerInviteSentWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerInviteSentWebhookEventPayloadLevel      `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerInviteSentWebhookEventPayloadJSON       `json:"-"`
 }
@@ -1824,6 +1965,7 @@ type workerInviteSentWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -1893,6 +2035,48 @@ func (r workerInviteSentWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerInviteSentWebhookEventPayloadLevel struct {
+	ID    string                                        `json:"id" api:"required"`
+	Code  string                                        `json:"code" api:"required"`
+	Name  string                                        `json:"name" api:"required"`
+	Track WorkerInviteSentWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerInviteSentWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerInviteSentWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventPayloadLevel]
+type workerInviteSentWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteSentWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerInviteSentWebhookEventPayloadLevelTrackIc        WorkerInviteSentWebhookEventPayloadLevelTrack = "ic"
+	WorkerInviteSentWebhookEventPayloadLevelTrackManager   WorkerInviteSentWebhookEventPayloadLevelTrack = "manager"
+	WorkerInviteSentWebhookEventPayloadLevelTrackExecutive WorkerInviteSentWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerInviteSentWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventPayloadLevelTrackIc, WorkerInviteSentWebhookEventPayloadLevelTrackManager, WorkerInviteSentWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteAcceptedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -1960,7 +2144,10 @@ type WorkerInviteAcceptedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerInviteAcceptedWebhookEventPayloadLevel  `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerInviteAcceptedWebhookEventPayloadJSON   `json:"-"`
 }
@@ -1984,6 +2171,7 @@ type workerInviteAcceptedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -2053,6 +2241,48 @@ func (r workerInviteAcceptedWebhookEventPayloadDepartmentJSON) RawJSON() string 
 	return r.raw
 }
 
+type WorkerInviteAcceptedWebhookEventPayloadLevel struct {
+	ID    string                                            `json:"id" api:"required"`
+	Code  string                                            `json:"code" api:"required"`
+	Name  string                                            `json:"name" api:"required"`
+	Track WorkerInviteAcceptedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerInviteAcceptedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventPayloadLevel]
+type workerInviteAcceptedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerInviteAcceptedWebhookEventPayloadLevelTrackIc        WorkerInviteAcceptedWebhookEventPayloadLevelTrack = "ic"
+	WorkerInviteAcceptedWebhookEventPayloadLevelTrackManager   WorkerInviteAcceptedWebhookEventPayloadLevelTrack = "manager"
+	WorkerInviteAcceptedWebhookEventPayloadLevelTrackExecutive WorkerInviteAcceptedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerInviteAcceptedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventPayloadLevelTrackIc, WorkerInviteAcceptedWebhookEventPayloadLevelTrackManager, WorkerInviteAcceptedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerOnboardingCompletedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -2120,9 +2350,12 @@ type WorkerOnboardingCompletedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation                  `json:"compensation" api:"required,nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField    `json:"customFields" api:"nullable"`
-	JSON         workerOnboardingCompletedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerOnboardingCompletedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []WorkerCreatedWebhookEventPayloadCustomField     `json:"customFields" api:"nullable"`
+	JSON         workerOnboardingCompletedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayload]
@@ -2144,6 +2377,7 @@ type workerOnboardingCompletedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -2213,6 +2447,48 @@ func (r workerOnboardingCompletedWebhookEventPayloadDepartmentJSON) RawJSON() st
 	return r.raw
 }
 
+type WorkerOnboardingCompletedWebhookEventPayloadLevel struct {
+	ID    string                                                 `json:"id" api:"required"`
+	Code  string                                                 `json:"code" api:"required"`
+	Name  string                                                 `json:"name" api:"required"`
+	Track WorkerOnboardingCompletedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerOnboardingCompletedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventPayloadLevel]
+type workerOnboardingCompletedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerOnboardingCompletedWebhookEventPayloadLevelTrackIc        WorkerOnboardingCompletedWebhookEventPayloadLevelTrack = "ic"
+	WorkerOnboardingCompletedWebhookEventPayloadLevelTrackManager   WorkerOnboardingCompletedWebhookEventPayloadLevelTrack = "manager"
+	WorkerOnboardingCompletedWebhookEventPayloadLevelTrackExecutive WorkerOnboardingCompletedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventPayloadLevelTrackIc, WorkerOnboardingCompletedWebhookEventPayloadLevelTrackManager, WorkerOnboardingCompletedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerOffboardingStartedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -2280,9 +2556,12 @@ type WorkerOffboardingStartedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation                 `json:"compensation" api:"required,nullable"`
-	CustomFields []WorkerCreatedWebhookEventPayloadCustomField   `json:"customFields" api:"nullable"`
-	JSON         workerOffboardingStartedWebhookEventPayloadJSON `json:"-"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerOffboardingStartedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	CustomFields []WorkerCreatedWebhookEventPayloadCustomField    `json:"customFields" api:"nullable"`
+	JSON         workerOffboardingStartedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventPayloadJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayload]
@@ -2304,6 +2583,7 @@ type workerOffboardingStartedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -2373,6 +2653,48 @@ func (r workerOffboardingStartedWebhookEventPayloadDepartmentJSON) RawJSON() str
 	return r.raw
 }
 
+type WorkerOffboardingStartedWebhookEventPayloadLevel struct {
+	ID    string                                                `json:"id" api:"required"`
+	Code  string                                                `json:"code" api:"required"`
+	Name  string                                                `json:"name" api:"required"`
+	Track WorkerOffboardingStartedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerOffboardingStartedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventPayloadLevel]
+type workerOffboardingStartedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerOffboardingStartedWebhookEventPayloadLevelTrackIc        WorkerOffboardingStartedWebhookEventPayloadLevelTrack = "ic"
+	WorkerOffboardingStartedWebhookEventPayloadLevelTrackManager   WorkerOffboardingStartedWebhookEventPayloadLevelTrack = "manager"
+	WorkerOffboardingStartedWebhookEventPayloadLevelTrackExecutive WorkerOffboardingStartedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerOffboardingStartedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventPayloadLevelTrackIc, WorkerOffboardingStartedWebhookEventPayloadLevelTrackManager, WorkerOffboardingStartedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerOffboardedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -2440,7 +2762,10 @@ type WorkerOffboardedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerOffboardedWebhookEventPayloadLevel      `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerOffboardedWebhookEventPayloadJSON       `json:"-"`
 }
@@ -2464,6 +2789,7 @@ type workerOffboardedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -2533,6 +2859,48 @@ func (r workerOffboardedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerOffboardedWebhookEventPayloadLevel struct {
+	ID    string                                        `json:"id" api:"required"`
+	Code  string                                        `json:"code" api:"required"`
+	Name  string                                        `json:"name" api:"required"`
+	Track WorkerOffboardedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerOffboardedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerOffboardedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventPayloadLevel]
+type workerOffboardedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerOffboardedWebhookEventPayloadLevelTrackIc        WorkerOffboardedWebhookEventPayloadLevelTrack = "ic"
+	WorkerOffboardedWebhookEventPayloadLevelTrackManager   WorkerOffboardedWebhookEventPayloadLevelTrack = "manager"
+	WorkerOffboardedWebhookEventPayloadLevelTrackExecutive WorkerOffboardedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerOffboardedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventPayloadLevelTrackIc, WorkerOffboardedWebhookEventPayloadLevelTrackManager, WorkerOffboardedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type WorkerReactivatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -2600,7 +2968,10 @@ type WorkerReactivatedWebhookEventPayload struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation shared.PublicWorkerCompensation               `json:"compensation" api:"required,nullable"`
+	Compensation shared.PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's assigned job level, or null if unassigned. Omitted when job levels
+	// are not enabled.
+	Level        WorkerReactivatedWebhookEventPayloadLevel     `json:"level" api:"nullable"`
 	CustomFields []WorkerCreatedWebhookEventPayloadCustomField `json:"customFields" api:"nullable"`
 	JSON         workerReactivatedWebhookEventPayloadJSON      `json:"-"`
 }
@@ -2624,6 +2995,7 @@ type workerReactivatedWebhookEventPayloadJSON struct {
 	TimeZone      apijson.Field
 	Department    apijson.Field
 	Compensation  apijson.Field
+	Level         apijson.Field
 	CustomFields  apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -2693,6 +3065,48 @@ func (r workerReactivatedWebhookEventPayloadDepartmentJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerReactivatedWebhookEventPayloadLevel struct {
+	ID    string                                         `json:"id" api:"required"`
+	Code  string                                         `json:"code" api:"required"`
+	Name  string                                         `json:"name" api:"required"`
+	Track WorkerReactivatedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  workerReactivatedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// workerReactivatedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventPayloadLevel]
+type workerReactivatedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerReactivatedWebhookEventPayloadLevelTrack string
+
+const (
+	WorkerReactivatedWebhookEventPayloadLevelTrackIc        WorkerReactivatedWebhookEventPayloadLevelTrack = "ic"
+	WorkerReactivatedWebhookEventPayloadLevelTrackManager   WorkerReactivatedWebhookEventPayloadLevelTrack = "manager"
+	WorkerReactivatedWebhookEventPayloadLevelTrackExecutive WorkerReactivatedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r WorkerReactivatedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventPayloadLevelTrackIc, WorkerReactivatedWebhookEventPayloadLevelTrackManager, WorkerReactivatedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferCreatedWebhookEvent struct {
 	// Unique event identifier (format: `<objectTag>:<uuid>`). Stable across retries.
 	ID string `json:"id" api:"required"`
@@ -2750,11 +3164,14 @@ type OfferCreatedWebhookEventPayload struct {
 	SentBy       string                                      `json:"sentBy" api:"required,nullable"`
 	Compensation OfferCreatedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string                              `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string                              `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string                              `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string                              `json:"createdAt" api:"required"`
-	JSON           offerCreatedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferCreatedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	JSON  offerCreatedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // offerCreatedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayload]
@@ -2773,6 +3190,7 @@ type offerCreatedWebhookEventPayloadJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -3221,6 +3639,48 @@ func (r offerCreatedWebhookEventPayloadManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferCreatedWebhookEventPayloadLevel struct {
+	ID    string                                    `json:"id" api:"required"`
+	Code  string                                    `json:"code" api:"required"`
+	Name  string                                    `json:"name" api:"required"`
+	Track OfferCreatedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  offerCreatedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// offerCreatedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [OfferCreatedWebhookEventPayloadLevel]
+type offerCreatedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferCreatedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerCreatedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferCreatedWebhookEventPayloadLevelTrack string
+
+const (
+	OfferCreatedWebhookEventPayloadLevelTrackIc        OfferCreatedWebhookEventPayloadLevelTrack = "ic"
+	OfferCreatedWebhookEventPayloadLevelTrackManager   OfferCreatedWebhookEventPayloadLevelTrack = "manager"
+	OfferCreatedWebhookEventPayloadLevelTrackExecutive OfferCreatedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r OfferCreatedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferCreatedWebhookEventPayloadLevelTrackIc, OfferCreatedWebhookEventPayloadLevelTrackManager, OfferCreatedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferCreatedWebhookEventPayloadCompensation struct {
 	BasePay         OfferCreatedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
 	SignOnBonus     Union                                              `json:"signOnBonus" api:"required"`
@@ -3388,11 +3848,14 @@ type OfferSentWebhookEventPayload struct {
 	SentBy       string                                   `json:"sentBy" api:"required,nullable"`
 	Compensation OfferSentWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string                           `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string                           `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string                           `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string                           `json:"createdAt" api:"required"`
-	JSON           offerSentWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferSentWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	JSON  offerSentWebhookEventPayloadJSON  `json:"-"`
 }
 
 // offerSentWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayload]
@@ -3411,6 +3874,7 @@ type offerSentWebhookEventPayloadJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -3859,6 +4323,48 @@ func (r offerSentWebhookEventPayloadManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferSentWebhookEventPayloadLevel struct {
+	ID    string                                 `json:"id" api:"required"`
+	Code  string                                 `json:"code" api:"required"`
+	Name  string                                 `json:"name" api:"required"`
+	Track OfferSentWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  offerSentWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// offerSentWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [OfferSentWebhookEventPayloadLevel]
+type offerSentWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferSentWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerSentWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferSentWebhookEventPayloadLevelTrack string
+
+const (
+	OfferSentWebhookEventPayloadLevelTrackIc        OfferSentWebhookEventPayloadLevelTrack = "ic"
+	OfferSentWebhookEventPayloadLevelTrackManager   OfferSentWebhookEventPayloadLevelTrack = "manager"
+	OfferSentWebhookEventPayloadLevelTrackExecutive OfferSentWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r OfferSentWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferSentWebhookEventPayloadLevelTrackIc, OfferSentWebhookEventPayloadLevelTrackManager, OfferSentWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferSentWebhookEventPayloadCompensation struct {
 	BasePay         OfferSentWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
 	SignOnBonus     Union                                           `json:"signOnBonus" api:"required"`
@@ -4026,11 +4532,14 @@ type OfferViewedWebhookEventPayload struct {
 	SentBy       string                                     `json:"sentBy" api:"required,nullable"`
 	Compensation OfferViewedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string                             `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string                             `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string                             `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string                             `json:"createdAt" api:"required"`
-	JSON           offerViewedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferViewedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	JSON  offerViewedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // offerViewedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayload]
@@ -4049,6 +4558,7 @@ type offerViewedWebhookEventPayloadJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -4497,6 +5007,48 @@ func (r offerViewedWebhookEventPayloadManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferViewedWebhookEventPayloadLevel struct {
+	ID    string                                   `json:"id" api:"required"`
+	Code  string                                   `json:"code" api:"required"`
+	Name  string                                   `json:"name" api:"required"`
+	Track OfferViewedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  offerViewedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// offerViewedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [OfferViewedWebhookEventPayloadLevel]
+type offerViewedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferViewedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerViewedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferViewedWebhookEventPayloadLevelTrack string
+
+const (
+	OfferViewedWebhookEventPayloadLevelTrackIc        OfferViewedWebhookEventPayloadLevelTrack = "ic"
+	OfferViewedWebhookEventPayloadLevelTrackManager   OfferViewedWebhookEventPayloadLevelTrack = "manager"
+	OfferViewedWebhookEventPayloadLevelTrackExecutive OfferViewedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r OfferViewedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferViewedWebhookEventPayloadLevelTrackIc, OfferViewedWebhookEventPayloadLevelTrackManager, OfferViewedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferViewedWebhookEventPayloadCompensation struct {
 	BasePay         OfferViewedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
 	SignOnBonus     Union                                             `json:"signOnBonus" api:"required"`
@@ -4664,11 +5216,14 @@ type OfferAcceptedWebhookEventPayload struct {
 	SentBy       string                                       `json:"sentBy" api:"required,nullable"`
 	Compensation OfferAcceptedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string                               `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string                               `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string                               `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string                               `json:"createdAt" api:"required"`
-	JSON           offerAcceptedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferAcceptedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	JSON  offerAcceptedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // offerAcceptedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayload]
@@ -4687,6 +5242,7 @@ type offerAcceptedWebhookEventPayloadJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -5135,6 +5691,48 @@ func (r offerAcceptedWebhookEventPayloadManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferAcceptedWebhookEventPayloadLevel struct {
+	ID    string                                     `json:"id" api:"required"`
+	Code  string                                     `json:"code" api:"required"`
+	Name  string                                     `json:"name" api:"required"`
+	Track OfferAcceptedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  offerAcceptedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// offerAcceptedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [OfferAcceptedWebhookEventPayloadLevel]
+type offerAcceptedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferAcceptedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerAcceptedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferAcceptedWebhookEventPayloadLevelTrack string
+
+const (
+	OfferAcceptedWebhookEventPayloadLevelTrackIc        OfferAcceptedWebhookEventPayloadLevelTrack = "ic"
+	OfferAcceptedWebhookEventPayloadLevelTrackManager   OfferAcceptedWebhookEventPayloadLevelTrack = "manager"
+	OfferAcceptedWebhookEventPayloadLevelTrackExecutive OfferAcceptedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r OfferAcceptedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferAcceptedWebhookEventPayloadLevelTrackIc, OfferAcceptedWebhookEventPayloadLevelTrackManager, OfferAcceptedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferAcceptedWebhookEventPayloadCompensation struct {
 	BasePay         OfferAcceptedWebhookEventPayloadCompensationBasePay `json:"basePay" api:"required"`
 	SignOnBonus     Union                                               `json:"signOnBonus" api:"required"`
@@ -5302,11 +5900,14 @@ type OfferVoidedWebhookEventPayload struct {
 	SentBy       string                                     `json:"sentBy" api:"required,nullable"`
 	Compensation OfferVoidedWebhookEventPayloadCompensation `json:"compensation" api:"required"`
 	// The candidate-facing offer portal URL. Null for offers that have not been sent.
-	OfferURL       string                             `json:"offerUrl" api:"required,nullable"`
-	ExpirationTime string                             `json:"expirationTime" api:"required,nullable"`
-	LastViewedAt   string                             `json:"lastViewedAt" api:"required,nullable"`
-	CreatedAt      string                             `json:"createdAt" api:"required"`
-	JSON           offerVoidedWebhookEventPayloadJSON `json:"-"`
+	OfferURL       string `json:"offerUrl" api:"required,nullable"`
+	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
+	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferVoidedWebhookEventPayloadLevel `json:"level" api:"nullable"`
+	JSON  offerVoidedWebhookEventPayloadJSON  `json:"-"`
 }
 
 // offerVoidedWebhookEventPayloadJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayload]
@@ -5325,6 +5926,7 @@ type offerVoidedWebhookEventPayloadJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -5771,6 +6373,48 @@ func (r *OfferVoidedWebhookEventPayloadManager) UnmarshalJSON(data []byte) (err 
 
 func (r offerVoidedWebhookEventPayloadManagerJSON) RawJSON() string {
 	return r.raw
+}
+
+type OfferVoidedWebhookEventPayloadLevel struct {
+	ID    string                                   `json:"id" api:"required"`
+	Code  string                                   `json:"code" api:"required"`
+	Name  string                                   `json:"name" api:"required"`
+	Track OfferVoidedWebhookEventPayloadLevelTrack `json:"track" api:"required"`
+	JSON  offerVoidedWebhookEventPayloadLevelJSON  `json:"-"`
+}
+
+// offerVoidedWebhookEventPayloadLevelJSON contains the JSON metadata for the struct [OfferVoidedWebhookEventPayloadLevel]
+type offerVoidedWebhookEventPayloadLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidedWebhookEventPayloadLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidedWebhookEventPayloadLevelJSON) RawJSON() string {
+	return r.raw
+}
+
+type OfferVoidedWebhookEventPayloadLevelTrack string
+
+const (
+	OfferVoidedWebhookEventPayloadLevelTrackIc        OfferVoidedWebhookEventPayloadLevelTrack = "ic"
+	OfferVoidedWebhookEventPayloadLevelTrackManager   OfferVoidedWebhookEventPayloadLevelTrack = "manager"
+	OfferVoidedWebhookEventPayloadLevelTrackExecutive OfferVoidedWebhookEventPayloadLevelTrack = "executive"
+)
+
+func (r OfferVoidedWebhookEventPayloadLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferVoidedWebhookEventPayloadLevelTrackIc, OfferVoidedWebhookEventPayloadLevelTrackManager, OfferVoidedWebhookEventPayloadLevelTrackExecutive:
+		return true
+	}
+	return false
 }
 
 type OfferVoidedWebhookEventPayloadCompensation struct {
