@@ -3956,9 +3956,11 @@ type WorkerCreatedWebhookEvent struct {
 	// The event type.
 	Type WorkerCreatedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                        `json:"timestamp" api:"required"`
-	Data      WorkerCreatedWebhookEventData `json:"data" api:"required"`
-	JSON      workerCreatedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerCreatedWebhookEventData `json:"data" api:"required"`
+	JSON workerCreatedWebhookEventJSON `json:"-"`
 }
 
 // workerCreatedWebhookEventJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEvent]
@@ -4009,6 +4011,16 @@ type WorkerCreatedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerCreatedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerCreatedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerCreatedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -4016,6 +4028,15 @@ type WorkerCreatedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerCreatedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerCreatedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -4029,27 +4050,36 @@ type WorkerCreatedWebhookEventData struct {
 
 // workerCreatedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventData]
 type workerCreatedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerCreatedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -4094,6 +4124,329 @@ func (r WorkerCreatedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerCreatedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerCreatedWebhookEventDataBiologicalSexMale   WorkerCreatedWebhookEventDataBiologicalSex = "male"
+	WorkerCreatedWebhookEventDataBiologicalSexFemale WorkerCreatedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerCreatedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventDataBiologicalSexMale, WorkerCreatedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerCreatedWebhookEventDataMaritalStatusMarried    WorkerCreatedWebhookEventDataMaritalStatus = "married"
+	WorkerCreatedWebhookEventDataMaritalStatusNotMarried WorkerCreatedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerCreatedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventDataMaritalStatusMarried, WorkerCreatedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerCreatedWebhookEventDataAddress struct {
+	Line1      string                                      `json:"line1" api:"required"`
+	Line2      string                                      `json:"line2" api:"required,nullable"`
+	City       string                                      `json:"city" api:"required"`
+	State      string                                      `json:"state" api:"required,nullable"`
+	PostalCode string                                      `json:"postalCode" api:"required,nullable"`
+	Country    WorkerCreatedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerCreatedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerCreatedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventDataAddress]
+type workerCreatedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventDataAddressCountry string
+
+const (
+	WorkerCreatedWebhookEventDataAddressCountryAd WorkerCreatedWebhookEventDataAddressCountry = "AD"
+	WorkerCreatedWebhookEventDataAddressCountryAe WorkerCreatedWebhookEventDataAddressCountry = "AE"
+	WorkerCreatedWebhookEventDataAddressCountryAf WorkerCreatedWebhookEventDataAddressCountry = "AF"
+	WorkerCreatedWebhookEventDataAddressCountryAg WorkerCreatedWebhookEventDataAddressCountry = "AG"
+	WorkerCreatedWebhookEventDataAddressCountryAI WorkerCreatedWebhookEventDataAddressCountry = "AI"
+	WorkerCreatedWebhookEventDataAddressCountryAl WorkerCreatedWebhookEventDataAddressCountry = "AL"
+	WorkerCreatedWebhookEventDataAddressCountryAm WorkerCreatedWebhookEventDataAddressCountry = "AM"
+	WorkerCreatedWebhookEventDataAddressCountryAo WorkerCreatedWebhookEventDataAddressCountry = "AO"
+	WorkerCreatedWebhookEventDataAddressCountryAq WorkerCreatedWebhookEventDataAddressCountry = "AQ"
+	WorkerCreatedWebhookEventDataAddressCountryAr WorkerCreatedWebhookEventDataAddressCountry = "AR"
+	WorkerCreatedWebhookEventDataAddressCountryAs WorkerCreatedWebhookEventDataAddressCountry = "AS"
+	WorkerCreatedWebhookEventDataAddressCountryAt WorkerCreatedWebhookEventDataAddressCountry = "AT"
+	WorkerCreatedWebhookEventDataAddressCountryAu WorkerCreatedWebhookEventDataAddressCountry = "AU"
+	WorkerCreatedWebhookEventDataAddressCountryAw WorkerCreatedWebhookEventDataAddressCountry = "AW"
+	WorkerCreatedWebhookEventDataAddressCountryAx WorkerCreatedWebhookEventDataAddressCountry = "AX"
+	WorkerCreatedWebhookEventDataAddressCountryAz WorkerCreatedWebhookEventDataAddressCountry = "AZ"
+	WorkerCreatedWebhookEventDataAddressCountryBa WorkerCreatedWebhookEventDataAddressCountry = "BA"
+	WorkerCreatedWebhookEventDataAddressCountryBb WorkerCreatedWebhookEventDataAddressCountry = "BB"
+	WorkerCreatedWebhookEventDataAddressCountryBd WorkerCreatedWebhookEventDataAddressCountry = "BD"
+	WorkerCreatedWebhookEventDataAddressCountryBe WorkerCreatedWebhookEventDataAddressCountry = "BE"
+	WorkerCreatedWebhookEventDataAddressCountryBf WorkerCreatedWebhookEventDataAddressCountry = "BF"
+	WorkerCreatedWebhookEventDataAddressCountryBg WorkerCreatedWebhookEventDataAddressCountry = "BG"
+	WorkerCreatedWebhookEventDataAddressCountryBh WorkerCreatedWebhookEventDataAddressCountry = "BH"
+	WorkerCreatedWebhookEventDataAddressCountryBi WorkerCreatedWebhookEventDataAddressCountry = "BI"
+	WorkerCreatedWebhookEventDataAddressCountryBj WorkerCreatedWebhookEventDataAddressCountry = "BJ"
+	WorkerCreatedWebhookEventDataAddressCountryBl WorkerCreatedWebhookEventDataAddressCountry = "BL"
+	WorkerCreatedWebhookEventDataAddressCountryBm WorkerCreatedWebhookEventDataAddressCountry = "BM"
+	WorkerCreatedWebhookEventDataAddressCountryBn WorkerCreatedWebhookEventDataAddressCountry = "BN"
+	WorkerCreatedWebhookEventDataAddressCountryBo WorkerCreatedWebhookEventDataAddressCountry = "BO"
+	WorkerCreatedWebhookEventDataAddressCountryBq WorkerCreatedWebhookEventDataAddressCountry = "BQ"
+	WorkerCreatedWebhookEventDataAddressCountryBr WorkerCreatedWebhookEventDataAddressCountry = "BR"
+	WorkerCreatedWebhookEventDataAddressCountryBs WorkerCreatedWebhookEventDataAddressCountry = "BS"
+	WorkerCreatedWebhookEventDataAddressCountryBt WorkerCreatedWebhookEventDataAddressCountry = "BT"
+	WorkerCreatedWebhookEventDataAddressCountryBv WorkerCreatedWebhookEventDataAddressCountry = "BV"
+	WorkerCreatedWebhookEventDataAddressCountryBw WorkerCreatedWebhookEventDataAddressCountry = "BW"
+	WorkerCreatedWebhookEventDataAddressCountryBy WorkerCreatedWebhookEventDataAddressCountry = "BY"
+	WorkerCreatedWebhookEventDataAddressCountryBz WorkerCreatedWebhookEventDataAddressCountry = "BZ"
+	WorkerCreatedWebhookEventDataAddressCountryCa WorkerCreatedWebhookEventDataAddressCountry = "CA"
+	WorkerCreatedWebhookEventDataAddressCountryCc WorkerCreatedWebhookEventDataAddressCountry = "CC"
+	WorkerCreatedWebhookEventDataAddressCountryCd WorkerCreatedWebhookEventDataAddressCountry = "CD"
+	WorkerCreatedWebhookEventDataAddressCountryCf WorkerCreatedWebhookEventDataAddressCountry = "CF"
+	WorkerCreatedWebhookEventDataAddressCountryCg WorkerCreatedWebhookEventDataAddressCountry = "CG"
+	WorkerCreatedWebhookEventDataAddressCountryCh WorkerCreatedWebhookEventDataAddressCountry = "CH"
+	WorkerCreatedWebhookEventDataAddressCountryCi WorkerCreatedWebhookEventDataAddressCountry = "CI"
+	WorkerCreatedWebhookEventDataAddressCountryCk WorkerCreatedWebhookEventDataAddressCountry = "CK"
+	WorkerCreatedWebhookEventDataAddressCountryCl WorkerCreatedWebhookEventDataAddressCountry = "CL"
+	WorkerCreatedWebhookEventDataAddressCountryCm WorkerCreatedWebhookEventDataAddressCountry = "CM"
+	WorkerCreatedWebhookEventDataAddressCountryCn WorkerCreatedWebhookEventDataAddressCountry = "CN"
+	WorkerCreatedWebhookEventDataAddressCountryCo WorkerCreatedWebhookEventDataAddressCountry = "CO"
+	WorkerCreatedWebhookEventDataAddressCountryCr WorkerCreatedWebhookEventDataAddressCountry = "CR"
+	WorkerCreatedWebhookEventDataAddressCountryCu WorkerCreatedWebhookEventDataAddressCountry = "CU"
+	WorkerCreatedWebhookEventDataAddressCountryCv WorkerCreatedWebhookEventDataAddressCountry = "CV"
+	WorkerCreatedWebhookEventDataAddressCountryCw WorkerCreatedWebhookEventDataAddressCountry = "CW"
+	WorkerCreatedWebhookEventDataAddressCountryCx WorkerCreatedWebhookEventDataAddressCountry = "CX"
+	WorkerCreatedWebhookEventDataAddressCountryCy WorkerCreatedWebhookEventDataAddressCountry = "CY"
+	WorkerCreatedWebhookEventDataAddressCountryCz WorkerCreatedWebhookEventDataAddressCountry = "CZ"
+	WorkerCreatedWebhookEventDataAddressCountryDe WorkerCreatedWebhookEventDataAddressCountry = "DE"
+	WorkerCreatedWebhookEventDataAddressCountryDj WorkerCreatedWebhookEventDataAddressCountry = "DJ"
+	WorkerCreatedWebhookEventDataAddressCountryDk WorkerCreatedWebhookEventDataAddressCountry = "DK"
+	WorkerCreatedWebhookEventDataAddressCountryDm WorkerCreatedWebhookEventDataAddressCountry = "DM"
+	WorkerCreatedWebhookEventDataAddressCountryDo WorkerCreatedWebhookEventDataAddressCountry = "DO"
+	WorkerCreatedWebhookEventDataAddressCountryDz WorkerCreatedWebhookEventDataAddressCountry = "DZ"
+	WorkerCreatedWebhookEventDataAddressCountryEc WorkerCreatedWebhookEventDataAddressCountry = "EC"
+	WorkerCreatedWebhookEventDataAddressCountryEe WorkerCreatedWebhookEventDataAddressCountry = "EE"
+	WorkerCreatedWebhookEventDataAddressCountryEg WorkerCreatedWebhookEventDataAddressCountry = "EG"
+	WorkerCreatedWebhookEventDataAddressCountryEh WorkerCreatedWebhookEventDataAddressCountry = "EH"
+	WorkerCreatedWebhookEventDataAddressCountryEr WorkerCreatedWebhookEventDataAddressCountry = "ER"
+	WorkerCreatedWebhookEventDataAddressCountryEs WorkerCreatedWebhookEventDataAddressCountry = "ES"
+	WorkerCreatedWebhookEventDataAddressCountryEt WorkerCreatedWebhookEventDataAddressCountry = "ET"
+	WorkerCreatedWebhookEventDataAddressCountryFi WorkerCreatedWebhookEventDataAddressCountry = "FI"
+	WorkerCreatedWebhookEventDataAddressCountryFj WorkerCreatedWebhookEventDataAddressCountry = "FJ"
+	WorkerCreatedWebhookEventDataAddressCountryFk WorkerCreatedWebhookEventDataAddressCountry = "FK"
+	WorkerCreatedWebhookEventDataAddressCountryFm WorkerCreatedWebhookEventDataAddressCountry = "FM"
+	WorkerCreatedWebhookEventDataAddressCountryFo WorkerCreatedWebhookEventDataAddressCountry = "FO"
+	WorkerCreatedWebhookEventDataAddressCountryFr WorkerCreatedWebhookEventDataAddressCountry = "FR"
+	WorkerCreatedWebhookEventDataAddressCountryGa WorkerCreatedWebhookEventDataAddressCountry = "GA"
+	WorkerCreatedWebhookEventDataAddressCountryGB WorkerCreatedWebhookEventDataAddressCountry = "GB"
+	WorkerCreatedWebhookEventDataAddressCountryGd WorkerCreatedWebhookEventDataAddressCountry = "GD"
+	WorkerCreatedWebhookEventDataAddressCountryGe WorkerCreatedWebhookEventDataAddressCountry = "GE"
+	WorkerCreatedWebhookEventDataAddressCountryGf WorkerCreatedWebhookEventDataAddressCountry = "GF"
+	WorkerCreatedWebhookEventDataAddressCountryGg WorkerCreatedWebhookEventDataAddressCountry = "GG"
+	WorkerCreatedWebhookEventDataAddressCountryGh WorkerCreatedWebhookEventDataAddressCountry = "GH"
+	WorkerCreatedWebhookEventDataAddressCountryGi WorkerCreatedWebhookEventDataAddressCountry = "GI"
+	WorkerCreatedWebhookEventDataAddressCountryGl WorkerCreatedWebhookEventDataAddressCountry = "GL"
+	WorkerCreatedWebhookEventDataAddressCountryGm WorkerCreatedWebhookEventDataAddressCountry = "GM"
+	WorkerCreatedWebhookEventDataAddressCountryGn WorkerCreatedWebhookEventDataAddressCountry = "GN"
+	WorkerCreatedWebhookEventDataAddressCountryGp WorkerCreatedWebhookEventDataAddressCountry = "GP"
+	WorkerCreatedWebhookEventDataAddressCountryGq WorkerCreatedWebhookEventDataAddressCountry = "GQ"
+	WorkerCreatedWebhookEventDataAddressCountryGr WorkerCreatedWebhookEventDataAddressCountry = "GR"
+	WorkerCreatedWebhookEventDataAddressCountryGs WorkerCreatedWebhookEventDataAddressCountry = "GS"
+	WorkerCreatedWebhookEventDataAddressCountryGt WorkerCreatedWebhookEventDataAddressCountry = "GT"
+	WorkerCreatedWebhookEventDataAddressCountryGu WorkerCreatedWebhookEventDataAddressCountry = "GU"
+	WorkerCreatedWebhookEventDataAddressCountryGw WorkerCreatedWebhookEventDataAddressCountry = "GW"
+	WorkerCreatedWebhookEventDataAddressCountryGy WorkerCreatedWebhookEventDataAddressCountry = "GY"
+	WorkerCreatedWebhookEventDataAddressCountryHk WorkerCreatedWebhookEventDataAddressCountry = "HK"
+	WorkerCreatedWebhookEventDataAddressCountryHm WorkerCreatedWebhookEventDataAddressCountry = "HM"
+	WorkerCreatedWebhookEventDataAddressCountryHn WorkerCreatedWebhookEventDataAddressCountry = "HN"
+	WorkerCreatedWebhookEventDataAddressCountryHr WorkerCreatedWebhookEventDataAddressCountry = "HR"
+	WorkerCreatedWebhookEventDataAddressCountryHt WorkerCreatedWebhookEventDataAddressCountry = "HT"
+	WorkerCreatedWebhookEventDataAddressCountryHu WorkerCreatedWebhookEventDataAddressCountry = "HU"
+	WorkerCreatedWebhookEventDataAddressCountryID WorkerCreatedWebhookEventDataAddressCountry = "ID"
+	WorkerCreatedWebhookEventDataAddressCountryIe WorkerCreatedWebhookEventDataAddressCountry = "IE"
+	WorkerCreatedWebhookEventDataAddressCountryIl WorkerCreatedWebhookEventDataAddressCountry = "IL"
+	WorkerCreatedWebhookEventDataAddressCountryIm WorkerCreatedWebhookEventDataAddressCountry = "IM"
+	WorkerCreatedWebhookEventDataAddressCountryIn WorkerCreatedWebhookEventDataAddressCountry = "IN"
+	WorkerCreatedWebhookEventDataAddressCountryIo WorkerCreatedWebhookEventDataAddressCountry = "IO"
+	WorkerCreatedWebhookEventDataAddressCountryIq WorkerCreatedWebhookEventDataAddressCountry = "IQ"
+	WorkerCreatedWebhookEventDataAddressCountryIr WorkerCreatedWebhookEventDataAddressCountry = "IR"
+	WorkerCreatedWebhookEventDataAddressCountryIs WorkerCreatedWebhookEventDataAddressCountry = "IS"
+	WorkerCreatedWebhookEventDataAddressCountryIt WorkerCreatedWebhookEventDataAddressCountry = "IT"
+	WorkerCreatedWebhookEventDataAddressCountryJe WorkerCreatedWebhookEventDataAddressCountry = "JE"
+	WorkerCreatedWebhookEventDataAddressCountryJm WorkerCreatedWebhookEventDataAddressCountry = "JM"
+	WorkerCreatedWebhookEventDataAddressCountryJo WorkerCreatedWebhookEventDataAddressCountry = "JO"
+	WorkerCreatedWebhookEventDataAddressCountryJp WorkerCreatedWebhookEventDataAddressCountry = "JP"
+	WorkerCreatedWebhookEventDataAddressCountryKe WorkerCreatedWebhookEventDataAddressCountry = "KE"
+	WorkerCreatedWebhookEventDataAddressCountryKg WorkerCreatedWebhookEventDataAddressCountry = "KG"
+	WorkerCreatedWebhookEventDataAddressCountryKh WorkerCreatedWebhookEventDataAddressCountry = "KH"
+	WorkerCreatedWebhookEventDataAddressCountryKi WorkerCreatedWebhookEventDataAddressCountry = "KI"
+	WorkerCreatedWebhookEventDataAddressCountryKm WorkerCreatedWebhookEventDataAddressCountry = "KM"
+	WorkerCreatedWebhookEventDataAddressCountryKn WorkerCreatedWebhookEventDataAddressCountry = "KN"
+	WorkerCreatedWebhookEventDataAddressCountryKp WorkerCreatedWebhookEventDataAddressCountry = "KP"
+	WorkerCreatedWebhookEventDataAddressCountryKr WorkerCreatedWebhookEventDataAddressCountry = "KR"
+	WorkerCreatedWebhookEventDataAddressCountryKw WorkerCreatedWebhookEventDataAddressCountry = "KW"
+	WorkerCreatedWebhookEventDataAddressCountryKy WorkerCreatedWebhookEventDataAddressCountry = "KY"
+	WorkerCreatedWebhookEventDataAddressCountryKz WorkerCreatedWebhookEventDataAddressCountry = "KZ"
+	WorkerCreatedWebhookEventDataAddressCountryLa WorkerCreatedWebhookEventDataAddressCountry = "LA"
+	WorkerCreatedWebhookEventDataAddressCountryLb WorkerCreatedWebhookEventDataAddressCountry = "LB"
+	WorkerCreatedWebhookEventDataAddressCountryLc WorkerCreatedWebhookEventDataAddressCountry = "LC"
+	WorkerCreatedWebhookEventDataAddressCountryLi WorkerCreatedWebhookEventDataAddressCountry = "LI"
+	WorkerCreatedWebhookEventDataAddressCountryLk WorkerCreatedWebhookEventDataAddressCountry = "LK"
+	WorkerCreatedWebhookEventDataAddressCountryLr WorkerCreatedWebhookEventDataAddressCountry = "LR"
+	WorkerCreatedWebhookEventDataAddressCountryLs WorkerCreatedWebhookEventDataAddressCountry = "LS"
+	WorkerCreatedWebhookEventDataAddressCountryLt WorkerCreatedWebhookEventDataAddressCountry = "LT"
+	WorkerCreatedWebhookEventDataAddressCountryLu WorkerCreatedWebhookEventDataAddressCountry = "LU"
+	WorkerCreatedWebhookEventDataAddressCountryLv WorkerCreatedWebhookEventDataAddressCountry = "LV"
+	WorkerCreatedWebhookEventDataAddressCountryLy WorkerCreatedWebhookEventDataAddressCountry = "LY"
+	WorkerCreatedWebhookEventDataAddressCountryMa WorkerCreatedWebhookEventDataAddressCountry = "MA"
+	WorkerCreatedWebhookEventDataAddressCountryMc WorkerCreatedWebhookEventDataAddressCountry = "MC"
+	WorkerCreatedWebhookEventDataAddressCountryMd WorkerCreatedWebhookEventDataAddressCountry = "MD"
+	WorkerCreatedWebhookEventDataAddressCountryMe WorkerCreatedWebhookEventDataAddressCountry = "ME"
+	WorkerCreatedWebhookEventDataAddressCountryMf WorkerCreatedWebhookEventDataAddressCountry = "MF"
+	WorkerCreatedWebhookEventDataAddressCountryMg WorkerCreatedWebhookEventDataAddressCountry = "MG"
+	WorkerCreatedWebhookEventDataAddressCountryMh WorkerCreatedWebhookEventDataAddressCountry = "MH"
+	WorkerCreatedWebhookEventDataAddressCountryMk WorkerCreatedWebhookEventDataAddressCountry = "MK"
+	WorkerCreatedWebhookEventDataAddressCountryMl WorkerCreatedWebhookEventDataAddressCountry = "ML"
+	WorkerCreatedWebhookEventDataAddressCountryMm WorkerCreatedWebhookEventDataAddressCountry = "MM"
+	WorkerCreatedWebhookEventDataAddressCountryMn WorkerCreatedWebhookEventDataAddressCountry = "MN"
+	WorkerCreatedWebhookEventDataAddressCountryMo WorkerCreatedWebhookEventDataAddressCountry = "MO"
+	WorkerCreatedWebhookEventDataAddressCountryMp WorkerCreatedWebhookEventDataAddressCountry = "MP"
+	WorkerCreatedWebhookEventDataAddressCountryMq WorkerCreatedWebhookEventDataAddressCountry = "MQ"
+	WorkerCreatedWebhookEventDataAddressCountryMr WorkerCreatedWebhookEventDataAddressCountry = "MR"
+	WorkerCreatedWebhookEventDataAddressCountryMs WorkerCreatedWebhookEventDataAddressCountry = "MS"
+	WorkerCreatedWebhookEventDataAddressCountryMt WorkerCreatedWebhookEventDataAddressCountry = "MT"
+	WorkerCreatedWebhookEventDataAddressCountryMu WorkerCreatedWebhookEventDataAddressCountry = "MU"
+	WorkerCreatedWebhookEventDataAddressCountryMv WorkerCreatedWebhookEventDataAddressCountry = "MV"
+	WorkerCreatedWebhookEventDataAddressCountryMw WorkerCreatedWebhookEventDataAddressCountry = "MW"
+	WorkerCreatedWebhookEventDataAddressCountryMx WorkerCreatedWebhookEventDataAddressCountry = "MX"
+	WorkerCreatedWebhookEventDataAddressCountryMy WorkerCreatedWebhookEventDataAddressCountry = "MY"
+	WorkerCreatedWebhookEventDataAddressCountryMz WorkerCreatedWebhookEventDataAddressCountry = "MZ"
+	WorkerCreatedWebhookEventDataAddressCountryNa WorkerCreatedWebhookEventDataAddressCountry = "NA"
+	WorkerCreatedWebhookEventDataAddressCountryNc WorkerCreatedWebhookEventDataAddressCountry = "NC"
+	WorkerCreatedWebhookEventDataAddressCountryNe WorkerCreatedWebhookEventDataAddressCountry = "NE"
+	WorkerCreatedWebhookEventDataAddressCountryNf WorkerCreatedWebhookEventDataAddressCountry = "NF"
+	WorkerCreatedWebhookEventDataAddressCountryNg WorkerCreatedWebhookEventDataAddressCountry = "NG"
+	WorkerCreatedWebhookEventDataAddressCountryNi WorkerCreatedWebhookEventDataAddressCountry = "NI"
+	WorkerCreatedWebhookEventDataAddressCountryNl WorkerCreatedWebhookEventDataAddressCountry = "NL"
+	WorkerCreatedWebhookEventDataAddressCountryNo WorkerCreatedWebhookEventDataAddressCountry = "NO"
+	WorkerCreatedWebhookEventDataAddressCountryNp WorkerCreatedWebhookEventDataAddressCountry = "NP"
+	WorkerCreatedWebhookEventDataAddressCountryNr WorkerCreatedWebhookEventDataAddressCountry = "NR"
+	WorkerCreatedWebhookEventDataAddressCountryNu WorkerCreatedWebhookEventDataAddressCountry = "NU"
+	WorkerCreatedWebhookEventDataAddressCountryNz WorkerCreatedWebhookEventDataAddressCountry = "NZ"
+	WorkerCreatedWebhookEventDataAddressCountryOm WorkerCreatedWebhookEventDataAddressCountry = "OM"
+	WorkerCreatedWebhookEventDataAddressCountryPa WorkerCreatedWebhookEventDataAddressCountry = "PA"
+	WorkerCreatedWebhookEventDataAddressCountryPe WorkerCreatedWebhookEventDataAddressCountry = "PE"
+	WorkerCreatedWebhookEventDataAddressCountryPf WorkerCreatedWebhookEventDataAddressCountry = "PF"
+	WorkerCreatedWebhookEventDataAddressCountryPg WorkerCreatedWebhookEventDataAddressCountry = "PG"
+	WorkerCreatedWebhookEventDataAddressCountryPh WorkerCreatedWebhookEventDataAddressCountry = "PH"
+	WorkerCreatedWebhookEventDataAddressCountryPk WorkerCreatedWebhookEventDataAddressCountry = "PK"
+	WorkerCreatedWebhookEventDataAddressCountryPl WorkerCreatedWebhookEventDataAddressCountry = "PL"
+	WorkerCreatedWebhookEventDataAddressCountryPm WorkerCreatedWebhookEventDataAddressCountry = "PM"
+	WorkerCreatedWebhookEventDataAddressCountryPn WorkerCreatedWebhookEventDataAddressCountry = "PN"
+	WorkerCreatedWebhookEventDataAddressCountryPr WorkerCreatedWebhookEventDataAddressCountry = "PR"
+	WorkerCreatedWebhookEventDataAddressCountryPs WorkerCreatedWebhookEventDataAddressCountry = "PS"
+	WorkerCreatedWebhookEventDataAddressCountryPt WorkerCreatedWebhookEventDataAddressCountry = "PT"
+	WorkerCreatedWebhookEventDataAddressCountryPw WorkerCreatedWebhookEventDataAddressCountry = "PW"
+	WorkerCreatedWebhookEventDataAddressCountryPy WorkerCreatedWebhookEventDataAddressCountry = "PY"
+	WorkerCreatedWebhookEventDataAddressCountryQa WorkerCreatedWebhookEventDataAddressCountry = "QA"
+	WorkerCreatedWebhookEventDataAddressCountryRe WorkerCreatedWebhookEventDataAddressCountry = "RE"
+	WorkerCreatedWebhookEventDataAddressCountryRo WorkerCreatedWebhookEventDataAddressCountry = "RO"
+	WorkerCreatedWebhookEventDataAddressCountryRs WorkerCreatedWebhookEventDataAddressCountry = "RS"
+	WorkerCreatedWebhookEventDataAddressCountryRu WorkerCreatedWebhookEventDataAddressCountry = "RU"
+	WorkerCreatedWebhookEventDataAddressCountryRw WorkerCreatedWebhookEventDataAddressCountry = "RW"
+	WorkerCreatedWebhookEventDataAddressCountrySa WorkerCreatedWebhookEventDataAddressCountry = "SA"
+	WorkerCreatedWebhookEventDataAddressCountrySb WorkerCreatedWebhookEventDataAddressCountry = "SB"
+	WorkerCreatedWebhookEventDataAddressCountrySc WorkerCreatedWebhookEventDataAddressCountry = "SC"
+	WorkerCreatedWebhookEventDataAddressCountrySd WorkerCreatedWebhookEventDataAddressCountry = "SD"
+	WorkerCreatedWebhookEventDataAddressCountrySe WorkerCreatedWebhookEventDataAddressCountry = "SE"
+	WorkerCreatedWebhookEventDataAddressCountrySg WorkerCreatedWebhookEventDataAddressCountry = "SG"
+	WorkerCreatedWebhookEventDataAddressCountrySh WorkerCreatedWebhookEventDataAddressCountry = "SH"
+	WorkerCreatedWebhookEventDataAddressCountrySi WorkerCreatedWebhookEventDataAddressCountry = "SI"
+	WorkerCreatedWebhookEventDataAddressCountrySj WorkerCreatedWebhookEventDataAddressCountry = "SJ"
+	WorkerCreatedWebhookEventDataAddressCountrySk WorkerCreatedWebhookEventDataAddressCountry = "SK"
+	WorkerCreatedWebhookEventDataAddressCountrySl WorkerCreatedWebhookEventDataAddressCountry = "SL"
+	WorkerCreatedWebhookEventDataAddressCountrySm WorkerCreatedWebhookEventDataAddressCountry = "SM"
+	WorkerCreatedWebhookEventDataAddressCountrySn WorkerCreatedWebhookEventDataAddressCountry = "SN"
+	WorkerCreatedWebhookEventDataAddressCountrySo WorkerCreatedWebhookEventDataAddressCountry = "SO"
+	WorkerCreatedWebhookEventDataAddressCountrySr WorkerCreatedWebhookEventDataAddressCountry = "SR"
+	WorkerCreatedWebhookEventDataAddressCountrySS WorkerCreatedWebhookEventDataAddressCountry = "SS"
+	WorkerCreatedWebhookEventDataAddressCountrySt WorkerCreatedWebhookEventDataAddressCountry = "ST"
+	WorkerCreatedWebhookEventDataAddressCountrySv WorkerCreatedWebhookEventDataAddressCountry = "SV"
+	WorkerCreatedWebhookEventDataAddressCountrySx WorkerCreatedWebhookEventDataAddressCountry = "SX"
+	WorkerCreatedWebhookEventDataAddressCountrySy WorkerCreatedWebhookEventDataAddressCountry = "SY"
+	WorkerCreatedWebhookEventDataAddressCountrySz WorkerCreatedWebhookEventDataAddressCountry = "SZ"
+	WorkerCreatedWebhookEventDataAddressCountryTc WorkerCreatedWebhookEventDataAddressCountry = "TC"
+	WorkerCreatedWebhookEventDataAddressCountryTd WorkerCreatedWebhookEventDataAddressCountry = "TD"
+	WorkerCreatedWebhookEventDataAddressCountryTf WorkerCreatedWebhookEventDataAddressCountry = "TF"
+	WorkerCreatedWebhookEventDataAddressCountryTg WorkerCreatedWebhookEventDataAddressCountry = "TG"
+	WorkerCreatedWebhookEventDataAddressCountryTh WorkerCreatedWebhookEventDataAddressCountry = "TH"
+	WorkerCreatedWebhookEventDataAddressCountryTj WorkerCreatedWebhookEventDataAddressCountry = "TJ"
+	WorkerCreatedWebhookEventDataAddressCountryTk WorkerCreatedWebhookEventDataAddressCountry = "TK"
+	WorkerCreatedWebhookEventDataAddressCountryTl WorkerCreatedWebhookEventDataAddressCountry = "TL"
+	WorkerCreatedWebhookEventDataAddressCountryTm WorkerCreatedWebhookEventDataAddressCountry = "TM"
+	WorkerCreatedWebhookEventDataAddressCountryTn WorkerCreatedWebhookEventDataAddressCountry = "TN"
+	WorkerCreatedWebhookEventDataAddressCountryTo WorkerCreatedWebhookEventDataAddressCountry = "TO"
+	WorkerCreatedWebhookEventDataAddressCountryTr WorkerCreatedWebhookEventDataAddressCountry = "TR"
+	WorkerCreatedWebhookEventDataAddressCountryTt WorkerCreatedWebhookEventDataAddressCountry = "TT"
+	WorkerCreatedWebhookEventDataAddressCountryTv WorkerCreatedWebhookEventDataAddressCountry = "TV"
+	WorkerCreatedWebhookEventDataAddressCountryTw WorkerCreatedWebhookEventDataAddressCountry = "TW"
+	WorkerCreatedWebhookEventDataAddressCountryTz WorkerCreatedWebhookEventDataAddressCountry = "TZ"
+	WorkerCreatedWebhookEventDataAddressCountryUa WorkerCreatedWebhookEventDataAddressCountry = "UA"
+	WorkerCreatedWebhookEventDataAddressCountryUg WorkerCreatedWebhookEventDataAddressCountry = "UG"
+	WorkerCreatedWebhookEventDataAddressCountryUm WorkerCreatedWebhookEventDataAddressCountry = "UM"
+	WorkerCreatedWebhookEventDataAddressCountryUs WorkerCreatedWebhookEventDataAddressCountry = "US"
+	WorkerCreatedWebhookEventDataAddressCountryUy WorkerCreatedWebhookEventDataAddressCountry = "UY"
+	WorkerCreatedWebhookEventDataAddressCountryUz WorkerCreatedWebhookEventDataAddressCountry = "UZ"
+	WorkerCreatedWebhookEventDataAddressCountryVa WorkerCreatedWebhookEventDataAddressCountry = "VA"
+	WorkerCreatedWebhookEventDataAddressCountryVc WorkerCreatedWebhookEventDataAddressCountry = "VC"
+	WorkerCreatedWebhookEventDataAddressCountryVe WorkerCreatedWebhookEventDataAddressCountry = "VE"
+	WorkerCreatedWebhookEventDataAddressCountryVg WorkerCreatedWebhookEventDataAddressCountry = "VG"
+	WorkerCreatedWebhookEventDataAddressCountryVi WorkerCreatedWebhookEventDataAddressCountry = "VI"
+	WorkerCreatedWebhookEventDataAddressCountryVn WorkerCreatedWebhookEventDataAddressCountry = "VN"
+	WorkerCreatedWebhookEventDataAddressCountryVu WorkerCreatedWebhookEventDataAddressCountry = "VU"
+	WorkerCreatedWebhookEventDataAddressCountryWf WorkerCreatedWebhookEventDataAddressCountry = "WF"
+	WorkerCreatedWebhookEventDataAddressCountryWs WorkerCreatedWebhookEventDataAddressCountry = "WS"
+	WorkerCreatedWebhookEventDataAddressCountryXk WorkerCreatedWebhookEventDataAddressCountry = "XK"
+	WorkerCreatedWebhookEventDataAddressCountryYe WorkerCreatedWebhookEventDataAddressCountry = "YE"
+	WorkerCreatedWebhookEventDataAddressCountryYt WorkerCreatedWebhookEventDataAddressCountry = "YT"
+	WorkerCreatedWebhookEventDataAddressCountryZa WorkerCreatedWebhookEventDataAddressCountry = "ZA"
+	WorkerCreatedWebhookEventDataAddressCountryZm WorkerCreatedWebhookEventDataAddressCountry = "ZM"
+	WorkerCreatedWebhookEventDataAddressCountryZw WorkerCreatedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerCreatedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventDataAddressCountryAd, WorkerCreatedWebhookEventDataAddressCountryAe, WorkerCreatedWebhookEventDataAddressCountryAf, WorkerCreatedWebhookEventDataAddressCountryAg, WorkerCreatedWebhookEventDataAddressCountryAI, WorkerCreatedWebhookEventDataAddressCountryAl, WorkerCreatedWebhookEventDataAddressCountryAm, WorkerCreatedWebhookEventDataAddressCountryAo, WorkerCreatedWebhookEventDataAddressCountryAq, WorkerCreatedWebhookEventDataAddressCountryAr, WorkerCreatedWebhookEventDataAddressCountryAs, WorkerCreatedWebhookEventDataAddressCountryAt, WorkerCreatedWebhookEventDataAddressCountryAu, WorkerCreatedWebhookEventDataAddressCountryAw, WorkerCreatedWebhookEventDataAddressCountryAx, WorkerCreatedWebhookEventDataAddressCountryAz, WorkerCreatedWebhookEventDataAddressCountryBa, WorkerCreatedWebhookEventDataAddressCountryBb, WorkerCreatedWebhookEventDataAddressCountryBd, WorkerCreatedWebhookEventDataAddressCountryBe, WorkerCreatedWebhookEventDataAddressCountryBf, WorkerCreatedWebhookEventDataAddressCountryBg, WorkerCreatedWebhookEventDataAddressCountryBh, WorkerCreatedWebhookEventDataAddressCountryBi, WorkerCreatedWebhookEventDataAddressCountryBj, WorkerCreatedWebhookEventDataAddressCountryBl, WorkerCreatedWebhookEventDataAddressCountryBm, WorkerCreatedWebhookEventDataAddressCountryBn, WorkerCreatedWebhookEventDataAddressCountryBo, WorkerCreatedWebhookEventDataAddressCountryBq, WorkerCreatedWebhookEventDataAddressCountryBr, WorkerCreatedWebhookEventDataAddressCountryBs, WorkerCreatedWebhookEventDataAddressCountryBt, WorkerCreatedWebhookEventDataAddressCountryBv, WorkerCreatedWebhookEventDataAddressCountryBw, WorkerCreatedWebhookEventDataAddressCountryBy, WorkerCreatedWebhookEventDataAddressCountryBz, WorkerCreatedWebhookEventDataAddressCountryCa, WorkerCreatedWebhookEventDataAddressCountryCc, WorkerCreatedWebhookEventDataAddressCountryCd, WorkerCreatedWebhookEventDataAddressCountryCf, WorkerCreatedWebhookEventDataAddressCountryCg, WorkerCreatedWebhookEventDataAddressCountryCh, WorkerCreatedWebhookEventDataAddressCountryCi, WorkerCreatedWebhookEventDataAddressCountryCk, WorkerCreatedWebhookEventDataAddressCountryCl, WorkerCreatedWebhookEventDataAddressCountryCm, WorkerCreatedWebhookEventDataAddressCountryCn, WorkerCreatedWebhookEventDataAddressCountryCo, WorkerCreatedWebhookEventDataAddressCountryCr, WorkerCreatedWebhookEventDataAddressCountryCu, WorkerCreatedWebhookEventDataAddressCountryCv, WorkerCreatedWebhookEventDataAddressCountryCw, WorkerCreatedWebhookEventDataAddressCountryCx, WorkerCreatedWebhookEventDataAddressCountryCy, WorkerCreatedWebhookEventDataAddressCountryCz, WorkerCreatedWebhookEventDataAddressCountryDe, WorkerCreatedWebhookEventDataAddressCountryDj, WorkerCreatedWebhookEventDataAddressCountryDk, WorkerCreatedWebhookEventDataAddressCountryDm, WorkerCreatedWebhookEventDataAddressCountryDo, WorkerCreatedWebhookEventDataAddressCountryDz, WorkerCreatedWebhookEventDataAddressCountryEc, WorkerCreatedWebhookEventDataAddressCountryEe, WorkerCreatedWebhookEventDataAddressCountryEg, WorkerCreatedWebhookEventDataAddressCountryEh, WorkerCreatedWebhookEventDataAddressCountryEr, WorkerCreatedWebhookEventDataAddressCountryEs, WorkerCreatedWebhookEventDataAddressCountryEt, WorkerCreatedWebhookEventDataAddressCountryFi, WorkerCreatedWebhookEventDataAddressCountryFj, WorkerCreatedWebhookEventDataAddressCountryFk, WorkerCreatedWebhookEventDataAddressCountryFm, WorkerCreatedWebhookEventDataAddressCountryFo, WorkerCreatedWebhookEventDataAddressCountryFr, WorkerCreatedWebhookEventDataAddressCountryGa, WorkerCreatedWebhookEventDataAddressCountryGB, WorkerCreatedWebhookEventDataAddressCountryGd, WorkerCreatedWebhookEventDataAddressCountryGe, WorkerCreatedWebhookEventDataAddressCountryGf, WorkerCreatedWebhookEventDataAddressCountryGg, WorkerCreatedWebhookEventDataAddressCountryGh, WorkerCreatedWebhookEventDataAddressCountryGi, WorkerCreatedWebhookEventDataAddressCountryGl, WorkerCreatedWebhookEventDataAddressCountryGm, WorkerCreatedWebhookEventDataAddressCountryGn, WorkerCreatedWebhookEventDataAddressCountryGp, WorkerCreatedWebhookEventDataAddressCountryGq, WorkerCreatedWebhookEventDataAddressCountryGr, WorkerCreatedWebhookEventDataAddressCountryGs, WorkerCreatedWebhookEventDataAddressCountryGt, WorkerCreatedWebhookEventDataAddressCountryGu, WorkerCreatedWebhookEventDataAddressCountryGw, WorkerCreatedWebhookEventDataAddressCountryGy, WorkerCreatedWebhookEventDataAddressCountryHk, WorkerCreatedWebhookEventDataAddressCountryHm, WorkerCreatedWebhookEventDataAddressCountryHn, WorkerCreatedWebhookEventDataAddressCountryHr, WorkerCreatedWebhookEventDataAddressCountryHt, WorkerCreatedWebhookEventDataAddressCountryHu, WorkerCreatedWebhookEventDataAddressCountryID, WorkerCreatedWebhookEventDataAddressCountryIe, WorkerCreatedWebhookEventDataAddressCountryIl, WorkerCreatedWebhookEventDataAddressCountryIm, WorkerCreatedWebhookEventDataAddressCountryIn, WorkerCreatedWebhookEventDataAddressCountryIo, WorkerCreatedWebhookEventDataAddressCountryIq, WorkerCreatedWebhookEventDataAddressCountryIr, WorkerCreatedWebhookEventDataAddressCountryIs, WorkerCreatedWebhookEventDataAddressCountryIt, WorkerCreatedWebhookEventDataAddressCountryJe, WorkerCreatedWebhookEventDataAddressCountryJm, WorkerCreatedWebhookEventDataAddressCountryJo, WorkerCreatedWebhookEventDataAddressCountryJp, WorkerCreatedWebhookEventDataAddressCountryKe, WorkerCreatedWebhookEventDataAddressCountryKg, WorkerCreatedWebhookEventDataAddressCountryKh, WorkerCreatedWebhookEventDataAddressCountryKi, WorkerCreatedWebhookEventDataAddressCountryKm, WorkerCreatedWebhookEventDataAddressCountryKn, WorkerCreatedWebhookEventDataAddressCountryKp, WorkerCreatedWebhookEventDataAddressCountryKr, WorkerCreatedWebhookEventDataAddressCountryKw, WorkerCreatedWebhookEventDataAddressCountryKy, WorkerCreatedWebhookEventDataAddressCountryKz, WorkerCreatedWebhookEventDataAddressCountryLa, WorkerCreatedWebhookEventDataAddressCountryLb, WorkerCreatedWebhookEventDataAddressCountryLc, WorkerCreatedWebhookEventDataAddressCountryLi, WorkerCreatedWebhookEventDataAddressCountryLk, WorkerCreatedWebhookEventDataAddressCountryLr, WorkerCreatedWebhookEventDataAddressCountryLs, WorkerCreatedWebhookEventDataAddressCountryLt, WorkerCreatedWebhookEventDataAddressCountryLu, WorkerCreatedWebhookEventDataAddressCountryLv, WorkerCreatedWebhookEventDataAddressCountryLy, WorkerCreatedWebhookEventDataAddressCountryMa, WorkerCreatedWebhookEventDataAddressCountryMc, WorkerCreatedWebhookEventDataAddressCountryMd, WorkerCreatedWebhookEventDataAddressCountryMe, WorkerCreatedWebhookEventDataAddressCountryMf, WorkerCreatedWebhookEventDataAddressCountryMg, WorkerCreatedWebhookEventDataAddressCountryMh, WorkerCreatedWebhookEventDataAddressCountryMk, WorkerCreatedWebhookEventDataAddressCountryMl, WorkerCreatedWebhookEventDataAddressCountryMm, WorkerCreatedWebhookEventDataAddressCountryMn, WorkerCreatedWebhookEventDataAddressCountryMo, WorkerCreatedWebhookEventDataAddressCountryMp, WorkerCreatedWebhookEventDataAddressCountryMq, WorkerCreatedWebhookEventDataAddressCountryMr, WorkerCreatedWebhookEventDataAddressCountryMs, WorkerCreatedWebhookEventDataAddressCountryMt, WorkerCreatedWebhookEventDataAddressCountryMu, WorkerCreatedWebhookEventDataAddressCountryMv, WorkerCreatedWebhookEventDataAddressCountryMw, WorkerCreatedWebhookEventDataAddressCountryMx, WorkerCreatedWebhookEventDataAddressCountryMy, WorkerCreatedWebhookEventDataAddressCountryMz, WorkerCreatedWebhookEventDataAddressCountryNa, WorkerCreatedWebhookEventDataAddressCountryNc, WorkerCreatedWebhookEventDataAddressCountryNe, WorkerCreatedWebhookEventDataAddressCountryNf, WorkerCreatedWebhookEventDataAddressCountryNg, WorkerCreatedWebhookEventDataAddressCountryNi, WorkerCreatedWebhookEventDataAddressCountryNl, WorkerCreatedWebhookEventDataAddressCountryNo, WorkerCreatedWebhookEventDataAddressCountryNp, WorkerCreatedWebhookEventDataAddressCountryNr, WorkerCreatedWebhookEventDataAddressCountryNu, WorkerCreatedWebhookEventDataAddressCountryNz, WorkerCreatedWebhookEventDataAddressCountryOm, WorkerCreatedWebhookEventDataAddressCountryPa, WorkerCreatedWebhookEventDataAddressCountryPe, WorkerCreatedWebhookEventDataAddressCountryPf, WorkerCreatedWebhookEventDataAddressCountryPg, WorkerCreatedWebhookEventDataAddressCountryPh, WorkerCreatedWebhookEventDataAddressCountryPk, WorkerCreatedWebhookEventDataAddressCountryPl, WorkerCreatedWebhookEventDataAddressCountryPm, WorkerCreatedWebhookEventDataAddressCountryPn, WorkerCreatedWebhookEventDataAddressCountryPr, WorkerCreatedWebhookEventDataAddressCountryPs, WorkerCreatedWebhookEventDataAddressCountryPt, WorkerCreatedWebhookEventDataAddressCountryPw, WorkerCreatedWebhookEventDataAddressCountryPy, WorkerCreatedWebhookEventDataAddressCountryQa, WorkerCreatedWebhookEventDataAddressCountryRe, WorkerCreatedWebhookEventDataAddressCountryRo, WorkerCreatedWebhookEventDataAddressCountryRs, WorkerCreatedWebhookEventDataAddressCountryRu, WorkerCreatedWebhookEventDataAddressCountryRw, WorkerCreatedWebhookEventDataAddressCountrySa, WorkerCreatedWebhookEventDataAddressCountrySb, WorkerCreatedWebhookEventDataAddressCountrySc, WorkerCreatedWebhookEventDataAddressCountrySd, WorkerCreatedWebhookEventDataAddressCountrySe, WorkerCreatedWebhookEventDataAddressCountrySg, WorkerCreatedWebhookEventDataAddressCountrySh, WorkerCreatedWebhookEventDataAddressCountrySi, WorkerCreatedWebhookEventDataAddressCountrySj, WorkerCreatedWebhookEventDataAddressCountrySk, WorkerCreatedWebhookEventDataAddressCountrySl, WorkerCreatedWebhookEventDataAddressCountrySm, WorkerCreatedWebhookEventDataAddressCountrySn, WorkerCreatedWebhookEventDataAddressCountrySo, WorkerCreatedWebhookEventDataAddressCountrySr, WorkerCreatedWebhookEventDataAddressCountrySS, WorkerCreatedWebhookEventDataAddressCountrySt, WorkerCreatedWebhookEventDataAddressCountrySv, WorkerCreatedWebhookEventDataAddressCountrySx, WorkerCreatedWebhookEventDataAddressCountrySy, WorkerCreatedWebhookEventDataAddressCountrySz, WorkerCreatedWebhookEventDataAddressCountryTc, WorkerCreatedWebhookEventDataAddressCountryTd, WorkerCreatedWebhookEventDataAddressCountryTf, WorkerCreatedWebhookEventDataAddressCountryTg, WorkerCreatedWebhookEventDataAddressCountryTh, WorkerCreatedWebhookEventDataAddressCountryTj, WorkerCreatedWebhookEventDataAddressCountryTk, WorkerCreatedWebhookEventDataAddressCountryTl, WorkerCreatedWebhookEventDataAddressCountryTm, WorkerCreatedWebhookEventDataAddressCountryTn, WorkerCreatedWebhookEventDataAddressCountryTo, WorkerCreatedWebhookEventDataAddressCountryTr, WorkerCreatedWebhookEventDataAddressCountryTt, WorkerCreatedWebhookEventDataAddressCountryTv, WorkerCreatedWebhookEventDataAddressCountryTw, WorkerCreatedWebhookEventDataAddressCountryTz, WorkerCreatedWebhookEventDataAddressCountryUa, WorkerCreatedWebhookEventDataAddressCountryUg, WorkerCreatedWebhookEventDataAddressCountryUm, WorkerCreatedWebhookEventDataAddressCountryUs, WorkerCreatedWebhookEventDataAddressCountryUy, WorkerCreatedWebhookEventDataAddressCountryUz, WorkerCreatedWebhookEventDataAddressCountryVa, WorkerCreatedWebhookEventDataAddressCountryVc, WorkerCreatedWebhookEventDataAddressCountryVe, WorkerCreatedWebhookEventDataAddressCountryVg, WorkerCreatedWebhookEventDataAddressCountryVi, WorkerCreatedWebhookEventDataAddressCountryVn, WorkerCreatedWebhookEventDataAddressCountryVu, WorkerCreatedWebhookEventDataAddressCountryWf, WorkerCreatedWebhookEventDataAddressCountryWs, WorkerCreatedWebhookEventDataAddressCountryXk, WorkerCreatedWebhookEventDataAddressCountryYe, WorkerCreatedWebhookEventDataAddressCountryYt, WorkerCreatedWebhookEventDataAddressCountryZa, WorkerCreatedWebhookEventDataAddressCountryZm, WorkerCreatedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerCreatedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                      `json:"id" api:"required"`
@@ -4115,6 +4468,46 @@ func (r *WorkerCreatedWebhookEventDataDepartment) UnmarshalJSON(data []byte) (er
 
 func (r workerCreatedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerCreatedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                            `json:"id" api:"required"`
+	Name string                                            `json:"name" api:"required"`
+	Type WorkerCreatedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerCreatedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerCreatedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerCreatedWebhookEventDataPrimaryWorkplace]
+type workerCreatedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerCreatedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerCreatedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerCreatedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerCreatedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerCreatedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerCreatedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerCreatedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerCreatedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerCreatedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerCreatedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerCreatedWebhookEventDataLevel struct {
@@ -4166,9 +4559,11 @@ type WorkerDeletedWebhookEvent struct {
 	// The event type.
 	Type WorkerDeletedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                        `json:"timestamp" api:"required"`
-	Data      WorkerDeletedWebhookEventData `json:"data" api:"required"`
-	JSON      workerDeletedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerDeletedWebhookEventData `json:"data" api:"required"`
+	JSON workerDeletedWebhookEventJSON `json:"-"`
 }
 
 // workerDeletedWebhookEventJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEvent]
@@ -4219,6 +4614,16 @@ type WorkerDeletedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerDeletedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerDeletedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerDeletedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -4226,6 +4631,15 @@ type WorkerDeletedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerDeletedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerDeletedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -4239,27 +4653,36 @@ type WorkerDeletedWebhookEventData struct {
 
 // workerDeletedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventData]
 type workerDeletedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerDeletedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -4304,6 +4727,329 @@ func (r WorkerDeletedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerDeletedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerDeletedWebhookEventDataBiologicalSexMale   WorkerDeletedWebhookEventDataBiologicalSex = "male"
+	WorkerDeletedWebhookEventDataBiologicalSexFemale WorkerDeletedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerDeletedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventDataBiologicalSexMale, WorkerDeletedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerDeletedWebhookEventDataMaritalStatusMarried    WorkerDeletedWebhookEventDataMaritalStatus = "married"
+	WorkerDeletedWebhookEventDataMaritalStatusNotMarried WorkerDeletedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerDeletedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventDataMaritalStatusMarried, WorkerDeletedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerDeletedWebhookEventDataAddress struct {
+	Line1      string                                      `json:"line1" api:"required"`
+	Line2      string                                      `json:"line2" api:"required,nullable"`
+	City       string                                      `json:"city" api:"required"`
+	State      string                                      `json:"state" api:"required,nullable"`
+	PostalCode string                                      `json:"postalCode" api:"required,nullable"`
+	Country    WorkerDeletedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerDeletedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerDeletedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventDataAddress]
+type workerDeletedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerDeletedWebhookEventDataAddressCountry string
+
+const (
+	WorkerDeletedWebhookEventDataAddressCountryAd WorkerDeletedWebhookEventDataAddressCountry = "AD"
+	WorkerDeletedWebhookEventDataAddressCountryAe WorkerDeletedWebhookEventDataAddressCountry = "AE"
+	WorkerDeletedWebhookEventDataAddressCountryAf WorkerDeletedWebhookEventDataAddressCountry = "AF"
+	WorkerDeletedWebhookEventDataAddressCountryAg WorkerDeletedWebhookEventDataAddressCountry = "AG"
+	WorkerDeletedWebhookEventDataAddressCountryAI WorkerDeletedWebhookEventDataAddressCountry = "AI"
+	WorkerDeletedWebhookEventDataAddressCountryAl WorkerDeletedWebhookEventDataAddressCountry = "AL"
+	WorkerDeletedWebhookEventDataAddressCountryAm WorkerDeletedWebhookEventDataAddressCountry = "AM"
+	WorkerDeletedWebhookEventDataAddressCountryAo WorkerDeletedWebhookEventDataAddressCountry = "AO"
+	WorkerDeletedWebhookEventDataAddressCountryAq WorkerDeletedWebhookEventDataAddressCountry = "AQ"
+	WorkerDeletedWebhookEventDataAddressCountryAr WorkerDeletedWebhookEventDataAddressCountry = "AR"
+	WorkerDeletedWebhookEventDataAddressCountryAs WorkerDeletedWebhookEventDataAddressCountry = "AS"
+	WorkerDeletedWebhookEventDataAddressCountryAt WorkerDeletedWebhookEventDataAddressCountry = "AT"
+	WorkerDeletedWebhookEventDataAddressCountryAu WorkerDeletedWebhookEventDataAddressCountry = "AU"
+	WorkerDeletedWebhookEventDataAddressCountryAw WorkerDeletedWebhookEventDataAddressCountry = "AW"
+	WorkerDeletedWebhookEventDataAddressCountryAx WorkerDeletedWebhookEventDataAddressCountry = "AX"
+	WorkerDeletedWebhookEventDataAddressCountryAz WorkerDeletedWebhookEventDataAddressCountry = "AZ"
+	WorkerDeletedWebhookEventDataAddressCountryBa WorkerDeletedWebhookEventDataAddressCountry = "BA"
+	WorkerDeletedWebhookEventDataAddressCountryBb WorkerDeletedWebhookEventDataAddressCountry = "BB"
+	WorkerDeletedWebhookEventDataAddressCountryBd WorkerDeletedWebhookEventDataAddressCountry = "BD"
+	WorkerDeletedWebhookEventDataAddressCountryBe WorkerDeletedWebhookEventDataAddressCountry = "BE"
+	WorkerDeletedWebhookEventDataAddressCountryBf WorkerDeletedWebhookEventDataAddressCountry = "BF"
+	WorkerDeletedWebhookEventDataAddressCountryBg WorkerDeletedWebhookEventDataAddressCountry = "BG"
+	WorkerDeletedWebhookEventDataAddressCountryBh WorkerDeletedWebhookEventDataAddressCountry = "BH"
+	WorkerDeletedWebhookEventDataAddressCountryBi WorkerDeletedWebhookEventDataAddressCountry = "BI"
+	WorkerDeletedWebhookEventDataAddressCountryBj WorkerDeletedWebhookEventDataAddressCountry = "BJ"
+	WorkerDeletedWebhookEventDataAddressCountryBl WorkerDeletedWebhookEventDataAddressCountry = "BL"
+	WorkerDeletedWebhookEventDataAddressCountryBm WorkerDeletedWebhookEventDataAddressCountry = "BM"
+	WorkerDeletedWebhookEventDataAddressCountryBn WorkerDeletedWebhookEventDataAddressCountry = "BN"
+	WorkerDeletedWebhookEventDataAddressCountryBo WorkerDeletedWebhookEventDataAddressCountry = "BO"
+	WorkerDeletedWebhookEventDataAddressCountryBq WorkerDeletedWebhookEventDataAddressCountry = "BQ"
+	WorkerDeletedWebhookEventDataAddressCountryBr WorkerDeletedWebhookEventDataAddressCountry = "BR"
+	WorkerDeletedWebhookEventDataAddressCountryBs WorkerDeletedWebhookEventDataAddressCountry = "BS"
+	WorkerDeletedWebhookEventDataAddressCountryBt WorkerDeletedWebhookEventDataAddressCountry = "BT"
+	WorkerDeletedWebhookEventDataAddressCountryBv WorkerDeletedWebhookEventDataAddressCountry = "BV"
+	WorkerDeletedWebhookEventDataAddressCountryBw WorkerDeletedWebhookEventDataAddressCountry = "BW"
+	WorkerDeletedWebhookEventDataAddressCountryBy WorkerDeletedWebhookEventDataAddressCountry = "BY"
+	WorkerDeletedWebhookEventDataAddressCountryBz WorkerDeletedWebhookEventDataAddressCountry = "BZ"
+	WorkerDeletedWebhookEventDataAddressCountryCa WorkerDeletedWebhookEventDataAddressCountry = "CA"
+	WorkerDeletedWebhookEventDataAddressCountryCc WorkerDeletedWebhookEventDataAddressCountry = "CC"
+	WorkerDeletedWebhookEventDataAddressCountryCd WorkerDeletedWebhookEventDataAddressCountry = "CD"
+	WorkerDeletedWebhookEventDataAddressCountryCf WorkerDeletedWebhookEventDataAddressCountry = "CF"
+	WorkerDeletedWebhookEventDataAddressCountryCg WorkerDeletedWebhookEventDataAddressCountry = "CG"
+	WorkerDeletedWebhookEventDataAddressCountryCh WorkerDeletedWebhookEventDataAddressCountry = "CH"
+	WorkerDeletedWebhookEventDataAddressCountryCi WorkerDeletedWebhookEventDataAddressCountry = "CI"
+	WorkerDeletedWebhookEventDataAddressCountryCk WorkerDeletedWebhookEventDataAddressCountry = "CK"
+	WorkerDeletedWebhookEventDataAddressCountryCl WorkerDeletedWebhookEventDataAddressCountry = "CL"
+	WorkerDeletedWebhookEventDataAddressCountryCm WorkerDeletedWebhookEventDataAddressCountry = "CM"
+	WorkerDeletedWebhookEventDataAddressCountryCn WorkerDeletedWebhookEventDataAddressCountry = "CN"
+	WorkerDeletedWebhookEventDataAddressCountryCo WorkerDeletedWebhookEventDataAddressCountry = "CO"
+	WorkerDeletedWebhookEventDataAddressCountryCr WorkerDeletedWebhookEventDataAddressCountry = "CR"
+	WorkerDeletedWebhookEventDataAddressCountryCu WorkerDeletedWebhookEventDataAddressCountry = "CU"
+	WorkerDeletedWebhookEventDataAddressCountryCv WorkerDeletedWebhookEventDataAddressCountry = "CV"
+	WorkerDeletedWebhookEventDataAddressCountryCw WorkerDeletedWebhookEventDataAddressCountry = "CW"
+	WorkerDeletedWebhookEventDataAddressCountryCx WorkerDeletedWebhookEventDataAddressCountry = "CX"
+	WorkerDeletedWebhookEventDataAddressCountryCy WorkerDeletedWebhookEventDataAddressCountry = "CY"
+	WorkerDeletedWebhookEventDataAddressCountryCz WorkerDeletedWebhookEventDataAddressCountry = "CZ"
+	WorkerDeletedWebhookEventDataAddressCountryDe WorkerDeletedWebhookEventDataAddressCountry = "DE"
+	WorkerDeletedWebhookEventDataAddressCountryDj WorkerDeletedWebhookEventDataAddressCountry = "DJ"
+	WorkerDeletedWebhookEventDataAddressCountryDk WorkerDeletedWebhookEventDataAddressCountry = "DK"
+	WorkerDeletedWebhookEventDataAddressCountryDm WorkerDeletedWebhookEventDataAddressCountry = "DM"
+	WorkerDeletedWebhookEventDataAddressCountryDo WorkerDeletedWebhookEventDataAddressCountry = "DO"
+	WorkerDeletedWebhookEventDataAddressCountryDz WorkerDeletedWebhookEventDataAddressCountry = "DZ"
+	WorkerDeletedWebhookEventDataAddressCountryEc WorkerDeletedWebhookEventDataAddressCountry = "EC"
+	WorkerDeletedWebhookEventDataAddressCountryEe WorkerDeletedWebhookEventDataAddressCountry = "EE"
+	WorkerDeletedWebhookEventDataAddressCountryEg WorkerDeletedWebhookEventDataAddressCountry = "EG"
+	WorkerDeletedWebhookEventDataAddressCountryEh WorkerDeletedWebhookEventDataAddressCountry = "EH"
+	WorkerDeletedWebhookEventDataAddressCountryEr WorkerDeletedWebhookEventDataAddressCountry = "ER"
+	WorkerDeletedWebhookEventDataAddressCountryEs WorkerDeletedWebhookEventDataAddressCountry = "ES"
+	WorkerDeletedWebhookEventDataAddressCountryEt WorkerDeletedWebhookEventDataAddressCountry = "ET"
+	WorkerDeletedWebhookEventDataAddressCountryFi WorkerDeletedWebhookEventDataAddressCountry = "FI"
+	WorkerDeletedWebhookEventDataAddressCountryFj WorkerDeletedWebhookEventDataAddressCountry = "FJ"
+	WorkerDeletedWebhookEventDataAddressCountryFk WorkerDeletedWebhookEventDataAddressCountry = "FK"
+	WorkerDeletedWebhookEventDataAddressCountryFm WorkerDeletedWebhookEventDataAddressCountry = "FM"
+	WorkerDeletedWebhookEventDataAddressCountryFo WorkerDeletedWebhookEventDataAddressCountry = "FO"
+	WorkerDeletedWebhookEventDataAddressCountryFr WorkerDeletedWebhookEventDataAddressCountry = "FR"
+	WorkerDeletedWebhookEventDataAddressCountryGa WorkerDeletedWebhookEventDataAddressCountry = "GA"
+	WorkerDeletedWebhookEventDataAddressCountryGB WorkerDeletedWebhookEventDataAddressCountry = "GB"
+	WorkerDeletedWebhookEventDataAddressCountryGd WorkerDeletedWebhookEventDataAddressCountry = "GD"
+	WorkerDeletedWebhookEventDataAddressCountryGe WorkerDeletedWebhookEventDataAddressCountry = "GE"
+	WorkerDeletedWebhookEventDataAddressCountryGf WorkerDeletedWebhookEventDataAddressCountry = "GF"
+	WorkerDeletedWebhookEventDataAddressCountryGg WorkerDeletedWebhookEventDataAddressCountry = "GG"
+	WorkerDeletedWebhookEventDataAddressCountryGh WorkerDeletedWebhookEventDataAddressCountry = "GH"
+	WorkerDeletedWebhookEventDataAddressCountryGi WorkerDeletedWebhookEventDataAddressCountry = "GI"
+	WorkerDeletedWebhookEventDataAddressCountryGl WorkerDeletedWebhookEventDataAddressCountry = "GL"
+	WorkerDeletedWebhookEventDataAddressCountryGm WorkerDeletedWebhookEventDataAddressCountry = "GM"
+	WorkerDeletedWebhookEventDataAddressCountryGn WorkerDeletedWebhookEventDataAddressCountry = "GN"
+	WorkerDeletedWebhookEventDataAddressCountryGp WorkerDeletedWebhookEventDataAddressCountry = "GP"
+	WorkerDeletedWebhookEventDataAddressCountryGq WorkerDeletedWebhookEventDataAddressCountry = "GQ"
+	WorkerDeletedWebhookEventDataAddressCountryGr WorkerDeletedWebhookEventDataAddressCountry = "GR"
+	WorkerDeletedWebhookEventDataAddressCountryGs WorkerDeletedWebhookEventDataAddressCountry = "GS"
+	WorkerDeletedWebhookEventDataAddressCountryGt WorkerDeletedWebhookEventDataAddressCountry = "GT"
+	WorkerDeletedWebhookEventDataAddressCountryGu WorkerDeletedWebhookEventDataAddressCountry = "GU"
+	WorkerDeletedWebhookEventDataAddressCountryGw WorkerDeletedWebhookEventDataAddressCountry = "GW"
+	WorkerDeletedWebhookEventDataAddressCountryGy WorkerDeletedWebhookEventDataAddressCountry = "GY"
+	WorkerDeletedWebhookEventDataAddressCountryHk WorkerDeletedWebhookEventDataAddressCountry = "HK"
+	WorkerDeletedWebhookEventDataAddressCountryHm WorkerDeletedWebhookEventDataAddressCountry = "HM"
+	WorkerDeletedWebhookEventDataAddressCountryHn WorkerDeletedWebhookEventDataAddressCountry = "HN"
+	WorkerDeletedWebhookEventDataAddressCountryHr WorkerDeletedWebhookEventDataAddressCountry = "HR"
+	WorkerDeletedWebhookEventDataAddressCountryHt WorkerDeletedWebhookEventDataAddressCountry = "HT"
+	WorkerDeletedWebhookEventDataAddressCountryHu WorkerDeletedWebhookEventDataAddressCountry = "HU"
+	WorkerDeletedWebhookEventDataAddressCountryID WorkerDeletedWebhookEventDataAddressCountry = "ID"
+	WorkerDeletedWebhookEventDataAddressCountryIe WorkerDeletedWebhookEventDataAddressCountry = "IE"
+	WorkerDeletedWebhookEventDataAddressCountryIl WorkerDeletedWebhookEventDataAddressCountry = "IL"
+	WorkerDeletedWebhookEventDataAddressCountryIm WorkerDeletedWebhookEventDataAddressCountry = "IM"
+	WorkerDeletedWebhookEventDataAddressCountryIn WorkerDeletedWebhookEventDataAddressCountry = "IN"
+	WorkerDeletedWebhookEventDataAddressCountryIo WorkerDeletedWebhookEventDataAddressCountry = "IO"
+	WorkerDeletedWebhookEventDataAddressCountryIq WorkerDeletedWebhookEventDataAddressCountry = "IQ"
+	WorkerDeletedWebhookEventDataAddressCountryIr WorkerDeletedWebhookEventDataAddressCountry = "IR"
+	WorkerDeletedWebhookEventDataAddressCountryIs WorkerDeletedWebhookEventDataAddressCountry = "IS"
+	WorkerDeletedWebhookEventDataAddressCountryIt WorkerDeletedWebhookEventDataAddressCountry = "IT"
+	WorkerDeletedWebhookEventDataAddressCountryJe WorkerDeletedWebhookEventDataAddressCountry = "JE"
+	WorkerDeletedWebhookEventDataAddressCountryJm WorkerDeletedWebhookEventDataAddressCountry = "JM"
+	WorkerDeletedWebhookEventDataAddressCountryJo WorkerDeletedWebhookEventDataAddressCountry = "JO"
+	WorkerDeletedWebhookEventDataAddressCountryJp WorkerDeletedWebhookEventDataAddressCountry = "JP"
+	WorkerDeletedWebhookEventDataAddressCountryKe WorkerDeletedWebhookEventDataAddressCountry = "KE"
+	WorkerDeletedWebhookEventDataAddressCountryKg WorkerDeletedWebhookEventDataAddressCountry = "KG"
+	WorkerDeletedWebhookEventDataAddressCountryKh WorkerDeletedWebhookEventDataAddressCountry = "KH"
+	WorkerDeletedWebhookEventDataAddressCountryKi WorkerDeletedWebhookEventDataAddressCountry = "KI"
+	WorkerDeletedWebhookEventDataAddressCountryKm WorkerDeletedWebhookEventDataAddressCountry = "KM"
+	WorkerDeletedWebhookEventDataAddressCountryKn WorkerDeletedWebhookEventDataAddressCountry = "KN"
+	WorkerDeletedWebhookEventDataAddressCountryKp WorkerDeletedWebhookEventDataAddressCountry = "KP"
+	WorkerDeletedWebhookEventDataAddressCountryKr WorkerDeletedWebhookEventDataAddressCountry = "KR"
+	WorkerDeletedWebhookEventDataAddressCountryKw WorkerDeletedWebhookEventDataAddressCountry = "KW"
+	WorkerDeletedWebhookEventDataAddressCountryKy WorkerDeletedWebhookEventDataAddressCountry = "KY"
+	WorkerDeletedWebhookEventDataAddressCountryKz WorkerDeletedWebhookEventDataAddressCountry = "KZ"
+	WorkerDeletedWebhookEventDataAddressCountryLa WorkerDeletedWebhookEventDataAddressCountry = "LA"
+	WorkerDeletedWebhookEventDataAddressCountryLb WorkerDeletedWebhookEventDataAddressCountry = "LB"
+	WorkerDeletedWebhookEventDataAddressCountryLc WorkerDeletedWebhookEventDataAddressCountry = "LC"
+	WorkerDeletedWebhookEventDataAddressCountryLi WorkerDeletedWebhookEventDataAddressCountry = "LI"
+	WorkerDeletedWebhookEventDataAddressCountryLk WorkerDeletedWebhookEventDataAddressCountry = "LK"
+	WorkerDeletedWebhookEventDataAddressCountryLr WorkerDeletedWebhookEventDataAddressCountry = "LR"
+	WorkerDeletedWebhookEventDataAddressCountryLs WorkerDeletedWebhookEventDataAddressCountry = "LS"
+	WorkerDeletedWebhookEventDataAddressCountryLt WorkerDeletedWebhookEventDataAddressCountry = "LT"
+	WorkerDeletedWebhookEventDataAddressCountryLu WorkerDeletedWebhookEventDataAddressCountry = "LU"
+	WorkerDeletedWebhookEventDataAddressCountryLv WorkerDeletedWebhookEventDataAddressCountry = "LV"
+	WorkerDeletedWebhookEventDataAddressCountryLy WorkerDeletedWebhookEventDataAddressCountry = "LY"
+	WorkerDeletedWebhookEventDataAddressCountryMa WorkerDeletedWebhookEventDataAddressCountry = "MA"
+	WorkerDeletedWebhookEventDataAddressCountryMc WorkerDeletedWebhookEventDataAddressCountry = "MC"
+	WorkerDeletedWebhookEventDataAddressCountryMd WorkerDeletedWebhookEventDataAddressCountry = "MD"
+	WorkerDeletedWebhookEventDataAddressCountryMe WorkerDeletedWebhookEventDataAddressCountry = "ME"
+	WorkerDeletedWebhookEventDataAddressCountryMf WorkerDeletedWebhookEventDataAddressCountry = "MF"
+	WorkerDeletedWebhookEventDataAddressCountryMg WorkerDeletedWebhookEventDataAddressCountry = "MG"
+	WorkerDeletedWebhookEventDataAddressCountryMh WorkerDeletedWebhookEventDataAddressCountry = "MH"
+	WorkerDeletedWebhookEventDataAddressCountryMk WorkerDeletedWebhookEventDataAddressCountry = "MK"
+	WorkerDeletedWebhookEventDataAddressCountryMl WorkerDeletedWebhookEventDataAddressCountry = "ML"
+	WorkerDeletedWebhookEventDataAddressCountryMm WorkerDeletedWebhookEventDataAddressCountry = "MM"
+	WorkerDeletedWebhookEventDataAddressCountryMn WorkerDeletedWebhookEventDataAddressCountry = "MN"
+	WorkerDeletedWebhookEventDataAddressCountryMo WorkerDeletedWebhookEventDataAddressCountry = "MO"
+	WorkerDeletedWebhookEventDataAddressCountryMp WorkerDeletedWebhookEventDataAddressCountry = "MP"
+	WorkerDeletedWebhookEventDataAddressCountryMq WorkerDeletedWebhookEventDataAddressCountry = "MQ"
+	WorkerDeletedWebhookEventDataAddressCountryMr WorkerDeletedWebhookEventDataAddressCountry = "MR"
+	WorkerDeletedWebhookEventDataAddressCountryMs WorkerDeletedWebhookEventDataAddressCountry = "MS"
+	WorkerDeletedWebhookEventDataAddressCountryMt WorkerDeletedWebhookEventDataAddressCountry = "MT"
+	WorkerDeletedWebhookEventDataAddressCountryMu WorkerDeletedWebhookEventDataAddressCountry = "MU"
+	WorkerDeletedWebhookEventDataAddressCountryMv WorkerDeletedWebhookEventDataAddressCountry = "MV"
+	WorkerDeletedWebhookEventDataAddressCountryMw WorkerDeletedWebhookEventDataAddressCountry = "MW"
+	WorkerDeletedWebhookEventDataAddressCountryMx WorkerDeletedWebhookEventDataAddressCountry = "MX"
+	WorkerDeletedWebhookEventDataAddressCountryMy WorkerDeletedWebhookEventDataAddressCountry = "MY"
+	WorkerDeletedWebhookEventDataAddressCountryMz WorkerDeletedWebhookEventDataAddressCountry = "MZ"
+	WorkerDeletedWebhookEventDataAddressCountryNa WorkerDeletedWebhookEventDataAddressCountry = "NA"
+	WorkerDeletedWebhookEventDataAddressCountryNc WorkerDeletedWebhookEventDataAddressCountry = "NC"
+	WorkerDeletedWebhookEventDataAddressCountryNe WorkerDeletedWebhookEventDataAddressCountry = "NE"
+	WorkerDeletedWebhookEventDataAddressCountryNf WorkerDeletedWebhookEventDataAddressCountry = "NF"
+	WorkerDeletedWebhookEventDataAddressCountryNg WorkerDeletedWebhookEventDataAddressCountry = "NG"
+	WorkerDeletedWebhookEventDataAddressCountryNi WorkerDeletedWebhookEventDataAddressCountry = "NI"
+	WorkerDeletedWebhookEventDataAddressCountryNl WorkerDeletedWebhookEventDataAddressCountry = "NL"
+	WorkerDeletedWebhookEventDataAddressCountryNo WorkerDeletedWebhookEventDataAddressCountry = "NO"
+	WorkerDeletedWebhookEventDataAddressCountryNp WorkerDeletedWebhookEventDataAddressCountry = "NP"
+	WorkerDeletedWebhookEventDataAddressCountryNr WorkerDeletedWebhookEventDataAddressCountry = "NR"
+	WorkerDeletedWebhookEventDataAddressCountryNu WorkerDeletedWebhookEventDataAddressCountry = "NU"
+	WorkerDeletedWebhookEventDataAddressCountryNz WorkerDeletedWebhookEventDataAddressCountry = "NZ"
+	WorkerDeletedWebhookEventDataAddressCountryOm WorkerDeletedWebhookEventDataAddressCountry = "OM"
+	WorkerDeletedWebhookEventDataAddressCountryPa WorkerDeletedWebhookEventDataAddressCountry = "PA"
+	WorkerDeletedWebhookEventDataAddressCountryPe WorkerDeletedWebhookEventDataAddressCountry = "PE"
+	WorkerDeletedWebhookEventDataAddressCountryPf WorkerDeletedWebhookEventDataAddressCountry = "PF"
+	WorkerDeletedWebhookEventDataAddressCountryPg WorkerDeletedWebhookEventDataAddressCountry = "PG"
+	WorkerDeletedWebhookEventDataAddressCountryPh WorkerDeletedWebhookEventDataAddressCountry = "PH"
+	WorkerDeletedWebhookEventDataAddressCountryPk WorkerDeletedWebhookEventDataAddressCountry = "PK"
+	WorkerDeletedWebhookEventDataAddressCountryPl WorkerDeletedWebhookEventDataAddressCountry = "PL"
+	WorkerDeletedWebhookEventDataAddressCountryPm WorkerDeletedWebhookEventDataAddressCountry = "PM"
+	WorkerDeletedWebhookEventDataAddressCountryPn WorkerDeletedWebhookEventDataAddressCountry = "PN"
+	WorkerDeletedWebhookEventDataAddressCountryPr WorkerDeletedWebhookEventDataAddressCountry = "PR"
+	WorkerDeletedWebhookEventDataAddressCountryPs WorkerDeletedWebhookEventDataAddressCountry = "PS"
+	WorkerDeletedWebhookEventDataAddressCountryPt WorkerDeletedWebhookEventDataAddressCountry = "PT"
+	WorkerDeletedWebhookEventDataAddressCountryPw WorkerDeletedWebhookEventDataAddressCountry = "PW"
+	WorkerDeletedWebhookEventDataAddressCountryPy WorkerDeletedWebhookEventDataAddressCountry = "PY"
+	WorkerDeletedWebhookEventDataAddressCountryQa WorkerDeletedWebhookEventDataAddressCountry = "QA"
+	WorkerDeletedWebhookEventDataAddressCountryRe WorkerDeletedWebhookEventDataAddressCountry = "RE"
+	WorkerDeletedWebhookEventDataAddressCountryRo WorkerDeletedWebhookEventDataAddressCountry = "RO"
+	WorkerDeletedWebhookEventDataAddressCountryRs WorkerDeletedWebhookEventDataAddressCountry = "RS"
+	WorkerDeletedWebhookEventDataAddressCountryRu WorkerDeletedWebhookEventDataAddressCountry = "RU"
+	WorkerDeletedWebhookEventDataAddressCountryRw WorkerDeletedWebhookEventDataAddressCountry = "RW"
+	WorkerDeletedWebhookEventDataAddressCountrySa WorkerDeletedWebhookEventDataAddressCountry = "SA"
+	WorkerDeletedWebhookEventDataAddressCountrySb WorkerDeletedWebhookEventDataAddressCountry = "SB"
+	WorkerDeletedWebhookEventDataAddressCountrySc WorkerDeletedWebhookEventDataAddressCountry = "SC"
+	WorkerDeletedWebhookEventDataAddressCountrySd WorkerDeletedWebhookEventDataAddressCountry = "SD"
+	WorkerDeletedWebhookEventDataAddressCountrySe WorkerDeletedWebhookEventDataAddressCountry = "SE"
+	WorkerDeletedWebhookEventDataAddressCountrySg WorkerDeletedWebhookEventDataAddressCountry = "SG"
+	WorkerDeletedWebhookEventDataAddressCountrySh WorkerDeletedWebhookEventDataAddressCountry = "SH"
+	WorkerDeletedWebhookEventDataAddressCountrySi WorkerDeletedWebhookEventDataAddressCountry = "SI"
+	WorkerDeletedWebhookEventDataAddressCountrySj WorkerDeletedWebhookEventDataAddressCountry = "SJ"
+	WorkerDeletedWebhookEventDataAddressCountrySk WorkerDeletedWebhookEventDataAddressCountry = "SK"
+	WorkerDeletedWebhookEventDataAddressCountrySl WorkerDeletedWebhookEventDataAddressCountry = "SL"
+	WorkerDeletedWebhookEventDataAddressCountrySm WorkerDeletedWebhookEventDataAddressCountry = "SM"
+	WorkerDeletedWebhookEventDataAddressCountrySn WorkerDeletedWebhookEventDataAddressCountry = "SN"
+	WorkerDeletedWebhookEventDataAddressCountrySo WorkerDeletedWebhookEventDataAddressCountry = "SO"
+	WorkerDeletedWebhookEventDataAddressCountrySr WorkerDeletedWebhookEventDataAddressCountry = "SR"
+	WorkerDeletedWebhookEventDataAddressCountrySS WorkerDeletedWebhookEventDataAddressCountry = "SS"
+	WorkerDeletedWebhookEventDataAddressCountrySt WorkerDeletedWebhookEventDataAddressCountry = "ST"
+	WorkerDeletedWebhookEventDataAddressCountrySv WorkerDeletedWebhookEventDataAddressCountry = "SV"
+	WorkerDeletedWebhookEventDataAddressCountrySx WorkerDeletedWebhookEventDataAddressCountry = "SX"
+	WorkerDeletedWebhookEventDataAddressCountrySy WorkerDeletedWebhookEventDataAddressCountry = "SY"
+	WorkerDeletedWebhookEventDataAddressCountrySz WorkerDeletedWebhookEventDataAddressCountry = "SZ"
+	WorkerDeletedWebhookEventDataAddressCountryTc WorkerDeletedWebhookEventDataAddressCountry = "TC"
+	WorkerDeletedWebhookEventDataAddressCountryTd WorkerDeletedWebhookEventDataAddressCountry = "TD"
+	WorkerDeletedWebhookEventDataAddressCountryTf WorkerDeletedWebhookEventDataAddressCountry = "TF"
+	WorkerDeletedWebhookEventDataAddressCountryTg WorkerDeletedWebhookEventDataAddressCountry = "TG"
+	WorkerDeletedWebhookEventDataAddressCountryTh WorkerDeletedWebhookEventDataAddressCountry = "TH"
+	WorkerDeletedWebhookEventDataAddressCountryTj WorkerDeletedWebhookEventDataAddressCountry = "TJ"
+	WorkerDeletedWebhookEventDataAddressCountryTk WorkerDeletedWebhookEventDataAddressCountry = "TK"
+	WorkerDeletedWebhookEventDataAddressCountryTl WorkerDeletedWebhookEventDataAddressCountry = "TL"
+	WorkerDeletedWebhookEventDataAddressCountryTm WorkerDeletedWebhookEventDataAddressCountry = "TM"
+	WorkerDeletedWebhookEventDataAddressCountryTn WorkerDeletedWebhookEventDataAddressCountry = "TN"
+	WorkerDeletedWebhookEventDataAddressCountryTo WorkerDeletedWebhookEventDataAddressCountry = "TO"
+	WorkerDeletedWebhookEventDataAddressCountryTr WorkerDeletedWebhookEventDataAddressCountry = "TR"
+	WorkerDeletedWebhookEventDataAddressCountryTt WorkerDeletedWebhookEventDataAddressCountry = "TT"
+	WorkerDeletedWebhookEventDataAddressCountryTv WorkerDeletedWebhookEventDataAddressCountry = "TV"
+	WorkerDeletedWebhookEventDataAddressCountryTw WorkerDeletedWebhookEventDataAddressCountry = "TW"
+	WorkerDeletedWebhookEventDataAddressCountryTz WorkerDeletedWebhookEventDataAddressCountry = "TZ"
+	WorkerDeletedWebhookEventDataAddressCountryUa WorkerDeletedWebhookEventDataAddressCountry = "UA"
+	WorkerDeletedWebhookEventDataAddressCountryUg WorkerDeletedWebhookEventDataAddressCountry = "UG"
+	WorkerDeletedWebhookEventDataAddressCountryUm WorkerDeletedWebhookEventDataAddressCountry = "UM"
+	WorkerDeletedWebhookEventDataAddressCountryUs WorkerDeletedWebhookEventDataAddressCountry = "US"
+	WorkerDeletedWebhookEventDataAddressCountryUy WorkerDeletedWebhookEventDataAddressCountry = "UY"
+	WorkerDeletedWebhookEventDataAddressCountryUz WorkerDeletedWebhookEventDataAddressCountry = "UZ"
+	WorkerDeletedWebhookEventDataAddressCountryVa WorkerDeletedWebhookEventDataAddressCountry = "VA"
+	WorkerDeletedWebhookEventDataAddressCountryVc WorkerDeletedWebhookEventDataAddressCountry = "VC"
+	WorkerDeletedWebhookEventDataAddressCountryVe WorkerDeletedWebhookEventDataAddressCountry = "VE"
+	WorkerDeletedWebhookEventDataAddressCountryVg WorkerDeletedWebhookEventDataAddressCountry = "VG"
+	WorkerDeletedWebhookEventDataAddressCountryVi WorkerDeletedWebhookEventDataAddressCountry = "VI"
+	WorkerDeletedWebhookEventDataAddressCountryVn WorkerDeletedWebhookEventDataAddressCountry = "VN"
+	WorkerDeletedWebhookEventDataAddressCountryVu WorkerDeletedWebhookEventDataAddressCountry = "VU"
+	WorkerDeletedWebhookEventDataAddressCountryWf WorkerDeletedWebhookEventDataAddressCountry = "WF"
+	WorkerDeletedWebhookEventDataAddressCountryWs WorkerDeletedWebhookEventDataAddressCountry = "WS"
+	WorkerDeletedWebhookEventDataAddressCountryXk WorkerDeletedWebhookEventDataAddressCountry = "XK"
+	WorkerDeletedWebhookEventDataAddressCountryYe WorkerDeletedWebhookEventDataAddressCountry = "YE"
+	WorkerDeletedWebhookEventDataAddressCountryYt WorkerDeletedWebhookEventDataAddressCountry = "YT"
+	WorkerDeletedWebhookEventDataAddressCountryZa WorkerDeletedWebhookEventDataAddressCountry = "ZA"
+	WorkerDeletedWebhookEventDataAddressCountryZm WorkerDeletedWebhookEventDataAddressCountry = "ZM"
+	WorkerDeletedWebhookEventDataAddressCountryZw WorkerDeletedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerDeletedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventDataAddressCountryAd, WorkerDeletedWebhookEventDataAddressCountryAe, WorkerDeletedWebhookEventDataAddressCountryAf, WorkerDeletedWebhookEventDataAddressCountryAg, WorkerDeletedWebhookEventDataAddressCountryAI, WorkerDeletedWebhookEventDataAddressCountryAl, WorkerDeletedWebhookEventDataAddressCountryAm, WorkerDeletedWebhookEventDataAddressCountryAo, WorkerDeletedWebhookEventDataAddressCountryAq, WorkerDeletedWebhookEventDataAddressCountryAr, WorkerDeletedWebhookEventDataAddressCountryAs, WorkerDeletedWebhookEventDataAddressCountryAt, WorkerDeletedWebhookEventDataAddressCountryAu, WorkerDeletedWebhookEventDataAddressCountryAw, WorkerDeletedWebhookEventDataAddressCountryAx, WorkerDeletedWebhookEventDataAddressCountryAz, WorkerDeletedWebhookEventDataAddressCountryBa, WorkerDeletedWebhookEventDataAddressCountryBb, WorkerDeletedWebhookEventDataAddressCountryBd, WorkerDeletedWebhookEventDataAddressCountryBe, WorkerDeletedWebhookEventDataAddressCountryBf, WorkerDeletedWebhookEventDataAddressCountryBg, WorkerDeletedWebhookEventDataAddressCountryBh, WorkerDeletedWebhookEventDataAddressCountryBi, WorkerDeletedWebhookEventDataAddressCountryBj, WorkerDeletedWebhookEventDataAddressCountryBl, WorkerDeletedWebhookEventDataAddressCountryBm, WorkerDeletedWebhookEventDataAddressCountryBn, WorkerDeletedWebhookEventDataAddressCountryBo, WorkerDeletedWebhookEventDataAddressCountryBq, WorkerDeletedWebhookEventDataAddressCountryBr, WorkerDeletedWebhookEventDataAddressCountryBs, WorkerDeletedWebhookEventDataAddressCountryBt, WorkerDeletedWebhookEventDataAddressCountryBv, WorkerDeletedWebhookEventDataAddressCountryBw, WorkerDeletedWebhookEventDataAddressCountryBy, WorkerDeletedWebhookEventDataAddressCountryBz, WorkerDeletedWebhookEventDataAddressCountryCa, WorkerDeletedWebhookEventDataAddressCountryCc, WorkerDeletedWebhookEventDataAddressCountryCd, WorkerDeletedWebhookEventDataAddressCountryCf, WorkerDeletedWebhookEventDataAddressCountryCg, WorkerDeletedWebhookEventDataAddressCountryCh, WorkerDeletedWebhookEventDataAddressCountryCi, WorkerDeletedWebhookEventDataAddressCountryCk, WorkerDeletedWebhookEventDataAddressCountryCl, WorkerDeletedWebhookEventDataAddressCountryCm, WorkerDeletedWebhookEventDataAddressCountryCn, WorkerDeletedWebhookEventDataAddressCountryCo, WorkerDeletedWebhookEventDataAddressCountryCr, WorkerDeletedWebhookEventDataAddressCountryCu, WorkerDeletedWebhookEventDataAddressCountryCv, WorkerDeletedWebhookEventDataAddressCountryCw, WorkerDeletedWebhookEventDataAddressCountryCx, WorkerDeletedWebhookEventDataAddressCountryCy, WorkerDeletedWebhookEventDataAddressCountryCz, WorkerDeletedWebhookEventDataAddressCountryDe, WorkerDeletedWebhookEventDataAddressCountryDj, WorkerDeletedWebhookEventDataAddressCountryDk, WorkerDeletedWebhookEventDataAddressCountryDm, WorkerDeletedWebhookEventDataAddressCountryDo, WorkerDeletedWebhookEventDataAddressCountryDz, WorkerDeletedWebhookEventDataAddressCountryEc, WorkerDeletedWebhookEventDataAddressCountryEe, WorkerDeletedWebhookEventDataAddressCountryEg, WorkerDeletedWebhookEventDataAddressCountryEh, WorkerDeletedWebhookEventDataAddressCountryEr, WorkerDeletedWebhookEventDataAddressCountryEs, WorkerDeletedWebhookEventDataAddressCountryEt, WorkerDeletedWebhookEventDataAddressCountryFi, WorkerDeletedWebhookEventDataAddressCountryFj, WorkerDeletedWebhookEventDataAddressCountryFk, WorkerDeletedWebhookEventDataAddressCountryFm, WorkerDeletedWebhookEventDataAddressCountryFo, WorkerDeletedWebhookEventDataAddressCountryFr, WorkerDeletedWebhookEventDataAddressCountryGa, WorkerDeletedWebhookEventDataAddressCountryGB, WorkerDeletedWebhookEventDataAddressCountryGd, WorkerDeletedWebhookEventDataAddressCountryGe, WorkerDeletedWebhookEventDataAddressCountryGf, WorkerDeletedWebhookEventDataAddressCountryGg, WorkerDeletedWebhookEventDataAddressCountryGh, WorkerDeletedWebhookEventDataAddressCountryGi, WorkerDeletedWebhookEventDataAddressCountryGl, WorkerDeletedWebhookEventDataAddressCountryGm, WorkerDeletedWebhookEventDataAddressCountryGn, WorkerDeletedWebhookEventDataAddressCountryGp, WorkerDeletedWebhookEventDataAddressCountryGq, WorkerDeletedWebhookEventDataAddressCountryGr, WorkerDeletedWebhookEventDataAddressCountryGs, WorkerDeletedWebhookEventDataAddressCountryGt, WorkerDeletedWebhookEventDataAddressCountryGu, WorkerDeletedWebhookEventDataAddressCountryGw, WorkerDeletedWebhookEventDataAddressCountryGy, WorkerDeletedWebhookEventDataAddressCountryHk, WorkerDeletedWebhookEventDataAddressCountryHm, WorkerDeletedWebhookEventDataAddressCountryHn, WorkerDeletedWebhookEventDataAddressCountryHr, WorkerDeletedWebhookEventDataAddressCountryHt, WorkerDeletedWebhookEventDataAddressCountryHu, WorkerDeletedWebhookEventDataAddressCountryID, WorkerDeletedWebhookEventDataAddressCountryIe, WorkerDeletedWebhookEventDataAddressCountryIl, WorkerDeletedWebhookEventDataAddressCountryIm, WorkerDeletedWebhookEventDataAddressCountryIn, WorkerDeletedWebhookEventDataAddressCountryIo, WorkerDeletedWebhookEventDataAddressCountryIq, WorkerDeletedWebhookEventDataAddressCountryIr, WorkerDeletedWebhookEventDataAddressCountryIs, WorkerDeletedWebhookEventDataAddressCountryIt, WorkerDeletedWebhookEventDataAddressCountryJe, WorkerDeletedWebhookEventDataAddressCountryJm, WorkerDeletedWebhookEventDataAddressCountryJo, WorkerDeletedWebhookEventDataAddressCountryJp, WorkerDeletedWebhookEventDataAddressCountryKe, WorkerDeletedWebhookEventDataAddressCountryKg, WorkerDeletedWebhookEventDataAddressCountryKh, WorkerDeletedWebhookEventDataAddressCountryKi, WorkerDeletedWebhookEventDataAddressCountryKm, WorkerDeletedWebhookEventDataAddressCountryKn, WorkerDeletedWebhookEventDataAddressCountryKp, WorkerDeletedWebhookEventDataAddressCountryKr, WorkerDeletedWebhookEventDataAddressCountryKw, WorkerDeletedWebhookEventDataAddressCountryKy, WorkerDeletedWebhookEventDataAddressCountryKz, WorkerDeletedWebhookEventDataAddressCountryLa, WorkerDeletedWebhookEventDataAddressCountryLb, WorkerDeletedWebhookEventDataAddressCountryLc, WorkerDeletedWebhookEventDataAddressCountryLi, WorkerDeletedWebhookEventDataAddressCountryLk, WorkerDeletedWebhookEventDataAddressCountryLr, WorkerDeletedWebhookEventDataAddressCountryLs, WorkerDeletedWebhookEventDataAddressCountryLt, WorkerDeletedWebhookEventDataAddressCountryLu, WorkerDeletedWebhookEventDataAddressCountryLv, WorkerDeletedWebhookEventDataAddressCountryLy, WorkerDeletedWebhookEventDataAddressCountryMa, WorkerDeletedWebhookEventDataAddressCountryMc, WorkerDeletedWebhookEventDataAddressCountryMd, WorkerDeletedWebhookEventDataAddressCountryMe, WorkerDeletedWebhookEventDataAddressCountryMf, WorkerDeletedWebhookEventDataAddressCountryMg, WorkerDeletedWebhookEventDataAddressCountryMh, WorkerDeletedWebhookEventDataAddressCountryMk, WorkerDeletedWebhookEventDataAddressCountryMl, WorkerDeletedWebhookEventDataAddressCountryMm, WorkerDeletedWebhookEventDataAddressCountryMn, WorkerDeletedWebhookEventDataAddressCountryMo, WorkerDeletedWebhookEventDataAddressCountryMp, WorkerDeletedWebhookEventDataAddressCountryMq, WorkerDeletedWebhookEventDataAddressCountryMr, WorkerDeletedWebhookEventDataAddressCountryMs, WorkerDeletedWebhookEventDataAddressCountryMt, WorkerDeletedWebhookEventDataAddressCountryMu, WorkerDeletedWebhookEventDataAddressCountryMv, WorkerDeletedWebhookEventDataAddressCountryMw, WorkerDeletedWebhookEventDataAddressCountryMx, WorkerDeletedWebhookEventDataAddressCountryMy, WorkerDeletedWebhookEventDataAddressCountryMz, WorkerDeletedWebhookEventDataAddressCountryNa, WorkerDeletedWebhookEventDataAddressCountryNc, WorkerDeletedWebhookEventDataAddressCountryNe, WorkerDeletedWebhookEventDataAddressCountryNf, WorkerDeletedWebhookEventDataAddressCountryNg, WorkerDeletedWebhookEventDataAddressCountryNi, WorkerDeletedWebhookEventDataAddressCountryNl, WorkerDeletedWebhookEventDataAddressCountryNo, WorkerDeletedWebhookEventDataAddressCountryNp, WorkerDeletedWebhookEventDataAddressCountryNr, WorkerDeletedWebhookEventDataAddressCountryNu, WorkerDeletedWebhookEventDataAddressCountryNz, WorkerDeletedWebhookEventDataAddressCountryOm, WorkerDeletedWebhookEventDataAddressCountryPa, WorkerDeletedWebhookEventDataAddressCountryPe, WorkerDeletedWebhookEventDataAddressCountryPf, WorkerDeletedWebhookEventDataAddressCountryPg, WorkerDeletedWebhookEventDataAddressCountryPh, WorkerDeletedWebhookEventDataAddressCountryPk, WorkerDeletedWebhookEventDataAddressCountryPl, WorkerDeletedWebhookEventDataAddressCountryPm, WorkerDeletedWebhookEventDataAddressCountryPn, WorkerDeletedWebhookEventDataAddressCountryPr, WorkerDeletedWebhookEventDataAddressCountryPs, WorkerDeletedWebhookEventDataAddressCountryPt, WorkerDeletedWebhookEventDataAddressCountryPw, WorkerDeletedWebhookEventDataAddressCountryPy, WorkerDeletedWebhookEventDataAddressCountryQa, WorkerDeletedWebhookEventDataAddressCountryRe, WorkerDeletedWebhookEventDataAddressCountryRo, WorkerDeletedWebhookEventDataAddressCountryRs, WorkerDeletedWebhookEventDataAddressCountryRu, WorkerDeletedWebhookEventDataAddressCountryRw, WorkerDeletedWebhookEventDataAddressCountrySa, WorkerDeletedWebhookEventDataAddressCountrySb, WorkerDeletedWebhookEventDataAddressCountrySc, WorkerDeletedWebhookEventDataAddressCountrySd, WorkerDeletedWebhookEventDataAddressCountrySe, WorkerDeletedWebhookEventDataAddressCountrySg, WorkerDeletedWebhookEventDataAddressCountrySh, WorkerDeletedWebhookEventDataAddressCountrySi, WorkerDeletedWebhookEventDataAddressCountrySj, WorkerDeletedWebhookEventDataAddressCountrySk, WorkerDeletedWebhookEventDataAddressCountrySl, WorkerDeletedWebhookEventDataAddressCountrySm, WorkerDeletedWebhookEventDataAddressCountrySn, WorkerDeletedWebhookEventDataAddressCountrySo, WorkerDeletedWebhookEventDataAddressCountrySr, WorkerDeletedWebhookEventDataAddressCountrySS, WorkerDeletedWebhookEventDataAddressCountrySt, WorkerDeletedWebhookEventDataAddressCountrySv, WorkerDeletedWebhookEventDataAddressCountrySx, WorkerDeletedWebhookEventDataAddressCountrySy, WorkerDeletedWebhookEventDataAddressCountrySz, WorkerDeletedWebhookEventDataAddressCountryTc, WorkerDeletedWebhookEventDataAddressCountryTd, WorkerDeletedWebhookEventDataAddressCountryTf, WorkerDeletedWebhookEventDataAddressCountryTg, WorkerDeletedWebhookEventDataAddressCountryTh, WorkerDeletedWebhookEventDataAddressCountryTj, WorkerDeletedWebhookEventDataAddressCountryTk, WorkerDeletedWebhookEventDataAddressCountryTl, WorkerDeletedWebhookEventDataAddressCountryTm, WorkerDeletedWebhookEventDataAddressCountryTn, WorkerDeletedWebhookEventDataAddressCountryTo, WorkerDeletedWebhookEventDataAddressCountryTr, WorkerDeletedWebhookEventDataAddressCountryTt, WorkerDeletedWebhookEventDataAddressCountryTv, WorkerDeletedWebhookEventDataAddressCountryTw, WorkerDeletedWebhookEventDataAddressCountryTz, WorkerDeletedWebhookEventDataAddressCountryUa, WorkerDeletedWebhookEventDataAddressCountryUg, WorkerDeletedWebhookEventDataAddressCountryUm, WorkerDeletedWebhookEventDataAddressCountryUs, WorkerDeletedWebhookEventDataAddressCountryUy, WorkerDeletedWebhookEventDataAddressCountryUz, WorkerDeletedWebhookEventDataAddressCountryVa, WorkerDeletedWebhookEventDataAddressCountryVc, WorkerDeletedWebhookEventDataAddressCountryVe, WorkerDeletedWebhookEventDataAddressCountryVg, WorkerDeletedWebhookEventDataAddressCountryVi, WorkerDeletedWebhookEventDataAddressCountryVn, WorkerDeletedWebhookEventDataAddressCountryVu, WorkerDeletedWebhookEventDataAddressCountryWf, WorkerDeletedWebhookEventDataAddressCountryWs, WorkerDeletedWebhookEventDataAddressCountryXk, WorkerDeletedWebhookEventDataAddressCountryYe, WorkerDeletedWebhookEventDataAddressCountryYt, WorkerDeletedWebhookEventDataAddressCountryZa, WorkerDeletedWebhookEventDataAddressCountryZm, WorkerDeletedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerDeletedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                      `json:"id" api:"required"`
@@ -4325,6 +5071,46 @@ func (r *WorkerDeletedWebhookEventDataDepartment) UnmarshalJSON(data []byte) (er
 
 func (r workerDeletedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerDeletedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                            `json:"id" api:"required"`
+	Name string                                            `json:"name" api:"required"`
+	Type WorkerDeletedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerDeletedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerDeletedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerDeletedWebhookEventDataPrimaryWorkplace]
+type workerDeletedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerDeletedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerDeletedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerDeletedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerDeletedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerDeletedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerDeletedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerDeletedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerDeletedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerDeletedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerDeletedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerDeletedWebhookEventDataLevel struct {
@@ -4376,9 +5162,11 @@ type WorkerInviteAcceptedWebhookEvent struct {
 	// The event type.
 	Type WorkerInviteAcceptedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                               `json:"timestamp" api:"required"`
-	Data      WorkerInviteAcceptedWebhookEventData `json:"data" api:"required"`
-	JSON      workerInviteAcceptedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerInviteAcceptedWebhookEventData `json:"data" api:"required"`
+	JSON workerInviteAcceptedWebhookEventJSON `json:"-"`
 }
 
 // workerInviteAcceptedWebhookEventJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEvent]
@@ -4429,6 +5217,16 @@ type WorkerInviteAcceptedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerInviteAcceptedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerInviteAcceptedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerInviteAcceptedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -4436,6 +5234,15 @@ type WorkerInviteAcceptedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteAcceptedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerInviteAcceptedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -4449,27 +5256,36 @@ type WorkerInviteAcceptedWebhookEventData struct {
 
 // workerInviteAcceptedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventData]
 type workerInviteAcceptedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerInviteAcceptedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -4514,6 +5330,329 @@ func (r WorkerInviteAcceptedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerInviteAcceptedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerInviteAcceptedWebhookEventDataBiologicalSexMale   WorkerInviteAcceptedWebhookEventDataBiologicalSex = "male"
+	WorkerInviteAcceptedWebhookEventDataBiologicalSexFemale WorkerInviteAcceptedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerInviteAcceptedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventDataBiologicalSexMale, WorkerInviteAcceptedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerInviteAcceptedWebhookEventDataMaritalStatusMarried    WorkerInviteAcceptedWebhookEventDataMaritalStatus = "married"
+	WorkerInviteAcceptedWebhookEventDataMaritalStatusNotMarried WorkerInviteAcceptedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerInviteAcceptedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventDataMaritalStatusMarried, WorkerInviteAcceptedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteAcceptedWebhookEventDataAddress struct {
+	Line1      string                                             `json:"line1" api:"required"`
+	Line2      string                                             `json:"line2" api:"required,nullable"`
+	City       string                                             `json:"city" api:"required"`
+	State      string                                             `json:"state" api:"required,nullable"`
+	PostalCode string                                             `json:"postalCode" api:"required,nullable"`
+	Country    WorkerInviteAcceptedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerInviteAcceptedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventDataAddress]
+type workerInviteAcceptedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventDataAddressCountry string
+
+const (
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAd WorkerInviteAcceptedWebhookEventDataAddressCountry = "AD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAe WorkerInviteAcceptedWebhookEventDataAddressCountry = "AE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAf WorkerInviteAcceptedWebhookEventDataAddressCountry = "AF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAg WorkerInviteAcceptedWebhookEventDataAddressCountry = "AG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAI WorkerInviteAcceptedWebhookEventDataAddressCountry = "AI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAl WorkerInviteAcceptedWebhookEventDataAddressCountry = "AL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAm WorkerInviteAcceptedWebhookEventDataAddressCountry = "AM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAo WorkerInviteAcceptedWebhookEventDataAddressCountry = "AO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAq WorkerInviteAcceptedWebhookEventDataAddressCountry = "AQ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAr WorkerInviteAcceptedWebhookEventDataAddressCountry = "AR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAs WorkerInviteAcceptedWebhookEventDataAddressCountry = "AS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAt WorkerInviteAcceptedWebhookEventDataAddressCountry = "AT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAu WorkerInviteAcceptedWebhookEventDataAddressCountry = "AU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAw WorkerInviteAcceptedWebhookEventDataAddressCountry = "AW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAx WorkerInviteAcceptedWebhookEventDataAddressCountry = "AX"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryAz WorkerInviteAcceptedWebhookEventDataAddressCountry = "AZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBa WorkerInviteAcceptedWebhookEventDataAddressCountry = "BA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBb WorkerInviteAcceptedWebhookEventDataAddressCountry = "BB"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBd WorkerInviteAcceptedWebhookEventDataAddressCountry = "BD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBe WorkerInviteAcceptedWebhookEventDataAddressCountry = "BE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBf WorkerInviteAcceptedWebhookEventDataAddressCountry = "BF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBg WorkerInviteAcceptedWebhookEventDataAddressCountry = "BG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBh WorkerInviteAcceptedWebhookEventDataAddressCountry = "BH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBi WorkerInviteAcceptedWebhookEventDataAddressCountry = "BI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBj WorkerInviteAcceptedWebhookEventDataAddressCountry = "BJ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBl WorkerInviteAcceptedWebhookEventDataAddressCountry = "BL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBm WorkerInviteAcceptedWebhookEventDataAddressCountry = "BM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBn WorkerInviteAcceptedWebhookEventDataAddressCountry = "BN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBo WorkerInviteAcceptedWebhookEventDataAddressCountry = "BO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBq WorkerInviteAcceptedWebhookEventDataAddressCountry = "BQ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBr WorkerInviteAcceptedWebhookEventDataAddressCountry = "BR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBs WorkerInviteAcceptedWebhookEventDataAddressCountry = "BS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBt WorkerInviteAcceptedWebhookEventDataAddressCountry = "BT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBv WorkerInviteAcceptedWebhookEventDataAddressCountry = "BV"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBw WorkerInviteAcceptedWebhookEventDataAddressCountry = "BW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBy WorkerInviteAcceptedWebhookEventDataAddressCountry = "BY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryBz WorkerInviteAcceptedWebhookEventDataAddressCountry = "BZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCa WorkerInviteAcceptedWebhookEventDataAddressCountry = "CA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCc WorkerInviteAcceptedWebhookEventDataAddressCountry = "CC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCd WorkerInviteAcceptedWebhookEventDataAddressCountry = "CD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCf WorkerInviteAcceptedWebhookEventDataAddressCountry = "CF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCg WorkerInviteAcceptedWebhookEventDataAddressCountry = "CG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCh WorkerInviteAcceptedWebhookEventDataAddressCountry = "CH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCi WorkerInviteAcceptedWebhookEventDataAddressCountry = "CI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCk WorkerInviteAcceptedWebhookEventDataAddressCountry = "CK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCl WorkerInviteAcceptedWebhookEventDataAddressCountry = "CL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCm WorkerInviteAcceptedWebhookEventDataAddressCountry = "CM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCn WorkerInviteAcceptedWebhookEventDataAddressCountry = "CN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCo WorkerInviteAcceptedWebhookEventDataAddressCountry = "CO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCr WorkerInviteAcceptedWebhookEventDataAddressCountry = "CR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCu WorkerInviteAcceptedWebhookEventDataAddressCountry = "CU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCv WorkerInviteAcceptedWebhookEventDataAddressCountry = "CV"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCw WorkerInviteAcceptedWebhookEventDataAddressCountry = "CW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCx WorkerInviteAcceptedWebhookEventDataAddressCountry = "CX"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCy WorkerInviteAcceptedWebhookEventDataAddressCountry = "CY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryCz WorkerInviteAcceptedWebhookEventDataAddressCountry = "CZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryDe WorkerInviteAcceptedWebhookEventDataAddressCountry = "DE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryDj WorkerInviteAcceptedWebhookEventDataAddressCountry = "DJ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryDk WorkerInviteAcceptedWebhookEventDataAddressCountry = "DK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryDm WorkerInviteAcceptedWebhookEventDataAddressCountry = "DM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryDo WorkerInviteAcceptedWebhookEventDataAddressCountry = "DO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryDz WorkerInviteAcceptedWebhookEventDataAddressCountry = "DZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEc WorkerInviteAcceptedWebhookEventDataAddressCountry = "EC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEe WorkerInviteAcceptedWebhookEventDataAddressCountry = "EE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEg WorkerInviteAcceptedWebhookEventDataAddressCountry = "EG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEh WorkerInviteAcceptedWebhookEventDataAddressCountry = "EH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEr WorkerInviteAcceptedWebhookEventDataAddressCountry = "ER"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEs WorkerInviteAcceptedWebhookEventDataAddressCountry = "ES"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryEt WorkerInviteAcceptedWebhookEventDataAddressCountry = "ET"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryFi WorkerInviteAcceptedWebhookEventDataAddressCountry = "FI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryFj WorkerInviteAcceptedWebhookEventDataAddressCountry = "FJ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryFk WorkerInviteAcceptedWebhookEventDataAddressCountry = "FK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryFm WorkerInviteAcceptedWebhookEventDataAddressCountry = "FM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryFo WorkerInviteAcceptedWebhookEventDataAddressCountry = "FO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryFr WorkerInviteAcceptedWebhookEventDataAddressCountry = "FR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGa WorkerInviteAcceptedWebhookEventDataAddressCountry = "GA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGB WorkerInviteAcceptedWebhookEventDataAddressCountry = "GB"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGd WorkerInviteAcceptedWebhookEventDataAddressCountry = "GD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGe WorkerInviteAcceptedWebhookEventDataAddressCountry = "GE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGf WorkerInviteAcceptedWebhookEventDataAddressCountry = "GF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGg WorkerInviteAcceptedWebhookEventDataAddressCountry = "GG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGh WorkerInviteAcceptedWebhookEventDataAddressCountry = "GH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGi WorkerInviteAcceptedWebhookEventDataAddressCountry = "GI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGl WorkerInviteAcceptedWebhookEventDataAddressCountry = "GL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGm WorkerInviteAcceptedWebhookEventDataAddressCountry = "GM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGn WorkerInviteAcceptedWebhookEventDataAddressCountry = "GN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGp WorkerInviteAcceptedWebhookEventDataAddressCountry = "GP"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGq WorkerInviteAcceptedWebhookEventDataAddressCountry = "GQ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGr WorkerInviteAcceptedWebhookEventDataAddressCountry = "GR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGs WorkerInviteAcceptedWebhookEventDataAddressCountry = "GS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGt WorkerInviteAcceptedWebhookEventDataAddressCountry = "GT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGu WorkerInviteAcceptedWebhookEventDataAddressCountry = "GU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGw WorkerInviteAcceptedWebhookEventDataAddressCountry = "GW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryGy WorkerInviteAcceptedWebhookEventDataAddressCountry = "GY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryHk WorkerInviteAcceptedWebhookEventDataAddressCountry = "HK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryHm WorkerInviteAcceptedWebhookEventDataAddressCountry = "HM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryHn WorkerInviteAcceptedWebhookEventDataAddressCountry = "HN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryHr WorkerInviteAcceptedWebhookEventDataAddressCountry = "HR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryHt WorkerInviteAcceptedWebhookEventDataAddressCountry = "HT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryHu WorkerInviteAcceptedWebhookEventDataAddressCountry = "HU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryID WorkerInviteAcceptedWebhookEventDataAddressCountry = "ID"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIe WorkerInviteAcceptedWebhookEventDataAddressCountry = "IE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIl WorkerInviteAcceptedWebhookEventDataAddressCountry = "IL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIm WorkerInviteAcceptedWebhookEventDataAddressCountry = "IM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIn WorkerInviteAcceptedWebhookEventDataAddressCountry = "IN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIo WorkerInviteAcceptedWebhookEventDataAddressCountry = "IO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIq WorkerInviteAcceptedWebhookEventDataAddressCountry = "IQ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIr WorkerInviteAcceptedWebhookEventDataAddressCountry = "IR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIs WorkerInviteAcceptedWebhookEventDataAddressCountry = "IS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryIt WorkerInviteAcceptedWebhookEventDataAddressCountry = "IT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryJe WorkerInviteAcceptedWebhookEventDataAddressCountry = "JE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryJm WorkerInviteAcceptedWebhookEventDataAddressCountry = "JM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryJo WorkerInviteAcceptedWebhookEventDataAddressCountry = "JO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryJp WorkerInviteAcceptedWebhookEventDataAddressCountry = "JP"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKe WorkerInviteAcceptedWebhookEventDataAddressCountry = "KE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKg WorkerInviteAcceptedWebhookEventDataAddressCountry = "KG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKh WorkerInviteAcceptedWebhookEventDataAddressCountry = "KH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKi WorkerInviteAcceptedWebhookEventDataAddressCountry = "KI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKm WorkerInviteAcceptedWebhookEventDataAddressCountry = "KM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKn WorkerInviteAcceptedWebhookEventDataAddressCountry = "KN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKp WorkerInviteAcceptedWebhookEventDataAddressCountry = "KP"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKr WorkerInviteAcceptedWebhookEventDataAddressCountry = "KR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKw WorkerInviteAcceptedWebhookEventDataAddressCountry = "KW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKy WorkerInviteAcceptedWebhookEventDataAddressCountry = "KY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryKz WorkerInviteAcceptedWebhookEventDataAddressCountry = "KZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLa WorkerInviteAcceptedWebhookEventDataAddressCountry = "LA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLb WorkerInviteAcceptedWebhookEventDataAddressCountry = "LB"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLc WorkerInviteAcceptedWebhookEventDataAddressCountry = "LC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLi WorkerInviteAcceptedWebhookEventDataAddressCountry = "LI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLk WorkerInviteAcceptedWebhookEventDataAddressCountry = "LK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLr WorkerInviteAcceptedWebhookEventDataAddressCountry = "LR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLs WorkerInviteAcceptedWebhookEventDataAddressCountry = "LS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLt WorkerInviteAcceptedWebhookEventDataAddressCountry = "LT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLu WorkerInviteAcceptedWebhookEventDataAddressCountry = "LU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLv WorkerInviteAcceptedWebhookEventDataAddressCountry = "LV"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryLy WorkerInviteAcceptedWebhookEventDataAddressCountry = "LY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMa WorkerInviteAcceptedWebhookEventDataAddressCountry = "MA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMc WorkerInviteAcceptedWebhookEventDataAddressCountry = "MC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMd WorkerInviteAcceptedWebhookEventDataAddressCountry = "MD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMe WorkerInviteAcceptedWebhookEventDataAddressCountry = "ME"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMf WorkerInviteAcceptedWebhookEventDataAddressCountry = "MF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMg WorkerInviteAcceptedWebhookEventDataAddressCountry = "MG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMh WorkerInviteAcceptedWebhookEventDataAddressCountry = "MH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMk WorkerInviteAcceptedWebhookEventDataAddressCountry = "MK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMl WorkerInviteAcceptedWebhookEventDataAddressCountry = "ML"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMm WorkerInviteAcceptedWebhookEventDataAddressCountry = "MM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMn WorkerInviteAcceptedWebhookEventDataAddressCountry = "MN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMo WorkerInviteAcceptedWebhookEventDataAddressCountry = "MO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMp WorkerInviteAcceptedWebhookEventDataAddressCountry = "MP"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMq WorkerInviteAcceptedWebhookEventDataAddressCountry = "MQ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMr WorkerInviteAcceptedWebhookEventDataAddressCountry = "MR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMs WorkerInviteAcceptedWebhookEventDataAddressCountry = "MS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMt WorkerInviteAcceptedWebhookEventDataAddressCountry = "MT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMu WorkerInviteAcceptedWebhookEventDataAddressCountry = "MU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMv WorkerInviteAcceptedWebhookEventDataAddressCountry = "MV"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMw WorkerInviteAcceptedWebhookEventDataAddressCountry = "MW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMx WorkerInviteAcceptedWebhookEventDataAddressCountry = "MX"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMy WorkerInviteAcceptedWebhookEventDataAddressCountry = "MY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryMz WorkerInviteAcceptedWebhookEventDataAddressCountry = "MZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNa WorkerInviteAcceptedWebhookEventDataAddressCountry = "NA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNc WorkerInviteAcceptedWebhookEventDataAddressCountry = "NC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNe WorkerInviteAcceptedWebhookEventDataAddressCountry = "NE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNf WorkerInviteAcceptedWebhookEventDataAddressCountry = "NF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNg WorkerInviteAcceptedWebhookEventDataAddressCountry = "NG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNi WorkerInviteAcceptedWebhookEventDataAddressCountry = "NI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNl WorkerInviteAcceptedWebhookEventDataAddressCountry = "NL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNo WorkerInviteAcceptedWebhookEventDataAddressCountry = "NO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNp WorkerInviteAcceptedWebhookEventDataAddressCountry = "NP"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNr WorkerInviteAcceptedWebhookEventDataAddressCountry = "NR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNu WorkerInviteAcceptedWebhookEventDataAddressCountry = "NU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryNz WorkerInviteAcceptedWebhookEventDataAddressCountry = "NZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryOm WorkerInviteAcceptedWebhookEventDataAddressCountry = "OM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPa WorkerInviteAcceptedWebhookEventDataAddressCountry = "PA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPe WorkerInviteAcceptedWebhookEventDataAddressCountry = "PE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPf WorkerInviteAcceptedWebhookEventDataAddressCountry = "PF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPg WorkerInviteAcceptedWebhookEventDataAddressCountry = "PG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPh WorkerInviteAcceptedWebhookEventDataAddressCountry = "PH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPk WorkerInviteAcceptedWebhookEventDataAddressCountry = "PK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPl WorkerInviteAcceptedWebhookEventDataAddressCountry = "PL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPm WorkerInviteAcceptedWebhookEventDataAddressCountry = "PM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPn WorkerInviteAcceptedWebhookEventDataAddressCountry = "PN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPr WorkerInviteAcceptedWebhookEventDataAddressCountry = "PR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPs WorkerInviteAcceptedWebhookEventDataAddressCountry = "PS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPt WorkerInviteAcceptedWebhookEventDataAddressCountry = "PT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPw WorkerInviteAcceptedWebhookEventDataAddressCountry = "PW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryPy WorkerInviteAcceptedWebhookEventDataAddressCountry = "PY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryQa WorkerInviteAcceptedWebhookEventDataAddressCountry = "QA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryRe WorkerInviteAcceptedWebhookEventDataAddressCountry = "RE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryRo WorkerInviteAcceptedWebhookEventDataAddressCountry = "RO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryRs WorkerInviteAcceptedWebhookEventDataAddressCountry = "RS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryRu WorkerInviteAcceptedWebhookEventDataAddressCountry = "RU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryRw WorkerInviteAcceptedWebhookEventDataAddressCountry = "RW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySa WorkerInviteAcceptedWebhookEventDataAddressCountry = "SA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySb WorkerInviteAcceptedWebhookEventDataAddressCountry = "SB"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySc WorkerInviteAcceptedWebhookEventDataAddressCountry = "SC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySd WorkerInviteAcceptedWebhookEventDataAddressCountry = "SD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySe WorkerInviteAcceptedWebhookEventDataAddressCountry = "SE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySg WorkerInviteAcceptedWebhookEventDataAddressCountry = "SG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySh WorkerInviteAcceptedWebhookEventDataAddressCountry = "SH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySi WorkerInviteAcceptedWebhookEventDataAddressCountry = "SI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySj WorkerInviteAcceptedWebhookEventDataAddressCountry = "SJ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySk WorkerInviteAcceptedWebhookEventDataAddressCountry = "SK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySl WorkerInviteAcceptedWebhookEventDataAddressCountry = "SL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySm WorkerInviteAcceptedWebhookEventDataAddressCountry = "SM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySn WorkerInviteAcceptedWebhookEventDataAddressCountry = "SN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySo WorkerInviteAcceptedWebhookEventDataAddressCountry = "SO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySr WorkerInviteAcceptedWebhookEventDataAddressCountry = "SR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySS WorkerInviteAcceptedWebhookEventDataAddressCountry = "SS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySt WorkerInviteAcceptedWebhookEventDataAddressCountry = "ST"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySv WorkerInviteAcceptedWebhookEventDataAddressCountry = "SV"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySx WorkerInviteAcceptedWebhookEventDataAddressCountry = "SX"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySy WorkerInviteAcceptedWebhookEventDataAddressCountry = "SY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountrySz WorkerInviteAcceptedWebhookEventDataAddressCountry = "SZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTc WorkerInviteAcceptedWebhookEventDataAddressCountry = "TC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTd WorkerInviteAcceptedWebhookEventDataAddressCountry = "TD"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTf WorkerInviteAcceptedWebhookEventDataAddressCountry = "TF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTg WorkerInviteAcceptedWebhookEventDataAddressCountry = "TG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTh WorkerInviteAcceptedWebhookEventDataAddressCountry = "TH"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTj WorkerInviteAcceptedWebhookEventDataAddressCountry = "TJ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTk WorkerInviteAcceptedWebhookEventDataAddressCountry = "TK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTl WorkerInviteAcceptedWebhookEventDataAddressCountry = "TL"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTm WorkerInviteAcceptedWebhookEventDataAddressCountry = "TM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTn WorkerInviteAcceptedWebhookEventDataAddressCountry = "TN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTo WorkerInviteAcceptedWebhookEventDataAddressCountry = "TO"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTr WorkerInviteAcceptedWebhookEventDataAddressCountry = "TR"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTt WorkerInviteAcceptedWebhookEventDataAddressCountry = "TT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTv WorkerInviteAcceptedWebhookEventDataAddressCountry = "TV"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTw WorkerInviteAcceptedWebhookEventDataAddressCountry = "TW"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryTz WorkerInviteAcceptedWebhookEventDataAddressCountry = "TZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryUa WorkerInviteAcceptedWebhookEventDataAddressCountry = "UA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryUg WorkerInviteAcceptedWebhookEventDataAddressCountry = "UG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryUm WorkerInviteAcceptedWebhookEventDataAddressCountry = "UM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryUs WorkerInviteAcceptedWebhookEventDataAddressCountry = "US"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryUy WorkerInviteAcceptedWebhookEventDataAddressCountry = "UY"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryUz WorkerInviteAcceptedWebhookEventDataAddressCountry = "UZ"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVa WorkerInviteAcceptedWebhookEventDataAddressCountry = "VA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVc WorkerInviteAcceptedWebhookEventDataAddressCountry = "VC"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVe WorkerInviteAcceptedWebhookEventDataAddressCountry = "VE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVg WorkerInviteAcceptedWebhookEventDataAddressCountry = "VG"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVi WorkerInviteAcceptedWebhookEventDataAddressCountry = "VI"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVn WorkerInviteAcceptedWebhookEventDataAddressCountry = "VN"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryVu WorkerInviteAcceptedWebhookEventDataAddressCountry = "VU"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryWf WorkerInviteAcceptedWebhookEventDataAddressCountry = "WF"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryWs WorkerInviteAcceptedWebhookEventDataAddressCountry = "WS"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryXk WorkerInviteAcceptedWebhookEventDataAddressCountry = "XK"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryYe WorkerInviteAcceptedWebhookEventDataAddressCountry = "YE"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryYt WorkerInviteAcceptedWebhookEventDataAddressCountry = "YT"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryZa WorkerInviteAcceptedWebhookEventDataAddressCountry = "ZA"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryZm WorkerInviteAcceptedWebhookEventDataAddressCountry = "ZM"
+	WorkerInviteAcceptedWebhookEventDataAddressCountryZw WorkerInviteAcceptedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerInviteAcceptedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventDataAddressCountryAd, WorkerInviteAcceptedWebhookEventDataAddressCountryAe, WorkerInviteAcceptedWebhookEventDataAddressCountryAf, WorkerInviteAcceptedWebhookEventDataAddressCountryAg, WorkerInviteAcceptedWebhookEventDataAddressCountryAI, WorkerInviteAcceptedWebhookEventDataAddressCountryAl, WorkerInviteAcceptedWebhookEventDataAddressCountryAm, WorkerInviteAcceptedWebhookEventDataAddressCountryAo, WorkerInviteAcceptedWebhookEventDataAddressCountryAq, WorkerInviteAcceptedWebhookEventDataAddressCountryAr, WorkerInviteAcceptedWebhookEventDataAddressCountryAs, WorkerInviteAcceptedWebhookEventDataAddressCountryAt, WorkerInviteAcceptedWebhookEventDataAddressCountryAu, WorkerInviteAcceptedWebhookEventDataAddressCountryAw, WorkerInviteAcceptedWebhookEventDataAddressCountryAx, WorkerInviteAcceptedWebhookEventDataAddressCountryAz, WorkerInviteAcceptedWebhookEventDataAddressCountryBa, WorkerInviteAcceptedWebhookEventDataAddressCountryBb, WorkerInviteAcceptedWebhookEventDataAddressCountryBd, WorkerInviteAcceptedWebhookEventDataAddressCountryBe, WorkerInviteAcceptedWebhookEventDataAddressCountryBf, WorkerInviteAcceptedWebhookEventDataAddressCountryBg, WorkerInviteAcceptedWebhookEventDataAddressCountryBh, WorkerInviteAcceptedWebhookEventDataAddressCountryBi, WorkerInviteAcceptedWebhookEventDataAddressCountryBj, WorkerInviteAcceptedWebhookEventDataAddressCountryBl, WorkerInviteAcceptedWebhookEventDataAddressCountryBm, WorkerInviteAcceptedWebhookEventDataAddressCountryBn, WorkerInviteAcceptedWebhookEventDataAddressCountryBo, WorkerInviteAcceptedWebhookEventDataAddressCountryBq, WorkerInviteAcceptedWebhookEventDataAddressCountryBr, WorkerInviteAcceptedWebhookEventDataAddressCountryBs, WorkerInviteAcceptedWebhookEventDataAddressCountryBt, WorkerInviteAcceptedWebhookEventDataAddressCountryBv, WorkerInviteAcceptedWebhookEventDataAddressCountryBw, WorkerInviteAcceptedWebhookEventDataAddressCountryBy, WorkerInviteAcceptedWebhookEventDataAddressCountryBz, WorkerInviteAcceptedWebhookEventDataAddressCountryCa, WorkerInviteAcceptedWebhookEventDataAddressCountryCc, WorkerInviteAcceptedWebhookEventDataAddressCountryCd, WorkerInviteAcceptedWebhookEventDataAddressCountryCf, WorkerInviteAcceptedWebhookEventDataAddressCountryCg, WorkerInviteAcceptedWebhookEventDataAddressCountryCh, WorkerInviteAcceptedWebhookEventDataAddressCountryCi, WorkerInviteAcceptedWebhookEventDataAddressCountryCk, WorkerInviteAcceptedWebhookEventDataAddressCountryCl, WorkerInviteAcceptedWebhookEventDataAddressCountryCm, WorkerInviteAcceptedWebhookEventDataAddressCountryCn, WorkerInviteAcceptedWebhookEventDataAddressCountryCo, WorkerInviteAcceptedWebhookEventDataAddressCountryCr, WorkerInviteAcceptedWebhookEventDataAddressCountryCu, WorkerInviteAcceptedWebhookEventDataAddressCountryCv, WorkerInviteAcceptedWebhookEventDataAddressCountryCw, WorkerInviteAcceptedWebhookEventDataAddressCountryCx, WorkerInviteAcceptedWebhookEventDataAddressCountryCy, WorkerInviteAcceptedWebhookEventDataAddressCountryCz, WorkerInviteAcceptedWebhookEventDataAddressCountryDe, WorkerInviteAcceptedWebhookEventDataAddressCountryDj, WorkerInviteAcceptedWebhookEventDataAddressCountryDk, WorkerInviteAcceptedWebhookEventDataAddressCountryDm, WorkerInviteAcceptedWebhookEventDataAddressCountryDo, WorkerInviteAcceptedWebhookEventDataAddressCountryDz, WorkerInviteAcceptedWebhookEventDataAddressCountryEc, WorkerInviteAcceptedWebhookEventDataAddressCountryEe, WorkerInviteAcceptedWebhookEventDataAddressCountryEg, WorkerInviteAcceptedWebhookEventDataAddressCountryEh, WorkerInviteAcceptedWebhookEventDataAddressCountryEr, WorkerInviteAcceptedWebhookEventDataAddressCountryEs, WorkerInviteAcceptedWebhookEventDataAddressCountryEt, WorkerInviteAcceptedWebhookEventDataAddressCountryFi, WorkerInviteAcceptedWebhookEventDataAddressCountryFj, WorkerInviteAcceptedWebhookEventDataAddressCountryFk, WorkerInviteAcceptedWebhookEventDataAddressCountryFm, WorkerInviteAcceptedWebhookEventDataAddressCountryFo, WorkerInviteAcceptedWebhookEventDataAddressCountryFr, WorkerInviteAcceptedWebhookEventDataAddressCountryGa, WorkerInviteAcceptedWebhookEventDataAddressCountryGB, WorkerInviteAcceptedWebhookEventDataAddressCountryGd, WorkerInviteAcceptedWebhookEventDataAddressCountryGe, WorkerInviteAcceptedWebhookEventDataAddressCountryGf, WorkerInviteAcceptedWebhookEventDataAddressCountryGg, WorkerInviteAcceptedWebhookEventDataAddressCountryGh, WorkerInviteAcceptedWebhookEventDataAddressCountryGi, WorkerInviteAcceptedWebhookEventDataAddressCountryGl, WorkerInviteAcceptedWebhookEventDataAddressCountryGm, WorkerInviteAcceptedWebhookEventDataAddressCountryGn, WorkerInviteAcceptedWebhookEventDataAddressCountryGp, WorkerInviteAcceptedWebhookEventDataAddressCountryGq, WorkerInviteAcceptedWebhookEventDataAddressCountryGr, WorkerInviteAcceptedWebhookEventDataAddressCountryGs, WorkerInviteAcceptedWebhookEventDataAddressCountryGt, WorkerInviteAcceptedWebhookEventDataAddressCountryGu, WorkerInviteAcceptedWebhookEventDataAddressCountryGw, WorkerInviteAcceptedWebhookEventDataAddressCountryGy, WorkerInviteAcceptedWebhookEventDataAddressCountryHk, WorkerInviteAcceptedWebhookEventDataAddressCountryHm, WorkerInviteAcceptedWebhookEventDataAddressCountryHn, WorkerInviteAcceptedWebhookEventDataAddressCountryHr, WorkerInviteAcceptedWebhookEventDataAddressCountryHt, WorkerInviteAcceptedWebhookEventDataAddressCountryHu, WorkerInviteAcceptedWebhookEventDataAddressCountryID, WorkerInviteAcceptedWebhookEventDataAddressCountryIe, WorkerInviteAcceptedWebhookEventDataAddressCountryIl, WorkerInviteAcceptedWebhookEventDataAddressCountryIm, WorkerInviteAcceptedWebhookEventDataAddressCountryIn, WorkerInviteAcceptedWebhookEventDataAddressCountryIo, WorkerInviteAcceptedWebhookEventDataAddressCountryIq, WorkerInviteAcceptedWebhookEventDataAddressCountryIr, WorkerInviteAcceptedWebhookEventDataAddressCountryIs, WorkerInviteAcceptedWebhookEventDataAddressCountryIt, WorkerInviteAcceptedWebhookEventDataAddressCountryJe, WorkerInviteAcceptedWebhookEventDataAddressCountryJm, WorkerInviteAcceptedWebhookEventDataAddressCountryJo, WorkerInviteAcceptedWebhookEventDataAddressCountryJp, WorkerInviteAcceptedWebhookEventDataAddressCountryKe, WorkerInviteAcceptedWebhookEventDataAddressCountryKg, WorkerInviteAcceptedWebhookEventDataAddressCountryKh, WorkerInviteAcceptedWebhookEventDataAddressCountryKi, WorkerInviteAcceptedWebhookEventDataAddressCountryKm, WorkerInviteAcceptedWebhookEventDataAddressCountryKn, WorkerInviteAcceptedWebhookEventDataAddressCountryKp, WorkerInviteAcceptedWebhookEventDataAddressCountryKr, WorkerInviteAcceptedWebhookEventDataAddressCountryKw, WorkerInviteAcceptedWebhookEventDataAddressCountryKy, WorkerInviteAcceptedWebhookEventDataAddressCountryKz, WorkerInviteAcceptedWebhookEventDataAddressCountryLa, WorkerInviteAcceptedWebhookEventDataAddressCountryLb, WorkerInviteAcceptedWebhookEventDataAddressCountryLc, WorkerInviteAcceptedWebhookEventDataAddressCountryLi, WorkerInviteAcceptedWebhookEventDataAddressCountryLk, WorkerInviteAcceptedWebhookEventDataAddressCountryLr, WorkerInviteAcceptedWebhookEventDataAddressCountryLs, WorkerInviteAcceptedWebhookEventDataAddressCountryLt, WorkerInviteAcceptedWebhookEventDataAddressCountryLu, WorkerInviteAcceptedWebhookEventDataAddressCountryLv, WorkerInviteAcceptedWebhookEventDataAddressCountryLy, WorkerInviteAcceptedWebhookEventDataAddressCountryMa, WorkerInviteAcceptedWebhookEventDataAddressCountryMc, WorkerInviteAcceptedWebhookEventDataAddressCountryMd, WorkerInviteAcceptedWebhookEventDataAddressCountryMe, WorkerInviteAcceptedWebhookEventDataAddressCountryMf, WorkerInviteAcceptedWebhookEventDataAddressCountryMg, WorkerInviteAcceptedWebhookEventDataAddressCountryMh, WorkerInviteAcceptedWebhookEventDataAddressCountryMk, WorkerInviteAcceptedWebhookEventDataAddressCountryMl, WorkerInviteAcceptedWebhookEventDataAddressCountryMm, WorkerInviteAcceptedWebhookEventDataAddressCountryMn, WorkerInviteAcceptedWebhookEventDataAddressCountryMo, WorkerInviteAcceptedWebhookEventDataAddressCountryMp, WorkerInviteAcceptedWebhookEventDataAddressCountryMq, WorkerInviteAcceptedWebhookEventDataAddressCountryMr, WorkerInviteAcceptedWebhookEventDataAddressCountryMs, WorkerInviteAcceptedWebhookEventDataAddressCountryMt, WorkerInviteAcceptedWebhookEventDataAddressCountryMu, WorkerInviteAcceptedWebhookEventDataAddressCountryMv, WorkerInviteAcceptedWebhookEventDataAddressCountryMw, WorkerInviteAcceptedWebhookEventDataAddressCountryMx, WorkerInviteAcceptedWebhookEventDataAddressCountryMy, WorkerInviteAcceptedWebhookEventDataAddressCountryMz, WorkerInviteAcceptedWebhookEventDataAddressCountryNa, WorkerInviteAcceptedWebhookEventDataAddressCountryNc, WorkerInviteAcceptedWebhookEventDataAddressCountryNe, WorkerInviteAcceptedWebhookEventDataAddressCountryNf, WorkerInviteAcceptedWebhookEventDataAddressCountryNg, WorkerInviteAcceptedWebhookEventDataAddressCountryNi, WorkerInviteAcceptedWebhookEventDataAddressCountryNl, WorkerInviteAcceptedWebhookEventDataAddressCountryNo, WorkerInviteAcceptedWebhookEventDataAddressCountryNp, WorkerInviteAcceptedWebhookEventDataAddressCountryNr, WorkerInviteAcceptedWebhookEventDataAddressCountryNu, WorkerInviteAcceptedWebhookEventDataAddressCountryNz, WorkerInviteAcceptedWebhookEventDataAddressCountryOm, WorkerInviteAcceptedWebhookEventDataAddressCountryPa, WorkerInviteAcceptedWebhookEventDataAddressCountryPe, WorkerInviteAcceptedWebhookEventDataAddressCountryPf, WorkerInviteAcceptedWebhookEventDataAddressCountryPg, WorkerInviteAcceptedWebhookEventDataAddressCountryPh, WorkerInviteAcceptedWebhookEventDataAddressCountryPk, WorkerInviteAcceptedWebhookEventDataAddressCountryPl, WorkerInviteAcceptedWebhookEventDataAddressCountryPm, WorkerInviteAcceptedWebhookEventDataAddressCountryPn, WorkerInviteAcceptedWebhookEventDataAddressCountryPr, WorkerInviteAcceptedWebhookEventDataAddressCountryPs, WorkerInviteAcceptedWebhookEventDataAddressCountryPt, WorkerInviteAcceptedWebhookEventDataAddressCountryPw, WorkerInviteAcceptedWebhookEventDataAddressCountryPy, WorkerInviteAcceptedWebhookEventDataAddressCountryQa, WorkerInviteAcceptedWebhookEventDataAddressCountryRe, WorkerInviteAcceptedWebhookEventDataAddressCountryRo, WorkerInviteAcceptedWebhookEventDataAddressCountryRs, WorkerInviteAcceptedWebhookEventDataAddressCountryRu, WorkerInviteAcceptedWebhookEventDataAddressCountryRw, WorkerInviteAcceptedWebhookEventDataAddressCountrySa, WorkerInviteAcceptedWebhookEventDataAddressCountrySb, WorkerInviteAcceptedWebhookEventDataAddressCountrySc, WorkerInviteAcceptedWebhookEventDataAddressCountrySd, WorkerInviteAcceptedWebhookEventDataAddressCountrySe, WorkerInviteAcceptedWebhookEventDataAddressCountrySg, WorkerInviteAcceptedWebhookEventDataAddressCountrySh, WorkerInviteAcceptedWebhookEventDataAddressCountrySi, WorkerInviteAcceptedWebhookEventDataAddressCountrySj, WorkerInviteAcceptedWebhookEventDataAddressCountrySk, WorkerInviteAcceptedWebhookEventDataAddressCountrySl, WorkerInviteAcceptedWebhookEventDataAddressCountrySm, WorkerInviteAcceptedWebhookEventDataAddressCountrySn, WorkerInviteAcceptedWebhookEventDataAddressCountrySo, WorkerInviteAcceptedWebhookEventDataAddressCountrySr, WorkerInviteAcceptedWebhookEventDataAddressCountrySS, WorkerInviteAcceptedWebhookEventDataAddressCountrySt, WorkerInviteAcceptedWebhookEventDataAddressCountrySv, WorkerInviteAcceptedWebhookEventDataAddressCountrySx, WorkerInviteAcceptedWebhookEventDataAddressCountrySy, WorkerInviteAcceptedWebhookEventDataAddressCountrySz, WorkerInviteAcceptedWebhookEventDataAddressCountryTc, WorkerInviteAcceptedWebhookEventDataAddressCountryTd, WorkerInviteAcceptedWebhookEventDataAddressCountryTf, WorkerInviteAcceptedWebhookEventDataAddressCountryTg, WorkerInviteAcceptedWebhookEventDataAddressCountryTh, WorkerInviteAcceptedWebhookEventDataAddressCountryTj, WorkerInviteAcceptedWebhookEventDataAddressCountryTk, WorkerInviteAcceptedWebhookEventDataAddressCountryTl, WorkerInviteAcceptedWebhookEventDataAddressCountryTm, WorkerInviteAcceptedWebhookEventDataAddressCountryTn, WorkerInviteAcceptedWebhookEventDataAddressCountryTo, WorkerInviteAcceptedWebhookEventDataAddressCountryTr, WorkerInviteAcceptedWebhookEventDataAddressCountryTt, WorkerInviteAcceptedWebhookEventDataAddressCountryTv, WorkerInviteAcceptedWebhookEventDataAddressCountryTw, WorkerInviteAcceptedWebhookEventDataAddressCountryTz, WorkerInviteAcceptedWebhookEventDataAddressCountryUa, WorkerInviteAcceptedWebhookEventDataAddressCountryUg, WorkerInviteAcceptedWebhookEventDataAddressCountryUm, WorkerInviteAcceptedWebhookEventDataAddressCountryUs, WorkerInviteAcceptedWebhookEventDataAddressCountryUy, WorkerInviteAcceptedWebhookEventDataAddressCountryUz, WorkerInviteAcceptedWebhookEventDataAddressCountryVa, WorkerInviteAcceptedWebhookEventDataAddressCountryVc, WorkerInviteAcceptedWebhookEventDataAddressCountryVe, WorkerInviteAcceptedWebhookEventDataAddressCountryVg, WorkerInviteAcceptedWebhookEventDataAddressCountryVi, WorkerInviteAcceptedWebhookEventDataAddressCountryVn, WorkerInviteAcceptedWebhookEventDataAddressCountryVu, WorkerInviteAcceptedWebhookEventDataAddressCountryWf, WorkerInviteAcceptedWebhookEventDataAddressCountryWs, WorkerInviteAcceptedWebhookEventDataAddressCountryXk, WorkerInviteAcceptedWebhookEventDataAddressCountryYe, WorkerInviteAcceptedWebhookEventDataAddressCountryYt, WorkerInviteAcceptedWebhookEventDataAddressCountryZa, WorkerInviteAcceptedWebhookEventDataAddressCountryZm, WorkerInviteAcceptedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteAcceptedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                             `json:"id" api:"required"`
@@ -4535,6 +5674,46 @@ func (r *WorkerInviteAcceptedWebhookEventDataDepartment) UnmarshalJSON(data []by
 
 func (r workerInviteAcceptedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                                   `json:"id" api:"required"`
+	Name string                                                   `json:"name" api:"required"`
+	Type WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerInviteAcceptedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerInviteAcceptedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerInviteAcceptedWebhookEventDataPrimaryWorkplace]
+type workerInviteAcceptedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteAcceptedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteAcceptedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerInviteAcceptedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerInviteAcceptedWebhookEventDataLevel struct {
@@ -4586,9 +5765,11 @@ type WorkerInviteSentWebhookEvent struct {
 	// The event type.
 	Type WorkerInviteSentWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                           `json:"timestamp" api:"required"`
-	Data      WorkerInviteSentWebhookEventData `json:"data" api:"required"`
-	JSON      workerInviteSentWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerInviteSentWebhookEventData `json:"data" api:"required"`
+	JSON workerInviteSentWebhookEventJSON `json:"-"`
 }
 
 // workerInviteSentWebhookEventJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEvent]
@@ -4639,6 +5820,16 @@ type WorkerInviteSentWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerInviteSentWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerInviteSentWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerInviteSentWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -4646,6 +5837,15 @@ type WorkerInviteSentWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerInviteSentWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerInviteSentWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -4659,27 +5859,36 @@ type WorkerInviteSentWebhookEventData struct {
 
 // workerInviteSentWebhookEventDataJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventData]
 type workerInviteSentWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerInviteSentWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -4724,6 +5933,329 @@ func (r WorkerInviteSentWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerInviteSentWebhookEventDataBiologicalSex string
+
+const (
+	WorkerInviteSentWebhookEventDataBiologicalSexMale   WorkerInviteSentWebhookEventDataBiologicalSex = "male"
+	WorkerInviteSentWebhookEventDataBiologicalSexFemale WorkerInviteSentWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerInviteSentWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventDataBiologicalSexMale, WorkerInviteSentWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventDataMaritalStatus string
+
+const (
+	WorkerInviteSentWebhookEventDataMaritalStatusMarried    WorkerInviteSentWebhookEventDataMaritalStatus = "married"
+	WorkerInviteSentWebhookEventDataMaritalStatusNotMarried WorkerInviteSentWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerInviteSentWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventDataMaritalStatusMarried, WorkerInviteSentWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerInviteSentWebhookEventDataAddress struct {
+	Line1      string                                         `json:"line1" api:"required"`
+	Line2      string                                         `json:"line2" api:"required,nullable"`
+	City       string                                         `json:"city" api:"required"`
+	State      string                                         `json:"state" api:"required,nullable"`
+	PostalCode string                                         `json:"postalCode" api:"required,nullable"`
+	Country    WorkerInviteSentWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerInviteSentWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerInviteSentWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventDataAddress]
+type workerInviteSentWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteSentWebhookEventDataAddressCountry string
+
+const (
+	WorkerInviteSentWebhookEventDataAddressCountryAd WorkerInviteSentWebhookEventDataAddressCountry = "AD"
+	WorkerInviteSentWebhookEventDataAddressCountryAe WorkerInviteSentWebhookEventDataAddressCountry = "AE"
+	WorkerInviteSentWebhookEventDataAddressCountryAf WorkerInviteSentWebhookEventDataAddressCountry = "AF"
+	WorkerInviteSentWebhookEventDataAddressCountryAg WorkerInviteSentWebhookEventDataAddressCountry = "AG"
+	WorkerInviteSentWebhookEventDataAddressCountryAI WorkerInviteSentWebhookEventDataAddressCountry = "AI"
+	WorkerInviteSentWebhookEventDataAddressCountryAl WorkerInviteSentWebhookEventDataAddressCountry = "AL"
+	WorkerInviteSentWebhookEventDataAddressCountryAm WorkerInviteSentWebhookEventDataAddressCountry = "AM"
+	WorkerInviteSentWebhookEventDataAddressCountryAo WorkerInviteSentWebhookEventDataAddressCountry = "AO"
+	WorkerInviteSentWebhookEventDataAddressCountryAq WorkerInviteSentWebhookEventDataAddressCountry = "AQ"
+	WorkerInviteSentWebhookEventDataAddressCountryAr WorkerInviteSentWebhookEventDataAddressCountry = "AR"
+	WorkerInviteSentWebhookEventDataAddressCountryAs WorkerInviteSentWebhookEventDataAddressCountry = "AS"
+	WorkerInviteSentWebhookEventDataAddressCountryAt WorkerInviteSentWebhookEventDataAddressCountry = "AT"
+	WorkerInviteSentWebhookEventDataAddressCountryAu WorkerInviteSentWebhookEventDataAddressCountry = "AU"
+	WorkerInviteSentWebhookEventDataAddressCountryAw WorkerInviteSentWebhookEventDataAddressCountry = "AW"
+	WorkerInviteSentWebhookEventDataAddressCountryAx WorkerInviteSentWebhookEventDataAddressCountry = "AX"
+	WorkerInviteSentWebhookEventDataAddressCountryAz WorkerInviteSentWebhookEventDataAddressCountry = "AZ"
+	WorkerInviteSentWebhookEventDataAddressCountryBa WorkerInviteSentWebhookEventDataAddressCountry = "BA"
+	WorkerInviteSentWebhookEventDataAddressCountryBb WorkerInviteSentWebhookEventDataAddressCountry = "BB"
+	WorkerInviteSentWebhookEventDataAddressCountryBd WorkerInviteSentWebhookEventDataAddressCountry = "BD"
+	WorkerInviteSentWebhookEventDataAddressCountryBe WorkerInviteSentWebhookEventDataAddressCountry = "BE"
+	WorkerInviteSentWebhookEventDataAddressCountryBf WorkerInviteSentWebhookEventDataAddressCountry = "BF"
+	WorkerInviteSentWebhookEventDataAddressCountryBg WorkerInviteSentWebhookEventDataAddressCountry = "BG"
+	WorkerInviteSentWebhookEventDataAddressCountryBh WorkerInviteSentWebhookEventDataAddressCountry = "BH"
+	WorkerInviteSentWebhookEventDataAddressCountryBi WorkerInviteSentWebhookEventDataAddressCountry = "BI"
+	WorkerInviteSentWebhookEventDataAddressCountryBj WorkerInviteSentWebhookEventDataAddressCountry = "BJ"
+	WorkerInviteSentWebhookEventDataAddressCountryBl WorkerInviteSentWebhookEventDataAddressCountry = "BL"
+	WorkerInviteSentWebhookEventDataAddressCountryBm WorkerInviteSentWebhookEventDataAddressCountry = "BM"
+	WorkerInviteSentWebhookEventDataAddressCountryBn WorkerInviteSentWebhookEventDataAddressCountry = "BN"
+	WorkerInviteSentWebhookEventDataAddressCountryBo WorkerInviteSentWebhookEventDataAddressCountry = "BO"
+	WorkerInviteSentWebhookEventDataAddressCountryBq WorkerInviteSentWebhookEventDataAddressCountry = "BQ"
+	WorkerInviteSentWebhookEventDataAddressCountryBr WorkerInviteSentWebhookEventDataAddressCountry = "BR"
+	WorkerInviteSentWebhookEventDataAddressCountryBs WorkerInviteSentWebhookEventDataAddressCountry = "BS"
+	WorkerInviteSentWebhookEventDataAddressCountryBt WorkerInviteSentWebhookEventDataAddressCountry = "BT"
+	WorkerInviteSentWebhookEventDataAddressCountryBv WorkerInviteSentWebhookEventDataAddressCountry = "BV"
+	WorkerInviteSentWebhookEventDataAddressCountryBw WorkerInviteSentWebhookEventDataAddressCountry = "BW"
+	WorkerInviteSentWebhookEventDataAddressCountryBy WorkerInviteSentWebhookEventDataAddressCountry = "BY"
+	WorkerInviteSentWebhookEventDataAddressCountryBz WorkerInviteSentWebhookEventDataAddressCountry = "BZ"
+	WorkerInviteSentWebhookEventDataAddressCountryCa WorkerInviteSentWebhookEventDataAddressCountry = "CA"
+	WorkerInviteSentWebhookEventDataAddressCountryCc WorkerInviteSentWebhookEventDataAddressCountry = "CC"
+	WorkerInviteSentWebhookEventDataAddressCountryCd WorkerInviteSentWebhookEventDataAddressCountry = "CD"
+	WorkerInviteSentWebhookEventDataAddressCountryCf WorkerInviteSentWebhookEventDataAddressCountry = "CF"
+	WorkerInviteSentWebhookEventDataAddressCountryCg WorkerInviteSentWebhookEventDataAddressCountry = "CG"
+	WorkerInviteSentWebhookEventDataAddressCountryCh WorkerInviteSentWebhookEventDataAddressCountry = "CH"
+	WorkerInviteSentWebhookEventDataAddressCountryCi WorkerInviteSentWebhookEventDataAddressCountry = "CI"
+	WorkerInviteSentWebhookEventDataAddressCountryCk WorkerInviteSentWebhookEventDataAddressCountry = "CK"
+	WorkerInviteSentWebhookEventDataAddressCountryCl WorkerInviteSentWebhookEventDataAddressCountry = "CL"
+	WorkerInviteSentWebhookEventDataAddressCountryCm WorkerInviteSentWebhookEventDataAddressCountry = "CM"
+	WorkerInviteSentWebhookEventDataAddressCountryCn WorkerInviteSentWebhookEventDataAddressCountry = "CN"
+	WorkerInviteSentWebhookEventDataAddressCountryCo WorkerInviteSentWebhookEventDataAddressCountry = "CO"
+	WorkerInviteSentWebhookEventDataAddressCountryCr WorkerInviteSentWebhookEventDataAddressCountry = "CR"
+	WorkerInviteSentWebhookEventDataAddressCountryCu WorkerInviteSentWebhookEventDataAddressCountry = "CU"
+	WorkerInviteSentWebhookEventDataAddressCountryCv WorkerInviteSentWebhookEventDataAddressCountry = "CV"
+	WorkerInviteSentWebhookEventDataAddressCountryCw WorkerInviteSentWebhookEventDataAddressCountry = "CW"
+	WorkerInviteSentWebhookEventDataAddressCountryCx WorkerInviteSentWebhookEventDataAddressCountry = "CX"
+	WorkerInviteSentWebhookEventDataAddressCountryCy WorkerInviteSentWebhookEventDataAddressCountry = "CY"
+	WorkerInviteSentWebhookEventDataAddressCountryCz WorkerInviteSentWebhookEventDataAddressCountry = "CZ"
+	WorkerInviteSentWebhookEventDataAddressCountryDe WorkerInviteSentWebhookEventDataAddressCountry = "DE"
+	WorkerInviteSentWebhookEventDataAddressCountryDj WorkerInviteSentWebhookEventDataAddressCountry = "DJ"
+	WorkerInviteSentWebhookEventDataAddressCountryDk WorkerInviteSentWebhookEventDataAddressCountry = "DK"
+	WorkerInviteSentWebhookEventDataAddressCountryDm WorkerInviteSentWebhookEventDataAddressCountry = "DM"
+	WorkerInviteSentWebhookEventDataAddressCountryDo WorkerInviteSentWebhookEventDataAddressCountry = "DO"
+	WorkerInviteSentWebhookEventDataAddressCountryDz WorkerInviteSentWebhookEventDataAddressCountry = "DZ"
+	WorkerInviteSentWebhookEventDataAddressCountryEc WorkerInviteSentWebhookEventDataAddressCountry = "EC"
+	WorkerInviteSentWebhookEventDataAddressCountryEe WorkerInviteSentWebhookEventDataAddressCountry = "EE"
+	WorkerInviteSentWebhookEventDataAddressCountryEg WorkerInviteSentWebhookEventDataAddressCountry = "EG"
+	WorkerInviteSentWebhookEventDataAddressCountryEh WorkerInviteSentWebhookEventDataAddressCountry = "EH"
+	WorkerInviteSentWebhookEventDataAddressCountryEr WorkerInviteSentWebhookEventDataAddressCountry = "ER"
+	WorkerInviteSentWebhookEventDataAddressCountryEs WorkerInviteSentWebhookEventDataAddressCountry = "ES"
+	WorkerInviteSentWebhookEventDataAddressCountryEt WorkerInviteSentWebhookEventDataAddressCountry = "ET"
+	WorkerInviteSentWebhookEventDataAddressCountryFi WorkerInviteSentWebhookEventDataAddressCountry = "FI"
+	WorkerInviteSentWebhookEventDataAddressCountryFj WorkerInviteSentWebhookEventDataAddressCountry = "FJ"
+	WorkerInviteSentWebhookEventDataAddressCountryFk WorkerInviteSentWebhookEventDataAddressCountry = "FK"
+	WorkerInviteSentWebhookEventDataAddressCountryFm WorkerInviteSentWebhookEventDataAddressCountry = "FM"
+	WorkerInviteSentWebhookEventDataAddressCountryFo WorkerInviteSentWebhookEventDataAddressCountry = "FO"
+	WorkerInviteSentWebhookEventDataAddressCountryFr WorkerInviteSentWebhookEventDataAddressCountry = "FR"
+	WorkerInviteSentWebhookEventDataAddressCountryGa WorkerInviteSentWebhookEventDataAddressCountry = "GA"
+	WorkerInviteSentWebhookEventDataAddressCountryGB WorkerInviteSentWebhookEventDataAddressCountry = "GB"
+	WorkerInviteSentWebhookEventDataAddressCountryGd WorkerInviteSentWebhookEventDataAddressCountry = "GD"
+	WorkerInviteSentWebhookEventDataAddressCountryGe WorkerInviteSentWebhookEventDataAddressCountry = "GE"
+	WorkerInviteSentWebhookEventDataAddressCountryGf WorkerInviteSentWebhookEventDataAddressCountry = "GF"
+	WorkerInviteSentWebhookEventDataAddressCountryGg WorkerInviteSentWebhookEventDataAddressCountry = "GG"
+	WorkerInviteSentWebhookEventDataAddressCountryGh WorkerInviteSentWebhookEventDataAddressCountry = "GH"
+	WorkerInviteSentWebhookEventDataAddressCountryGi WorkerInviteSentWebhookEventDataAddressCountry = "GI"
+	WorkerInviteSentWebhookEventDataAddressCountryGl WorkerInviteSentWebhookEventDataAddressCountry = "GL"
+	WorkerInviteSentWebhookEventDataAddressCountryGm WorkerInviteSentWebhookEventDataAddressCountry = "GM"
+	WorkerInviteSentWebhookEventDataAddressCountryGn WorkerInviteSentWebhookEventDataAddressCountry = "GN"
+	WorkerInviteSentWebhookEventDataAddressCountryGp WorkerInviteSentWebhookEventDataAddressCountry = "GP"
+	WorkerInviteSentWebhookEventDataAddressCountryGq WorkerInviteSentWebhookEventDataAddressCountry = "GQ"
+	WorkerInviteSentWebhookEventDataAddressCountryGr WorkerInviteSentWebhookEventDataAddressCountry = "GR"
+	WorkerInviteSentWebhookEventDataAddressCountryGs WorkerInviteSentWebhookEventDataAddressCountry = "GS"
+	WorkerInviteSentWebhookEventDataAddressCountryGt WorkerInviteSentWebhookEventDataAddressCountry = "GT"
+	WorkerInviteSentWebhookEventDataAddressCountryGu WorkerInviteSentWebhookEventDataAddressCountry = "GU"
+	WorkerInviteSentWebhookEventDataAddressCountryGw WorkerInviteSentWebhookEventDataAddressCountry = "GW"
+	WorkerInviteSentWebhookEventDataAddressCountryGy WorkerInviteSentWebhookEventDataAddressCountry = "GY"
+	WorkerInviteSentWebhookEventDataAddressCountryHk WorkerInviteSentWebhookEventDataAddressCountry = "HK"
+	WorkerInviteSentWebhookEventDataAddressCountryHm WorkerInviteSentWebhookEventDataAddressCountry = "HM"
+	WorkerInviteSentWebhookEventDataAddressCountryHn WorkerInviteSentWebhookEventDataAddressCountry = "HN"
+	WorkerInviteSentWebhookEventDataAddressCountryHr WorkerInviteSentWebhookEventDataAddressCountry = "HR"
+	WorkerInviteSentWebhookEventDataAddressCountryHt WorkerInviteSentWebhookEventDataAddressCountry = "HT"
+	WorkerInviteSentWebhookEventDataAddressCountryHu WorkerInviteSentWebhookEventDataAddressCountry = "HU"
+	WorkerInviteSentWebhookEventDataAddressCountryID WorkerInviteSentWebhookEventDataAddressCountry = "ID"
+	WorkerInviteSentWebhookEventDataAddressCountryIe WorkerInviteSentWebhookEventDataAddressCountry = "IE"
+	WorkerInviteSentWebhookEventDataAddressCountryIl WorkerInviteSentWebhookEventDataAddressCountry = "IL"
+	WorkerInviteSentWebhookEventDataAddressCountryIm WorkerInviteSentWebhookEventDataAddressCountry = "IM"
+	WorkerInviteSentWebhookEventDataAddressCountryIn WorkerInviteSentWebhookEventDataAddressCountry = "IN"
+	WorkerInviteSentWebhookEventDataAddressCountryIo WorkerInviteSentWebhookEventDataAddressCountry = "IO"
+	WorkerInviteSentWebhookEventDataAddressCountryIq WorkerInviteSentWebhookEventDataAddressCountry = "IQ"
+	WorkerInviteSentWebhookEventDataAddressCountryIr WorkerInviteSentWebhookEventDataAddressCountry = "IR"
+	WorkerInviteSentWebhookEventDataAddressCountryIs WorkerInviteSentWebhookEventDataAddressCountry = "IS"
+	WorkerInviteSentWebhookEventDataAddressCountryIt WorkerInviteSentWebhookEventDataAddressCountry = "IT"
+	WorkerInviteSentWebhookEventDataAddressCountryJe WorkerInviteSentWebhookEventDataAddressCountry = "JE"
+	WorkerInviteSentWebhookEventDataAddressCountryJm WorkerInviteSentWebhookEventDataAddressCountry = "JM"
+	WorkerInviteSentWebhookEventDataAddressCountryJo WorkerInviteSentWebhookEventDataAddressCountry = "JO"
+	WorkerInviteSentWebhookEventDataAddressCountryJp WorkerInviteSentWebhookEventDataAddressCountry = "JP"
+	WorkerInviteSentWebhookEventDataAddressCountryKe WorkerInviteSentWebhookEventDataAddressCountry = "KE"
+	WorkerInviteSentWebhookEventDataAddressCountryKg WorkerInviteSentWebhookEventDataAddressCountry = "KG"
+	WorkerInviteSentWebhookEventDataAddressCountryKh WorkerInviteSentWebhookEventDataAddressCountry = "KH"
+	WorkerInviteSentWebhookEventDataAddressCountryKi WorkerInviteSentWebhookEventDataAddressCountry = "KI"
+	WorkerInviteSentWebhookEventDataAddressCountryKm WorkerInviteSentWebhookEventDataAddressCountry = "KM"
+	WorkerInviteSentWebhookEventDataAddressCountryKn WorkerInviteSentWebhookEventDataAddressCountry = "KN"
+	WorkerInviteSentWebhookEventDataAddressCountryKp WorkerInviteSentWebhookEventDataAddressCountry = "KP"
+	WorkerInviteSentWebhookEventDataAddressCountryKr WorkerInviteSentWebhookEventDataAddressCountry = "KR"
+	WorkerInviteSentWebhookEventDataAddressCountryKw WorkerInviteSentWebhookEventDataAddressCountry = "KW"
+	WorkerInviteSentWebhookEventDataAddressCountryKy WorkerInviteSentWebhookEventDataAddressCountry = "KY"
+	WorkerInviteSentWebhookEventDataAddressCountryKz WorkerInviteSentWebhookEventDataAddressCountry = "KZ"
+	WorkerInviteSentWebhookEventDataAddressCountryLa WorkerInviteSentWebhookEventDataAddressCountry = "LA"
+	WorkerInviteSentWebhookEventDataAddressCountryLb WorkerInviteSentWebhookEventDataAddressCountry = "LB"
+	WorkerInviteSentWebhookEventDataAddressCountryLc WorkerInviteSentWebhookEventDataAddressCountry = "LC"
+	WorkerInviteSentWebhookEventDataAddressCountryLi WorkerInviteSentWebhookEventDataAddressCountry = "LI"
+	WorkerInviteSentWebhookEventDataAddressCountryLk WorkerInviteSentWebhookEventDataAddressCountry = "LK"
+	WorkerInviteSentWebhookEventDataAddressCountryLr WorkerInviteSentWebhookEventDataAddressCountry = "LR"
+	WorkerInviteSentWebhookEventDataAddressCountryLs WorkerInviteSentWebhookEventDataAddressCountry = "LS"
+	WorkerInviteSentWebhookEventDataAddressCountryLt WorkerInviteSentWebhookEventDataAddressCountry = "LT"
+	WorkerInviteSentWebhookEventDataAddressCountryLu WorkerInviteSentWebhookEventDataAddressCountry = "LU"
+	WorkerInviteSentWebhookEventDataAddressCountryLv WorkerInviteSentWebhookEventDataAddressCountry = "LV"
+	WorkerInviteSentWebhookEventDataAddressCountryLy WorkerInviteSentWebhookEventDataAddressCountry = "LY"
+	WorkerInviteSentWebhookEventDataAddressCountryMa WorkerInviteSentWebhookEventDataAddressCountry = "MA"
+	WorkerInviteSentWebhookEventDataAddressCountryMc WorkerInviteSentWebhookEventDataAddressCountry = "MC"
+	WorkerInviteSentWebhookEventDataAddressCountryMd WorkerInviteSentWebhookEventDataAddressCountry = "MD"
+	WorkerInviteSentWebhookEventDataAddressCountryMe WorkerInviteSentWebhookEventDataAddressCountry = "ME"
+	WorkerInviteSentWebhookEventDataAddressCountryMf WorkerInviteSentWebhookEventDataAddressCountry = "MF"
+	WorkerInviteSentWebhookEventDataAddressCountryMg WorkerInviteSentWebhookEventDataAddressCountry = "MG"
+	WorkerInviteSentWebhookEventDataAddressCountryMh WorkerInviteSentWebhookEventDataAddressCountry = "MH"
+	WorkerInviteSentWebhookEventDataAddressCountryMk WorkerInviteSentWebhookEventDataAddressCountry = "MK"
+	WorkerInviteSentWebhookEventDataAddressCountryMl WorkerInviteSentWebhookEventDataAddressCountry = "ML"
+	WorkerInviteSentWebhookEventDataAddressCountryMm WorkerInviteSentWebhookEventDataAddressCountry = "MM"
+	WorkerInviteSentWebhookEventDataAddressCountryMn WorkerInviteSentWebhookEventDataAddressCountry = "MN"
+	WorkerInviteSentWebhookEventDataAddressCountryMo WorkerInviteSentWebhookEventDataAddressCountry = "MO"
+	WorkerInviteSentWebhookEventDataAddressCountryMp WorkerInviteSentWebhookEventDataAddressCountry = "MP"
+	WorkerInviteSentWebhookEventDataAddressCountryMq WorkerInviteSentWebhookEventDataAddressCountry = "MQ"
+	WorkerInviteSentWebhookEventDataAddressCountryMr WorkerInviteSentWebhookEventDataAddressCountry = "MR"
+	WorkerInviteSentWebhookEventDataAddressCountryMs WorkerInviteSentWebhookEventDataAddressCountry = "MS"
+	WorkerInviteSentWebhookEventDataAddressCountryMt WorkerInviteSentWebhookEventDataAddressCountry = "MT"
+	WorkerInviteSentWebhookEventDataAddressCountryMu WorkerInviteSentWebhookEventDataAddressCountry = "MU"
+	WorkerInviteSentWebhookEventDataAddressCountryMv WorkerInviteSentWebhookEventDataAddressCountry = "MV"
+	WorkerInviteSentWebhookEventDataAddressCountryMw WorkerInviteSentWebhookEventDataAddressCountry = "MW"
+	WorkerInviteSentWebhookEventDataAddressCountryMx WorkerInviteSentWebhookEventDataAddressCountry = "MX"
+	WorkerInviteSentWebhookEventDataAddressCountryMy WorkerInviteSentWebhookEventDataAddressCountry = "MY"
+	WorkerInviteSentWebhookEventDataAddressCountryMz WorkerInviteSentWebhookEventDataAddressCountry = "MZ"
+	WorkerInviteSentWebhookEventDataAddressCountryNa WorkerInviteSentWebhookEventDataAddressCountry = "NA"
+	WorkerInviteSentWebhookEventDataAddressCountryNc WorkerInviteSentWebhookEventDataAddressCountry = "NC"
+	WorkerInviteSentWebhookEventDataAddressCountryNe WorkerInviteSentWebhookEventDataAddressCountry = "NE"
+	WorkerInviteSentWebhookEventDataAddressCountryNf WorkerInviteSentWebhookEventDataAddressCountry = "NF"
+	WorkerInviteSentWebhookEventDataAddressCountryNg WorkerInviteSentWebhookEventDataAddressCountry = "NG"
+	WorkerInviteSentWebhookEventDataAddressCountryNi WorkerInviteSentWebhookEventDataAddressCountry = "NI"
+	WorkerInviteSentWebhookEventDataAddressCountryNl WorkerInviteSentWebhookEventDataAddressCountry = "NL"
+	WorkerInviteSentWebhookEventDataAddressCountryNo WorkerInviteSentWebhookEventDataAddressCountry = "NO"
+	WorkerInviteSentWebhookEventDataAddressCountryNp WorkerInviteSentWebhookEventDataAddressCountry = "NP"
+	WorkerInviteSentWebhookEventDataAddressCountryNr WorkerInviteSentWebhookEventDataAddressCountry = "NR"
+	WorkerInviteSentWebhookEventDataAddressCountryNu WorkerInviteSentWebhookEventDataAddressCountry = "NU"
+	WorkerInviteSentWebhookEventDataAddressCountryNz WorkerInviteSentWebhookEventDataAddressCountry = "NZ"
+	WorkerInviteSentWebhookEventDataAddressCountryOm WorkerInviteSentWebhookEventDataAddressCountry = "OM"
+	WorkerInviteSentWebhookEventDataAddressCountryPa WorkerInviteSentWebhookEventDataAddressCountry = "PA"
+	WorkerInviteSentWebhookEventDataAddressCountryPe WorkerInviteSentWebhookEventDataAddressCountry = "PE"
+	WorkerInviteSentWebhookEventDataAddressCountryPf WorkerInviteSentWebhookEventDataAddressCountry = "PF"
+	WorkerInviteSentWebhookEventDataAddressCountryPg WorkerInviteSentWebhookEventDataAddressCountry = "PG"
+	WorkerInviteSentWebhookEventDataAddressCountryPh WorkerInviteSentWebhookEventDataAddressCountry = "PH"
+	WorkerInviteSentWebhookEventDataAddressCountryPk WorkerInviteSentWebhookEventDataAddressCountry = "PK"
+	WorkerInviteSentWebhookEventDataAddressCountryPl WorkerInviteSentWebhookEventDataAddressCountry = "PL"
+	WorkerInviteSentWebhookEventDataAddressCountryPm WorkerInviteSentWebhookEventDataAddressCountry = "PM"
+	WorkerInviteSentWebhookEventDataAddressCountryPn WorkerInviteSentWebhookEventDataAddressCountry = "PN"
+	WorkerInviteSentWebhookEventDataAddressCountryPr WorkerInviteSentWebhookEventDataAddressCountry = "PR"
+	WorkerInviteSentWebhookEventDataAddressCountryPs WorkerInviteSentWebhookEventDataAddressCountry = "PS"
+	WorkerInviteSentWebhookEventDataAddressCountryPt WorkerInviteSentWebhookEventDataAddressCountry = "PT"
+	WorkerInviteSentWebhookEventDataAddressCountryPw WorkerInviteSentWebhookEventDataAddressCountry = "PW"
+	WorkerInviteSentWebhookEventDataAddressCountryPy WorkerInviteSentWebhookEventDataAddressCountry = "PY"
+	WorkerInviteSentWebhookEventDataAddressCountryQa WorkerInviteSentWebhookEventDataAddressCountry = "QA"
+	WorkerInviteSentWebhookEventDataAddressCountryRe WorkerInviteSentWebhookEventDataAddressCountry = "RE"
+	WorkerInviteSentWebhookEventDataAddressCountryRo WorkerInviteSentWebhookEventDataAddressCountry = "RO"
+	WorkerInviteSentWebhookEventDataAddressCountryRs WorkerInviteSentWebhookEventDataAddressCountry = "RS"
+	WorkerInviteSentWebhookEventDataAddressCountryRu WorkerInviteSentWebhookEventDataAddressCountry = "RU"
+	WorkerInviteSentWebhookEventDataAddressCountryRw WorkerInviteSentWebhookEventDataAddressCountry = "RW"
+	WorkerInviteSentWebhookEventDataAddressCountrySa WorkerInviteSentWebhookEventDataAddressCountry = "SA"
+	WorkerInviteSentWebhookEventDataAddressCountrySb WorkerInviteSentWebhookEventDataAddressCountry = "SB"
+	WorkerInviteSentWebhookEventDataAddressCountrySc WorkerInviteSentWebhookEventDataAddressCountry = "SC"
+	WorkerInviteSentWebhookEventDataAddressCountrySd WorkerInviteSentWebhookEventDataAddressCountry = "SD"
+	WorkerInviteSentWebhookEventDataAddressCountrySe WorkerInviteSentWebhookEventDataAddressCountry = "SE"
+	WorkerInviteSentWebhookEventDataAddressCountrySg WorkerInviteSentWebhookEventDataAddressCountry = "SG"
+	WorkerInviteSentWebhookEventDataAddressCountrySh WorkerInviteSentWebhookEventDataAddressCountry = "SH"
+	WorkerInviteSentWebhookEventDataAddressCountrySi WorkerInviteSentWebhookEventDataAddressCountry = "SI"
+	WorkerInviteSentWebhookEventDataAddressCountrySj WorkerInviteSentWebhookEventDataAddressCountry = "SJ"
+	WorkerInviteSentWebhookEventDataAddressCountrySk WorkerInviteSentWebhookEventDataAddressCountry = "SK"
+	WorkerInviteSentWebhookEventDataAddressCountrySl WorkerInviteSentWebhookEventDataAddressCountry = "SL"
+	WorkerInviteSentWebhookEventDataAddressCountrySm WorkerInviteSentWebhookEventDataAddressCountry = "SM"
+	WorkerInviteSentWebhookEventDataAddressCountrySn WorkerInviteSentWebhookEventDataAddressCountry = "SN"
+	WorkerInviteSentWebhookEventDataAddressCountrySo WorkerInviteSentWebhookEventDataAddressCountry = "SO"
+	WorkerInviteSentWebhookEventDataAddressCountrySr WorkerInviteSentWebhookEventDataAddressCountry = "SR"
+	WorkerInviteSentWebhookEventDataAddressCountrySS WorkerInviteSentWebhookEventDataAddressCountry = "SS"
+	WorkerInviteSentWebhookEventDataAddressCountrySt WorkerInviteSentWebhookEventDataAddressCountry = "ST"
+	WorkerInviteSentWebhookEventDataAddressCountrySv WorkerInviteSentWebhookEventDataAddressCountry = "SV"
+	WorkerInviteSentWebhookEventDataAddressCountrySx WorkerInviteSentWebhookEventDataAddressCountry = "SX"
+	WorkerInviteSentWebhookEventDataAddressCountrySy WorkerInviteSentWebhookEventDataAddressCountry = "SY"
+	WorkerInviteSentWebhookEventDataAddressCountrySz WorkerInviteSentWebhookEventDataAddressCountry = "SZ"
+	WorkerInviteSentWebhookEventDataAddressCountryTc WorkerInviteSentWebhookEventDataAddressCountry = "TC"
+	WorkerInviteSentWebhookEventDataAddressCountryTd WorkerInviteSentWebhookEventDataAddressCountry = "TD"
+	WorkerInviteSentWebhookEventDataAddressCountryTf WorkerInviteSentWebhookEventDataAddressCountry = "TF"
+	WorkerInviteSentWebhookEventDataAddressCountryTg WorkerInviteSentWebhookEventDataAddressCountry = "TG"
+	WorkerInviteSentWebhookEventDataAddressCountryTh WorkerInviteSentWebhookEventDataAddressCountry = "TH"
+	WorkerInviteSentWebhookEventDataAddressCountryTj WorkerInviteSentWebhookEventDataAddressCountry = "TJ"
+	WorkerInviteSentWebhookEventDataAddressCountryTk WorkerInviteSentWebhookEventDataAddressCountry = "TK"
+	WorkerInviteSentWebhookEventDataAddressCountryTl WorkerInviteSentWebhookEventDataAddressCountry = "TL"
+	WorkerInviteSentWebhookEventDataAddressCountryTm WorkerInviteSentWebhookEventDataAddressCountry = "TM"
+	WorkerInviteSentWebhookEventDataAddressCountryTn WorkerInviteSentWebhookEventDataAddressCountry = "TN"
+	WorkerInviteSentWebhookEventDataAddressCountryTo WorkerInviteSentWebhookEventDataAddressCountry = "TO"
+	WorkerInviteSentWebhookEventDataAddressCountryTr WorkerInviteSentWebhookEventDataAddressCountry = "TR"
+	WorkerInviteSentWebhookEventDataAddressCountryTt WorkerInviteSentWebhookEventDataAddressCountry = "TT"
+	WorkerInviteSentWebhookEventDataAddressCountryTv WorkerInviteSentWebhookEventDataAddressCountry = "TV"
+	WorkerInviteSentWebhookEventDataAddressCountryTw WorkerInviteSentWebhookEventDataAddressCountry = "TW"
+	WorkerInviteSentWebhookEventDataAddressCountryTz WorkerInviteSentWebhookEventDataAddressCountry = "TZ"
+	WorkerInviteSentWebhookEventDataAddressCountryUa WorkerInviteSentWebhookEventDataAddressCountry = "UA"
+	WorkerInviteSentWebhookEventDataAddressCountryUg WorkerInviteSentWebhookEventDataAddressCountry = "UG"
+	WorkerInviteSentWebhookEventDataAddressCountryUm WorkerInviteSentWebhookEventDataAddressCountry = "UM"
+	WorkerInviteSentWebhookEventDataAddressCountryUs WorkerInviteSentWebhookEventDataAddressCountry = "US"
+	WorkerInviteSentWebhookEventDataAddressCountryUy WorkerInviteSentWebhookEventDataAddressCountry = "UY"
+	WorkerInviteSentWebhookEventDataAddressCountryUz WorkerInviteSentWebhookEventDataAddressCountry = "UZ"
+	WorkerInviteSentWebhookEventDataAddressCountryVa WorkerInviteSentWebhookEventDataAddressCountry = "VA"
+	WorkerInviteSentWebhookEventDataAddressCountryVc WorkerInviteSentWebhookEventDataAddressCountry = "VC"
+	WorkerInviteSentWebhookEventDataAddressCountryVe WorkerInviteSentWebhookEventDataAddressCountry = "VE"
+	WorkerInviteSentWebhookEventDataAddressCountryVg WorkerInviteSentWebhookEventDataAddressCountry = "VG"
+	WorkerInviteSentWebhookEventDataAddressCountryVi WorkerInviteSentWebhookEventDataAddressCountry = "VI"
+	WorkerInviteSentWebhookEventDataAddressCountryVn WorkerInviteSentWebhookEventDataAddressCountry = "VN"
+	WorkerInviteSentWebhookEventDataAddressCountryVu WorkerInviteSentWebhookEventDataAddressCountry = "VU"
+	WorkerInviteSentWebhookEventDataAddressCountryWf WorkerInviteSentWebhookEventDataAddressCountry = "WF"
+	WorkerInviteSentWebhookEventDataAddressCountryWs WorkerInviteSentWebhookEventDataAddressCountry = "WS"
+	WorkerInviteSentWebhookEventDataAddressCountryXk WorkerInviteSentWebhookEventDataAddressCountry = "XK"
+	WorkerInviteSentWebhookEventDataAddressCountryYe WorkerInviteSentWebhookEventDataAddressCountry = "YE"
+	WorkerInviteSentWebhookEventDataAddressCountryYt WorkerInviteSentWebhookEventDataAddressCountry = "YT"
+	WorkerInviteSentWebhookEventDataAddressCountryZa WorkerInviteSentWebhookEventDataAddressCountry = "ZA"
+	WorkerInviteSentWebhookEventDataAddressCountryZm WorkerInviteSentWebhookEventDataAddressCountry = "ZM"
+	WorkerInviteSentWebhookEventDataAddressCountryZw WorkerInviteSentWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerInviteSentWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventDataAddressCountryAd, WorkerInviteSentWebhookEventDataAddressCountryAe, WorkerInviteSentWebhookEventDataAddressCountryAf, WorkerInviteSentWebhookEventDataAddressCountryAg, WorkerInviteSentWebhookEventDataAddressCountryAI, WorkerInviteSentWebhookEventDataAddressCountryAl, WorkerInviteSentWebhookEventDataAddressCountryAm, WorkerInviteSentWebhookEventDataAddressCountryAo, WorkerInviteSentWebhookEventDataAddressCountryAq, WorkerInviteSentWebhookEventDataAddressCountryAr, WorkerInviteSentWebhookEventDataAddressCountryAs, WorkerInviteSentWebhookEventDataAddressCountryAt, WorkerInviteSentWebhookEventDataAddressCountryAu, WorkerInviteSentWebhookEventDataAddressCountryAw, WorkerInviteSentWebhookEventDataAddressCountryAx, WorkerInviteSentWebhookEventDataAddressCountryAz, WorkerInviteSentWebhookEventDataAddressCountryBa, WorkerInviteSentWebhookEventDataAddressCountryBb, WorkerInviteSentWebhookEventDataAddressCountryBd, WorkerInviteSentWebhookEventDataAddressCountryBe, WorkerInviteSentWebhookEventDataAddressCountryBf, WorkerInviteSentWebhookEventDataAddressCountryBg, WorkerInviteSentWebhookEventDataAddressCountryBh, WorkerInviteSentWebhookEventDataAddressCountryBi, WorkerInviteSentWebhookEventDataAddressCountryBj, WorkerInviteSentWebhookEventDataAddressCountryBl, WorkerInviteSentWebhookEventDataAddressCountryBm, WorkerInviteSentWebhookEventDataAddressCountryBn, WorkerInviteSentWebhookEventDataAddressCountryBo, WorkerInviteSentWebhookEventDataAddressCountryBq, WorkerInviteSentWebhookEventDataAddressCountryBr, WorkerInviteSentWebhookEventDataAddressCountryBs, WorkerInviteSentWebhookEventDataAddressCountryBt, WorkerInviteSentWebhookEventDataAddressCountryBv, WorkerInviteSentWebhookEventDataAddressCountryBw, WorkerInviteSentWebhookEventDataAddressCountryBy, WorkerInviteSentWebhookEventDataAddressCountryBz, WorkerInviteSentWebhookEventDataAddressCountryCa, WorkerInviteSentWebhookEventDataAddressCountryCc, WorkerInviteSentWebhookEventDataAddressCountryCd, WorkerInviteSentWebhookEventDataAddressCountryCf, WorkerInviteSentWebhookEventDataAddressCountryCg, WorkerInviteSentWebhookEventDataAddressCountryCh, WorkerInviteSentWebhookEventDataAddressCountryCi, WorkerInviteSentWebhookEventDataAddressCountryCk, WorkerInviteSentWebhookEventDataAddressCountryCl, WorkerInviteSentWebhookEventDataAddressCountryCm, WorkerInviteSentWebhookEventDataAddressCountryCn, WorkerInviteSentWebhookEventDataAddressCountryCo, WorkerInviteSentWebhookEventDataAddressCountryCr, WorkerInviteSentWebhookEventDataAddressCountryCu, WorkerInviteSentWebhookEventDataAddressCountryCv, WorkerInviteSentWebhookEventDataAddressCountryCw, WorkerInviteSentWebhookEventDataAddressCountryCx, WorkerInviteSentWebhookEventDataAddressCountryCy, WorkerInviteSentWebhookEventDataAddressCountryCz, WorkerInviteSentWebhookEventDataAddressCountryDe, WorkerInviteSentWebhookEventDataAddressCountryDj, WorkerInviteSentWebhookEventDataAddressCountryDk, WorkerInviteSentWebhookEventDataAddressCountryDm, WorkerInviteSentWebhookEventDataAddressCountryDo, WorkerInviteSentWebhookEventDataAddressCountryDz, WorkerInviteSentWebhookEventDataAddressCountryEc, WorkerInviteSentWebhookEventDataAddressCountryEe, WorkerInviteSentWebhookEventDataAddressCountryEg, WorkerInviteSentWebhookEventDataAddressCountryEh, WorkerInviteSentWebhookEventDataAddressCountryEr, WorkerInviteSentWebhookEventDataAddressCountryEs, WorkerInviteSentWebhookEventDataAddressCountryEt, WorkerInviteSentWebhookEventDataAddressCountryFi, WorkerInviteSentWebhookEventDataAddressCountryFj, WorkerInviteSentWebhookEventDataAddressCountryFk, WorkerInviteSentWebhookEventDataAddressCountryFm, WorkerInviteSentWebhookEventDataAddressCountryFo, WorkerInviteSentWebhookEventDataAddressCountryFr, WorkerInviteSentWebhookEventDataAddressCountryGa, WorkerInviteSentWebhookEventDataAddressCountryGB, WorkerInviteSentWebhookEventDataAddressCountryGd, WorkerInviteSentWebhookEventDataAddressCountryGe, WorkerInviteSentWebhookEventDataAddressCountryGf, WorkerInviteSentWebhookEventDataAddressCountryGg, WorkerInviteSentWebhookEventDataAddressCountryGh, WorkerInviteSentWebhookEventDataAddressCountryGi, WorkerInviteSentWebhookEventDataAddressCountryGl, WorkerInviteSentWebhookEventDataAddressCountryGm, WorkerInviteSentWebhookEventDataAddressCountryGn, WorkerInviteSentWebhookEventDataAddressCountryGp, WorkerInviteSentWebhookEventDataAddressCountryGq, WorkerInviteSentWebhookEventDataAddressCountryGr, WorkerInviteSentWebhookEventDataAddressCountryGs, WorkerInviteSentWebhookEventDataAddressCountryGt, WorkerInviteSentWebhookEventDataAddressCountryGu, WorkerInviteSentWebhookEventDataAddressCountryGw, WorkerInviteSentWebhookEventDataAddressCountryGy, WorkerInviteSentWebhookEventDataAddressCountryHk, WorkerInviteSentWebhookEventDataAddressCountryHm, WorkerInviteSentWebhookEventDataAddressCountryHn, WorkerInviteSentWebhookEventDataAddressCountryHr, WorkerInviteSentWebhookEventDataAddressCountryHt, WorkerInviteSentWebhookEventDataAddressCountryHu, WorkerInviteSentWebhookEventDataAddressCountryID, WorkerInviteSentWebhookEventDataAddressCountryIe, WorkerInviteSentWebhookEventDataAddressCountryIl, WorkerInviteSentWebhookEventDataAddressCountryIm, WorkerInviteSentWebhookEventDataAddressCountryIn, WorkerInviteSentWebhookEventDataAddressCountryIo, WorkerInviteSentWebhookEventDataAddressCountryIq, WorkerInviteSentWebhookEventDataAddressCountryIr, WorkerInviteSentWebhookEventDataAddressCountryIs, WorkerInviteSentWebhookEventDataAddressCountryIt, WorkerInviteSentWebhookEventDataAddressCountryJe, WorkerInviteSentWebhookEventDataAddressCountryJm, WorkerInviteSentWebhookEventDataAddressCountryJo, WorkerInviteSentWebhookEventDataAddressCountryJp, WorkerInviteSentWebhookEventDataAddressCountryKe, WorkerInviteSentWebhookEventDataAddressCountryKg, WorkerInviteSentWebhookEventDataAddressCountryKh, WorkerInviteSentWebhookEventDataAddressCountryKi, WorkerInviteSentWebhookEventDataAddressCountryKm, WorkerInviteSentWebhookEventDataAddressCountryKn, WorkerInviteSentWebhookEventDataAddressCountryKp, WorkerInviteSentWebhookEventDataAddressCountryKr, WorkerInviteSentWebhookEventDataAddressCountryKw, WorkerInviteSentWebhookEventDataAddressCountryKy, WorkerInviteSentWebhookEventDataAddressCountryKz, WorkerInviteSentWebhookEventDataAddressCountryLa, WorkerInviteSentWebhookEventDataAddressCountryLb, WorkerInviteSentWebhookEventDataAddressCountryLc, WorkerInviteSentWebhookEventDataAddressCountryLi, WorkerInviteSentWebhookEventDataAddressCountryLk, WorkerInviteSentWebhookEventDataAddressCountryLr, WorkerInviteSentWebhookEventDataAddressCountryLs, WorkerInviteSentWebhookEventDataAddressCountryLt, WorkerInviteSentWebhookEventDataAddressCountryLu, WorkerInviteSentWebhookEventDataAddressCountryLv, WorkerInviteSentWebhookEventDataAddressCountryLy, WorkerInviteSentWebhookEventDataAddressCountryMa, WorkerInviteSentWebhookEventDataAddressCountryMc, WorkerInviteSentWebhookEventDataAddressCountryMd, WorkerInviteSentWebhookEventDataAddressCountryMe, WorkerInviteSentWebhookEventDataAddressCountryMf, WorkerInviteSentWebhookEventDataAddressCountryMg, WorkerInviteSentWebhookEventDataAddressCountryMh, WorkerInviteSentWebhookEventDataAddressCountryMk, WorkerInviteSentWebhookEventDataAddressCountryMl, WorkerInviteSentWebhookEventDataAddressCountryMm, WorkerInviteSentWebhookEventDataAddressCountryMn, WorkerInviteSentWebhookEventDataAddressCountryMo, WorkerInviteSentWebhookEventDataAddressCountryMp, WorkerInviteSentWebhookEventDataAddressCountryMq, WorkerInviteSentWebhookEventDataAddressCountryMr, WorkerInviteSentWebhookEventDataAddressCountryMs, WorkerInviteSentWebhookEventDataAddressCountryMt, WorkerInviteSentWebhookEventDataAddressCountryMu, WorkerInviteSentWebhookEventDataAddressCountryMv, WorkerInviteSentWebhookEventDataAddressCountryMw, WorkerInviteSentWebhookEventDataAddressCountryMx, WorkerInviteSentWebhookEventDataAddressCountryMy, WorkerInviteSentWebhookEventDataAddressCountryMz, WorkerInviteSentWebhookEventDataAddressCountryNa, WorkerInviteSentWebhookEventDataAddressCountryNc, WorkerInviteSentWebhookEventDataAddressCountryNe, WorkerInviteSentWebhookEventDataAddressCountryNf, WorkerInviteSentWebhookEventDataAddressCountryNg, WorkerInviteSentWebhookEventDataAddressCountryNi, WorkerInviteSentWebhookEventDataAddressCountryNl, WorkerInviteSentWebhookEventDataAddressCountryNo, WorkerInviteSentWebhookEventDataAddressCountryNp, WorkerInviteSentWebhookEventDataAddressCountryNr, WorkerInviteSentWebhookEventDataAddressCountryNu, WorkerInviteSentWebhookEventDataAddressCountryNz, WorkerInviteSentWebhookEventDataAddressCountryOm, WorkerInviteSentWebhookEventDataAddressCountryPa, WorkerInviteSentWebhookEventDataAddressCountryPe, WorkerInviteSentWebhookEventDataAddressCountryPf, WorkerInviteSentWebhookEventDataAddressCountryPg, WorkerInviteSentWebhookEventDataAddressCountryPh, WorkerInviteSentWebhookEventDataAddressCountryPk, WorkerInviteSentWebhookEventDataAddressCountryPl, WorkerInviteSentWebhookEventDataAddressCountryPm, WorkerInviteSentWebhookEventDataAddressCountryPn, WorkerInviteSentWebhookEventDataAddressCountryPr, WorkerInviteSentWebhookEventDataAddressCountryPs, WorkerInviteSentWebhookEventDataAddressCountryPt, WorkerInviteSentWebhookEventDataAddressCountryPw, WorkerInviteSentWebhookEventDataAddressCountryPy, WorkerInviteSentWebhookEventDataAddressCountryQa, WorkerInviteSentWebhookEventDataAddressCountryRe, WorkerInviteSentWebhookEventDataAddressCountryRo, WorkerInviteSentWebhookEventDataAddressCountryRs, WorkerInviteSentWebhookEventDataAddressCountryRu, WorkerInviteSentWebhookEventDataAddressCountryRw, WorkerInviteSentWebhookEventDataAddressCountrySa, WorkerInviteSentWebhookEventDataAddressCountrySb, WorkerInviteSentWebhookEventDataAddressCountrySc, WorkerInviteSentWebhookEventDataAddressCountrySd, WorkerInviteSentWebhookEventDataAddressCountrySe, WorkerInviteSentWebhookEventDataAddressCountrySg, WorkerInviteSentWebhookEventDataAddressCountrySh, WorkerInviteSentWebhookEventDataAddressCountrySi, WorkerInviteSentWebhookEventDataAddressCountrySj, WorkerInviteSentWebhookEventDataAddressCountrySk, WorkerInviteSentWebhookEventDataAddressCountrySl, WorkerInviteSentWebhookEventDataAddressCountrySm, WorkerInviteSentWebhookEventDataAddressCountrySn, WorkerInviteSentWebhookEventDataAddressCountrySo, WorkerInviteSentWebhookEventDataAddressCountrySr, WorkerInviteSentWebhookEventDataAddressCountrySS, WorkerInviteSentWebhookEventDataAddressCountrySt, WorkerInviteSentWebhookEventDataAddressCountrySv, WorkerInviteSentWebhookEventDataAddressCountrySx, WorkerInviteSentWebhookEventDataAddressCountrySy, WorkerInviteSentWebhookEventDataAddressCountrySz, WorkerInviteSentWebhookEventDataAddressCountryTc, WorkerInviteSentWebhookEventDataAddressCountryTd, WorkerInviteSentWebhookEventDataAddressCountryTf, WorkerInviteSentWebhookEventDataAddressCountryTg, WorkerInviteSentWebhookEventDataAddressCountryTh, WorkerInviteSentWebhookEventDataAddressCountryTj, WorkerInviteSentWebhookEventDataAddressCountryTk, WorkerInviteSentWebhookEventDataAddressCountryTl, WorkerInviteSentWebhookEventDataAddressCountryTm, WorkerInviteSentWebhookEventDataAddressCountryTn, WorkerInviteSentWebhookEventDataAddressCountryTo, WorkerInviteSentWebhookEventDataAddressCountryTr, WorkerInviteSentWebhookEventDataAddressCountryTt, WorkerInviteSentWebhookEventDataAddressCountryTv, WorkerInviteSentWebhookEventDataAddressCountryTw, WorkerInviteSentWebhookEventDataAddressCountryTz, WorkerInviteSentWebhookEventDataAddressCountryUa, WorkerInviteSentWebhookEventDataAddressCountryUg, WorkerInviteSentWebhookEventDataAddressCountryUm, WorkerInviteSentWebhookEventDataAddressCountryUs, WorkerInviteSentWebhookEventDataAddressCountryUy, WorkerInviteSentWebhookEventDataAddressCountryUz, WorkerInviteSentWebhookEventDataAddressCountryVa, WorkerInviteSentWebhookEventDataAddressCountryVc, WorkerInviteSentWebhookEventDataAddressCountryVe, WorkerInviteSentWebhookEventDataAddressCountryVg, WorkerInviteSentWebhookEventDataAddressCountryVi, WorkerInviteSentWebhookEventDataAddressCountryVn, WorkerInviteSentWebhookEventDataAddressCountryVu, WorkerInviteSentWebhookEventDataAddressCountryWf, WorkerInviteSentWebhookEventDataAddressCountryWs, WorkerInviteSentWebhookEventDataAddressCountryXk, WorkerInviteSentWebhookEventDataAddressCountryYe, WorkerInviteSentWebhookEventDataAddressCountryYt, WorkerInviteSentWebhookEventDataAddressCountryZa, WorkerInviteSentWebhookEventDataAddressCountryZm, WorkerInviteSentWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerInviteSentWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
@@ -4745,6 +6277,46 @@ func (r *WorkerInviteSentWebhookEventDataDepartment) UnmarshalJSON(data []byte) 
 
 func (r workerInviteSentWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerInviteSentWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                               `json:"id" api:"required"`
+	Name string                                               `json:"name" api:"required"`
+	Type WorkerInviteSentWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerInviteSentWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerInviteSentWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerInviteSentWebhookEventDataPrimaryWorkplace]
+type workerInviteSentWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteSentWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteSentWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteSentWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerInviteSentWebhookEventDataPrimaryWorkplaceTypeRemote WorkerInviteSentWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerInviteSentWebhookEventDataPrimaryWorkplaceTypeOffice WorkerInviteSentWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerInviteSentWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerInviteSentWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerInviteSentWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerInviteSentWebhookEventDataLevel struct {
@@ -4796,9 +6368,11 @@ type WorkerOffboardedWebhookEvent struct {
 	// The event type.
 	Type WorkerOffboardedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                           `json:"timestamp" api:"required"`
-	Data      WorkerOffboardedWebhookEventData `json:"data" api:"required"`
-	JSON      workerOffboardedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerOffboardedWebhookEventData `json:"data" api:"required"`
+	JSON workerOffboardedWebhookEventJSON `json:"-"`
 }
 
 // workerOffboardedWebhookEventJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEvent]
@@ -4849,6 +6423,16 @@ type WorkerOffboardedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerOffboardedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerOffboardedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerOffboardedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -4856,6 +6440,15 @@ type WorkerOffboardedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOffboardedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerOffboardedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -4869,27 +6462,36 @@ type WorkerOffboardedWebhookEventData struct {
 
 // workerOffboardedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventData]
 type workerOffboardedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerOffboardedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -4934,6 +6536,329 @@ func (r WorkerOffboardedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerOffboardedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerOffboardedWebhookEventDataBiologicalSexMale   WorkerOffboardedWebhookEventDataBiologicalSex = "male"
+	WorkerOffboardedWebhookEventDataBiologicalSexFemale WorkerOffboardedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerOffboardedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventDataBiologicalSexMale, WorkerOffboardedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerOffboardedWebhookEventDataMaritalStatusMarried    WorkerOffboardedWebhookEventDataMaritalStatus = "married"
+	WorkerOffboardedWebhookEventDataMaritalStatusNotMarried WorkerOffboardedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerOffboardedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventDataMaritalStatusMarried, WorkerOffboardedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardedWebhookEventDataAddress struct {
+	Line1      string                                         `json:"line1" api:"required"`
+	Line2      string                                         `json:"line2" api:"required,nullable"`
+	City       string                                         `json:"city" api:"required"`
+	State      string                                         `json:"state" api:"required,nullable"`
+	PostalCode string                                         `json:"postalCode" api:"required,nullable"`
+	Country    WorkerOffboardedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerOffboardedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerOffboardedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventDataAddress]
+type workerOffboardedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardedWebhookEventDataAddressCountry string
+
+const (
+	WorkerOffboardedWebhookEventDataAddressCountryAd WorkerOffboardedWebhookEventDataAddressCountry = "AD"
+	WorkerOffboardedWebhookEventDataAddressCountryAe WorkerOffboardedWebhookEventDataAddressCountry = "AE"
+	WorkerOffboardedWebhookEventDataAddressCountryAf WorkerOffboardedWebhookEventDataAddressCountry = "AF"
+	WorkerOffboardedWebhookEventDataAddressCountryAg WorkerOffboardedWebhookEventDataAddressCountry = "AG"
+	WorkerOffboardedWebhookEventDataAddressCountryAI WorkerOffboardedWebhookEventDataAddressCountry = "AI"
+	WorkerOffboardedWebhookEventDataAddressCountryAl WorkerOffboardedWebhookEventDataAddressCountry = "AL"
+	WorkerOffboardedWebhookEventDataAddressCountryAm WorkerOffboardedWebhookEventDataAddressCountry = "AM"
+	WorkerOffboardedWebhookEventDataAddressCountryAo WorkerOffboardedWebhookEventDataAddressCountry = "AO"
+	WorkerOffboardedWebhookEventDataAddressCountryAq WorkerOffboardedWebhookEventDataAddressCountry = "AQ"
+	WorkerOffboardedWebhookEventDataAddressCountryAr WorkerOffboardedWebhookEventDataAddressCountry = "AR"
+	WorkerOffboardedWebhookEventDataAddressCountryAs WorkerOffboardedWebhookEventDataAddressCountry = "AS"
+	WorkerOffboardedWebhookEventDataAddressCountryAt WorkerOffboardedWebhookEventDataAddressCountry = "AT"
+	WorkerOffboardedWebhookEventDataAddressCountryAu WorkerOffboardedWebhookEventDataAddressCountry = "AU"
+	WorkerOffboardedWebhookEventDataAddressCountryAw WorkerOffboardedWebhookEventDataAddressCountry = "AW"
+	WorkerOffboardedWebhookEventDataAddressCountryAx WorkerOffboardedWebhookEventDataAddressCountry = "AX"
+	WorkerOffboardedWebhookEventDataAddressCountryAz WorkerOffboardedWebhookEventDataAddressCountry = "AZ"
+	WorkerOffboardedWebhookEventDataAddressCountryBa WorkerOffboardedWebhookEventDataAddressCountry = "BA"
+	WorkerOffboardedWebhookEventDataAddressCountryBb WorkerOffboardedWebhookEventDataAddressCountry = "BB"
+	WorkerOffboardedWebhookEventDataAddressCountryBd WorkerOffboardedWebhookEventDataAddressCountry = "BD"
+	WorkerOffboardedWebhookEventDataAddressCountryBe WorkerOffboardedWebhookEventDataAddressCountry = "BE"
+	WorkerOffboardedWebhookEventDataAddressCountryBf WorkerOffboardedWebhookEventDataAddressCountry = "BF"
+	WorkerOffboardedWebhookEventDataAddressCountryBg WorkerOffboardedWebhookEventDataAddressCountry = "BG"
+	WorkerOffboardedWebhookEventDataAddressCountryBh WorkerOffboardedWebhookEventDataAddressCountry = "BH"
+	WorkerOffboardedWebhookEventDataAddressCountryBi WorkerOffboardedWebhookEventDataAddressCountry = "BI"
+	WorkerOffboardedWebhookEventDataAddressCountryBj WorkerOffboardedWebhookEventDataAddressCountry = "BJ"
+	WorkerOffboardedWebhookEventDataAddressCountryBl WorkerOffboardedWebhookEventDataAddressCountry = "BL"
+	WorkerOffboardedWebhookEventDataAddressCountryBm WorkerOffboardedWebhookEventDataAddressCountry = "BM"
+	WorkerOffboardedWebhookEventDataAddressCountryBn WorkerOffboardedWebhookEventDataAddressCountry = "BN"
+	WorkerOffboardedWebhookEventDataAddressCountryBo WorkerOffboardedWebhookEventDataAddressCountry = "BO"
+	WorkerOffboardedWebhookEventDataAddressCountryBq WorkerOffboardedWebhookEventDataAddressCountry = "BQ"
+	WorkerOffboardedWebhookEventDataAddressCountryBr WorkerOffboardedWebhookEventDataAddressCountry = "BR"
+	WorkerOffboardedWebhookEventDataAddressCountryBs WorkerOffboardedWebhookEventDataAddressCountry = "BS"
+	WorkerOffboardedWebhookEventDataAddressCountryBt WorkerOffboardedWebhookEventDataAddressCountry = "BT"
+	WorkerOffboardedWebhookEventDataAddressCountryBv WorkerOffboardedWebhookEventDataAddressCountry = "BV"
+	WorkerOffboardedWebhookEventDataAddressCountryBw WorkerOffboardedWebhookEventDataAddressCountry = "BW"
+	WorkerOffboardedWebhookEventDataAddressCountryBy WorkerOffboardedWebhookEventDataAddressCountry = "BY"
+	WorkerOffboardedWebhookEventDataAddressCountryBz WorkerOffboardedWebhookEventDataAddressCountry = "BZ"
+	WorkerOffboardedWebhookEventDataAddressCountryCa WorkerOffboardedWebhookEventDataAddressCountry = "CA"
+	WorkerOffboardedWebhookEventDataAddressCountryCc WorkerOffboardedWebhookEventDataAddressCountry = "CC"
+	WorkerOffboardedWebhookEventDataAddressCountryCd WorkerOffboardedWebhookEventDataAddressCountry = "CD"
+	WorkerOffboardedWebhookEventDataAddressCountryCf WorkerOffboardedWebhookEventDataAddressCountry = "CF"
+	WorkerOffboardedWebhookEventDataAddressCountryCg WorkerOffboardedWebhookEventDataAddressCountry = "CG"
+	WorkerOffboardedWebhookEventDataAddressCountryCh WorkerOffboardedWebhookEventDataAddressCountry = "CH"
+	WorkerOffboardedWebhookEventDataAddressCountryCi WorkerOffboardedWebhookEventDataAddressCountry = "CI"
+	WorkerOffboardedWebhookEventDataAddressCountryCk WorkerOffboardedWebhookEventDataAddressCountry = "CK"
+	WorkerOffboardedWebhookEventDataAddressCountryCl WorkerOffboardedWebhookEventDataAddressCountry = "CL"
+	WorkerOffboardedWebhookEventDataAddressCountryCm WorkerOffboardedWebhookEventDataAddressCountry = "CM"
+	WorkerOffboardedWebhookEventDataAddressCountryCn WorkerOffboardedWebhookEventDataAddressCountry = "CN"
+	WorkerOffboardedWebhookEventDataAddressCountryCo WorkerOffboardedWebhookEventDataAddressCountry = "CO"
+	WorkerOffboardedWebhookEventDataAddressCountryCr WorkerOffboardedWebhookEventDataAddressCountry = "CR"
+	WorkerOffboardedWebhookEventDataAddressCountryCu WorkerOffboardedWebhookEventDataAddressCountry = "CU"
+	WorkerOffboardedWebhookEventDataAddressCountryCv WorkerOffboardedWebhookEventDataAddressCountry = "CV"
+	WorkerOffboardedWebhookEventDataAddressCountryCw WorkerOffboardedWebhookEventDataAddressCountry = "CW"
+	WorkerOffboardedWebhookEventDataAddressCountryCx WorkerOffboardedWebhookEventDataAddressCountry = "CX"
+	WorkerOffboardedWebhookEventDataAddressCountryCy WorkerOffboardedWebhookEventDataAddressCountry = "CY"
+	WorkerOffboardedWebhookEventDataAddressCountryCz WorkerOffboardedWebhookEventDataAddressCountry = "CZ"
+	WorkerOffboardedWebhookEventDataAddressCountryDe WorkerOffboardedWebhookEventDataAddressCountry = "DE"
+	WorkerOffboardedWebhookEventDataAddressCountryDj WorkerOffboardedWebhookEventDataAddressCountry = "DJ"
+	WorkerOffboardedWebhookEventDataAddressCountryDk WorkerOffboardedWebhookEventDataAddressCountry = "DK"
+	WorkerOffboardedWebhookEventDataAddressCountryDm WorkerOffboardedWebhookEventDataAddressCountry = "DM"
+	WorkerOffboardedWebhookEventDataAddressCountryDo WorkerOffboardedWebhookEventDataAddressCountry = "DO"
+	WorkerOffboardedWebhookEventDataAddressCountryDz WorkerOffboardedWebhookEventDataAddressCountry = "DZ"
+	WorkerOffboardedWebhookEventDataAddressCountryEc WorkerOffboardedWebhookEventDataAddressCountry = "EC"
+	WorkerOffboardedWebhookEventDataAddressCountryEe WorkerOffboardedWebhookEventDataAddressCountry = "EE"
+	WorkerOffboardedWebhookEventDataAddressCountryEg WorkerOffboardedWebhookEventDataAddressCountry = "EG"
+	WorkerOffboardedWebhookEventDataAddressCountryEh WorkerOffboardedWebhookEventDataAddressCountry = "EH"
+	WorkerOffboardedWebhookEventDataAddressCountryEr WorkerOffboardedWebhookEventDataAddressCountry = "ER"
+	WorkerOffboardedWebhookEventDataAddressCountryEs WorkerOffboardedWebhookEventDataAddressCountry = "ES"
+	WorkerOffboardedWebhookEventDataAddressCountryEt WorkerOffboardedWebhookEventDataAddressCountry = "ET"
+	WorkerOffboardedWebhookEventDataAddressCountryFi WorkerOffboardedWebhookEventDataAddressCountry = "FI"
+	WorkerOffboardedWebhookEventDataAddressCountryFj WorkerOffboardedWebhookEventDataAddressCountry = "FJ"
+	WorkerOffboardedWebhookEventDataAddressCountryFk WorkerOffboardedWebhookEventDataAddressCountry = "FK"
+	WorkerOffboardedWebhookEventDataAddressCountryFm WorkerOffboardedWebhookEventDataAddressCountry = "FM"
+	WorkerOffboardedWebhookEventDataAddressCountryFo WorkerOffboardedWebhookEventDataAddressCountry = "FO"
+	WorkerOffboardedWebhookEventDataAddressCountryFr WorkerOffboardedWebhookEventDataAddressCountry = "FR"
+	WorkerOffboardedWebhookEventDataAddressCountryGa WorkerOffboardedWebhookEventDataAddressCountry = "GA"
+	WorkerOffboardedWebhookEventDataAddressCountryGB WorkerOffboardedWebhookEventDataAddressCountry = "GB"
+	WorkerOffboardedWebhookEventDataAddressCountryGd WorkerOffboardedWebhookEventDataAddressCountry = "GD"
+	WorkerOffboardedWebhookEventDataAddressCountryGe WorkerOffboardedWebhookEventDataAddressCountry = "GE"
+	WorkerOffboardedWebhookEventDataAddressCountryGf WorkerOffboardedWebhookEventDataAddressCountry = "GF"
+	WorkerOffboardedWebhookEventDataAddressCountryGg WorkerOffboardedWebhookEventDataAddressCountry = "GG"
+	WorkerOffboardedWebhookEventDataAddressCountryGh WorkerOffboardedWebhookEventDataAddressCountry = "GH"
+	WorkerOffboardedWebhookEventDataAddressCountryGi WorkerOffboardedWebhookEventDataAddressCountry = "GI"
+	WorkerOffboardedWebhookEventDataAddressCountryGl WorkerOffboardedWebhookEventDataAddressCountry = "GL"
+	WorkerOffboardedWebhookEventDataAddressCountryGm WorkerOffboardedWebhookEventDataAddressCountry = "GM"
+	WorkerOffboardedWebhookEventDataAddressCountryGn WorkerOffboardedWebhookEventDataAddressCountry = "GN"
+	WorkerOffboardedWebhookEventDataAddressCountryGp WorkerOffboardedWebhookEventDataAddressCountry = "GP"
+	WorkerOffboardedWebhookEventDataAddressCountryGq WorkerOffboardedWebhookEventDataAddressCountry = "GQ"
+	WorkerOffboardedWebhookEventDataAddressCountryGr WorkerOffboardedWebhookEventDataAddressCountry = "GR"
+	WorkerOffboardedWebhookEventDataAddressCountryGs WorkerOffboardedWebhookEventDataAddressCountry = "GS"
+	WorkerOffboardedWebhookEventDataAddressCountryGt WorkerOffboardedWebhookEventDataAddressCountry = "GT"
+	WorkerOffboardedWebhookEventDataAddressCountryGu WorkerOffboardedWebhookEventDataAddressCountry = "GU"
+	WorkerOffboardedWebhookEventDataAddressCountryGw WorkerOffboardedWebhookEventDataAddressCountry = "GW"
+	WorkerOffboardedWebhookEventDataAddressCountryGy WorkerOffboardedWebhookEventDataAddressCountry = "GY"
+	WorkerOffboardedWebhookEventDataAddressCountryHk WorkerOffboardedWebhookEventDataAddressCountry = "HK"
+	WorkerOffboardedWebhookEventDataAddressCountryHm WorkerOffboardedWebhookEventDataAddressCountry = "HM"
+	WorkerOffboardedWebhookEventDataAddressCountryHn WorkerOffboardedWebhookEventDataAddressCountry = "HN"
+	WorkerOffboardedWebhookEventDataAddressCountryHr WorkerOffboardedWebhookEventDataAddressCountry = "HR"
+	WorkerOffboardedWebhookEventDataAddressCountryHt WorkerOffboardedWebhookEventDataAddressCountry = "HT"
+	WorkerOffboardedWebhookEventDataAddressCountryHu WorkerOffboardedWebhookEventDataAddressCountry = "HU"
+	WorkerOffboardedWebhookEventDataAddressCountryID WorkerOffboardedWebhookEventDataAddressCountry = "ID"
+	WorkerOffboardedWebhookEventDataAddressCountryIe WorkerOffboardedWebhookEventDataAddressCountry = "IE"
+	WorkerOffboardedWebhookEventDataAddressCountryIl WorkerOffboardedWebhookEventDataAddressCountry = "IL"
+	WorkerOffboardedWebhookEventDataAddressCountryIm WorkerOffboardedWebhookEventDataAddressCountry = "IM"
+	WorkerOffboardedWebhookEventDataAddressCountryIn WorkerOffboardedWebhookEventDataAddressCountry = "IN"
+	WorkerOffboardedWebhookEventDataAddressCountryIo WorkerOffboardedWebhookEventDataAddressCountry = "IO"
+	WorkerOffboardedWebhookEventDataAddressCountryIq WorkerOffboardedWebhookEventDataAddressCountry = "IQ"
+	WorkerOffboardedWebhookEventDataAddressCountryIr WorkerOffboardedWebhookEventDataAddressCountry = "IR"
+	WorkerOffboardedWebhookEventDataAddressCountryIs WorkerOffboardedWebhookEventDataAddressCountry = "IS"
+	WorkerOffboardedWebhookEventDataAddressCountryIt WorkerOffboardedWebhookEventDataAddressCountry = "IT"
+	WorkerOffboardedWebhookEventDataAddressCountryJe WorkerOffboardedWebhookEventDataAddressCountry = "JE"
+	WorkerOffboardedWebhookEventDataAddressCountryJm WorkerOffboardedWebhookEventDataAddressCountry = "JM"
+	WorkerOffboardedWebhookEventDataAddressCountryJo WorkerOffboardedWebhookEventDataAddressCountry = "JO"
+	WorkerOffboardedWebhookEventDataAddressCountryJp WorkerOffboardedWebhookEventDataAddressCountry = "JP"
+	WorkerOffboardedWebhookEventDataAddressCountryKe WorkerOffboardedWebhookEventDataAddressCountry = "KE"
+	WorkerOffboardedWebhookEventDataAddressCountryKg WorkerOffboardedWebhookEventDataAddressCountry = "KG"
+	WorkerOffboardedWebhookEventDataAddressCountryKh WorkerOffboardedWebhookEventDataAddressCountry = "KH"
+	WorkerOffboardedWebhookEventDataAddressCountryKi WorkerOffboardedWebhookEventDataAddressCountry = "KI"
+	WorkerOffboardedWebhookEventDataAddressCountryKm WorkerOffboardedWebhookEventDataAddressCountry = "KM"
+	WorkerOffboardedWebhookEventDataAddressCountryKn WorkerOffboardedWebhookEventDataAddressCountry = "KN"
+	WorkerOffboardedWebhookEventDataAddressCountryKp WorkerOffboardedWebhookEventDataAddressCountry = "KP"
+	WorkerOffboardedWebhookEventDataAddressCountryKr WorkerOffboardedWebhookEventDataAddressCountry = "KR"
+	WorkerOffboardedWebhookEventDataAddressCountryKw WorkerOffboardedWebhookEventDataAddressCountry = "KW"
+	WorkerOffboardedWebhookEventDataAddressCountryKy WorkerOffboardedWebhookEventDataAddressCountry = "KY"
+	WorkerOffboardedWebhookEventDataAddressCountryKz WorkerOffboardedWebhookEventDataAddressCountry = "KZ"
+	WorkerOffboardedWebhookEventDataAddressCountryLa WorkerOffboardedWebhookEventDataAddressCountry = "LA"
+	WorkerOffboardedWebhookEventDataAddressCountryLb WorkerOffboardedWebhookEventDataAddressCountry = "LB"
+	WorkerOffboardedWebhookEventDataAddressCountryLc WorkerOffboardedWebhookEventDataAddressCountry = "LC"
+	WorkerOffboardedWebhookEventDataAddressCountryLi WorkerOffboardedWebhookEventDataAddressCountry = "LI"
+	WorkerOffboardedWebhookEventDataAddressCountryLk WorkerOffboardedWebhookEventDataAddressCountry = "LK"
+	WorkerOffboardedWebhookEventDataAddressCountryLr WorkerOffboardedWebhookEventDataAddressCountry = "LR"
+	WorkerOffboardedWebhookEventDataAddressCountryLs WorkerOffboardedWebhookEventDataAddressCountry = "LS"
+	WorkerOffboardedWebhookEventDataAddressCountryLt WorkerOffboardedWebhookEventDataAddressCountry = "LT"
+	WorkerOffboardedWebhookEventDataAddressCountryLu WorkerOffboardedWebhookEventDataAddressCountry = "LU"
+	WorkerOffboardedWebhookEventDataAddressCountryLv WorkerOffboardedWebhookEventDataAddressCountry = "LV"
+	WorkerOffboardedWebhookEventDataAddressCountryLy WorkerOffboardedWebhookEventDataAddressCountry = "LY"
+	WorkerOffboardedWebhookEventDataAddressCountryMa WorkerOffboardedWebhookEventDataAddressCountry = "MA"
+	WorkerOffboardedWebhookEventDataAddressCountryMc WorkerOffboardedWebhookEventDataAddressCountry = "MC"
+	WorkerOffboardedWebhookEventDataAddressCountryMd WorkerOffboardedWebhookEventDataAddressCountry = "MD"
+	WorkerOffboardedWebhookEventDataAddressCountryMe WorkerOffboardedWebhookEventDataAddressCountry = "ME"
+	WorkerOffboardedWebhookEventDataAddressCountryMf WorkerOffboardedWebhookEventDataAddressCountry = "MF"
+	WorkerOffboardedWebhookEventDataAddressCountryMg WorkerOffboardedWebhookEventDataAddressCountry = "MG"
+	WorkerOffboardedWebhookEventDataAddressCountryMh WorkerOffboardedWebhookEventDataAddressCountry = "MH"
+	WorkerOffboardedWebhookEventDataAddressCountryMk WorkerOffboardedWebhookEventDataAddressCountry = "MK"
+	WorkerOffboardedWebhookEventDataAddressCountryMl WorkerOffboardedWebhookEventDataAddressCountry = "ML"
+	WorkerOffboardedWebhookEventDataAddressCountryMm WorkerOffboardedWebhookEventDataAddressCountry = "MM"
+	WorkerOffboardedWebhookEventDataAddressCountryMn WorkerOffboardedWebhookEventDataAddressCountry = "MN"
+	WorkerOffboardedWebhookEventDataAddressCountryMo WorkerOffboardedWebhookEventDataAddressCountry = "MO"
+	WorkerOffboardedWebhookEventDataAddressCountryMp WorkerOffboardedWebhookEventDataAddressCountry = "MP"
+	WorkerOffboardedWebhookEventDataAddressCountryMq WorkerOffboardedWebhookEventDataAddressCountry = "MQ"
+	WorkerOffboardedWebhookEventDataAddressCountryMr WorkerOffboardedWebhookEventDataAddressCountry = "MR"
+	WorkerOffboardedWebhookEventDataAddressCountryMs WorkerOffboardedWebhookEventDataAddressCountry = "MS"
+	WorkerOffboardedWebhookEventDataAddressCountryMt WorkerOffboardedWebhookEventDataAddressCountry = "MT"
+	WorkerOffboardedWebhookEventDataAddressCountryMu WorkerOffboardedWebhookEventDataAddressCountry = "MU"
+	WorkerOffboardedWebhookEventDataAddressCountryMv WorkerOffboardedWebhookEventDataAddressCountry = "MV"
+	WorkerOffboardedWebhookEventDataAddressCountryMw WorkerOffboardedWebhookEventDataAddressCountry = "MW"
+	WorkerOffboardedWebhookEventDataAddressCountryMx WorkerOffboardedWebhookEventDataAddressCountry = "MX"
+	WorkerOffboardedWebhookEventDataAddressCountryMy WorkerOffboardedWebhookEventDataAddressCountry = "MY"
+	WorkerOffboardedWebhookEventDataAddressCountryMz WorkerOffboardedWebhookEventDataAddressCountry = "MZ"
+	WorkerOffboardedWebhookEventDataAddressCountryNa WorkerOffboardedWebhookEventDataAddressCountry = "NA"
+	WorkerOffboardedWebhookEventDataAddressCountryNc WorkerOffboardedWebhookEventDataAddressCountry = "NC"
+	WorkerOffboardedWebhookEventDataAddressCountryNe WorkerOffboardedWebhookEventDataAddressCountry = "NE"
+	WorkerOffboardedWebhookEventDataAddressCountryNf WorkerOffboardedWebhookEventDataAddressCountry = "NF"
+	WorkerOffboardedWebhookEventDataAddressCountryNg WorkerOffboardedWebhookEventDataAddressCountry = "NG"
+	WorkerOffboardedWebhookEventDataAddressCountryNi WorkerOffboardedWebhookEventDataAddressCountry = "NI"
+	WorkerOffboardedWebhookEventDataAddressCountryNl WorkerOffboardedWebhookEventDataAddressCountry = "NL"
+	WorkerOffboardedWebhookEventDataAddressCountryNo WorkerOffboardedWebhookEventDataAddressCountry = "NO"
+	WorkerOffboardedWebhookEventDataAddressCountryNp WorkerOffboardedWebhookEventDataAddressCountry = "NP"
+	WorkerOffboardedWebhookEventDataAddressCountryNr WorkerOffboardedWebhookEventDataAddressCountry = "NR"
+	WorkerOffboardedWebhookEventDataAddressCountryNu WorkerOffboardedWebhookEventDataAddressCountry = "NU"
+	WorkerOffboardedWebhookEventDataAddressCountryNz WorkerOffboardedWebhookEventDataAddressCountry = "NZ"
+	WorkerOffboardedWebhookEventDataAddressCountryOm WorkerOffboardedWebhookEventDataAddressCountry = "OM"
+	WorkerOffboardedWebhookEventDataAddressCountryPa WorkerOffboardedWebhookEventDataAddressCountry = "PA"
+	WorkerOffboardedWebhookEventDataAddressCountryPe WorkerOffboardedWebhookEventDataAddressCountry = "PE"
+	WorkerOffboardedWebhookEventDataAddressCountryPf WorkerOffboardedWebhookEventDataAddressCountry = "PF"
+	WorkerOffboardedWebhookEventDataAddressCountryPg WorkerOffboardedWebhookEventDataAddressCountry = "PG"
+	WorkerOffboardedWebhookEventDataAddressCountryPh WorkerOffboardedWebhookEventDataAddressCountry = "PH"
+	WorkerOffboardedWebhookEventDataAddressCountryPk WorkerOffboardedWebhookEventDataAddressCountry = "PK"
+	WorkerOffboardedWebhookEventDataAddressCountryPl WorkerOffboardedWebhookEventDataAddressCountry = "PL"
+	WorkerOffboardedWebhookEventDataAddressCountryPm WorkerOffboardedWebhookEventDataAddressCountry = "PM"
+	WorkerOffboardedWebhookEventDataAddressCountryPn WorkerOffboardedWebhookEventDataAddressCountry = "PN"
+	WorkerOffboardedWebhookEventDataAddressCountryPr WorkerOffboardedWebhookEventDataAddressCountry = "PR"
+	WorkerOffboardedWebhookEventDataAddressCountryPs WorkerOffboardedWebhookEventDataAddressCountry = "PS"
+	WorkerOffboardedWebhookEventDataAddressCountryPt WorkerOffboardedWebhookEventDataAddressCountry = "PT"
+	WorkerOffboardedWebhookEventDataAddressCountryPw WorkerOffboardedWebhookEventDataAddressCountry = "PW"
+	WorkerOffboardedWebhookEventDataAddressCountryPy WorkerOffboardedWebhookEventDataAddressCountry = "PY"
+	WorkerOffboardedWebhookEventDataAddressCountryQa WorkerOffboardedWebhookEventDataAddressCountry = "QA"
+	WorkerOffboardedWebhookEventDataAddressCountryRe WorkerOffboardedWebhookEventDataAddressCountry = "RE"
+	WorkerOffboardedWebhookEventDataAddressCountryRo WorkerOffboardedWebhookEventDataAddressCountry = "RO"
+	WorkerOffboardedWebhookEventDataAddressCountryRs WorkerOffboardedWebhookEventDataAddressCountry = "RS"
+	WorkerOffboardedWebhookEventDataAddressCountryRu WorkerOffboardedWebhookEventDataAddressCountry = "RU"
+	WorkerOffboardedWebhookEventDataAddressCountryRw WorkerOffboardedWebhookEventDataAddressCountry = "RW"
+	WorkerOffboardedWebhookEventDataAddressCountrySa WorkerOffboardedWebhookEventDataAddressCountry = "SA"
+	WorkerOffboardedWebhookEventDataAddressCountrySb WorkerOffboardedWebhookEventDataAddressCountry = "SB"
+	WorkerOffboardedWebhookEventDataAddressCountrySc WorkerOffboardedWebhookEventDataAddressCountry = "SC"
+	WorkerOffboardedWebhookEventDataAddressCountrySd WorkerOffboardedWebhookEventDataAddressCountry = "SD"
+	WorkerOffboardedWebhookEventDataAddressCountrySe WorkerOffboardedWebhookEventDataAddressCountry = "SE"
+	WorkerOffboardedWebhookEventDataAddressCountrySg WorkerOffboardedWebhookEventDataAddressCountry = "SG"
+	WorkerOffboardedWebhookEventDataAddressCountrySh WorkerOffboardedWebhookEventDataAddressCountry = "SH"
+	WorkerOffboardedWebhookEventDataAddressCountrySi WorkerOffboardedWebhookEventDataAddressCountry = "SI"
+	WorkerOffboardedWebhookEventDataAddressCountrySj WorkerOffboardedWebhookEventDataAddressCountry = "SJ"
+	WorkerOffboardedWebhookEventDataAddressCountrySk WorkerOffboardedWebhookEventDataAddressCountry = "SK"
+	WorkerOffboardedWebhookEventDataAddressCountrySl WorkerOffboardedWebhookEventDataAddressCountry = "SL"
+	WorkerOffboardedWebhookEventDataAddressCountrySm WorkerOffboardedWebhookEventDataAddressCountry = "SM"
+	WorkerOffboardedWebhookEventDataAddressCountrySn WorkerOffboardedWebhookEventDataAddressCountry = "SN"
+	WorkerOffboardedWebhookEventDataAddressCountrySo WorkerOffboardedWebhookEventDataAddressCountry = "SO"
+	WorkerOffboardedWebhookEventDataAddressCountrySr WorkerOffboardedWebhookEventDataAddressCountry = "SR"
+	WorkerOffboardedWebhookEventDataAddressCountrySS WorkerOffboardedWebhookEventDataAddressCountry = "SS"
+	WorkerOffboardedWebhookEventDataAddressCountrySt WorkerOffboardedWebhookEventDataAddressCountry = "ST"
+	WorkerOffboardedWebhookEventDataAddressCountrySv WorkerOffboardedWebhookEventDataAddressCountry = "SV"
+	WorkerOffboardedWebhookEventDataAddressCountrySx WorkerOffboardedWebhookEventDataAddressCountry = "SX"
+	WorkerOffboardedWebhookEventDataAddressCountrySy WorkerOffboardedWebhookEventDataAddressCountry = "SY"
+	WorkerOffboardedWebhookEventDataAddressCountrySz WorkerOffboardedWebhookEventDataAddressCountry = "SZ"
+	WorkerOffboardedWebhookEventDataAddressCountryTc WorkerOffboardedWebhookEventDataAddressCountry = "TC"
+	WorkerOffboardedWebhookEventDataAddressCountryTd WorkerOffboardedWebhookEventDataAddressCountry = "TD"
+	WorkerOffboardedWebhookEventDataAddressCountryTf WorkerOffboardedWebhookEventDataAddressCountry = "TF"
+	WorkerOffboardedWebhookEventDataAddressCountryTg WorkerOffboardedWebhookEventDataAddressCountry = "TG"
+	WorkerOffboardedWebhookEventDataAddressCountryTh WorkerOffboardedWebhookEventDataAddressCountry = "TH"
+	WorkerOffboardedWebhookEventDataAddressCountryTj WorkerOffboardedWebhookEventDataAddressCountry = "TJ"
+	WorkerOffboardedWebhookEventDataAddressCountryTk WorkerOffboardedWebhookEventDataAddressCountry = "TK"
+	WorkerOffboardedWebhookEventDataAddressCountryTl WorkerOffboardedWebhookEventDataAddressCountry = "TL"
+	WorkerOffboardedWebhookEventDataAddressCountryTm WorkerOffboardedWebhookEventDataAddressCountry = "TM"
+	WorkerOffboardedWebhookEventDataAddressCountryTn WorkerOffboardedWebhookEventDataAddressCountry = "TN"
+	WorkerOffboardedWebhookEventDataAddressCountryTo WorkerOffboardedWebhookEventDataAddressCountry = "TO"
+	WorkerOffboardedWebhookEventDataAddressCountryTr WorkerOffboardedWebhookEventDataAddressCountry = "TR"
+	WorkerOffboardedWebhookEventDataAddressCountryTt WorkerOffboardedWebhookEventDataAddressCountry = "TT"
+	WorkerOffboardedWebhookEventDataAddressCountryTv WorkerOffboardedWebhookEventDataAddressCountry = "TV"
+	WorkerOffboardedWebhookEventDataAddressCountryTw WorkerOffboardedWebhookEventDataAddressCountry = "TW"
+	WorkerOffboardedWebhookEventDataAddressCountryTz WorkerOffboardedWebhookEventDataAddressCountry = "TZ"
+	WorkerOffboardedWebhookEventDataAddressCountryUa WorkerOffboardedWebhookEventDataAddressCountry = "UA"
+	WorkerOffboardedWebhookEventDataAddressCountryUg WorkerOffboardedWebhookEventDataAddressCountry = "UG"
+	WorkerOffboardedWebhookEventDataAddressCountryUm WorkerOffboardedWebhookEventDataAddressCountry = "UM"
+	WorkerOffboardedWebhookEventDataAddressCountryUs WorkerOffboardedWebhookEventDataAddressCountry = "US"
+	WorkerOffboardedWebhookEventDataAddressCountryUy WorkerOffboardedWebhookEventDataAddressCountry = "UY"
+	WorkerOffboardedWebhookEventDataAddressCountryUz WorkerOffboardedWebhookEventDataAddressCountry = "UZ"
+	WorkerOffboardedWebhookEventDataAddressCountryVa WorkerOffboardedWebhookEventDataAddressCountry = "VA"
+	WorkerOffboardedWebhookEventDataAddressCountryVc WorkerOffboardedWebhookEventDataAddressCountry = "VC"
+	WorkerOffboardedWebhookEventDataAddressCountryVe WorkerOffboardedWebhookEventDataAddressCountry = "VE"
+	WorkerOffboardedWebhookEventDataAddressCountryVg WorkerOffboardedWebhookEventDataAddressCountry = "VG"
+	WorkerOffboardedWebhookEventDataAddressCountryVi WorkerOffboardedWebhookEventDataAddressCountry = "VI"
+	WorkerOffboardedWebhookEventDataAddressCountryVn WorkerOffboardedWebhookEventDataAddressCountry = "VN"
+	WorkerOffboardedWebhookEventDataAddressCountryVu WorkerOffboardedWebhookEventDataAddressCountry = "VU"
+	WorkerOffboardedWebhookEventDataAddressCountryWf WorkerOffboardedWebhookEventDataAddressCountry = "WF"
+	WorkerOffboardedWebhookEventDataAddressCountryWs WorkerOffboardedWebhookEventDataAddressCountry = "WS"
+	WorkerOffboardedWebhookEventDataAddressCountryXk WorkerOffboardedWebhookEventDataAddressCountry = "XK"
+	WorkerOffboardedWebhookEventDataAddressCountryYe WorkerOffboardedWebhookEventDataAddressCountry = "YE"
+	WorkerOffboardedWebhookEventDataAddressCountryYt WorkerOffboardedWebhookEventDataAddressCountry = "YT"
+	WorkerOffboardedWebhookEventDataAddressCountryZa WorkerOffboardedWebhookEventDataAddressCountry = "ZA"
+	WorkerOffboardedWebhookEventDataAddressCountryZm WorkerOffboardedWebhookEventDataAddressCountry = "ZM"
+	WorkerOffboardedWebhookEventDataAddressCountryZw WorkerOffboardedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerOffboardedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventDataAddressCountryAd, WorkerOffboardedWebhookEventDataAddressCountryAe, WorkerOffboardedWebhookEventDataAddressCountryAf, WorkerOffboardedWebhookEventDataAddressCountryAg, WorkerOffboardedWebhookEventDataAddressCountryAI, WorkerOffboardedWebhookEventDataAddressCountryAl, WorkerOffboardedWebhookEventDataAddressCountryAm, WorkerOffboardedWebhookEventDataAddressCountryAo, WorkerOffboardedWebhookEventDataAddressCountryAq, WorkerOffboardedWebhookEventDataAddressCountryAr, WorkerOffboardedWebhookEventDataAddressCountryAs, WorkerOffboardedWebhookEventDataAddressCountryAt, WorkerOffboardedWebhookEventDataAddressCountryAu, WorkerOffboardedWebhookEventDataAddressCountryAw, WorkerOffboardedWebhookEventDataAddressCountryAx, WorkerOffboardedWebhookEventDataAddressCountryAz, WorkerOffboardedWebhookEventDataAddressCountryBa, WorkerOffboardedWebhookEventDataAddressCountryBb, WorkerOffboardedWebhookEventDataAddressCountryBd, WorkerOffboardedWebhookEventDataAddressCountryBe, WorkerOffboardedWebhookEventDataAddressCountryBf, WorkerOffboardedWebhookEventDataAddressCountryBg, WorkerOffboardedWebhookEventDataAddressCountryBh, WorkerOffboardedWebhookEventDataAddressCountryBi, WorkerOffboardedWebhookEventDataAddressCountryBj, WorkerOffboardedWebhookEventDataAddressCountryBl, WorkerOffboardedWebhookEventDataAddressCountryBm, WorkerOffboardedWebhookEventDataAddressCountryBn, WorkerOffboardedWebhookEventDataAddressCountryBo, WorkerOffboardedWebhookEventDataAddressCountryBq, WorkerOffboardedWebhookEventDataAddressCountryBr, WorkerOffboardedWebhookEventDataAddressCountryBs, WorkerOffboardedWebhookEventDataAddressCountryBt, WorkerOffboardedWebhookEventDataAddressCountryBv, WorkerOffboardedWebhookEventDataAddressCountryBw, WorkerOffboardedWebhookEventDataAddressCountryBy, WorkerOffboardedWebhookEventDataAddressCountryBz, WorkerOffboardedWebhookEventDataAddressCountryCa, WorkerOffboardedWebhookEventDataAddressCountryCc, WorkerOffboardedWebhookEventDataAddressCountryCd, WorkerOffboardedWebhookEventDataAddressCountryCf, WorkerOffboardedWebhookEventDataAddressCountryCg, WorkerOffboardedWebhookEventDataAddressCountryCh, WorkerOffboardedWebhookEventDataAddressCountryCi, WorkerOffboardedWebhookEventDataAddressCountryCk, WorkerOffboardedWebhookEventDataAddressCountryCl, WorkerOffboardedWebhookEventDataAddressCountryCm, WorkerOffboardedWebhookEventDataAddressCountryCn, WorkerOffboardedWebhookEventDataAddressCountryCo, WorkerOffboardedWebhookEventDataAddressCountryCr, WorkerOffboardedWebhookEventDataAddressCountryCu, WorkerOffboardedWebhookEventDataAddressCountryCv, WorkerOffboardedWebhookEventDataAddressCountryCw, WorkerOffboardedWebhookEventDataAddressCountryCx, WorkerOffboardedWebhookEventDataAddressCountryCy, WorkerOffboardedWebhookEventDataAddressCountryCz, WorkerOffboardedWebhookEventDataAddressCountryDe, WorkerOffboardedWebhookEventDataAddressCountryDj, WorkerOffboardedWebhookEventDataAddressCountryDk, WorkerOffboardedWebhookEventDataAddressCountryDm, WorkerOffboardedWebhookEventDataAddressCountryDo, WorkerOffboardedWebhookEventDataAddressCountryDz, WorkerOffboardedWebhookEventDataAddressCountryEc, WorkerOffboardedWebhookEventDataAddressCountryEe, WorkerOffboardedWebhookEventDataAddressCountryEg, WorkerOffboardedWebhookEventDataAddressCountryEh, WorkerOffboardedWebhookEventDataAddressCountryEr, WorkerOffboardedWebhookEventDataAddressCountryEs, WorkerOffboardedWebhookEventDataAddressCountryEt, WorkerOffboardedWebhookEventDataAddressCountryFi, WorkerOffboardedWebhookEventDataAddressCountryFj, WorkerOffboardedWebhookEventDataAddressCountryFk, WorkerOffboardedWebhookEventDataAddressCountryFm, WorkerOffboardedWebhookEventDataAddressCountryFo, WorkerOffboardedWebhookEventDataAddressCountryFr, WorkerOffboardedWebhookEventDataAddressCountryGa, WorkerOffboardedWebhookEventDataAddressCountryGB, WorkerOffboardedWebhookEventDataAddressCountryGd, WorkerOffboardedWebhookEventDataAddressCountryGe, WorkerOffboardedWebhookEventDataAddressCountryGf, WorkerOffboardedWebhookEventDataAddressCountryGg, WorkerOffboardedWebhookEventDataAddressCountryGh, WorkerOffboardedWebhookEventDataAddressCountryGi, WorkerOffboardedWebhookEventDataAddressCountryGl, WorkerOffboardedWebhookEventDataAddressCountryGm, WorkerOffboardedWebhookEventDataAddressCountryGn, WorkerOffboardedWebhookEventDataAddressCountryGp, WorkerOffboardedWebhookEventDataAddressCountryGq, WorkerOffboardedWebhookEventDataAddressCountryGr, WorkerOffboardedWebhookEventDataAddressCountryGs, WorkerOffboardedWebhookEventDataAddressCountryGt, WorkerOffboardedWebhookEventDataAddressCountryGu, WorkerOffboardedWebhookEventDataAddressCountryGw, WorkerOffboardedWebhookEventDataAddressCountryGy, WorkerOffboardedWebhookEventDataAddressCountryHk, WorkerOffboardedWebhookEventDataAddressCountryHm, WorkerOffboardedWebhookEventDataAddressCountryHn, WorkerOffboardedWebhookEventDataAddressCountryHr, WorkerOffboardedWebhookEventDataAddressCountryHt, WorkerOffboardedWebhookEventDataAddressCountryHu, WorkerOffboardedWebhookEventDataAddressCountryID, WorkerOffboardedWebhookEventDataAddressCountryIe, WorkerOffboardedWebhookEventDataAddressCountryIl, WorkerOffboardedWebhookEventDataAddressCountryIm, WorkerOffboardedWebhookEventDataAddressCountryIn, WorkerOffboardedWebhookEventDataAddressCountryIo, WorkerOffboardedWebhookEventDataAddressCountryIq, WorkerOffboardedWebhookEventDataAddressCountryIr, WorkerOffboardedWebhookEventDataAddressCountryIs, WorkerOffboardedWebhookEventDataAddressCountryIt, WorkerOffboardedWebhookEventDataAddressCountryJe, WorkerOffboardedWebhookEventDataAddressCountryJm, WorkerOffboardedWebhookEventDataAddressCountryJo, WorkerOffboardedWebhookEventDataAddressCountryJp, WorkerOffboardedWebhookEventDataAddressCountryKe, WorkerOffboardedWebhookEventDataAddressCountryKg, WorkerOffboardedWebhookEventDataAddressCountryKh, WorkerOffboardedWebhookEventDataAddressCountryKi, WorkerOffboardedWebhookEventDataAddressCountryKm, WorkerOffboardedWebhookEventDataAddressCountryKn, WorkerOffboardedWebhookEventDataAddressCountryKp, WorkerOffboardedWebhookEventDataAddressCountryKr, WorkerOffboardedWebhookEventDataAddressCountryKw, WorkerOffboardedWebhookEventDataAddressCountryKy, WorkerOffboardedWebhookEventDataAddressCountryKz, WorkerOffboardedWebhookEventDataAddressCountryLa, WorkerOffboardedWebhookEventDataAddressCountryLb, WorkerOffboardedWebhookEventDataAddressCountryLc, WorkerOffboardedWebhookEventDataAddressCountryLi, WorkerOffboardedWebhookEventDataAddressCountryLk, WorkerOffboardedWebhookEventDataAddressCountryLr, WorkerOffboardedWebhookEventDataAddressCountryLs, WorkerOffboardedWebhookEventDataAddressCountryLt, WorkerOffboardedWebhookEventDataAddressCountryLu, WorkerOffboardedWebhookEventDataAddressCountryLv, WorkerOffboardedWebhookEventDataAddressCountryLy, WorkerOffboardedWebhookEventDataAddressCountryMa, WorkerOffboardedWebhookEventDataAddressCountryMc, WorkerOffboardedWebhookEventDataAddressCountryMd, WorkerOffboardedWebhookEventDataAddressCountryMe, WorkerOffboardedWebhookEventDataAddressCountryMf, WorkerOffboardedWebhookEventDataAddressCountryMg, WorkerOffboardedWebhookEventDataAddressCountryMh, WorkerOffboardedWebhookEventDataAddressCountryMk, WorkerOffboardedWebhookEventDataAddressCountryMl, WorkerOffboardedWebhookEventDataAddressCountryMm, WorkerOffboardedWebhookEventDataAddressCountryMn, WorkerOffboardedWebhookEventDataAddressCountryMo, WorkerOffboardedWebhookEventDataAddressCountryMp, WorkerOffboardedWebhookEventDataAddressCountryMq, WorkerOffboardedWebhookEventDataAddressCountryMr, WorkerOffboardedWebhookEventDataAddressCountryMs, WorkerOffboardedWebhookEventDataAddressCountryMt, WorkerOffboardedWebhookEventDataAddressCountryMu, WorkerOffboardedWebhookEventDataAddressCountryMv, WorkerOffboardedWebhookEventDataAddressCountryMw, WorkerOffboardedWebhookEventDataAddressCountryMx, WorkerOffboardedWebhookEventDataAddressCountryMy, WorkerOffboardedWebhookEventDataAddressCountryMz, WorkerOffboardedWebhookEventDataAddressCountryNa, WorkerOffboardedWebhookEventDataAddressCountryNc, WorkerOffboardedWebhookEventDataAddressCountryNe, WorkerOffboardedWebhookEventDataAddressCountryNf, WorkerOffboardedWebhookEventDataAddressCountryNg, WorkerOffboardedWebhookEventDataAddressCountryNi, WorkerOffboardedWebhookEventDataAddressCountryNl, WorkerOffboardedWebhookEventDataAddressCountryNo, WorkerOffboardedWebhookEventDataAddressCountryNp, WorkerOffboardedWebhookEventDataAddressCountryNr, WorkerOffboardedWebhookEventDataAddressCountryNu, WorkerOffboardedWebhookEventDataAddressCountryNz, WorkerOffboardedWebhookEventDataAddressCountryOm, WorkerOffboardedWebhookEventDataAddressCountryPa, WorkerOffboardedWebhookEventDataAddressCountryPe, WorkerOffboardedWebhookEventDataAddressCountryPf, WorkerOffboardedWebhookEventDataAddressCountryPg, WorkerOffboardedWebhookEventDataAddressCountryPh, WorkerOffboardedWebhookEventDataAddressCountryPk, WorkerOffboardedWebhookEventDataAddressCountryPl, WorkerOffboardedWebhookEventDataAddressCountryPm, WorkerOffboardedWebhookEventDataAddressCountryPn, WorkerOffboardedWebhookEventDataAddressCountryPr, WorkerOffboardedWebhookEventDataAddressCountryPs, WorkerOffboardedWebhookEventDataAddressCountryPt, WorkerOffboardedWebhookEventDataAddressCountryPw, WorkerOffboardedWebhookEventDataAddressCountryPy, WorkerOffboardedWebhookEventDataAddressCountryQa, WorkerOffboardedWebhookEventDataAddressCountryRe, WorkerOffboardedWebhookEventDataAddressCountryRo, WorkerOffboardedWebhookEventDataAddressCountryRs, WorkerOffboardedWebhookEventDataAddressCountryRu, WorkerOffboardedWebhookEventDataAddressCountryRw, WorkerOffboardedWebhookEventDataAddressCountrySa, WorkerOffboardedWebhookEventDataAddressCountrySb, WorkerOffboardedWebhookEventDataAddressCountrySc, WorkerOffboardedWebhookEventDataAddressCountrySd, WorkerOffboardedWebhookEventDataAddressCountrySe, WorkerOffboardedWebhookEventDataAddressCountrySg, WorkerOffboardedWebhookEventDataAddressCountrySh, WorkerOffboardedWebhookEventDataAddressCountrySi, WorkerOffboardedWebhookEventDataAddressCountrySj, WorkerOffboardedWebhookEventDataAddressCountrySk, WorkerOffboardedWebhookEventDataAddressCountrySl, WorkerOffboardedWebhookEventDataAddressCountrySm, WorkerOffboardedWebhookEventDataAddressCountrySn, WorkerOffboardedWebhookEventDataAddressCountrySo, WorkerOffboardedWebhookEventDataAddressCountrySr, WorkerOffboardedWebhookEventDataAddressCountrySS, WorkerOffboardedWebhookEventDataAddressCountrySt, WorkerOffboardedWebhookEventDataAddressCountrySv, WorkerOffboardedWebhookEventDataAddressCountrySx, WorkerOffboardedWebhookEventDataAddressCountrySy, WorkerOffboardedWebhookEventDataAddressCountrySz, WorkerOffboardedWebhookEventDataAddressCountryTc, WorkerOffboardedWebhookEventDataAddressCountryTd, WorkerOffboardedWebhookEventDataAddressCountryTf, WorkerOffboardedWebhookEventDataAddressCountryTg, WorkerOffboardedWebhookEventDataAddressCountryTh, WorkerOffboardedWebhookEventDataAddressCountryTj, WorkerOffboardedWebhookEventDataAddressCountryTk, WorkerOffboardedWebhookEventDataAddressCountryTl, WorkerOffboardedWebhookEventDataAddressCountryTm, WorkerOffboardedWebhookEventDataAddressCountryTn, WorkerOffboardedWebhookEventDataAddressCountryTo, WorkerOffboardedWebhookEventDataAddressCountryTr, WorkerOffboardedWebhookEventDataAddressCountryTt, WorkerOffboardedWebhookEventDataAddressCountryTv, WorkerOffboardedWebhookEventDataAddressCountryTw, WorkerOffboardedWebhookEventDataAddressCountryTz, WorkerOffboardedWebhookEventDataAddressCountryUa, WorkerOffboardedWebhookEventDataAddressCountryUg, WorkerOffboardedWebhookEventDataAddressCountryUm, WorkerOffboardedWebhookEventDataAddressCountryUs, WorkerOffboardedWebhookEventDataAddressCountryUy, WorkerOffboardedWebhookEventDataAddressCountryUz, WorkerOffboardedWebhookEventDataAddressCountryVa, WorkerOffboardedWebhookEventDataAddressCountryVc, WorkerOffboardedWebhookEventDataAddressCountryVe, WorkerOffboardedWebhookEventDataAddressCountryVg, WorkerOffboardedWebhookEventDataAddressCountryVi, WorkerOffboardedWebhookEventDataAddressCountryVn, WorkerOffboardedWebhookEventDataAddressCountryVu, WorkerOffboardedWebhookEventDataAddressCountryWf, WorkerOffboardedWebhookEventDataAddressCountryWs, WorkerOffboardedWebhookEventDataAddressCountryXk, WorkerOffboardedWebhookEventDataAddressCountryYe, WorkerOffboardedWebhookEventDataAddressCountryYt, WorkerOffboardedWebhookEventDataAddressCountryZa, WorkerOffboardedWebhookEventDataAddressCountryZm, WorkerOffboardedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerOffboardedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                         `json:"id" api:"required"`
@@ -4955,6 +6880,46 @@ func (r *WorkerOffboardedWebhookEventDataDepartment) UnmarshalJSON(data []byte) 
 
 func (r workerOffboardedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOffboardedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                               `json:"id" api:"required"`
+	Name string                                               `json:"name" api:"required"`
+	Type WorkerOffboardedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerOffboardedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerOffboardedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerOffboardedWebhookEventDataPrimaryWorkplace]
+type workerOffboardedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerOffboardedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerOffboardedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerOffboardedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerOffboardedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerOffboardedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerOffboardedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerOffboardedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerOffboardedWebhookEventDataLevel struct {
@@ -5006,9 +6971,11 @@ type WorkerOffboardingStartedWebhookEvent struct {
 	// The event type.
 	Type WorkerOffboardingStartedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                                   `json:"timestamp" api:"required"`
-	Data      WorkerOffboardingStartedWebhookEventData `json:"data" api:"required"`
-	JSON      workerOffboardingStartedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerOffboardingStartedWebhookEventData `json:"data" api:"required"`
+	JSON workerOffboardingStartedWebhookEventJSON `json:"-"`
 }
 
 // workerOffboardingStartedWebhookEventJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEvent]
@@ -5059,6 +7026,16 @@ type WorkerOffboardingStartedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerOffboardingStartedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerOffboardingStartedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerOffboardingStartedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -5066,6 +7043,15 @@ type WorkerOffboardingStartedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOffboardingStartedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerOffboardingStartedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -5079,27 +7065,36 @@ type WorkerOffboardingStartedWebhookEventData struct {
 
 // workerOffboardingStartedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventData]
 type workerOffboardingStartedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerOffboardingStartedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -5144,6 +7139,329 @@ func (r WorkerOffboardingStartedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerOffboardingStartedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerOffboardingStartedWebhookEventDataBiologicalSexMale   WorkerOffboardingStartedWebhookEventDataBiologicalSex = "male"
+	WorkerOffboardingStartedWebhookEventDataBiologicalSexFemale WorkerOffboardingStartedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerOffboardingStartedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventDataBiologicalSexMale, WorkerOffboardingStartedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerOffboardingStartedWebhookEventDataMaritalStatusMarried    WorkerOffboardingStartedWebhookEventDataMaritalStatus = "married"
+	WorkerOffboardingStartedWebhookEventDataMaritalStatusNotMarried WorkerOffboardingStartedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerOffboardingStartedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventDataMaritalStatusMarried, WorkerOffboardingStartedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerOffboardingStartedWebhookEventDataAddress struct {
+	Line1      string                                                 `json:"line1" api:"required"`
+	Line2      string                                                 `json:"line2" api:"required,nullable"`
+	City       string                                                 `json:"city" api:"required"`
+	State      string                                                 `json:"state" api:"required,nullable"`
+	PostalCode string                                                 `json:"postalCode" api:"required,nullable"`
+	Country    WorkerOffboardingStartedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerOffboardingStartedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventDataAddress]
+type workerOffboardingStartedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventDataAddressCountry string
+
+const (
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAd WorkerOffboardingStartedWebhookEventDataAddressCountry = "AD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAe WorkerOffboardingStartedWebhookEventDataAddressCountry = "AE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAf WorkerOffboardingStartedWebhookEventDataAddressCountry = "AF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAg WorkerOffboardingStartedWebhookEventDataAddressCountry = "AG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAI WorkerOffboardingStartedWebhookEventDataAddressCountry = "AI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAl WorkerOffboardingStartedWebhookEventDataAddressCountry = "AL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAm WorkerOffboardingStartedWebhookEventDataAddressCountry = "AM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAo WorkerOffboardingStartedWebhookEventDataAddressCountry = "AO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAq WorkerOffboardingStartedWebhookEventDataAddressCountry = "AQ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAr WorkerOffboardingStartedWebhookEventDataAddressCountry = "AR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAs WorkerOffboardingStartedWebhookEventDataAddressCountry = "AS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAt WorkerOffboardingStartedWebhookEventDataAddressCountry = "AT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAu WorkerOffboardingStartedWebhookEventDataAddressCountry = "AU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAw WorkerOffboardingStartedWebhookEventDataAddressCountry = "AW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAx WorkerOffboardingStartedWebhookEventDataAddressCountry = "AX"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryAz WorkerOffboardingStartedWebhookEventDataAddressCountry = "AZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBa WorkerOffboardingStartedWebhookEventDataAddressCountry = "BA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBb WorkerOffboardingStartedWebhookEventDataAddressCountry = "BB"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBd WorkerOffboardingStartedWebhookEventDataAddressCountry = "BD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBe WorkerOffboardingStartedWebhookEventDataAddressCountry = "BE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBf WorkerOffboardingStartedWebhookEventDataAddressCountry = "BF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBg WorkerOffboardingStartedWebhookEventDataAddressCountry = "BG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBh WorkerOffboardingStartedWebhookEventDataAddressCountry = "BH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBi WorkerOffboardingStartedWebhookEventDataAddressCountry = "BI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBj WorkerOffboardingStartedWebhookEventDataAddressCountry = "BJ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBl WorkerOffboardingStartedWebhookEventDataAddressCountry = "BL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBm WorkerOffboardingStartedWebhookEventDataAddressCountry = "BM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBn WorkerOffboardingStartedWebhookEventDataAddressCountry = "BN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBo WorkerOffboardingStartedWebhookEventDataAddressCountry = "BO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBq WorkerOffboardingStartedWebhookEventDataAddressCountry = "BQ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBr WorkerOffboardingStartedWebhookEventDataAddressCountry = "BR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBs WorkerOffboardingStartedWebhookEventDataAddressCountry = "BS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBt WorkerOffboardingStartedWebhookEventDataAddressCountry = "BT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBv WorkerOffboardingStartedWebhookEventDataAddressCountry = "BV"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBw WorkerOffboardingStartedWebhookEventDataAddressCountry = "BW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBy WorkerOffboardingStartedWebhookEventDataAddressCountry = "BY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryBz WorkerOffboardingStartedWebhookEventDataAddressCountry = "BZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCa WorkerOffboardingStartedWebhookEventDataAddressCountry = "CA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCc WorkerOffboardingStartedWebhookEventDataAddressCountry = "CC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCd WorkerOffboardingStartedWebhookEventDataAddressCountry = "CD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCf WorkerOffboardingStartedWebhookEventDataAddressCountry = "CF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCg WorkerOffboardingStartedWebhookEventDataAddressCountry = "CG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCh WorkerOffboardingStartedWebhookEventDataAddressCountry = "CH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCi WorkerOffboardingStartedWebhookEventDataAddressCountry = "CI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCk WorkerOffboardingStartedWebhookEventDataAddressCountry = "CK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCl WorkerOffboardingStartedWebhookEventDataAddressCountry = "CL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCm WorkerOffboardingStartedWebhookEventDataAddressCountry = "CM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCn WorkerOffboardingStartedWebhookEventDataAddressCountry = "CN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCo WorkerOffboardingStartedWebhookEventDataAddressCountry = "CO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCr WorkerOffboardingStartedWebhookEventDataAddressCountry = "CR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCu WorkerOffboardingStartedWebhookEventDataAddressCountry = "CU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCv WorkerOffboardingStartedWebhookEventDataAddressCountry = "CV"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCw WorkerOffboardingStartedWebhookEventDataAddressCountry = "CW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCx WorkerOffboardingStartedWebhookEventDataAddressCountry = "CX"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCy WorkerOffboardingStartedWebhookEventDataAddressCountry = "CY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryCz WorkerOffboardingStartedWebhookEventDataAddressCountry = "CZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryDe WorkerOffboardingStartedWebhookEventDataAddressCountry = "DE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryDj WorkerOffboardingStartedWebhookEventDataAddressCountry = "DJ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryDk WorkerOffboardingStartedWebhookEventDataAddressCountry = "DK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryDm WorkerOffboardingStartedWebhookEventDataAddressCountry = "DM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryDo WorkerOffboardingStartedWebhookEventDataAddressCountry = "DO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryDz WorkerOffboardingStartedWebhookEventDataAddressCountry = "DZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEc WorkerOffboardingStartedWebhookEventDataAddressCountry = "EC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEe WorkerOffboardingStartedWebhookEventDataAddressCountry = "EE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEg WorkerOffboardingStartedWebhookEventDataAddressCountry = "EG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEh WorkerOffboardingStartedWebhookEventDataAddressCountry = "EH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEr WorkerOffboardingStartedWebhookEventDataAddressCountry = "ER"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEs WorkerOffboardingStartedWebhookEventDataAddressCountry = "ES"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryEt WorkerOffboardingStartedWebhookEventDataAddressCountry = "ET"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryFi WorkerOffboardingStartedWebhookEventDataAddressCountry = "FI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryFj WorkerOffboardingStartedWebhookEventDataAddressCountry = "FJ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryFk WorkerOffboardingStartedWebhookEventDataAddressCountry = "FK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryFm WorkerOffboardingStartedWebhookEventDataAddressCountry = "FM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryFo WorkerOffboardingStartedWebhookEventDataAddressCountry = "FO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryFr WorkerOffboardingStartedWebhookEventDataAddressCountry = "FR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGa WorkerOffboardingStartedWebhookEventDataAddressCountry = "GA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGB WorkerOffboardingStartedWebhookEventDataAddressCountry = "GB"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGd WorkerOffboardingStartedWebhookEventDataAddressCountry = "GD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGe WorkerOffboardingStartedWebhookEventDataAddressCountry = "GE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGf WorkerOffboardingStartedWebhookEventDataAddressCountry = "GF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGg WorkerOffboardingStartedWebhookEventDataAddressCountry = "GG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGh WorkerOffboardingStartedWebhookEventDataAddressCountry = "GH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGi WorkerOffboardingStartedWebhookEventDataAddressCountry = "GI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGl WorkerOffboardingStartedWebhookEventDataAddressCountry = "GL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGm WorkerOffboardingStartedWebhookEventDataAddressCountry = "GM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGn WorkerOffboardingStartedWebhookEventDataAddressCountry = "GN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGp WorkerOffboardingStartedWebhookEventDataAddressCountry = "GP"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGq WorkerOffboardingStartedWebhookEventDataAddressCountry = "GQ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGr WorkerOffboardingStartedWebhookEventDataAddressCountry = "GR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGs WorkerOffboardingStartedWebhookEventDataAddressCountry = "GS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGt WorkerOffboardingStartedWebhookEventDataAddressCountry = "GT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGu WorkerOffboardingStartedWebhookEventDataAddressCountry = "GU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGw WorkerOffboardingStartedWebhookEventDataAddressCountry = "GW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryGy WorkerOffboardingStartedWebhookEventDataAddressCountry = "GY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryHk WorkerOffboardingStartedWebhookEventDataAddressCountry = "HK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryHm WorkerOffboardingStartedWebhookEventDataAddressCountry = "HM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryHn WorkerOffboardingStartedWebhookEventDataAddressCountry = "HN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryHr WorkerOffboardingStartedWebhookEventDataAddressCountry = "HR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryHt WorkerOffboardingStartedWebhookEventDataAddressCountry = "HT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryHu WorkerOffboardingStartedWebhookEventDataAddressCountry = "HU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryID WorkerOffboardingStartedWebhookEventDataAddressCountry = "ID"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIe WorkerOffboardingStartedWebhookEventDataAddressCountry = "IE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIl WorkerOffboardingStartedWebhookEventDataAddressCountry = "IL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIm WorkerOffboardingStartedWebhookEventDataAddressCountry = "IM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIn WorkerOffboardingStartedWebhookEventDataAddressCountry = "IN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIo WorkerOffboardingStartedWebhookEventDataAddressCountry = "IO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIq WorkerOffboardingStartedWebhookEventDataAddressCountry = "IQ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIr WorkerOffboardingStartedWebhookEventDataAddressCountry = "IR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIs WorkerOffboardingStartedWebhookEventDataAddressCountry = "IS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryIt WorkerOffboardingStartedWebhookEventDataAddressCountry = "IT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryJe WorkerOffboardingStartedWebhookEventDataAddressCountry = "JE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryJm WorkerOffboardingStartedWebhookEventDataAddressCountry = "JM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryJo WorkerOffboardingStartedWebhookEventDataAddressCountry = "JO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryJp WorkerOffboardingStartedWebhookEventDataAddressCountry = "JP"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKe WorkerOffboardingStartedWebhookEventDataAddressCountry = "KE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKg WorkerOffboardingStartedWebhookEventDataAddressCountry = "KG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKh WorkerOffboardingStartedWebhookEventDataAddressCountry = "KH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKi WorkerOffboardingStartedWebhookEventDataAddressCountry = "KI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKm WorkerOffboardingStartedWebhookEventDataAddressCountry = "KM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKn WorkerOffboardingStartedWebhookEventDataAddressCountry = "KN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKp WorkerOffboardingStartedWebhookEventDataAddressCountry = "KP"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKr WorkerOffboardingStartedWebhookEventDataAddressCountry = "KR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKw WorkerOffboardingStartedWebhookEventDataAddressCountry = "KW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKy WorkerOffboardingStartedWebhookEventDataAddressCountry = "KY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryKz WorkerOffboardingStartedWebhookEventDataAddressCountry = "KZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLa WorkerOffboardingStartedWebhookEventDataAddressCountry = "LA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLb WorkerOffboardingStartedWebhookEventDataAddressCountry = "LB"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLc WorkerOffboardingStartedWebhookEventDataAddressCountry = "LC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLi WorkerOffboardingStartedWebhookEventDataAddressCountry = "LI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLk WorkerOffboardingStartedWebhookEventDataAddressCountry = "LK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLr WorkerOffboardingStartedWebhookEventDataAddressCountry = "LR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLs WorkerOffboardingStartedWebhookEventDataAddressCountry = "LS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLt WorkerOffboardingStartedWebhookEventDataAddressCountry = "LT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLu WorkerOffboardingStartedWebhookEventDataAddressCountry = "LU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLv WorkerOffboardingStartedWebhookEventDataAddressCountry = "LV"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryLy WorkerOffboardingStartedWebhookEventDataAddressCountry = "LY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMa WorkerOffboardingStartedWebhookEventDataAddressCountry = "MA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMc WorkerOffboardingStartedWebhookEventDataAddressCountry = "MC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMd WorkerOffboardingStartedWebhookEventDataAddressCountry = "MD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMe WorkerOffboardingStartedWebhookEventDataAddressCountry = "ME"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMf WorkerOffboardingStartedWebhookEventDataAddressCountry = "MF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMg WorkerOffboardingStartedWebhookEventDataAddressCountry = "MG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMh WorkerOffboardingStartedWebhookEventDataAddressCountry = "MH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMk WorkerOffboardingStartedWebhookEventDataAddressCountry = "MK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMl WorkerOffboardingStartedWebhookEventDataAddressCountry = "ML"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMm WorkerOffboardingStartedWebhookEventDataAddressCountry = "MM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMn WorkerOffboardingStartedWebhookEventDataAddressCountry = "MN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMo WorkerOffboardingStartedWebhookEventDataAddressCountry = "MO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMp WorkerOffboardingStartedWebhookEventDataAddressCountry = "MP"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMq WorkerOffboardingStartedWebhookEventDataAddressCountry = "MQ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMr WorkerOffboardingStartedWebhookEventDataAddressCountry = "MR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMs WorkerOffboardingStartedWebhookEventDataAddressCountry = "MS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMt WorkerOffboardingStartedWebhookEventDataAddressCountry = "MT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMu WorkerOffboardingStartedWebhookEventDataAddressCountry = "MU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMv WorkerOffboardingStartedWebhookEventDataAddressCountry = "MV"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMw WorkerOffboardingStartedWebhookEventDataAddressCountry = "MW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMx WorkerOffboardingStartedWebhookEventDataAddressCountry = "MX"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMy WorkerOffboardingStartedWebhookEventDataAddressCountry = "MY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryMz WorkerOffboardingStartedWebhookEventDataAddressCountry = "MZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNa WorkerOffboardingStartedWebhookEventDataAddressCountry = "NA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNc WorkerOffboardingStartedWebhookEventDataAddressCountry = "NC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNe WorkerOffboardingStartedWebhookEventDataAddressCountry = "NE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNf WorkerOffboardingStartedWebhookEventDataAddressCountry = "NF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNg WorkerOffboardingStartedWebhookEventDataAddressCountry = "NG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNi WorkerOffboardingStartedWebhookEventDataAddressCountry = "NI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNl WorkerOffboardingStartedWebhookEventDataAddressCountry = "NL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNo WorkerOffboardingStartedWebhookEventDataAddressCountry = "NO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNp WorkerOffboardingStartedWebhookEventDataAddressCountry = "NP"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNr WorkerOffboardingStartedWebhookEventDataAddressCountry = "NR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNu WorkerOffboardingStartedWebhookEventDataAddressCountry = "NU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryNz WorkerOffboardingStartedWebhookEventDataAddressCountry = "NZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryOm WorkerOffboardingStartedWebhookEventDataAddressCountry = "OM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPa WorkerOffboardingStartedWebhookEventDataAddressCountry = "PA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPe WorkerOffboardingStartedWebhookEventDataAddressCountry = "PE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPf WorkerOffboardingStartedWebhookEventDataAddressCountry = "PF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPg WorkerOffboardingStartedWebhookEventDataAddressCountry = "PG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPh WorkerOffboardingStartedWebhookEventDataAddressCountry = "PH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPk WorkerOffboardingStartedWebhookEventDataAddressCountry = "PK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPl WorkerOffboardingStartedWebhookEventDataAddressCountry = "PL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPm WorkerOffboardingStartedWebhookEventDataAddressCountry = "PM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPn WorkerOffboardingStartedWebhookEventDataAddressCountry = "PN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPr WorkerOffboardingStartedWebhookEventDataAddressCountry = "PR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPs WorkerOffboardingStartedWebhookEventDataAddressCountry = "PS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPt WorkerOffboardingStartedWebhookEventDataAddressCountry = "PT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPw WorkerOffboardingStartedWebhookEventDataAddressCountry = "PW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryPy WorkerOffboardingStartedWebhookEventDataAddressCountry = "PY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryQa WorkerOffboardingStartedWebhookEventDataAddressCountry = "QA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryRe WorkerOffboardingStartedWebhookEventDataAddressCountry = "RE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryRo WorkerOffboardingStartedWebhookEventDataAddressCountry = "RO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryRs WorkerOffboardingStartedWebhookEventDataAddressCountry = "RS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryRu WorkerOffboardingStartedWebhookEventDataAddressCountry = "RU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryRw WorkerOffboardingStartedWebhookEventDataAddressCountry = "RW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySa WorkerOffboardingStartedWebhookEventDataAddressCountry = "SA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySb WorkerOffboardingStartedWebhookEventDataAddressCountry = "SB"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySc WorkerOffboardingStartedWebhookEventDataAddressCountry = "SC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySd WorkerOffboardingStartedWebhookEventDataAddressCountry = "SD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySe WorkerOffboardingStartedWebhookEventDataAddressCountry = "SE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySg WorkerOffboardingStartedWebhookEventDataAddressCountry = "SG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySh WorkerOffboardingStartedWebhookEventDataAddressCountry = "SH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySi WorkerOffboardingStartedWebhookEventDataAddressCountry = "SI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySj WorkerOffboardingStartedWebhookEventDataAddressCountry = "SJ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySk WorkerOffboardingStartedWebhookEventDataAddressCountry = "SK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySl WorkerOffboardingStartedWebhookEventDataAddressCountry = "SL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySm WorkerOffboardingStartedWebhookEventDataAddressCountry = "SM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySn WorkerOffboardingStartedWebhookEventDataAddressCountry = "SN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySo WorkerOffboardingStartedWebhookEventDataAddressCountry = "SO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySr WorkerOffboardingStartedWebhookEventDataAddressCountry = "SR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySS WorkerOffboardingStartedWebhookEventDataAddressCountry = "SS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySt WorkerOffboardingStartedWebhookEventDataAddressCountry = "ST"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySv WorkerOffboardingStartedWebhookEventDataAddressCountry = "SV"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySx WorkerOffboardingStartedWebhookEventDataAddressCountry = "SX"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySy WorkerOffboardingStartedWebhookEventDataAddressCountry = "SY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountrySz WorkerOffboardingStartedWebhookEventDataAddressCountry = "SZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTc WorkerOffboardingStartedWebhookEventDataAddressCountry = "TC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTd WorkerOffboardingStartedWebhookEventDataAddressCountry = "TD"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTf WorkerOffboardingStartedWebhookEventDataAddressCountry = "TF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTg WorkerOffboardingStartedWebhookEventDataAddressCountry = "TG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTh WorkerOffboardingStartedWebhookEventDataAddressCountry = "TH"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTj WorkerOffboardingStartedWebhookEventDataAddressCountry = "TJ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTk WorkerOffboardingStartedWebhookEventDataAddressCountry = "TK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTl WorkerOffboardingStartedWebhookEventDataAddressCountry = "TL"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTm WorkerOffboardingStartedWebhookEventDataAddressCountry = "TM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTn WorkerOffboardingStartedWebhookEventDataAddressCountry = "TN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTo WorkerOffboardingStartedWebhookEventDataAddressCountry = "TO"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTr WorkerOffboardingStartedWebhookEventDataAddressCountry = "TR"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTt WorkerOffboardingStartedWebhookEventDataAddressCountry = "TT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTv WorkerOffboardingStartedWebhookEventDataAddressCountry = "TV"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTw WorkerOffboardingStartedWebhookEventDataAddressCountry = "TW"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryTz WorkerOffboardingStartedWebhookEventDataAddressCountry = "TZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryUa WorkerOffboardingStartedWebhookEventDataAddressCountry = "UA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryUg WorkerOffboardingStartedWebhookEventDataAddressCountry = "UG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryUm WorkerOffboardingStartedWebhookEventDataAddressCountry = "UM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryUs WorkerOffboardingStartedWebhookEventDataAddressCountry = "US"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryUy WorkerOffboardingStartedWebhookEventDataAddressCountry = "UY"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryUz WorkerOffboardingStartedWebhookEventDataAddressCountry = "UZ"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVa WorkerOffboardingStartedWebhookEventDataAddressCountry = "VA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVc WorkerOffboardingStartedWebhookEventDataAddressCountry = "VC"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVe WorkerOffboardingStartedWebhookEventDataAddressCountry = "VE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVg WorkerOffboardingStartedWebhookEventDataAddressCountry = "VG"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVi WorkerOffboardingStartedWebhookEventDataAddressCountry = "VI"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVn WorkerOffboardingStartedWebhookEventDataAddressCountry = "VN"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryVu WorkerOffboardingStartedWebhookEventDataAddressCountry = "VU"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryWf WorkerOffboardingStartedWebhookEventDataAddressCountry = "WF"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryWs WorkerOffboardingStartedWebhookEventDataAddressCountry = "WS"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryXk WorkerOffboardingStartedWebhookEventDataAddressCountry = "XK"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryYe WorkerOffboardingStartedWebhookEventDataAddressCountry = "YE"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryYt WorkerOffboardingStartedWebhookEventDataAddressCountry = "YT"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryZa WorkerOffboardingStartedWebhookEventDataAddressCountry = "ZA"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryZm WorkerOffboardingStartedWebhookEventDataAddressCountry = "ZM"
+	WorkerOffboardingStartedWebhookEventDataAddressCountryZw WorkerOffboardingStartedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerOffboardingStartedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventDataAddressCountryAd, WorkerOffboardingStartedWebhookEventDataAddressCountryAe, WorkerOffboardingStartedWebhookEventDataAddressCountryAf, WorkerOffboardingStartedWebhookEventDataAddressCountryAg, WorkerOffboardingStartedWebhookEventDataAddressCountryAI, WorkerOffboardingStartedWebhookEventDataAddressCountryAl, WorkerOffboardingStartedWebhookEventDataAddressCountryAm, WorkerOffboardingStartedWebhookEventDataAddressCountryAo, WorkerOffboardingStartedWebhookEventDataAddressCountryAq, WorkerOffboardingStartedWebhookEventDataAddressCountryAr, WorkerOffboardingStartedWebhookEventDataAddressCountryAs, WorkerOffboardingStartedWebhookEventDataAddressCountryAt, WorkerOffboardingStartedWebhookEventDataAddressCountryAu, WorkerOffboardingStartedWebhookEventDataAddressCountryAw, WorkerOffboardingStartedWebhookEventDataAddressCountryAx, WorkerOffboardingStartedWebhookEventDataAddressCountryAz, WorkerOffboardingStartedWebhookEventDataAddressCountryBa, WorkerOffboardingStartedWebhookEventDataAddressCountryBb, WorkerOffboardingStartedWebhookEventDataAddressCountryBd, WorkerOffboardingStartedWebhookEventDataAddressCountryBe, WorkerOffboardingStartedWebhookEventDataAddressCountryBf, WorkerOffboardingStartedWebhookEventDataAddressCountryBg, WorkerOffboardingStartedWebhookEventDataAddressCountryBh, WorkerOffboardingStartedWebhookEventDataAddressCountryBi, WorkerOffboardingStartedWebhookEventDataAddressCountryBj, WorkerOffboardingStartedWebhookEventDataAddressCountryBl, WorkerOffboardingStartedWebhookEventDataAddressCountryBm, WorkerOffboardingStartedWebhookEventDataAddressCountryBn, WorkerOffboardingStartedWebhookEventDataAddressCountryBo, WorkerOffboardingStartedWebhookEventDataAddressCountryBq, WorkerOffboardingStartedWebhookEventDataAddressCountryBr, WorkerOffboardingStartedWebhookEventDataAddressCountryBs, WorkerOffboardingStartedWebhookEventDataAddressCountryBt, WorkerOffboardingStartedWebhookEventDataAddressCountryBv, WorkerOffboardingStartedWebhookEventDataAddressCountryBw, WorkerOffboardingStartedWebhookEventDataAddressCountryBy, WorkerOffboardingStartedWebhookEventDataAddressCountryBz, WorkerOffboardingStartedWebhookEventDataAddressCountryCa, WorkerOffboardingStartedWebhookEventDataAddressCountryCc, WorkerOffboardingStartedWebhookEventDataAddressCountryCd, WorkerOffboardingStartedWebhookEventDataAddressCountryCf, WorkerOffboardingStartedWebhookEventDataAddressCountryCg, WorkerOffboardingStartedWebhookEventDataAddressCountryCh, WorkerOffboardingStartedWebhookEventDataAddressCountryCi, WorkerOffboardingStartedWebhookEventDataAddressCountryCk, WorkerOffboardingStartedWebhookEventDataAddressCountryCl, WorkerOffboardingStartedWebhookEventDataAddressCountryCm, WorkerOffboardingStartedWebhookEventDataAddressCountryCn, WorkerOffboardingStartedWebhookEventDataAddressCountryCo, WorkerOffboardingStartedWebhookEventDataAddressCountryCr, WorkerOffboardingStartedWebhookEventDataAddressCountryCu, WorkerOffboardingStartedWebhookEventDataAddressCountryCv, WorkerOffboardingStartedWebhookEventDataAddressCountryCw, WorkerOffboardingStartedWebhookEventDataAddressCountryCx, WorkerOffboardingStartedWebhookEventDataAddressCountryCy, WorkerOffboardingStartedWebhookEventDataAddressCountryCz, WorkerOffboardingStartedWebhookEventDataAddressCountryDe, WorkerOffboardingStartedWebhookEventDataAddressCountryDj, WorkerOffboardingStartedWebhookEventDataAddressCountryDk, WorkerOffboardingStartedWebhookEventDataAddressCountryDm, WorkerOffboardingStartedWebhookEventDataAddressCountryDo, WorkerOffboardingStartedWebhookEventDataAddressCountryDz, WorkerOffboardingStartedWebhookEventDataAddressCountryEc, WorkerOffboardingStartedWebhookEventDataAddressCountryEe, WorkerOffboardingStartedWebhookEventDataAddressCountryEg, WorkerOffboardingStartedWebhookEventDataAddressCountryEh, WorkerOffboardingStartedWebhookEventDataAddressCountryEr, WorkerOffboardingStartedWebhookEventDataAddressCountryEs, WorkerOffboardingStartedWebhookEventDataAddressCountryEt, WorkerOffboardingStartedWebhookEventDataAddressCountryFi, WorkerOffboardingStartedWebhookEventDataAddressCountryFj, WorkerOffboardingStartedWebhookEventDataAddressCountryFk, WorkerOffboardingStartedWebhookEventDataAddressCountryFm, WorkerOffboardingStartedWebhookEventDataAddressCountryFo, WorkerOffboardingStartedWebhookEventDataAddressCountryFr, WorkerOffboardingStartedWebhookEventDataAddressCountryGa, WorkerOffboardingStartedWebhookEventDataAddressCountryGB, WorkerOffboardingStartedWebhookEventDataAddressCountryGd, WorkerOffboardingStartedWebhookEventDataAddressCountryGe, WorkerOffboardingStartedWebhookEventDataAddressCountryGf, WorkerOffboardingStartedWebhookEventDataAddressCountryGg, WorkerOffboardingStartedWebhookEventDataAddressCountryGh, WorkerOffboardingStartedWebhookEventDataAddressCountryGi, WorkerOffboardingStartedWebhookEventDataAddressCountryGl, WorkerOffboardingStartedWebhookEventDataAddressCountryGm, WorkerOffboardingStartedWebhookEventDataAddressCountryGn, WorkerOffboardingStartedWebhookEventDataAddressCountryGp, WorkerOffboardingStartedWebhookEventDataAddressCountryGq, WorkerOffboardingStartedWebhookEventDataAddressCountryGr, WorkerOffboardingStartedWebhookEventDataAddressCountryGs, WorkerOffboardingStartedWebhookEventDataAddressCountryGt, WorkerOffboardingStartedWebhookEventDataAddressCountryGu, WorkerOffboardingStartedWebhookEventDataAddressCountryGw, WorkerOffboardingStartedWebhookEventDataAddressCountryGy, WorkerOffboardingStartedWebhookEventDataAddressCountryHk, WorkerOffboardingStartedWebhookEventDataAddressCountryHm, WorkerOffboardingStartedWebhookEventDataAddressCountryHn, WorkerOffboardingStartedWebhookEventDataAddressCountryHr, WorkerOffboardingStartedWebhookEventDataAddressCountryHt, WorkerOffboardingStartedWebhookEventDataAddressCountryHu, WorkerOffboardingStartedWebhookEventDataAddressCountryID, WorkerOffboardingStartedWebhookEventDataAddressCountryIe, WorkerOffboardingStartedWebhookEventDataAddressCountryIl, WorkerOffboardingStartedWebhookEventDataAddressCountryIm, WorkerOffboardingStartedWebhookEventDataAddressCountryIn, WorkerOffboardingStartedWebhookEventDataAddressCountryIo, WorkerOffboardingStartedWebhookEventDataAddressCountryIq, WorkerOffboardingStartedWebhookEventDataAddressCountryIr, WorkerOffboardingStartedWebhookEventDataAddressCountryIs, WorkerOffboardingStartedWebhookEventDataAddressCountryIt, WorkerOffboardingStartedWebhookEventDataAddressCountryJe, WorkerOffboardingStartedWebhookEventDataAddressCountryJm, WorkerOffboardingStartedWebhookEventDataAddressCountryJo, WorkerOffboardingStartedWebhookEventDataAddressCountryJp, WorkerOffboardingStartedWebhookEventDataAddressCountryKe, WorkerOffboardingStartedWebhookEventDataAddressCountryKg, WorkerOffboardingStartedWebhookEventDataAddressCountryKh, WorkerOffboardingStartedWebhookEventDataAddressCountryKi, WorkerOffboardingStartedWebhookEventDataAddressCountryKm, WorkerOffboardingStartedWebhookEventDataAddressCountryKn, WorkerOffboardingStartedWebhookEventDataAddressCountryKp, WorkerOffboardingStartedWebhookEventDataAddressCountryKr, WorkerOffboardingStartedWebhookEventDataAddressCountryKw, WorkerOffboardingStartedWebhookEventDataAddressCountryKy, WorkerOffboardingStartedWebhookEventDataAddressCountryKz, WorkerOffboardingStartedWebhookEventDataAddressCountryLa, WorkerOffboardingStartedWebhookEventDataAddressCountryLb, WorkerOffboardingStartedWebhookEventDataAddressCountryLc, WorkerOffboardingStartedWebhookEventDataAddressCountryLi, WorkerOffboardingStartedWebhookEventDataAddressCountryLk, WorkerOffboardingStartedWebhookEventDataAddressCountryLr, WorkerOffboardingStartedWebhookEventDataAddressCountryLs, WorkerOffboardingStartedWebhookEventDataAddressCountryLt, WorkerOffboardingStartedWebhookEventDataAddressCountryLu, WorkerOffboardingStartedWebhookEventDataAddressCountryLv, WorkerOffboardingStartedWebhookEventDataAddressCountryLy, WorkerOffboardingStartedWebhookEventDataAddressCountryMa, WorkerOffboardingStartedWebhookEventDataAddressCountryMc, WorkerOffboardingStartedWebhookEventDataAddressCountryMd, WorkerOffboardingStartedWebhookEventDataAddressCountryMe, WorkerOffboardingStartedWebhookEventDataAddressCountryMf, WorkerOffboardingStartedWebhookEventDataAddressCountryMg, WorkerOffboardingStartedWebhookEventDataAddressCountryMh, WorkerOffboardingStartedWebhookEventDataAddressCountryMk, WorkerOffboardingStartedWebhookEventDataAddressCountryMl, WorkerOffboardingStartedWebhookEventDataAddressCountryMm, WorkerOffboardingStartedWebhookEventDataAddressCountryMn, WorkerOffboardingStartedWebhookEventDataAddressCountryMo, WorkerOffboardingStartedWebhookEventDataAddressCountryMp, WorkerOffboardingStartedWebhookEventDataAddressCountryMq, WorkerOffboardingStartedWebhookEventDataAddressCountryMr, WorkerOffboardingStartedWebhookEventDataAddressCountryMs, WorkerOffboardingStartedWebhookEventDataAddressCountryMt, WorkerOffboardingStartedWebhookEventDataAddressCountryMu, WorkerOffboardingStartedWebhookEventDataAddressCountryMv, WorkerOffboardingStartedWebhookEventDataAddressCountryMw, WorkerOffboardingStartedWebhookEventDataAddressCountryMx, WorkerOffboardingStartedWebhookEventDataAddressCountryMy, WorkerOffboardingStartedWebhookEventDataAddressCountryMz, WorkerOffboardingStartedWebhookEventDataAddressCountryNa, WorkerOffboardingStartedWebhookEventDataAddressCountryNc, WorkerOffboardingStartedWebhookEventDataAddressCountryNe, WorkerOffboardingStartedWebhookEventDataAddressCountryNf, WorkerOffboardingStartedWebhookEventDataAddressCountryNg, WorkerOffboardingStartedWebhookEventDataAddressCountryNi, WorkerOffboardingStartedWebhookEventDataAddressCountryNl, WorkerOffboardingStartedWebhookEventDataAddressCountryNo, WorkerOffboardingStartedWebhookEventDataAddressCountryNp, WorkerOffboardingStartedWebhookEventDataAddressCountryNr, WorkerOffboardingStartedWebhookEventDataAddressCountryNu, WorkerOffboardingStartedWebhookEventDataAddressCountryNz, WorkerOffboardingStartedWebhookEventDataAddressCountryOm, WorkerOffboardingStartedWebhookEventDataAddressCountryPa, WorkerOffboardingStartedWebhookEventDataAddressCountryPe, WorkerOffboardingStartedWebhookEventDataAddressCountryPf, WorkerOffboardingStartedWebhookEventDataAddressCountryPg, WorkerOffboardingStartedWebhookEventDataAddressCountryPh, WorkerOffboardingStartedWebhookEventDataAddressCountryPk, WorkerOffboardingStartedWebhookEventDataAddressCountryPl, WorkerOffboardingStartedWebhookEventDataAddressCountryPm, WorkerOffboardingStartedWebhookEventDataAddressCountryPn, WorkerOffboardingStartedWebhookEventDataAddressCountryPr, WorkerOffboardingStartedWebhookEventDataAddressCountryPs, WorkerOffboardingStartedWebhookEventDataAddressCountryPt, WorkerOffboardingStartedWebhookEventDataAddressCountryPw, WorkerOffboardingStartedWebhookEventDataAddressCountryPy, WorkerOffboardingStartedWebhookEventDataAddressCountryQa, WorkerOffboardingStartedWebhookEventDataAddressCountryRe, WorkerOffboardingStartedWebhookEventDataAddressCountryRo, WorkerOffboardingStartedWebhookEventDataAddressCountryRs, WorkerOffboardingStartedWebhookEventDataAddressCountryRu, WorkerOffboardingStartedWebhookEventDataAddressCountryRw, WorkerOffboardingStartedWebhookEventDataAddressCountrySa, WorkerOffboardingStartedWebhookEventDataAddressCountrySb, WorkerOffboardingStartedWebhookEventDataAddressCountrySc, WorkerOffboardingStartedWebhookEventDataAddressCountrySd, WorkerOffboardingStartedWebhookEventDataAddressCountrySe, WorkerOffboardingStartedWebhookEventDataAddressCountrySg, WorkerOffboardingStartedWebhookEventDataAddressCountrySh, WorkerOffboardingStartedWebhookEventDataAddressCountrySi, WorkerOffboardingStartedWebhookEventDataAddressCountrySj, WorkerOffboardingStartedWebhookEventDataAddressCountrySk, WorkerOffboardingStartedWebhookEventDataAddressCountrySl, WorkerOffboardingStartedWebhookEventDataAddressCountrySm, WorkerOffboardingStartedWebhookEventDataAddressCountrySn, WorkerOffboardingStartedWebhookEventDataAddressCountrySo, WorkerOffboardingStartedWebhookEventDataAddressCountrySr, WorkerOffboardingStartedWebhookEventDataAddressCountrySS, WorkerOffboardingStartedWebhookEventDataAddressCountrySt, WorkerOffboardingStartedWebhookEventDataAddressCountrySv, WorkerOffboardingStartedWebhookEventDataAddressCountrySx, WorkerOffboardingStartedWebhookEventDataAddressCountrySy, WorkerOffboardingStartedWebhookEventDataAddressCountrySz, WorkerOffboardingStartedWebhookEventDataAddressCountryTc, WorkerOffboardingStartedWebhookEventDataAddressCountryTd, WorkerOffboardingStartedWebhookEventDataAddressCountryTf, WorkerOffboardingStartedWebhookEventDataAddressCountryTg, WorkerOffboardingStartedWebhookEventDataAddressCountryTh, WorkerOffboardingStartedWebhookEventDataAddressCountryTj, WorkerOffboardingStartedWebhookEventDataAddressCountryTk, WorkerOffboardingStartedWebhookEventDataAddressCountryTl, WorkerOffboardingStartedWebhookEventDataAddressCountryTm, WorkerOffboardingStartedWebhookEventDataAddressCountryTn, WorkerOffboardingStartedWebhookEventDataAddressCountryTo, WorkerOffboardingStartedWebhookEventDataAddressCountryTr, WorkerOffboardingStartedWebhookEventDataAddressCountryTt, WorkerOffboardingStartedWebhookEventDataAddressCountryTv, WorkerOffboardingStartedWebhookEventDataAddressCountryTw, WorkerOffboardingStartedWebhookEventDataAddressCountryTz, WorkerOffboardingStartedWebhookEventDataAddressCountryUa, WorkerOffboardingStartedWebhookEventDataAddressCountryUg, WorkerOffboardingStartedWebhookEventDataAddressCountryUm, WorkerOffboardingStartedWebhookEventDataAddressCountryUs, WorkerOffboardingStartedWebhookEventDataAddressCountryUy, WorkerOffboardingStartedWebhookEventDataAddressCountryUz, WorkerOffboardingStartedWebhookEventDataAddressCountryVa, WorkerOffboardingStartedWebhookEventDataAddressCountryVc, WorkerOffboardingStartedWebhookEventDataAddressCountryVe, WorkerOffboardingStartedWebhookEventDataAddressCountryVg, WorkerOffboardingStartedWebhookEventDataAddressCountryVi, WorkerOffboardingStartedWebhookEventDataAddressCountryVn, WorkerOffboardingStartedWebhookEventDataAddressCountryVu, WorkerOffboardingStartedWebhookEventDataAddressCountryWf, WorkerOffboardingStartedWebhookEventDataAddressCountryWs, WorkerOffboardingStartedWebhookEventDataAddressCountryXk, WorkerOffboardingStartedWebhookEventDataAddressCountryYe, WorkerOffboardingStartedWebhookEventDataAddressCountryYt, WorkerOffboardingStartedWebhookEventDataAddressCountryZa, WorkerOffboardingStartedWebhookEventDataAddressCountryZm, WorkerOffboardingStartedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerOffboardingStartedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                                 `json:"id" api:"required"`
@@ -5165,6 +7483,46 @@ func (r *WorkerOffboardingStartedWebhookEventDataDepartment) UnmarshalJSON(data 
 
 func (r workerOffboardingStartedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                                       `json:"id" api:"required"`
+	Name string                                                       `json:"name" api:"required"`
+	Type WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerOffboardingStartedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerOffboardingStartedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerOffboardingStartedWebhookEventDataPrimaryWorkplace]
+type workerOffboardingStartedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOffboardingStartedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOffboardingStartedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerOffboardingStartedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerOffboardingStartedWebhookEventDataLevel struct {
@@ -5216,9 +7574,11 @@ type WorkerOnboardingCompletedWebhookEvent struct {
 	// The event type.
 	Type WorkerOnboardingCompletedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                                    `json:"timestamp" api:"required"`
-	Data      WorkerOnboardingCompletedWebhookEventData `json:"data" api:"required"`
-	JSON      workerOnboardingCompletedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerOnboardingCompletedWebhookEventData `json:"data" api:"required"`
+	JSON workerOnboardingCompletedWebhookEventJSON `json:"-"`
 }
 
 // workerOnboardingCompletedWebhookEventJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEvent]
@@ -5269,6 +7629,16 @@ type WorkerOnboardingCompletedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerOnboardingCompletedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerOnboardingCompletedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerOnboardingCompletedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -5276,6 +7646,15 @@ type WorkerOnboardingCompletedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerOnboardingCompletedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -5289,27 +7668,36 @@ type WorkerOnboardingCompletedWebhookEventData struct {
 
 // workerOnboardingCompletedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventData]
 type workerOnboardingCompletedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerOnboardingCompletedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -5354,6 +7742,329 @@ func (r WorkerOnboardingCompletedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerOnboardingCompletedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerOnboardingCompletedWebhookEventDataBiologicalSexMale   WorkerOnboardingCompletedWebhookEventDataBiologicalSex = "male"
+	WorkerOnboardingCompletedWebhookEventDataBiologicalSexFemale WorkerOnboardingCompletedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventDataBiologicalSexMale, WorkerOnboardingCompletedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerOnboardingCompletedWebhookEventDataMaritalStatusMarried    WorkerOnboardingCompletedWebhookEventDataMaritalStatus = "married"
+	WorkerOnboardingCompletedWebhookEventDataMaritalStatusNotMarried WorkerOnboardingCompletedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventDataMaritalStatusMarried, WorkerOnboardingCompletedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerOnboardingCompletedWebhookEventDataAddress struct {
+	Line1      string                                                  `json:"line1" api:"required"`
+	Line2      string                                                  `json:"line2" api:"required,nullable"`
+	City       string                                                  `json:"city" api:"required"`
+	State      string                                                  `json:"state" api:"required,nullable"`
+	PostalCode string                                                  `json:"postalCode" api:"required,nullable"`
+	Country    WorkerOnboardingCompletedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerOnboardingCompletedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventDataAddress]
+type workerOnboardingCompletedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventDataAddressCountry string
+
+const (
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAI WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAq WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AQ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAx WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AX"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryAz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "AZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBb WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BB"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBj WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BJ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBq WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BQ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBv WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BV"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryBz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "BZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCv WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CV"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCx WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CX"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryCz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "CZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryDe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "DE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryDj WorkerOnboardingCompletedWebhookEventDataAddressCountry = "DJ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryDk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "DK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryDm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "DM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryDo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "DO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryDz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "DZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "EC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "EE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "EG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "EH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ER"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ES"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryEt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ET"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryFi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "FI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryFj WorkerOnboardingCompletedWebhookEventDataAddressCountry = "FJ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryFk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "FK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryFm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "FM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryFo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "FO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryFr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "FR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGB WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GB"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGp WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GP"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGq WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GQ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryGy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "GY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryHk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "HK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryHm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "HM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryHn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "HN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryHr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "HR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryHt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "HT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryHu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "HU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryID WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ID"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIq WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IQ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryIt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "IT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryJe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "JE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryJm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "JM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryJo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "JO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryJp WorkerOnboardingCompletedWebhookEventDataAddressCountry = "JP"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKp WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KP"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryKz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "KZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLb WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LB"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLv WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LV"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryLy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "LY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ME"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ML"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMp WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MP"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMq WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MQ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMv WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MV"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMx WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MX"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryMz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "MZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNp WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NP"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryNz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "NZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryOm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "OM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryPy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "PY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryQa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "QA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryRe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "RE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryRo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "RO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryRs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "RS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryRu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "RU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryRw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "RW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySb WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SB"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySj WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SJ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySS WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ST"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySv WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SV"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySx WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SX"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountrySz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "SZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTd WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TD"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTh WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TH"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTj WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TJ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTl WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TL"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTo WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TO"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTr WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TR"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTv WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TV"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TW"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryTz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "TZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryUa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "UA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryUg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "UG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryUm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "UM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryUs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "US"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryUy WorkerOnboardingCompletedWebhookEventDataAddressCountry = "UY"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryUz WorkerOnboardingCompletedWebhookEventDataAddressCountry = "UZ"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVc WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VC"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVg WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VG"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVi WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VI"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVn WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VN"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryVu WorkerOnboardingCompletedWebhookEventDataAddressCountry = "VU"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryWf WorkerOnboardingCompletedWebhookEventDataAddressCountry = "WF"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryWs WorkerOnboardingCompletedWebhookEventDataAddressCountry = "WS"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryXk WorkerOnboardingCompletedWebhookEventDataAddressCountry = "XK"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryYe WorkerOnboardingCompletedWebhookEventDataAddressCountry = "YE"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryYt WorkerOnboardingCompletedWebhookEventDataAddressCountry = "YT"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryZa WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ZA"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryZm WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ZM"
+	WorkerOnboardingCompletedWebhookEventDataAddressCountryZw WorkerOnboardingCompletedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventDataAddressCountryAd, WorkerOnboardingCompletedWebhookEventDataAddressCountryAe, WorkerOnboardingCompletedWebhookEventDataAddressCountryAf, WorkerOnboardingCompletedWebhookEventDataAddressCountryAg, WorkerOnboardingCompletedWebhookEventDataAddressCountryAI, WorkerOnboardingCompletedWebhookEventDataAddressCountryAl, WorkerOnboardingCompletedWebhookEventDataAddressCountryAm, WorkerOnboardingCompletedWebhookEventDataAddressCountryAo, WorkerOnboardingCompletedWebhookEventDataAddressCountryAq, WorkerOnboardingCompletedWebhookEventDataAddressCountryAr, WorkerOnboardingCompletedWebhookEventDataAddressCountryAs, WorkerOnboardingCompletedWebhookEventDataAddressCountryAt, WorkerOnboardingCompletedWebhookEventDataAddressCountryAu, WorkerOnboardingCompletedWebhookEventDataAddressCountryAw, WorkerOnboardingCompletedWebhookEventDataAddressCountryAx, WorkerOnboardingCompletedWebhookEventDataAddressCountryAz, WorkerOnboardingCompletedWebhookEventDataAddressCountryBa, WorkerOnboardingCompletedWebhookEventDataAddressCountryBb, WorkerOnboardingCompletedWebhookEventDataAddressCountryBd, WorkerOnboardingCompletedWebhookEventDataAddressCountryBe, WorkerOnboardingCompletedWebhookEventDataAddressCountryBf, WorkerOnboardingCompletedWebhookEventDataAddressCountryBg, WorkerOnboardingCompletedWebhookEventDataAddressCountryBh, WorkerOnboardingCompletedWebhookEventDataAddressCountryBi, WorkerOnboardingCompletedWebhookEventDataAddressCountryBj, WorkerOnboardingCompletedWebhookEventDataAddressCountryBl, WorkerOnboardingCompletedWebhookEventDataAddressCountryBm, WorkerOnboardingCompletedWebhookEventDataAddressCountryBn, WorkerOnboardingCompletedWebhookEventDataAddressCountryBo, WorkerOnboardingCompletedWebhookEventDataAddressCountryBq, WorkerOnboardingCompletedWebhookEventDataAddressCountryBr, WorkerOnboardingCompletedWebhookEventDataAddressCountryBs, WorkerOnboardingCompletedWebhookEventDataAddressCountryBt, WorkerOnboardingCompletedWebhookEventDataAddressCountryBv, WorkerOnboardingCompletedWebhookEventDataAddressCountryBw, WorkerOnboardingCompletedWebhookEventDataAddressCountryBy, WorkerOnboardingCompletedWebhookEventDataAddressCountryBz, WorkerOnboardingCompletedWebhookEventDataAddressCountryCa, WorkerOnboardingCompletedWebhookEventDataAddressCountryCc, WorkerOnboardingCompletedWebhookEventDataAddressCountryCd, WorkerOnboardingCompletedWebhookEventDataAddressCountryCf, WorkerOnboardingCompletedWebhookEventDataAddressCountryCg, WorkerOnboardingCompletedWebhookEventDataAddressCountryCh, WorkerOnboardingCompletedWebhookEventDataAddressCountryCi, WorkerOnboardingCompletedWebhookEventDataAddressCountryCk, WorkerOnboardingCompletedWebhookEventDataAddressCountryCl, WorkerOnboardingCompletedWebhookEventDataAddressCountryCm, WorkerOnboardingCompletedWebhookEventDataAddressCountryCn, WorkerOnboardingCompletedWebhookEventDataAddressCountryCo, WorkerOnboardingCompletedWebhookEventDataAddressCountryCr, WorkerOnboardingCompletedWebhookEventDataAddressCountryCu, WorkerOnboardingCompletedWebhookEventDataAddressCountryCv, WorkerOnboardingCompletedWebhookEventDataAddressCountryCw, WorkerOnboardingCompletedWebhookEventDataAddressCountryCx, WorkerOnboardingCompletedWebhookEventDataAddressCountryCy, WorkerOnboardingCompletedWebhookEventDataAddressCountryCz, WorkerOnboardingCompletedWebhookEventDataAddressCountryDe, WorkerOnboardingCompletedWebhookEventDataAddressCountryDj, WorkerOnboardingCompletedWebhookEventDataAddressCountryDk, WorkerOnboardingCompletedWebhookEventDataAddressCountryDm, WorkerOnboardingCompletedWebhookEventDataAddressCountryDo, WorkerOnboardingCompletedWebhookEventDataAddressCountryDz, WorkerOnboardingCompletedWebhookEventDataAddressCountryEc, WorkerOnboardingCompletedWebhookEventDataAddressCountryEe, WorkerOnboardingCompletedWebhookEventDataAddressCountryEg, WorkerOnboardingCompletedWebhookEventDataAddressCountryEh, WorkerOnboardingCompletedWebhookEventDataAddressCountryEr, WorkerOnboardingCompletedWebhookEventDataAddressCountryEs, WorkerOnboardingCompletedWebhookEventDataAddressCountryEt, WorkerOnboardingCompletedWebhookEventDataAddressCountryFi, WorkerOnboardingCompletedWebhookEventDataAddressCountryFj, WorkerOnboardingCompletedWebhookEventDataAddressCountryFk, WorkerOnboardingCompletedWebhookEventDataAddressCountryFm, WorkerOnboardingCompletedWebhookEventDataAddressCountryFo, WorkerOnboardingCompletedWebhookEventDataAddressCountryFr, WorkerOnboardingCompletedWebhookEventDataAddressCountryGa, WorkerOnboardingCompletedWebhookEventDataAddressCountryGB, WorkerOnboardingCompletedWebhookEventDataAddressCountryGd, WorkerOnboardingCompletedWebhookEventDataAddressCountryGe, WorkerOnboardingCompletedWebhookEventDataAddressCountryGf, WorkerOnboardingCompletedWebhookEventDataAddressCountryGg, WorkerOnboardingCompletedWebhookEventDataAddressCountryGh, WorkerOnboardingCompletedWebhookEventDataAddressCountryGi, WorkerOnboardingCompletedWebhookEventDataAddressCountryGl, WorkerOnboardingCompletedWebhookEventDataAddressCountryGm, WorkerOnboardingCompletedWebhookEventDataAddressCountryGn, WorkerOnboardingCompletedWebhookEventDataAddressCountryGp, WorkerOnboardingCompletedWebhookEventDataAddressCountryGq, WorkerOnboardingCompletedWebhookEventDataAddressCountryGr, WorkerOnboardingCompletedWebhookEventDataAddressCountryGs, WorkerOnboardingCompletedWebhookEventDataAddressCountryGt, WorkerOnboardingCompletedWebhookEventDataAddressCountryGu, WorkerOnboardingCompletedWebhookEventDataAddressCountryGw, WorkerOnboardingCompletedWebhookEventDataAddressCountryGy, WorkerOnboardingCompletedWebhookEventDataAddressCountryHk, WorkerOnboardingCompletedWebhookEventDataAddressCountryHm, WorkerOnboardingCompletedWebhookEventDataAddressCountryHn, WorkerOnboardingCompletedWebhookEventDataAddressCountryHr, WorkerOnboardingCompletedWebhookEventDataAddressCountryHt, WorkerOnboardingCompletedWebhookEventDataAddressCountryHu, WorkerOnboardingCompletedWebhookEventDataAddressCountryID, WorkerOnboardingCompletedWebhookEventDataAddressCountryIe, WorkerOnboardingCompletedWebhookEventDataAddressCountryIl, WorkerOnboardingCompletedWebhookEventDataAddressCountryIm, WorkerOnboardingCompletedWebhookEventDataAddressCountryIn, WorkerOnboardingCompletedWebhookEventDataAddressCountryIo, WorkerOnboardingCompletedWebhookEventDataAddressCountryIq, WorkerOnboardingCompletedWebhookEventDataAddressCountryIr, WorkerOnboardingCompletedWebhookEventDataAddressCountryIs, WorkerOnboardingCompletedWebhookEventDataAddressCountryIt, WorkerOnboardingCompletedWebhookEventDataAddressCountryJe, WorkerOnboardingCompletedWebhookEventDataAddressCountryJm, WorkerOnboardingCompletedWebhookEventDataAddressCountryJo, WorkerOnboardingCompletedWebhookEventDataAddressCountryJp, WorkerOnboardingCompletedWebhookEventDataAddressCountryKe, WorkerOnboardingCompletedWebhookEventDataAddressCountryKg, WorkerOnboardingCompletedWebhookEventDataAddressCountryKh, WorkerOnboardingCompletedWebhookEventDataAddressCountryKi, WorkerOnboardingCompletedWebhookEventDataAddressCountryKm, WorkerOnboardingCompletedWebhookEventDataAddressCountryKn, WorkerOnboardingCompletedWebhookEventDataAddressCountryKp, WorkerOnboardingCompletedWebhookEventDataAddressCountryKr, WorkerOnboardingCompletedWebhookEventDataAddressCountryKw, WorkerOnboardingCompletedWebhookEventDataAddressCountryKy, WorkerOnboardingCompletedWebhookEventDataAddressCountryKz, WorkerOnboardingCompletedWebhookEventDataAddressCountryLa, WorkerOnboardingCompletedWebhookEventDataAddressCountryLb, WorkerOnboardingCompletedWebhookEventDataAddressCountryLc, WorkerOnboardingCompletedWebhookEventDataAddressCountryLi, WorkerOnboardingCompletedWebhookEventDataAddressCountryLk, WorkerOnboardingCompletedWebhookEventDataAddressCountryLr, WorkerOnboardingCompletedWebhookEventDataAddressCountryLs, WorkerOnboardingCompletedWebhookEventDataAddressCountryLt, WorkerOnboardingCompletedWebhookEventDataAddressCountryLu, WorkerOnboardingCompletedWebhookEventDataAddressCountryLv, WorkerOnboardingCompletedWebhookEventDataAddressCountryLy, WorkerOnboardingCompletedWebhookEventDataAddressCountryMa, WorkerOnboardingCompletedWebhookEventDataAddressCountryMc, WorkerOnboardingCompletedWebhookEventDataAddressCountryMd, WorkerOnboardingCompletedWebhookEventDataAddressCountryMe, WorkerOnboardingCompletedWebhookEventDataAddressCountryMf, WorkerOnboardingCompletedWebhookEventDataAddressCountryMg, WorkerOnboardingCompletedWebhookEventDataAddressCountryMh, WorkerOnboardingCompletedWebhookEventDataAddressCountryMk, WorkerOnboardingCompletedWebhookEventDataAddressCountryMl, WorkerOnboardingCompletedWebhookEventDataAddressCountryMm, WorkerOnboardingCompletedWebhookEventDataAddressCountryMn, WorkerOnboardingCompletedWebhookEventDataAddressCountryMo, WorkerOnboardingCompletedWebhookEventDataAddressCountryMp, WorkerOnboardingCompletedWebhookEventDataAddressCountryMq, WorkerOnboardingCompletedWebhookEventDataAddressCountryMr, WorkerOnboardingCompletedWebhookEventDataAddressCountryMs, WorkerOnboardingCompletedWebhookEventDataAddressCountryMt, WorkerOnboardingCompletedWebhookEventDataAddressCountryMu, WorkerOnboardingCompletedWebhookEventDataAddressCountryMv, WorkerOnboardingCompletedWebhookEventDataAddressCountryMw, WorkerOnboardingCompletedWebhookEventDataAddressCountryMx, WorkerOnboardingCompletedWebhookEventDataAddressCountryMy, WorkerOnboardingCompletedWebhookEventDataAddressCountryMz, WorkerOnboardingCompletedWebhookEventDataAddressCountryNa, WorkerOnboardingCompletedWebhookEventDataAddressCountryNc, WorkerOnboardingCompletedWebhookEventDataAddressCountryNe, WorkerOnboardingCompletedWebhookEventDataAddressCountryNf, WorkerOnboardingCompletedWebhookEventDataAddressCountryNg, WorkerOnboardingCompletedWebhookEventDataAddressCountryNi, WorkerOnboardingCompletedWebhookEventDataAddressCountryNl, WorkerOnboardingCompletedWebhookEventDataAddressCountryNo, WorkerOnboardingCompletedWebhookEventDataAddressCountryNp, WorkerOnboardingCompletedWebhookEventDataAddressCountryNr, WorkerOnboardingCompletedWebhookEventDataAddressCountryNu, WorkerOnboardingCompletedWebhookEventDataAddressCountryNz, WorkerOnboardingCompletedWebhookEventDataAddressCountryOm, WorkerOnboardingCompletedWebhookEventDataAddressCountryPa, WorkerOnboardingCompletedWebhookEventDataAddressCountryPe, WorkerOnboardingCompletedWebhookEventDataAddressCountryPf, WorkerOnboardingCompletedWebhookEventDataAddressCountryPg, WorkerOnboardingCompletedWebhookEventDataAddressCountryPh, WorkerOnboardingCompletedWebhookEventDataAddressCountryPk, WorkerOnboardingCompletedWebhookEventDataAddressCountryPl, WorkerOnboardingCompletedWebhookEventDataAddressCountryPm, WorkerOnboardingCompletedWebhookEventDataAddressCountryPn, WorkerOnboardingCompletedWebhookEventDataAddressCountryPr, WorkerOnboardingCompletedWebhookEventDataAddressCountryPs, WorkerOnboardingCompletedWebhookEventDataAddressCountryPt, WorkerOnboardingCompletedWebhookEventDataAddressCountryPw, WorkerOnboardingCompletedWebhookEventDataAddressCountryPy, WorkerOnboardingCompletedWebhookEventDataAddressCountryQa, WorkerOnboardingCompletedWebhookEventDataAddressCountryRe, WorkerOnboardingCompletedWebhookEventDataAddressCountryRo, WorkerOnboardingCompletedWebhookEventDataAddressCountryRs, WorkerOnboardingCompletedWebhookEventDataAddressCountryRu, WorkerOnboardingCompletedWebhookEventDataAddressCountryRw, WorkerOnboardingCompletedWebhookEventDataAddressCountrySa, WorkerOnboardingCompletedWebhookEventDataAddressCountrySb, WorkerOnboardingCompletedWebhookEventDataAddressCountrySc, WorkerOnboardingCompletedWebhookEventDataAddressCountrySd, WorkerOnboardingCompletedWebhookEventDataAddressCountrySe, WorkerOnboardingCompletedWebhookEventDataAddressCountrySg, WorkerOnboardingCompletedWebhookEventDataAddressCountrySh, WorkerOnboardingCompletedWebhookEventDataAddressCountrySi, WorkerOnboardingCompletedWebhookEventDataAddressCountrySj, WorkerOnboardingCompletedWebhookEventDataAddressCountrySk, WorkerOnboardingCompletedWebhookEventDataAddressCountrySl, WorkerOnboardingCompletedWebhookEventDataAddressCountrySm, WorkerOnboardingCompletedWebhookEventDataAddressCountrySn, WorkerOnboardingCompletedWebhookEventDataAddressCountrySo, WorkerOnboardingCompletedWebhookEventDataAddressCountrySr, WorkerOnboardingCompletedWebhookEventDataAddressCountrySS, WorkerOnboardingCompletedWebhookEventDataAddressCountrySt, WorkerOnboardingCompletedWebhookEventDataAddressCountrySv, WorkerOnboardingCompletedWebhookEventDataAddressCountrySx, WorkerOnboardingCompletedWebhookEventDataAddressCountrySy, WorkerOnboardingCompletedWebhookEventDataAddressCountrySz, WorkerOnboardingCompletedWebhookEventDataAddressCountryTc, WorkerOnboardingCompletedWebhookEventDataAddressCountryTd, WorkerOnboardingCompletedWebhookEventDataAddressCountryTf, WorkerOnboardingCompletedWebhookEventDataAddressCountryTg, WorkerOnboardingCompletedWebhookEventDataAddressCountryTh, WorkerOnboardingCompletedWebhookEventDataAddressCountryTj, WorkerOnboardingCompletedWebhookEventDataAddressCountryTk, WorkerOnboardingCompletedWebhookEventDataAddressCountryTl, WorkerOnboardingCompletedWebhookEventDataAddressCountryTm, WorkerOnboardingCompletedWebhookEventDataAddressCountryTn, WorkerOnboardingCompletedWebhookEventDataAddressCountryTo, WorkerOnboardingCompletedWebhookEventDataAddressCountryTr, WorkerOnboardingCompletedWebhookEventDataAddressCountryTt, WorkerOnboardingCompletedWebhookEventDataAddressCountryTv, WorkerOnboardingCompletedWebhookEventDataAddressCountryTw, WorkerOnboardingCompletedWebhookEventDataAddressCountryTz, WorkerOnboardingCompletedWebhookEventDataAddressCountryUa, WorkerOnboardingCompletedWebhookEventDataAddressCountryUg, WorkerOnboardingCompletedWebhookEventDataAddressCountryUm, WorkerOnboardingCompletedWebhookEventDataAddressCountryUs, WorkerOnboardingCompletedWebhookEventDataAddressCountryUy, WorkerOnboardingCompletedWebhookEventDataAddressCountryUz, WorkerOnboardingCompletedWebhookEventDataAddressCountryVa, WorkerOnboardingCompletedWebhookEventDataAddressCountryVc, WorkerOnboardingCompletedWebhookEventDataAddressCountryVe, WorkerOnboardingCompletedWebhookEventDataAddressCountryVg, WorkerOnboardingCompletedWebhookEventDataAddressCountryVi, WorkerOnboardingCompletedWebhookEventDataAddressCountryVn, WorkerOnboardingCompletedWebhookEventDataAddressCountryVu, WorkerOnboardingCompletedWebhookEventDataAddressCountryWf, WorkerOnboardingCompletedWebhookEventDataAddressCountryWs, WorkerOnboardingCompletedWebhookEventDataAddressCountryXk, WorkerOnboardingCompletedWebhookEventDataAddressCountryYe, WorkerOnboardingCompletedWebhookEventDataAddressCountryYt, WorkerOnboardingCompletedWebhookEventDataAddressCountryZa, WorkerOnboardingCompletedWebhookEventDataAddressCountryZm, WorkerOnboardingCompletedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerOnboardingCompletedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                                  `json:"id" api:"required"`
@@ -5375,6 +8086,46 @@ func (r *WorkerOnboardingCompletedWebhookEventDataDepartment) UnmarshalJSON(data
 
 func (r workerOnboardingCompletedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                                        `json:"id" api:"required"`
+	Name string                                                        `json:"name" api:"required"`
+	Type WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerOnboardingCompletedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerOnboardingCompletedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplace]
+type workerOnboardingCompletedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerOnboardingCompletedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerOnboardingCompletedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerOnboardingCompletedWebhookEventDataLevel struct {
@@ -5426,9 +8177,11 @@ type WorkerReactivatedWebhookEvent struct {
 	// The event type.
 	Type WorkerReactivatedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                            `json:"timestamp" api:"required"`
-	Data      WorkerReactivatedWebhookEventData `json:"data" api:"required"`
-	JSON      workerReactivatedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerReactivatedWebhookEventData `json:"data" api:"required"`
+	JSON workerReactivatedWebhookEventJSON `json:"-"`
 }
 
 // workerReactivatedWebhookEventJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEvent]
@@ -5479,6 +8232,16 @@ type WorkerReactivatedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerReactivatedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerReactivatedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerReactivatedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -5486,6 +8249,15 @@ type WorkerReactivatedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerReactivatedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerReactivatedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -5499,27 +8271,36 @@ type WorkerReactivatedWebhookEventData struct {
 
 // workerReactivatedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventData]
 type workerReactivatedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerReactivatedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -5564,6 +8345,329 @@ func (r WorkerReactivatedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerReactivatedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerReactivatedWebhookEventDataBiologicalSexMale   WorkerReactivatedWebhookEventDataBiologicalSex = "male"
+	WorkerReactivatedWebhookEventDataBiologicalSexFemale WorkerReactivatedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerReactivatedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventDataBiologicalSexMale, WorkerReactivatedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerReactivatedWebhookEventDataMaritalStatusMarried    WorkerReactivatedWebhookEventDataMaritalStatus = "married"
+	WorkerReactivatedWebhookEventDataMaritalStatusNotMarried WorkerReactivatedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerReactivatedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventDataMaritalStatusMarried, WorkerReactivatedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerReactivatedWebhookEventDataAddress struct {
+	Line1      string                                          `json:"line1" api:"required"`
+	Line2      string                                          `json:"line2" api:"required,nullable"`
+	City       string                                          `json:"city" api:"required"`
+	State      string                                          `json:"state" api:"required,nullable"`
+	PostalCode string                                          `json:"postalCode" api:"required,nullable"`
+	Country    WorkerReactivatedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerReactivatedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerReactivatedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventDataAddress]
+type workerReactivatedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerReactivatedWebhookEventDataAddressCountry string
+
+const (
+	WorkerReactivatedWebhookEventDataAddressCountryAd WorkerReactivatedWebhookEventDataAddressCountry = "AD"
+	WorkerReactivatedWebhookEventDataAddressCountryAe WorkerReactivatedWebhookEventDataAddressCountry = "AE"
+	WorkerReactivatedWebhookEventDataAddressCountryAf WorkerReactivatedWebhookEventDataAddressCountry = "AF"
+	WorkerReactivatedWebhookEventDataAddressCountryAg WorkerReactivatedWebhookEventDataAddressCountry = "AG"
+	WorkerReactivatedWebhookEventDataAddressCountryAI WorkerReactivatedWebhookEventDataAddressCountry = "AI"
+	WorkerReactivatedWebhookEventDataAddressCountryAl WorkerReactivatedWebhookEventDataAddressCountry = "AL"
+	WorkerReactivatedWebhookEventDataAddressCountryAm WorkerReactivatedWebhookEventDataAddressCountry = "AM"
+	WorkerReactivatedWebhookEventDataAddressCountryAo WorkerReactivatedWebhookEventDataAddressCountry = "AO"
+	WorkerReactivatedWebhookEventDataAddressCountryAq WorkerReactivatedWebhookEventDataAddressCountry = "AQ"
+	WorkerReactivatedWebhookEventDataAddressCountryAr WorkerReactivatedWebhookEventDataAddressCountry = "AR"
+	WorkerReactivatedWebhookEventDataAddressCountryAs WorkerReactivatedWebhookEventDataAddressCountry = "AS"
+	WorkerReactivatedWebhookEventDataAddressCountryAt WorkerReactivatedWebhookEventDataAddressCountry = "AT"
+	WorkerReactivatedWebhookEventDataAddressCountryAu WorkerReactivatedWebhookEventDataAddressCountry = "AU"
+	WorkerReactivatedWebhookEventDataAddressCountryAw WorkerReactivatedWebhookEventDataAddressCountry = "AW"
+	WorkerReactivatedWebhookEventDataAddressCountryAx WorkerReactivatedWebhookEventDataAddressCountry = "AX"
+	WorkerReactivatedWebhookEventDataAddressCountryAz WorkerReactivatedWebhookEventDataAddressCountry = "AZ"
+	WorkerReactivatedWebhookEventDataAddressCountryBa WorkerReactivatedWebhookEventDataAddressCountry = "BA"
+	WorkerReactivatedWebhookEventDataAddressCountryBb WorkerReactivatedWebhookEventDataAddressCountry = "BB"
+	WorkerReactivatedWebhookEventDataAddressCountryBd WorkerReactivatedWebhookEventDataAddressCountry = "BD"
+	WorkerReactivatedWebhookEventDataAddressCountryBe WorkerReactivatedWebhookEventDataAddressCountry = "BE"
+	WorkerReactivatedWebhookEventDataAddressCountryBf WorkerReactivatedWebhookEventDataAddressCountry = "BF"
+	WorkerReactivatedWebhookEventDataAddressCountryBg WorkerReactivatedWebhookEventDataAddressCountry = "BG"
+	WorkerReactivatedWebhookEventDataAddressCountryBh WorkerReactivatedWebhookEventDataAddressCountry = "BH"
+	WorkerReactivatedWebhookEventDataAddressCountryBi WorkerReactivatedWebhookEventDataAddressCountry = "BI"
+	WorkerReactivatedWebhookEventDataAddressCountryBj WorkerReactivatedWebhookEventDataAddressCountry = "BJ"
+	WorkerReactivatedWebhookEventDataAddressCountryBl WorkerReactivatedWebhookEventDataAddressCountry = "BL"
+	WorkerReactivatedWebhookEventDataAddressCountryBm WorkerReactivatedWebhookEventDataAddressCountry = "BM"
+	WorkerReactivatedWebhookEventDataAddressCountryBn WorkerReactivatedWebhookEventDataAddressCountry = "BN"
+	WorkerReactivatedWebhookEventDataAddressCountryBo WorkerReactivatedWebhookEventDataAddressCountry = "BO"
+	WorkerReactivatedWebhookEventDataAddressCountryBq WorkerReactivatedWebhookEventDataAddressCountry = "BQ"
+	WorkerReactivatedWebhookEventDataAddressCountryBr WorkerReactivatedWebhookEventDataAddressCountry = "BR"
+	WorkerReactivatedWebhookEventDataAddressCountryBs WorkerReactivatedWebhookEventDataAddressCountry = "BS"
+	WorkerReactivatedWebhookEventDataAddressCountryBt WorkerReactivatedWebhookEventDataAddressCountry = "BT"
+	WorkerReactivatedWebhookEventDataAddressCountryBv WorkerReactivatedWebhookEventDataAddressCountry = "BV"
+	WorkerReactivatedWebhookEventDataAddressCountryBw WorkerReactivatedWebhookEventDataAddressCountry = "BW"
+	WorkerReactivatedWebhookEventDataAddressCountryBy WorkerReactivatedWebhookEventDataAddressCountry = "BY"
+	WorkerReactivatedWebhookEventDataAddressCountryBz WorkerReactivatedWebhookEventDataAddressCountry = "BZ"
+	WorkerReactivatedWebhookEventDataAddressCountryCa WorkerReactivatedWebhookEventDataAddressCountry = "CA"
+	WorkerReactivatedWebhookEventDataAddressCountryCc WorkerReactivatedWebhookEventDataAddressCountry = "CC"
+	WorkerReactivatedWebhookEventDataAddressCountryCd WorkerReactivatedWebhookEventDataAddressCountry = "CD"
+	WorkerReactivatedWebhookEventDataAddressCountryCf WorkerReactivatedWebhookEventDataAddressCountry = "CF"
+	WorkerReactivatedWebhookEventDataAddressCountryCg WorkerReactivatedWebhookEventDataAddressCountry = "CG"
+	WorkerReactivatedWebhookEventDataAddressCountryCh WorkerReactivatedWebhookEventDataAddressCountry = "CH"
+	WorkerReactivatedWebhookEventDataAddressCountryCi WorkerReactivatedWebhookEventDataAddressCountry = "CI"
+	WorkerReactivatedWebhookEventDataAddressCountryCk WorkerReactivatedWebhookEventDataAddressCountry = "CK"
+	WorkerReactivatedWebhookEventDataAddressCountryCl WorkerReactivatedWebhookEventDataAddressCountry = "CL"
+	WorkerReactivatedWebhookEventDataAddressCountryCm WorkerReactivatedWebhookEventDataAddressCountry = "CM"
+	WorkerReactivatedWebhookEventDataAddressCountryCn WorkerReactivatedWebhookEventDataAddressCountry = "CN"
+	WorkerReactivatedWebhookEventDataAddressCountryCo WorkerReactivatedWebhookEventDataAddressCountry = "CO"
+	WorkerReactivatedWebhookEventDataAddressCountryCr WorkerReactivatedWebhookEventDataAddressCountry = "CR"
+	WorkerReactivatedWebhookEventDataAddressCountryCu WorkerReactivatedWebhookEventDataAddressCountry = "CU"
+	WorkerReactivatedWebhookEventDataAddressCountryCv WorkerReactivatedWebhookEventDataAddressCountry = "CV"
+	WorkerReactivatedWebhookEventDataAddressCountryCw WorkerReactivatedWebhookEventDataAddressCountry = "CW"
+	WorkerReactivatedWebhookEventDataAddressCountryCx WorkerReactivatedWebhookEventDataAddressCountry = "CX"
+	WorkerReactivatedWebhookEventDataAddressCountryCy WorkerReactivatedWebhookEventDataAddressCountry = "CY"
+	WorkerReactivatedWebhookEventDataAddressCountryCz WorkerReactivatedWebhookEventDataAddressCountry = "CZ"
+	WorkerReactivatedWebhookEventDataAddressCountryDe WorkerReactivatedWebhookEventDataAddressCountry = "DE"
+	WorkerReactivatedWebhookEventDataAddressCountryDj WorkerReactivatedWebhookEventDataAddressCountry = "DJ"
+	WorkerReactivatedWebhookEventDataAddressCountryDk WorkerReactivatedWebhookEventDataAddressCountry = "DK"
+	WorkerReactivatedWebhookEventDataAddressCountryDm WorkerReactivatedWebhookEventDataAddressCountry = "DM"
+	WorkerReactivatedWebhookEventDataAddressCountryDo WorkerReactivatedWebhookEventDataAddressCountry = "DO"
+	WorkerReactivatedWebhookEventDataAddressCountryDz WorkerReactivatedWebhookEventDataAddressCountry = "DZ"
+	WorkerReactivatedWebhookEventDataAddressCountryEc WorkerReactivatedWebhookEventDataAddressCountry = "EC"
+	WorkerReactivatedWebhookEventDataAddressCountryEe WorkerReactivatedWebhookEventDataAddressCountry = "EE"
+	WorkerReactivatedWebhookEventDataAddressCountryEg WorkerReactivatedWebhookEventDataAddressCountry = "EG"
+	WorkerReactivatedWebhookEventDataAddressCountryEh WorkerReactivatedWebhookEventDataAddressCountry = "EH"
+	WorkerReactivatedWebhookEventDataAddressCountryEr WorkerReactivatedWebhookEventDataAddressCountry = "ER"
+	WorkerReactivatedWebhookEventDataAddressCountryEs WorkerReactivatedWebhookEventDataAddressCountry = "ES"
+	WorkerReactivatedWebhookEventDataAddressCountryEt WorkerReactivatedWebhookEventDataAddressCountry = "ET"
+	WorkerReactivatedWebhookEventDataAddressCountryFi WorkerReactivatedWebhookEventDataAddressCountry = "FI"
+	WorkerReactivatedWebhookEventDataAddressCountryFj WorkerReactivatedWebhookEventDataAddressCountry = "FJ"
+	WorkerReactivatedWebhookEventDataAddressCountryFk WorkerReactivatedWebhookEventDataAddressCountry = "FK"
+	WorkerReactivatedWebhookEventDataAddressCountryFm WorkerReactivatedWebhookEventDataAddressCountry = "FM"
+	WorkerReactivatedWebhookEventDataAddressCountryFo WorkerReactivatedWebhookEventDataAddressCountry = "FO"
+	WorkerReactivatedWebhookEventDataAddressCountryFr WorkerReactivatedWebhookEventDataAddressCountry = "FR"
+	WorkerReactivatedWebhookEventDataAddressCountryGa WorkerReactivatedWebhookEventDataAddressCountry = "GA"
+	WorkerReactivatedWebhookEventDataAddressCountryGB WorkerReactivatedWebhookEventDataAddressCountry = "GB"
+	WorkerReactivatedWebhookEventDataAddressCountryGd WorkerReactivatedWebhookEventDataAddressCountry = "GD"
+	WorkerReactivatedWebhookEventDataAddressCountryGe WorkerReactivatedWebhookEventDataAddressCountry = "GE"
+	WorkerReactivatedWebhookEventDataAddressCountryGf WorkerReactivatedWebhookEventDataAddressCountry = "GF"
+	WorkerReactivatedWebhookEventDataAddressCountryGg WorkerReactivatedWebhookEventDataAddressCountry = "GG"
+	WorkerReactivatedWebhookEventDataAddressCountryGh WorkerReactivatedWebhookEventDataAddressCountry = "GH"
+	WorkerReactivatedWebhookEventDataAddressCountryGi WorkerReactivatedWebhookEventDataAddressCountry = "GI"
+	WorkerReactivatedWebhookEventDataAddressCountryGl WorkerReactivatedWebhookEventDataAddressCountry = "GL"
+	WorkerReactivatedWebhookEventDataAddressCountryGm WorkerReactivatedWebhookEventDataAddressCountry = "GM"
+	WorkerReactivatedWebhookEventDataAddressCountryGn WorkerReactivatedWebhookEventDataAddressCountry = "GN"
+	WorkerReactivatedWebhookEventDataAddressCountryGp WorkerReactivatedWebhookEventDataAddressCountry = "GP"
+	WorkerReactivatedWebhookEventDataAddressCountryGq WorkerReactivatedWebhookEventDataAddressCountry = "GQ"
+	WorkerReactivatedWebhookEventDataAddressCountryGr WorkerReactivatedWebhookEventDataAddressCountry = "GR"
+	WorkerReactivatedWebhookEventDataAddressCountryGs WorkerReactivatedWebhookEventDataAddressCountry = "GS"
+	WorkerReactivatedWebhookEventDataAddressCountryGt WorkerReactivatedWebhookEventDataAddressCountry = "GT"
+	WorkerReactivatedWebhookEventDataAddressCountryGu WorkerReactivatedWebhookEventDataAddressCountry = "GU"
+	WorkerReactivatedWebhookEventDataAddressCountryGw WorkerReactivatedWebhookEventDataAddressCountry = "GW"
+	WorkerReactivatedWebhookEventDataAddressCountryGy WorkerReactivatedWebhookEventDataAddressCountry = "GY"
+	WorkerReactivatedWebhookEventDataAddressCountryHk WorkerReactivatedWebhookEventDataAddressCountry = "HK"
+	WorkerReactivatedWebhookEventDataAddressCountryHm WorkerReactivatedWebhookEventDataAddressCountry = "HM"
+	WorkerReactivatedWebhookEventDataAddressCountryHn WorkerReactivatedWebhookEventDataAddressCountry = "HN"
+	WorkerReactivatedWebhookEventDataAddressCountryHr WorkerReactivatedWebhookEventDataAddressCountry = "HR"
+	WorkerReactivatedWebhookEventDataAddressCountryHt WorkerReactivatedWebhookEventDataAddressCountry = "HT"
+	WorkerReactivatedWebhookEventDataAddressCountryHu WorkerReactivatedWebhookEventDataAddressCountry = "HU"
+	WorkerReactivatedWebhookEventDataAddressCountryID WorkerReactivatedWebhookEventDataAddressCountry = "ID"
+	WorkerReactivatedWebhookEventDataAddressCountryIe WorkerReactivatedWebhookEventDataAddressCountry = "IE"
+	WorkerReactivatedWebhookEventDataAddressCountryIl WorkerReactivatedWebhookEventDataAddressCountry = "IL"
+	WorkerReactivatedWebhookEventDataAddressCountryIm WorkerReactivatedWebhookEventDataAddressCountry = "IM"
+	WorkerReactivatedWebhookEventDataAddressCountryIn WorkerReactivatedWebhookEventDataAddressCountry = "IN"
+	WorkerReactivatedWebhookEventDataAddressCountryIo WorkerReactivatedWebhookEventDataAddressCountry = "IO"
+	WorkerReactivatedWebhookEventDataAddressCountryIq WorkerReactivatedWebhookEventDataAddressCountry = "IQ"
+	WorkerReactivatedWebhookEventDataAddressCountryIr WorkerReactivatedWebhookEventDataAddressCountry = "IR"
+	WorkerReactivatedWebhookEventDataAddressCountryIs WorkerReactivatedWebhookEventDataAddressCountry = "IS"
+	WorkerReactivatedWebhookEventDataAddressCountryIt WorkerReactivatedWebhookEventDataAddressCountry = "IT"
+	WorkerReactivatedWebhookEventDataAddressCountryJe WorkerReactivatedWebhookEventDataAddressCountry = "JE"
+	WorkerReactivatedWebhookEventDataAddressCountryJm WorkerReactivatedWebhookEventDataAddressCountry = "JM"
+	WorkerReactivatedWebhookEventDataAddressCountryJo WorkerReactivatedWebhookEventDataAddressCountry = "JO"
+	WorkerReactivatedWebhookEventDataAddressCountryJp WorkerReactivatedWebhookEventDataAddressCountry = "JP"
+	WorkerReactivatedWebhookEventDataAddressCountryKe WorkerReactivatedWebhookEventDataAddressCountry = "KE"
+	WorkerReactivatedWebhookEventDataAddressCountryKg WorkerReactivatedWebhookEventDataAddressCountry = "KG"
+	WorkerReactivatedWebhookEventDataAddressCountryKh WorkerReactivatedWebhookEventDataAddressCountry = "KH"
+	WorkerReactivatedWebhookEventDataAddressCountryKi WorkerReactivatedWebhookEventDataAddressCountry = "KI"
+	WorkerReactivatedWebhookEventDataAddressCountryKm WorkerReactivatedWebhookEventDataAddressCountry = "KM"
+	WorkerReactivatedWebhookEventDataAddressCountryKn WorkerReactivatedWebhookEventDataAddressCountry = "KN"
+	WorkerReactivatedWebhookEventDataAddressCountryKp WorkerReactivatedWebhookEventDataAddressCountry = "KP"
+	WorkerReactivatedWebhookEventDataAddressCountryKr WorkerReactivatedWebhookEventDataAddressCountry = "KR"
+	WorkerReactivatedWebhookEventDataAddressCountryKw WorkerReactivatedWebhookEventDataAddressCountry = "KW"
+	WorkerReactivatedWebhookEventDataAddressCountryKy WorkerReactivatedWebhookEventDataAddressCountry = "KY"
+	WorkerReactivatedWebhookEventDataAddressCountryKz WorkerReactivatedWebhookEventDataAddressCountry = "KZ"
+	WorkerReactivatedWebhookEventDataAddressCountryLa WorkerReactivatedWebhookEventDataAddressCountry = "LA"
+	WorkerReactivatedWebhookEventDataAddressCountryLb WorkerReactivatedWebhookEventDataAddressCountry = "LB"
+	WorkerReactivatedWebhookEventDataAddressCountryLc WorkerReactivatedWebhookEventDataAddressCountry = "LC"
+	WorkerReactivatedWebhookEventDataAddressCountryLi WorkerReactivatedWebhookEventDataAddressCountry = "LI"
+	WorkerReactivatedWebhookEventDataAddressCountryLk WorkerReactivatedWebhookEventDataAddressCountry = "LK"
+	WorkerReactivatedWebhookEventDataAddressCountryLr WorkerReactivatedWebhookEventDataAddressCountry = "LR"
+	WorkerReactivatedWebhookEventDataAddressCountryLs WorkerReactivatedWebhookEventDataAddressCountry = "LS"
+	WorkerReactivatedWebhookEventDataAddressCountryLt WorkerReactivatedWebhookEventDataAddressCountry = "LT"
+	WorkerReactivatedWebhookEventDataAddressCountryLu WorkerReactivatedWebhookEventDataAddressCountry = "LU"
+	WorkerReactivatedWebhookEventDataAddressCountryLv WorkerReactivatedWebhookEventDataAddressCountry = "LV"
+	WorkerReactivatedWebhookEventDataAddressCountryLy WorkerReactivatedWebhookEventDataAddressCountry = "LY"
+	WorkerReactivatedWebhookEventDataAddressCountryMa WorkerReactivatedWebhookEventDataAddressCountry = "MA"
+	WorkerReactivatedWebhookEventDataAddressCountryMc WorkerReactivatedWebhookEventDataAddressCountry = "MC"
+	WorkerReactivatedWebhookEventDataAddressCountryMd WorkerReactivatedWebhookEventDataAddressCountry = "MD"
+	WorkerReactivatedWebhookEventDataAddressCountryMe WorkerReactivatedWebhookEventDataAddressCountry = "ME"
+	WorkerReactivatedWebhookEventDataAddressCountryMf WorkerReactivatedWebhookEventDataAddressCountry = "MF"
+	WorkerReactivatedWebhookEventDataAddressCountryMg WorkerReactivatedWebhookEventDataAddressCountry = "MG"
+	WorkerReactivatedWebhookEventDataAddressCountryMh WorkerReactivatedWebhookEventDataAddressCountry = "MH"
+	WorkerReactivatedWebhookEventDataAddressCountryMk WorkerReactivatedWebhookEventDataAddressCountry = "MK"
+	WorkerReactivatedWebhookEventDataAddressCountryMl WorkerReactivatedWebhookEventDataAddressCountry = "ML"
+	WorkerReactivatedWebhookEventDataAddressCountryMm WorkerReactivatedWebhookEventDataAddressCountry = "MM"
+	WorkerReactivatedWebhookEventDataAddressCountryMn WorkerReactivatedWebhookEventDataAddressCountry = "MN"
+	WorkerReactivatedWebhookEventDataAddressCountryMo WorkerReactivatedWebhookEventDataAddressCountry = "MO"
+	WorkerReactivatedWebhookEventDataAddressCountryMp WorkerReactivatedWebhookEventDataAddressCountry = "MP"
+	WorkerReactivatedWebhookEventDataAddressCountryMq WorkerReactivatedWebhookEventDataAddressCountry = "MQ"
+	WorkerReactivatedWebhookEventDataAddressCountryMr WorkerReactivatedWebhookEventDataAddressCountry = "MR"
+	WorkerReactivatedWebhookEventDataAddressCountryMs WorkerReactivatedWebhookEventDataAddressCountry = "MS"
+	WorkerReactivatedWebhookEventDataAddressCountryMt WorkerReactivatedWebhookEventDataAddressCountry = "MT"
+	WorkerReactivatedWebhookEventDataAddressCountryMu WorkerReactivatedWebhookEventDataAddressCountry = "MU"
+	WorkerReactivatedWebhookEventDataAddressCountryMv WorkerReactivatedWebhookEventDataAddressCountry = "MV"
+	WorkerReactivatedWebhookEventDataAddressCountryMw WorkerReactivatedWebhookEventDataAddressCountry = "MW"
+	WorkerReactivatedWebhookEventDataAddressCountryMx WorkerReactivatedWebhookEventDataAddressCountry = "MX"
+	WorkerReactivatedWebhookEventDataAddressCountryMy WorkerReactivatedWebhookEventDataAddressCountry = "MY"
+	WorkerReactivatedWebhookEventDataAddressCountryMz WorkerReactivatedWebhookEventDataAddressCountry = "MZ"
+	WorkerReactivatedWebhookEventDataAddressCountryNa WorkerReactivatedWebhookEventDataAddressCountry = "NA"
+	WorkerReactivatedWebhookEventDataAddressCountryNc WorkerReactivatedWebhookEventDataAddressCountry = "NC"
+	WorkerReactivatedWebhookEventDataAddressCountryNe WorkerReactivatedWebhookEventDataAddressCountry = "NE"
+	WorkerReactivatedWebhookEventDataAddressCountryNf WorkerReactivatedWebhookEventDataAddressCountry = "NF"
+	WorkerReactivatedWebhookEventDataAddressCountryNg WorkerReactivatedWebhookEventDataAddressCountry = "NG"
+	WorkerReactivatedWebhookEventDataAddressCountryNi WorkerReactivatedWebhookEventDataAddressCountry = "NI"
+	WorkerReactivatedWebhookEventDataAddressCountryNl WorkerReactivatedWebhookEventDataAddressCountry = "NL"
+	WorkerReactivatedWebhookEventDataAddressCountryNo WorkerReactivatedWebhookEventDataAddressCountry = "NO"
+	WorkerReactivatedWebhookEventDataAddressCountryNp WorkerReactivatedWebhookEventDataAddressCountry = "NP"
+	WorkerReactivatedWebhookEventDataAddressCountryNr WorkerReactivatedWebhookEventDataAddressCountry = "NR"
+	WorkerReactivatedWebhookEventDataAddressCountryNu WorkerReactivatedWebhookEventDataAddressCountry = "NU"
+	WorkerReactivatedWebhookEventDataAddressCountryNz WorkerReactivatedWebhookEventDataAddressCountry = "NZ"
+	WorkerReactivatedWebhookEventDataAddressCountryOm WorkerReactivatedWebhookEventDataAddressCountry = "OM"
+	WorkerReactivatedWebhookEventDataAddressCountryPa WorkerReactivatedWebhookEventDataAddressCountry = "PA"
+	WorkerReactivatedWebhookEventDataAddressCountryPe WorkerReactivatedWebhookEventDataAddressCountry = "PE"
+	WorkerReactivatedWebhookEventDataAddressCountryPf WorkerReactivatedWebhookEventDataAddressCountry = "PF"
+	WorkerReactivatedWebhookEventDataAddressCountryPg WorkerReactivatedWebhookEventDataAddressCountry = "PG"
+	WorkerReactivatedWebhookEventDataAddressCountryPh WorkerReactivatedWebhookEventDataAddressCountry = "PH"
+	WorkerReactivatedWebhookEventDataAddressCountryPk WorkerReactivatedWebhookEventDataAddressCountry = "PK"
+	WorkerReactivatedWebhookEventDataAddressCountryPl WorkerReactivatedWebhookEventDataAddressCountry = "PL"
+	WorkerReactivatedWebhookEventDataAddressCountryPm WorkerReactivatedWebhookEventDataAddressCountry = "PM"
+	WorkerReactivatedWebhookEventDataAddressCountryPn WorkerReactivatedWebhookEventDataAddressCountry = "PN"
+	WorkerReactivatedWebhookEventDataAddressCountryPr WorkerReactivatedWebhookEventDataAddressCountry = "PR"
+	WorkerReactivatedWebhookEventDataAddressCountryPs WorkerReactivatedWebhookEventDataAddressCountry = "PS"
+	WorkerReactivatedWebhookEventDataAddressCountryPt WorkerReactivatedWebhookEventDataAddressCountry = "PT"
+	WorkerReactivatedWebhookEventDataAddressCountryPw WorkerReactivatedWebhookEventDataAddressCountry = "PW"
+	WorkerReactivatedWebhookEventDataAddressCountryPy WorkerReactivatedWebhookEventDataAddressCountry = "PY"
+	WorkerReactivatedWebhookEventDataAddressCountryQa WorkerReactivatedWebhookEventDataAddressCountry = "QA"
+	WorkerReactivatedWebhookEventDataAddressCountryRe WorkerReactivatedWebhookEventDataAddressCountry = "RE"
+	WorkerReactivatedWebhookEventDataAddressCountryRo WorkerReactivatedWebhookEventDataAddressCountry = "RO"
+	WorkerReactivatedWebhookEventDataAddressCountryRs WorkerReactivatedWebhookEventDataAddressCountry = "RS"
+	WorkerReactivatedWebhookEventDataAddressCountryRu WorkerReactivatedWebhookEventDataAddressCountry = "RU"
+	WorkerReactivatedWebhookEventDataAddressCountryRw WorkerReactivatedWebhookEventDataAddressCountry = "RW"
+	WorkerReactivatedWebhookEventDataAddressCountrySa WorkerReactivatedWebhookEventDataAddressCountry = "SA"
+	WorkerReactivatedWebhookEventDataAddressCountrySb WorkerReactivatedWebhookEventDataAddressCountry = "SB"
+	WorkerReactivatedWebhookEventDataAddressCountrySc WorkerReactivatedWebhookEventDataAddressCountry = "SC"
+	WorkerReactivatedWebhookEventDataAddressCountrySd WorkerReactivatedWebhookEventDataAddressCountry = "SD"
+	WorkerReactivatedWebhookEventDataAddressCountrySe WorkerReactivatedWebhookEventDataAddressCountry = "SE"
+	WorkerReactivatedWebhookEventDataAddressCountrySg WorkerReactivatedWebhookEventDataAddressCountry = "SG"
+	WorkerReactivatedWebhookEventDataAddressCountrySh WorkerReactivatedWebhookEventDataAddressCountry = "SH"
+	WorkerReactivatedWebhookEventDataAddressCountrySi WorkerReactivatedWebhookEventDataAddressCountry = "SI"
+	WorkerReactivatedWebhookEventDataAddressCountrySj WorkerReactivatedWebhookEventDataAddressCountry = "SJ"
+	WorkerReactivatedWebhookEventDataAddressCountrySk WorkerReactivatedWebhookEventDataAddressCountry = "SK"
+	WorkerReactivatedWebhookEventDataAddressCountrySl WorkerReactivatedWebhookEventDataAddressCountry = "SL"
+	WorkerReactivatedWebhookEventDataAddressCountrySm WorkerReactivatedWebhookEventDataAddressCountry = "SM"
+	WorkerReactivatedWebhookEventDataAddressCountrySn WorkerReactivatedWebhookEventDataAddressCountry = "SN"
+	WorkerReactivatedWebhookEventDataAddressCountrySo WorkerReactivatedWebhookEventDataAddressCountry = "SO"
+	WorkerReactivatedWebhookEventDataAddressCountrySr WorkerReactivatedWebhookEventDataAddressCountry = "SR"
+	WorkerReactivatedWebhookEventDataAddressCountrySS WorkerReactivatedWebhookEventDataAddressCountry = "SS"
+	WorkerReactivatedWebhookEventDataAddressCountrySt WorkerReactivatedWebhookEventDataAddressCountry = "ST"
+	WorkerReactivatedWebhookEventDataAddressCountrySv WorkerReactivatedWebhookEventDataAddressCountry = "SV"
+	WorkerReactivatedWebhookEventDataAddressCountrySx WorkerReactivatedWebhookEventDataAddressCountry = "SX"
+	WorkerReactivatedWebhookEventDataAddressCountrySy WorkerReactivatedWebhookEventDataAddressCountry = "SY"
+	WorkerReactivatedWebhookEventDataAddressCountrySz WorkerReactivatedWebhookEventDataAddressCountry = "SZ"
+	WorkerReactivatedWebhookEventDataAddressCountryTc WorkerReactivatedWebhookEventDataAddressCountry = "TC"
+	WorkerReactivatedWebhookEventDataAddressCountryTd WorkerReactivatedWebhookEventDataAddressCountry = "TD"
+	WorkerReactivatedWebhookEventDataAddressCountryTf WorkerReactivatedWebhookEventDataAddressCountry = "TF"
+	WorkerReactivatedWebhookEventDataAddressCountryTg WorkerReactivatedWebhookEventDataAddressCountry = "TG"
+	WorkerReactivatedWebhookEventDataAddressCountryTh WorkerReactivatedWebhookEventDataAddressCountry = "TH"
+	WorkerReactivatedWebhookEventDataAddressCountryTj WorkerReactivatedWebhookEventDataAddressCountry = "TJ"
+	WorkerReactivatedWebhookEventDataAddressCountryTk WorkerReactivatedWebhookEventDataAddressCountry = "TK"
+	WorkerReactivatedWebhookEventDataAddressCountryTl WorkerReactivatedWebhookEventDataAddressCountry = "TL"
+	WorkerReactivatedWebhookEventDataAddressCountryTm WorkerReactivatedWebhookEventDataAddressCountry = "TM"
+	WorkerReactivatedWebhookEventDataAddressCountryTn WorkerReactivatedWebhookEventDataAddressCountry = "TN"
+	WorkerReactivatedWebhookEventDataAddressCountryTo WorkerReactivatedWebhookEventDataAddressCountry = "TO"
+	WorkerReactivatedWebhookEventDataAddressCountryTr WorkerReactivatedWebhookEventDataAddressCountry = "TR"
+	WorkerReactivatedWebhookEventDataAddressCountryTt WorkerReactivatedWebhookEventDataAddressCountry = "TT"
+	WorkerReactivatedWebhookEventDataAddressCountryTv WorkerReactivatedWebhookEventDataAddressCountry = "TV"
+	WorkerReactivatedWebhookEventDataAddressCountryTw WorkerReactivatedWebhookEventDataAddressCountry = "TW"
+	WorkerReactivatedWebhookEventDataAddressCountryTz WorkerReactivatedWebhookEventDataAddressCountry = "TZ"
+	WorkerReactivatedWebhookEventDataAddressCountryUa WorkerReactivatedWebhookEventDataAddressCountry = "UA"
+	WorkerReactivatedWebhookEventDataAddressCountryUg WorkerReactivatedWebhookEventDataAddressCountry = "UG"
+	WorkerReactivatedWebhookEventDataAddressCountryUm WorkerReactivatedWebhookEventDataAddressCountry = "UM"
+	WorkerReactivatedWebhookEventDataAddressCountryUs WorkerReactivatedWebhookEventDataAddressCountry = "US"
+	WorkerReactivatedWebhookEventDataAddressCountryUy WorkerReactivatedWebhookEventDataAddressCountry = "UY"
+	WorkerReactivatedWebhookEventDataAddressCountryUz WorkerReactivatedWebhookEventDataAddressCountry = "UZ"
+	WorkerReactivatedWebhookEventDataAddressCountryVa WorkerReactivatedWebhookEventDataAddressCountry = "VA"
+	WorkerReactivatedWebhookEventDataAddressCountryVc WorkerReactivatedWebhookEventDataAddressCountry = "VC"
+	WorkerReactivatedWebhookEventDataAddressCountryVe WorkerReactivatedWebhookEventDataAddressCountry = "VE"
+	WorkerReactivatedWebhookEventDataAddressCountryVg WorkerReactivatedWebhookEventDataAddressCountry = "VG"
+	WorkerReactivatedWebhookEventDataAddressCountryVi WorkerReactivatedWebhookEventDataAddressCountry = "VI"
+	WorkerReactivatedWebhookEventDataAddressCountryVn WorkerReactivatedWebhookEventDataAddressCountry = "VN"
+	WorkerReactivatedWebhookEventDataAddressCountryVu WorkerReactivatedWebhookEventDataAddressCountry = "VU"
+	WorkerReactivatedWebhookEventDataAddressCountryWf WorkerReactivatedWebhookEventDataAddressCountry = "WF"
+	WorkerReactivatedWebhookEventDataAddressCountryWs WorkerReactivatedWebhookEventDataAddressCountry = "WS"
+	WorkerReactivatedWebhookEventDataAddressCountryXk WorkerReactivatedWebhookEventDataAddressCountry = "XK"
+	WorkerReactivatedWebhookEventDataAddressCountryYe WorkerReactivatedWebhookEventDataAddressCountry = "YE"
+	WorkerReactivatedWebhookEventDataAddressCountryYt WorkerReactivatedWebhookEventDataAddressCountry = "YT"
+	WorkerReactivatedWebhookEventDataAddressCountryZa WorkerReactivatedWebhookEventDataAddressCountry = "ZA"
+	WorkerReactivatedWebhookEventDataAddressCountryZm WorkerReactivatedWebhookEventDataAddressCountry = "ZM"
+	WorkerReactivatedWebhookEventDataAddressCountryZw WorkerReactivatedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerReactivatedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventDataAddressCountryAd, WorkerReactivatedWebhookEventDataAddressCountryAe, WorkerReactivatedWebhookEventDataAddressCountryAf, WorkerReactivatedWebhookEventDataAddressCountryAg, WorkerReactivatedWebhookEventDataAddressCountryAI, WorkerReactivatedWebhookEventDataAddressCountryAl, WorkerReactivatedWebhookEventDataAddressCountryAm, WorkerReactivatedWebhookEventDataAddressCountryAo, WorkerReactivatedWebhookEventDataAddressCountryAq, WorkerReactivatedWebhookEventDataAddressCountryAr, WorkerReactivatedWebhookEventDataAddressCountryAs, WorkerReactivatedWebhookEventDataAddressCountryAt, WorkerReactivatedWebhookEventDataAddressCountryAu, WorkerReactivatedWebhookEventDataAddressCountryAw, WorkerReactivatedWebhookEventDataAddressCountryAx, WorkerReactivatedWebhookEventDataAddressCountryAz, WorkerReactivatedWebhookEventDataAddressCountryBa, WorkerReactivatedWebhookEventDataAddressCountryBb, WorkerReactivatedWebhookEventDataAddressCountryBd, WorkerReactivatedWebhookEventDataAddressCountryBe, WorkerReactivatedWebhookEventDataAddressCountryBf, WorkerReactivatedWebhookEventDataAddressCountryBg, WorkerReactivatedWebhookEventDataAddressCountryBh, WorkerReactivatedWebhookEventDataAddressCountryBi, WorkerReactivatedWebhookEventDataAddressCountryBj, WorkerReactivatedWebhookEventDataAddressCountryBl, WorkerReactivatedWebhookEventDataAddressCountryBm, WorkerReactivatedWebhookEventDataAddressCountryBn, WorkerReactivatedWebhookEventDataAddressCountryBo, WorkerReactivatedWebhookEventDataAddressCountryBq, WorkerReactivatedWebhookEventDataAddressCountryBr, WorkerReactivatedWebhookEventDataAddressCountryBs, WorkerReactivatedWebhookEventDataAddressCountryBt, WorkerReactivatedWebhookEventDataAddressCountryBv, WorkerReactivatedWebhookEventDataAddressCountryBw, WorkerReactivatedWebhookEventDataAddressCountryBy, WorkerReactivatedWebhookEventDataAddressCountryBz, WorkerReactivatedWebhookEventDataAddressCountryCa, WorkerReactivatedWebhookEventDataAddressCountryCc, WorkerReactivatedWebhookEventDataAddressCountryCd, WorkerReactivatedWebhookEventDataAddressCountryCf, WorkerReactivatedWebhookEventDataAddressCountryCg, WorkerReactivatedWebhookEventDataAddressCountryCh, WorkerReactivatedWebhookEventDataAddressCountryCi, WorkerReactivatedWebhookEventDataAddressCountryCk, WorkerReactivatedWebhookEventDataAddressCountryCl, WorkerReactivatedWebhookEventDataAddressCountryCm, WorkerReactivatedWebhookEventDataAddressCountryCn, WorkerReactivatedWebhookEventDataAddressCountryCo, WorkerReactivatedWebhookEventDataAddressCountryCr, WorkerReactivatedWebhookEventDataAddressCountryCu, WorkerReactivatedWebhookEventDataAddressCountryCv, WorkerReactivatedWebhookEventDataAddressCountryCw, WorkerReactivatedWebhookEventDataAddressCountryCx, WorkerReactivatedWebhookEventDataAddressCountryCy, WorkerReactivatedWebhookEventDataAddressCountryCz, WorkerReactivatedWebhookEventDataAddressCountryDe, WorkerReactivatedWebhookEventDataAddressCountryDj, WorkerReactivatedWebhookEventDataAddressCountryDk, WorkerReactivatedWebhookEventDataAddressCountryDm, WorkerReactivatedWebhookEventDataAddressCountryDo, WorkerReactivatedWebhookEventDataAddressCountryDz, WorkerReactivatedWebhookEventDataAddressCountryEc, WorkerReactivatedWebhookEventDataAddressCountryEe, WorkerReactivatedWebhookEventDataAddressCountryEg, WorkerReactivatedWebhookEventDataAddressCountryEh, WorkerReactivatedWebhookEventDataAddressCountryEr, WorkerReactivatedWebhookEventDataAddressCountryEs, WorkerReactivatedWebhookEventDataAddressCountryEt, WorkerReactivatedWebhookEventDataAddressCountryFi, WorkerReactivatedWebhookEventDataAddressCountryFj, WorkerReactivatedWebhookEventDataAddressCountryFk, WorkerReactivatedWebhookEventDataAddressCountryFm, WorkerReactivatedWebhookEventDataAddressCountryFo, WorkerReactivatedWebhookEventDataAddressCountryFr, WorkerReactivatedWebhookEventDataAddressCountryGa, WorkerReactivatedWebhookEventDataAddressCountryGB, WorkerReactivatedWebhookEventDataAddressCountryGd, WorkerReactivatedWebhookEventDataAddressCountryGe, WorkerReactivatedWebhookEventDataAddressCountryGf, WorkerReactivatedWebhookEventDataAddressCountryGg, WorkerReactivatedWebhookEventDataAddressCountryGh, WorkerReactivatedWebhookEventDataAddressCountryGi, WorkerReactivatedWebhookEventDataAddressCountryGl, WorkerReactivatedWebhookEventDataAddressCountryGm, WorkerReactivatedWebhookEventDataAddressCountryGn, WorkerReactivatedWebhookEventDataAddressCountryGp, WorkerReactivatedWebhookEventDataAddressCountryGq, WorkerReactivatedWebhookEventDataAddressCountryGr, WorkerReactivatedWebhookEventDataAddressCountryGs, WorkerReactivatedWebhookEventDataAddressCountryGt, WorkerReactivatedWebhookEventDataAddressCountryGu, WorkerReactivatedWebhookEventDataAddressCountryGw, WorkerReactivatedWebhookEventDataAddressCountryGy, WorkerReactivatedWebhookEventDataAddressCountryHk, WorkerReactivatedWebhookEventDataAddressCountryHm, WorkerReactivatedWebhookEventDataAddressCountryHn, WorkerReactivatedWebhookEventDataAddressCountryHr, WorkerReactivatedWebhookEventDataAddressCountryHt, WorkerReactivatedWebhookEventDataAddressCountryHu, WorkerReactivatedWebhookEventDataAddressCountryID, WorkerReactivatedWebhookEventDataAddressCountryIe, WorkerReactivatedWebhookEventDataAddressCountryIl, WorkerReactivatedWebhookEventDataAddressCountryIm, WorkerReactivatedWebhookEventDataAddressCountryIn, WorkerReactivatedWebhookEventDataAddressCountryIo, WorkerReactivatedWebhookEventDataAddressCountryIq, WorkerReactivatedWebhookEventDataAddressCountryIr, WorkerReactivatedWebhookEventDataAddressCountryIs, WorkerReactivatedWebhookEventDataAddressCountryIt, WorkerReactivatedWebhookEventDataAddressCountryJe, WorkerReactivatedWebhookEventDataAddressCountryJm, WorkerReactivatedWebhookEventDataAddressCountryJo, WorkerReactivatedWebhookEventDataAddressCountryJp, WorkerReactivatedWebhookEventDataAddressCountryKe, WorkerReactivatedWebhookEventDataAddressCountryKg, WorkerReactivatedWebhookEventDataAddressCountryKh, WorkerReactivatedWebhookEventDataAddressCountryKi, WorkerReactivatedWebhookEventDataAddressCountryKm, WorkerReactivatedWebhookEventDataAddressCountryKn, WorkerReactivatedWebhookEventDataAddressCountryKp, WorkerReactivatedWebhookEventDataAddressCountryKr, WorkerReactivatedWebhookEventDataAddressCountryKw, WorkerReactivatedWebhookEventDataAddressCountryKy, WorkerReactivatedWebhookEventDataAddressCountryKz, WorkerReactivatedWebhookEventDataAddressCountryLa, WorkerReactivatedWebhookEventDataAddressCountryLb, WorkerReactivatedWebhookEventDataAddressCountryLc, WorkerReactivatedWebhookEventDataAddressCountryLi, WorkerReactivatedWebhookEventDataAddressCountryLk, WorkerReactivatedWebhookEventDataAddressCountryLr, WorkerReactivatedWebhookEventDataAddressCountryLs, WorkerReactivatedWebhookEventDataAddressCountryLt, WorkerReactivatedWebhookEventDataAddressCountryLu, WorkerReactivatedWebhookEventDataAddressCountryLv, WorkerReactivatedWebhookEventDataAddressCountryLy, WorkerReactivatedWebhookEventDataAddressCountryMa, WorkerReactivatedWebhookEventDataAddressCountryMc, WorkerReactivatedWebhookEventDataAddressCountryMd, WorkerReactivatedWebhookEventDataAddressCountryMe, WorkerReactivatedWebhookEventDataAddressCountryMf, WorkerReactivatedWebhookEventDataAddressCountryMg, WorkerReactivatedWebhookEventDataAddressCountryMh, WorkerReactivatedWebhookEventDataAddressCountryMk, WorkerReactivatedWebhookEventDataAddressCountryMl, WorkerReactivatedWebhookEventDataAddressCountryMm, WorkerReactivatedWebhookEventDataAddressCountryMn, WorkerReactivatedWebhookEventDataAddressCountryMo, WorkerReactivatedWebhookEventDataAddressCountryMp, WorkerReactivatedWebhookEventDataAddressCountryMq, WorkerReactivatedWebhookEventDataAddressCountryMr, WorkerReactivatedWebhookEventDataAddressCountryMs, WorkerReactivatedWebhookEventDataAddressCountryMt, WorkerReactivatedWebhookEventDataAddressCountryMu, WorkerReactivatedWebhookEventDataAddressCountryMv, WorkerReactivatedWebhookEventDataAddressCountryMw, WorkerReactivatedWebhookEventDataAddressCountryMx, WorkerReactivatedWebhookEventDataAddressCountryMy, WorkerReactivatedWebhookEventDataAddressCountryMz, WorkerReactivatedWebhookEventDataAddressCountryNa, WorkerReactivatedWebhookEventDataAddressCountryNc, WorkerReactivatedWebhookEventDataAddressCountryNe, WorkerReactivatedWebhookEventDataAddressCountryNf, WorkerReactivatedWebhookEventDataAddressCountryNg, WorkerReactivatedWebhookEventDataAddressCountryNi, WorkerReactivatedWebhookEventDataAddressCountryNl, WorkerReactivatedWebhookEventDataAddressCountryNo, WorkerReactivatedWebhookEventDataAddressCountryNp, WorkerReactivatedWebhookEventDataAddressCountryNr, WorkerReactivatedWebhookEventDataAddressCountryNu, WorkerReactivatedWebhookEventDataAddressCountryNz, WorkerReactivatedWebhookEventDataAddressCountryOm, WorkerReactivatedWebhookEventDataAddressCountryPa, WorkerReactivatedWebhookEventDataAddressCountryPe, WorkerReactivatedWebhookEventDataAddressCountryPf, WorkerReactivatedWebhookEventDataAddressCountryPg, WorkerReactivatedWebhookEventDataAddressCountryPh, WorkerReactivatedWebhookEventDataAddressCountryPk, WorkerReactivatedWebhookEventDataAddressCountryPl, WorkerReactivatedWebhookEventDataAddressCountryPm, WorkerReactivatedWebhookEventDataAddressCountryPn, WorkerReactivatedWebhookEventDataAddressCountryPr, WorkerReactivatedWebhookEventDataAddressCountryPs, WorkerReactivatedWebhookEventDataAddressCountryPt, WorkerReactivatedWebhookEventDataAddressCountryPw, WorkerReactivatedWebhookEventDataAddressCountryPy, WorkerReactivatedWebhookEventDataAddressCountryQa, WorkerReactivatedWebhookEventDataAddressCountryRe, WorkerReactivatedWebhookEventDataAddressCountryRo, WorkerReactivatedWebhookEventDataAddressCountryRs, WorkerReactivatedWebhookEventDataAddressCountryRu, WorkerReactivatedWebhookEventDataAddressCountryRw, WorkerReactivatedWebhookEventDataAddressCountrySa, WorkerReactivatedWebhookEventDataAddressCountrySb, WorkerReactivatedWebhookEventDataAddressCountrySc, WorkerReactivatedWebhookEventDataAddressCountrySd, WorkerReactivatedWebhookEventDataAddressCountrySe, WorkerReactivatedWebhookEventDataAddressCountrySg, WorkerReactivatedWebhookEventDataAddressCountrySh, WorkerReactivatedWebhookEventDataAddressCountrySi, WorkerReactivatedWebhookEventDataAddressCountrySj, WorkerReactivatedWebhookEventDataAddressCountrySk, WorkerReactivatedWebhookEventDataAddressCountrySl, WorkerReactivatedWebhookEventDataAddressCountrySm, WorkerReactivatedWebhookEventDataAddressCountrySn, WorkerReactivatedWebhookEventDataAddressCountrySo, WorkerReactivatedWebhookEventDataAddressCountrySr, WorkerReactivatedWebhookEventDataAddressCountrySS, WorkerReactivatedWebhookEventDataAddressCountrySt, WorkerReactivatedWebhookEventDataAddressCountrySv, WorkerReactivatedWebhookEventDataAddressCountrySx, WorkerReactivatedWebhookEventDataAddressCountrySy, WorkerReactivatedWebhookEventDataAddressCountrySz, WorkerReactivatedWebhookEventDataAddressCountryTc, WorkerReactivatedWebhookEventDataAddressCountryTd, WorkerReactivatedWebhookEventDataAddressCountryTf, WorkerReactivatedWebhookEventDataAddressCountryTg, WorkerReactivatedWebhookEventDataAddressCountryTh, WorkerReactivatedWebhookEventDataAddressCountryTj, WorkerReactivatedWebhookEventDataAddressCountryTk, WorkerReactivatedWebhookEventDataAddressCountryTl, WorkerReactivatedWebhookEventDataAddressCountryTm, WorkerReactivatedWebhookEventDataAddressCountryTn, WorkerReactivatedWebhookEventDataAddressCountryTo, WorkerReactivatedWebhookEventDataAddressCountryTr, WorkerReactivatedWebhookEventDataAddressCountryTt, WorkerReactivatedWebhookEventDataAddressCountryTv, WorkerReactivatedWebhookEventDataAddressCountryTw, WorkerReactivatedWebhookEventDataAddressCountryTz, WorkerReactivatedWebhookEventDataAddressCountryUa, WorkerReactivatedWebhookEventDataAddressCountryUg, WorkerReactivatedWebhookEventDataAddressCountryUm, WorkerReactivatedWebhookEventDataAddressCountryUs, WorkerReactivatedWebhookEventDataAddressCountryUy, WorkerReactivatedWebhookEventDataAddressCountryUz, WorkerReactivatedWebhookEventDataAddressCountryVa, WorkerReactivatedWebhookEventDataAddressCountryVc, WorkerReactivatedWebhookEventDataAddressCountryVe, WorkerReactivatedWebhookEventDataAddressCountryVg, WorkerReactivatedWebhookEventDataAddressCountryVi, WorkerReactivatedWebhookEventDataAddressCountryVn, WorkerReactivatedWebhookEventDataAddressCountryVu, WorkerReactivatedWebhookEventDataAddressCountryWf, WorkerReactivatedWebhookEventDataAddressCountryWs, WorkerReactivatedWebhookEventDataAddressCountryXk, WorkerReactivatedWebhookEventDataAddressCountryYe, WorkerReactivatedWebhookEventDataAddressCountryYt, WorkerReactivatedWebhookEventDataAddressCountryZa, WorkerReactivatedWebhookEventDataAddressCountryZm, WorkerReactivatedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerReactivatedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                          `json:"id" api:"required"`
@@ -5585,6 +8689,46 @@ func (r *WorkerReactivatedWebhookEventDataDepartment) UnmarshalJSON(data []byte)
 
 func (r workerReactivatedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerReactivatedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                                `json:"id" api:"required"`
+	Name string                                                `json:"name" api:"required"`
+	Type WorkerReactivatedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerReactivatedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerReactivatedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerReactivatedWebhookEventDataPrimaryWorkplace]
+type workerReactivatedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerReactivatedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerReactivatedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerReactivatedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerReactivatedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerReactivatedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerReactivatedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerReactivatedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerReactivatedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerReactivatedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerReactivatedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerReactivatedWebhookEventDataLevel struct {
@@ -5636,9 +8780,11 @@ type WorkerUpdatedWebhookEvent struct {
 	// The event type.
 	Type WorkerUpdatedWebhookEventType `json:"type" api:"required"`
 	// ISO 8601 timestamp of when the event occurred. Unchanged across retries.
-	Timestamp string                        `json:"timestamp" api:"required"`
-	Data      WorkerUpdatedWebhookEventData `json:"data" api:"required"`
-	JSON      workerUpdatedWebhookEventJSON `json:"-"`
+	Timestamp string `json:"timestamp" api:"required"`
+	// A worker profile, including lifecycle, workplace, profile, and compensation
+	// fields.
+	Data WorkerUpdatedWebhookEventData `json:"data" api:"required"`
+	JSON workerUpdatedWebhookEventJSON `json:"-"`
 }
 
 // workerUpdatedWebhookEventJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEvent]
@@ -5689,6 +8835,16 @@ type WorkerUpdatedWebhookEventData struct {
 	Email         string `json:"email" api:"required" format:"email"`
 	WorkEmail     string `json:"workEmail" api:"required,nullable" format:"email"`
 	PreferredName string `json:"preferredName" api:"required,nullable"`
+	// The worker's biological sex, or null when unavailable.
+	BiologicalSex WorkerUpdatedWebhookEventDataBiologicalSex `json:"biologicalSex" api:"required,nullable"`
+	// The worker's marital status, or null when unavailable.
+	MaritalStatus WorkerUpdatedWebhookEventDataMaritalStatus `json:"maritalStatus" api:"required,nullable"`
+	// The worker's date of birth, or null when unavailable.
+	DateOfBirth string `json:"dateOfBirth" api:"required,nullable"`
+	// The worker's personal phone number, or null when unavailable.
+	Phone string `json:"phone" api:"required,nullable"`
+	// The worker's home address, or null when unavailable.
+	Address WorkerUpdatedWebhookEventDataAddress `json:"address" api:"required,nullable"`
 	// The "ui" name of a worker. If it's a business contractor business name is used.
 	// Otherwise we default to preferred name, then first-last.
 	DisplayName string `json:"displayName" api:"required"`
@@ -5696,6 +8852,15 @@ type WorkerUpdatedWebhookEventData struct {
 	TimeZone string `json:"timeZone" api:"required,nullable"`
 	// The department the worker belongs to, or null if unassigned.
 	Department WorkerUpdatedWebhookEventDataDepartment `json:"department" api:"required,nullable"`
+	// The primary workplace the worker is assigned to, or null if unassigned.
+	PrimaryWorkplace WorkerUpdatedWebhookEventDataPrimaryWorkplace `json:"primaryWorkplace" api:"required,nullable"`
+	// The date the worker was most recently reactivated after an offboarding. This is
+	// distinct from startDate and is null if the worker has not been rehired.
+	LatestRehireDate string `json:"latestRehireDate" api:"required,nullable"`
+	// The reason the worker was terminated, or null when no termination reason is
+	// recorded.
+	TerminationReason string `json:"terminationReason" api:"required,nullable"`
+	UpdatedAt         string `json:"updatedAt" api:"required"`
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
@@ -5709,27 +8874,36 @@ type WorkerUpdatedWebhookEventData struct {
 
 // workerUpdatedWebhookEventDataJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventData]
 type workerUpdatedWebhookEventDataJSON struct {
-	ID            apijson.Field
-	Position      apijson.Field
-	Type          apijson.Field
-	Status        apijson.Field
-	StartDate     apijson.Field
-	EndDate       apijson.Field
-	IsBusiness    apijson.Field
-	BusinessName  apijson.Field
-	FirstName     apijson.Field
-	LastName      apijson.Field
-	Email         apijson.Field
-	WorkEmail     apijson.Field
-	PreferredName apijson.Field
-	DisplayName   apijson.Field
-	TimeZone      apijson.Field
-	Department    apijson.Field
-	Compensation  apijson.Field
-	Level         apijson.Field
-	CustomFields  apijson.Field
-	raw           string
-	ExtraFields   map[string]apijson.Field
+	ID                apijson.Field
+	Position          apijson.Field
+	Type              apijson.Field
+	Status            apijson.Field
+	StartDate         apijson.Field
+	EndDate           apijson.Field
+	IsBusiness        apijson.Field
+	BusinessName      apijson.Field
+	FirstName         apijson.Field
+	LastName          apijson.Field
+	Email             apijson.Field
+	WorkEmail         apijson.Field
+	PreferredName     apijson.Field
+	BiologicalSex     apijson.Field
+	MaritalStatus     apijson.Field
+	DateOfBirth       apijson.Field
+	Phone             apijson.Field
+	Address           apijson.Field
+	DisplayName       apijson.Field
+	TimeZone          apijson.Field
+	Department        apijson.Field
+	PrimaryWorkplace  apijson.Field
+	LatestRehireDate  apijson.Field
+	TerminationReason apijson.Field
+	UpdatedAt         apijson.Field
+	Compensation      apijson.Field
+	Level             apijson.Field
+	CustomFields      apijson.Field
+	raw               string
+	ExtraFields       map[string]apijson.Field
 }
 
 func (r *WorkerUpdatedWebhookEventData) UnmarshalJSON(data []byte) (err error) {
@@ -5774,6 +8948,329 @@ func (r WorkerUpdatedWebhookEventDataStatus) IsKnown() bool {
 	return false
 }
 
+type WorkerUpdatedWebhookEventDataBiologicalSex string
+
+const (
+	WorkerUpdatedWebhookEventDataBiologicalSexMale   WorkerUpdatedWebhookEventDataBiologicalSex = "male"
+	WorkerUpdatedWebhookEventDataBiologicalSexFemale WorkerUpdatedWebhookEventDataBiologicalSex = "female"
+)
+
+func (r WorkerUpdatedWebhookEventDataBiologicalSex) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventDataBiologicalSexMale, WorkerUpdatedWebhookEventDataBiologicalSexFemale:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventDataMaritalStatus string
+
+const (
+	WorkerUpdatedWebhookEventDataMaritalStatusMarried    WorkerUpdatedWebhookEventDataMaritalStatus = "married"
+	WorkerUpdatedWebhookEventDataMaritalStatusNotMarried WorkerUpdatedWebhookEventDataMaritalStatus = "not_married"
+)
+
+func (r WorkerUpdatedWebhookEventDataMaritalStatus) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventDataMaritalStatusMarried, WorkerUpdatedWebhookEventDataMaritalStatusNotMarried:
+		return true
+	}
+	return false
+}
+
+type WorkerUpdatedWebhookEventDataAddress struct {
+	Line1      string                                      `json:"line1" api:"required"`
+	Line2      string                                      `json:"line2" api:"required,nullable"`
+	City       string                                      `json:"city" api:"required"`
+	State      string                                      `json:"state" api:"required,nullable"`
+	PostalCode string                                      `json:"postalCode" api:"required,nullable"`
+	Country    WorkerUpdatedWebhookEventDataAddressCountry `json:"country" api:"required"`
+	JSON       workerUpdatedWebhookEventDataAddressJSON    `json:"-"`
+}
+
+// workerUpdatedWebhookEventDataAddressJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventDataAddress]
+type workerUpdatedWebhookEventDataAddressJSON struct {
+	Line1       apijson.Field
+	Line2       apijson.Field
+	City        apijson.Field
+	State       apijson.Field
+	PostalCode  apijson.Field
+	Country     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventDataAddress) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerUpdatedWebhookEventDataAddressCountry string
+
+const (
+	WorkerUpdatedWebhookEventDataAddressCountryAd WorkerUpdatedWebhookEventDataAddressCountry = "AD"
+	WorkerUpdatedWebhookEventDataAddressCountryAe WorkerUpdatedWebhookEventDataAddressCountry = "AE"
+	WorkerUpdatedWebhookEventDataAddressCountryAf WorkerUpdatedWebhookEventDataAddressCountry = "AF"
+	WorkerUpdatedWebhookEventDataAddressCountryAg WorkerUpdatedWebhookEventDataAddressCountry = "AG"
+	WorkerUpdatedWebhookEventDataAddressCountryAI WorkerUpdatedWebhookEventDataAddressCountry = "AI"
+	WorkerUpdatedWebhookEventDataAddressCountryAl WorkerUpdatedWebhookEventDataAddressCountry = "AL"
+	WorkerUpdatedWebhookEventDataAddressCountryAm WorkerUpdatedWebhookEventDataAddressCountry = "AM"
+	WorkerUpdatedWebhookEventDataAddressCountryAo WorkerUpdatedWebhookEventDataAddressCountry = "AO"
+	WorkerUpdatedWebhookEventDataAddressCountryAq WorkerUpdatedWebhookEventDataAddressCountry = "AQ"
+	WorkerUpdatedWebhookEventDataAddressCountryAr WorkerUpdatedWebhookEventDataAddressCountry = "AR"
+	WorkerUpdatedWebhookEventDataAddressCountryAs WorkerUpdatedWebhookEventDataAddressCountry = "AS"
+	WorkerUpdatedWebhookEventDataAddressCountryAt WorkerUpdatedWebhookEventDataAddressCountry = "AT"
+	WorkerUpdatedWebhookEventDataAddressCountryAu WorkerUpdatedWebhookEventDataAddressCountry = "AU"
+	WorkerUpdatedWebhookEventDataAddressCountryAw WorkerUpdatedWebhookEventDataAddressCountry = "AW"
+	WorkerUpdatedWebhookEventDataAddressCountryAx WorkerUpdatedWebhookEventDataAddressCountry = "AX"
+	WorkerUpdatedWebhookEventDataAddressCountryAz WorkerUpdatedWebhookEventDataAddressCountry = "AZ"
+	WorkerUpdatedWebhookEventDataAddressCountryBa WorkerUpdatedWebhookEventDataAddressCountry = "BA"
+	WorkerUpdatedWebhookEventDataAddressCountryBb WorkerUpdatedWebhookEventDataAddressCountry = "BB"
+	WorkerUpdatedWebhookEventDataAddressCountryBd WorkerUpdatedWebhookEventDataAddressCountry = "BD"
+	WorkerUpdatedWebhookEventDataAddressCountryBe WorkerUpdatedWebhookEventDataAddressCountry = "BE"
+	WorkerUpdatedWebhookEventDataAddressCountryBf WorkerUpdatedWebhookEventDataAddressCountry = "BF"
+	WorkerUpdatedWebhookEventDataAddressCountryBg WorkerUpdatedWebhookEventDataAddressCountry = "BG"
+	WorkerUpdatedWebhookEventDataAddressCountryBh WorkerUpdatedWebhookEventDataAddressCountry = "BH"
+	WorkerUpdatedWebhookEventDataAddressCountryBi WorkerUpdatedWebhookEventDataAddressCountry = "BI"
+	WorkerUpdatedWebhookEventDataAddressCountryBj WorkerUpdatedWebhookEventDataAddressCountry = "BJ"
+	WorkerUpdatedWebhookEventDataAddressCountryBl WorkerUpdatedWebhookEventDataAddressCountry = "BL"
+	WorkerUpdatedWebhookEventDataAddressCountryBm WorkerUpdatedWebhookEventDataAddressCountry = "BM"
+	WorkerUpdatedWebhookEventDataAddressCountryBn WorkerUpdatedWebhookEventDataAddressCountry = "BN"
+	WorkerUpdatedWebhookEventDataAddressCountryBo WorkerUpdatedWebhookEventDataAddressCountry = "BO"
+	WorkerUpdatedWebhookEventDataAddressCountryBq WorkerUpdatedWebhookEventDataAddressCountry = "BQ"
+	WorkerUpdatedWebhookEventDataAddressCountryBr WorkerUpdatedWebhookEventDataAddressCountry = "BR"
+	WorkerUpdatedWebhookEventDataAddressCountryBs WorkerUpdatedWebhookEventDataAddressCountry = "BS"
+	WorkerUpdatedWebhookEventDataAddressCountryBt WorkerUpdatedWebhookEventDataAddressCountry = "BT"
+	WorkerUpdatedWebhookEventDataAddressCountryBv WorkerUpdatedWebhookEventDataAddressCountry = "BV"
+	WorkerUpdatedWebhookEventDataAddressCountryBw WorkerUpdatedWebhookEventDataAddressCountry = "BW"
+	WorkerUpdatedWebhookEventDataAddressCountryBy WorkerUpdatedWebhookEventDataAddressCountry = "BY"
+	WorkerUpdatedWebhookEventDataAddressCountryBz WorkerUpdatedWebhookEventDataAddressCountry = "BZ"
+	WorkerUpdatedWebhookEventDataAddressCountryCa WorkerUpdatedWebhookEventDataAddressCountry = "CA"
+	WorkerUpdatedWebhookEventDataAddressCountryCc WorkerUpdatedWebhookEventDataAddressCountry = "CC"
+	WorkerUpdatedWebhookEventDataAddressCountryCd WorkerUpdatedWebhookEventDataAddressCountry = "CD"
+	WorkerUpdatedWebhookEventDataAddressCountryCf WorkerUpdatedWebhookEventDataAddressCountry = "CF"
+	WorkerUpdatedWebhookEventDataAddressCountryCg WorkerUpdatedWebhookEventDataAddressCountry = "CG"
+	WorkerUpdatedWebhookEventDataAddressCountryCh WorkerUpdatedWebhookEventDataAddressCountry = "CH"
+	WorkerUpdatedWebhookEventDataAddressCountryCi WorkerUpdatedWebhookEventDataAddressCountry = "CI"
+	WorkerUpdatedWebhookEventDataAddressCountryCk WorkerUpdatedWebhookEventDataAddressCountry = "CK"
+	WorkerUpdatedWebhookEventDataAddressCountryCl WorkerUpdatedWebhookEventDataAddressCountry = "CL"
+	WorkerUpdatedWebhookEventDataAddressCountryCm WorkerUpdatedWebhookEventDataAddressCountry = "CM"
+	WorkerUpdatedWebhookEventDataAddressCountryCn WorkerUpdatedWebhookEventDataAddressCountry = "CN"
+	WorkerUpdatedWebhookEventDataAddressCountryCo WorkerUpdatedWebhookEventDataAddressCountry = "CO"
+	WorkerUpdatedWebhookEventDataAddressCountryCr WorkerUpdatedWebhookEventDataAddressCountry = "CR"
+	WorkerUpdatedWebhookEventDataAddressCountryCu WorkerUpdatedWebhookEventDataAddressCountry = "CU"
+	WorkerUpdatedWebhookEventDataAddressCountryCv WorkerUpdatedWebhookEventDataAddressCountry = "CV"
+	WorkerUpdatedWebhookEventDataAddressCountryCw WorkerUpdatedWebhookEventDataAddressCountry = "CW"
+	WorkerUpdatedWebhookEventDataAddressCountryCx WorkerUpdatedWebhookEventDataAddressCountry = "CX"
+	WorkerUpdatedWebhookEventDataAddressCountryCy WorkerUpdatedWebhookEventDataAddressCountry = "CY"
+	WorkerUpdatedWebhookEventDataAddressCountryCz WorkerUpdatedWebhookEventDataAddressCountry = "CZ"
+	WorkerUpdatedWebhookEventDataAddressCountryDe WorkerUpdatedWebhookEventDataAddressCountry = "DE"
+	WorkerUpdatedWebhookEventDataAddressCountryDj WorkerUpdatedWebhookEventDataAddressCountry = "DJ"
+	WorkerUpdatedWebhookEventDataAddressCountryDk WorkerUpdatedWebhookEventDataAddressCountry = "DK"
+	WorkerUpdatedWebhookEventDataAddressCountryDm WorkerUpdatedWebhookEventDataAddressCountry = "DM"
+	WorkerUpdatedWebhookEventDataAddressCountryDo WorkerUpdatedWebhookEventDataAddressCountry = "DO"
+	WorkerUpdatedWebhookEventDataAddressCountryDz WorkerUpdatedWebhookEventDataAddressCountry = "DZ"
+	WorkerUpdatedWebhookEventDataAddressCountryEc WorkerUpdatedWebhookEventDataAddressCountry = "EC"
+	WorkerUpdatedWebhookEventDataAddressCountryEe WorkerUpdatedWebhookEventDataAddressCountry = "EE"
+	WorkerUpdatedWebhookEventDataAddressCountryEg WorkerUpdatedWebhookEventDataAddressCountry = "EG"
+	WorkerUpdatedWebhookEventDataAddressCountryEh WorkerUpdatedWebhookEventDataAddressCountry = "EH"
+	WorkerUpdatedWebhookEventDataAddressCountryEr WorkerUpdatedWebhookEventDataAddressCountry = "ER"
+	WorkerUpdatedWebhookEventDataAddressCountryEs WorkerUpdatedWebhookEventDataAddressCountry = "ES"
+	WorkerUpdatedWebhookEventDataAddressCountryEt WorkerUpdatedWebhookEventDataAddressCountry = "ET"
+	WorkerUpdatedWebhookEventDataAddressCountryFi WorkerUpdatedWebhookEventDataAddressCountry = "FI"
+	WorkerUpdatedWebhookEventDataAddressCountryFj WorkerUpdatedWebhookEventDataAddressCountry = "FJ"
+	WorkerUpdatedWebhookEventDataAddressCountryFk WorkerUpdatedWebhookEventDataAddressCountry = "FK"
+	WorkerUpdatedWebhookEventDataAddressCountryFm WorkerUpdatedWebhookEventDataAddressCountry = "FM"
+	WorkerUpdatedWebhookEventDataAddressCountryFo WorkerUpdatedWebhookEventDataAddressCountry = "FO"
+	WorkerUpdatedWebhookEventDataAddressCountryFr WorkerUpdatedWebhookEventDataAddressCountry = "FR"
+	WorkerUpdatedWebhookEventDataAddressCountryGa WorkerUpdatedWebhookEventDataAddressCountry = "GA"
+	WorkerUpdatedWebhookEventDataAddressCountryGB WorkerUpdatedWebhookEventDataAddressCountry = "GB"
+	WorkerUpdatedWebhookEventDataAddressCountryGd WorkerUpdatedWebhookEventDataAddressCountry = "GD"
+	WorkerUpdatedWebhookEventDataAddressCountryGe WorkerUpdatedWebhookEventDataAddressCountry = "GE"
+	WorkerUpdatedWebhookEventDataAddressCountryGf WorkerUpdatedWebhookEventDataAddressCountry = "GF"
+	WorkerUpdatedWebhookEventDataAddressCountryGg WorkerUpdatedWebhookEventDataAddressCountry = "GG"
+	WorkerUpdatedWebhookEventDataAddressCountryGh WorkerUpdatedWebhookEventDataAddressCountry = "GH"
+	WorkerUpdatedWebhookEventDataAddressCountryGi WorkerUpdatedWebhookEventDataAddressCountry = "GI"
+	WorkerUpdatedWebhookEventDataAddressCountryGl WorkerUpdatedWebhookEventDataAddressCountry = "GL"
+	WorkerUpdatedWebhookEventDataAddressCountryGm WorkerUpdatedWebhookEventDataAddressCountry = "GM"
+	WorkerUpdatedWebhookEventDataAddressCountryGn WorkerUpdatedWebhookEventDataAddressCountry = "GN"
+	WorkerUpdatedWebhookEventDataAddressCountryGp WorkerUpdatedWebhookEventDataAddressCountry = "GP"
+	WorkerUpdatedWebhookEventDataAddressCountryGq WorkerUpdatedWebhookEventDataAddressCountry = "GQ"
+	WorkerUpdatedWebhookEventDataAddressCountryGr WorkerUpdatedWebhookEventDataAddressCountry = "GR"
+	WorkerUpdatedWebhookEventDataAddressCountryGs WorkerUpdatedWebhookEventDataAddressCountry = "GS"
+	WorkerUpdatedWebhookEventDataAddressCountryGt WorkerUpdatedWebhookEventDataAddressCountry = "GT"
+	WorkerUpdatedWebhookEventDataAddressCountryGu WorkerUpdatedWebhookEventDataAddressCountry = "GU"
+	WorkerUpdatedWebhookEventDataAddressCountryGw WorkerUpdatedWebhookEventDataAddressCountry = "GW"
+	WorkerUpdatedWebhookEventDataAddressCountryGy WorkerUpdatedWebhookEventDataAddressCountry = "GY"
+	WorkerUpdatedWebhookEventDataAddressCountryHk WorkerUpdatedWebhookEventDataAddressCountry = "HK"
+	WorkerUpdatedWebhookEventDataAddressCountryHm WorkerUpdatedWebhookEventDataAddressCountry = "HM"
+	WorkerUpdatedWebhookEventDataAddressCountryHn WorkerUpdatedWebhookEventDataAddressCountry = "HN"
+	WorkerUpdatedWebhookEventDataAddressCountryHr WorkerUpdatedWebhookEventDataAddressCountry = "HR"
+	WorkerUpdatedWebhookEventDataAddressCountryHt WorkerUpdatedWebhookEventDataAddressCountry = "HT"
+	WorkerUpdatedWebhookEventDataAddressCountryHu WorkerUpdatedWebhookEventDataAddressCountry = "HU"
+	WorkerUpdatedWebhookEventDataAddressCountryID WorkerUpdatedWebhookEventDataAddressCountry = "ID"
+	WorkerUpdatedWebhookEventDataAddressCountryIe WorkerUpdatedWebhookEventDataAddressCountry = "IE"
+	WorkerUpdatedWebhookEventDataAddressCountryIl WorkerUpdatedWebhookEventDataAddressCountry = "IL"
+	WorkerUpdatedWebhookEventDataAddressCountryIm WorkerUpdatedWebhookEventDataAddressCountry = "IM"
+	WorkerUpdatedWebhookEventDataAddressCountryIn WorkerUpdatedWebhookEventDataAddressCountry = "IN"
+	WorkerUpdatedWebhookEventDataAddressCountryIo WorkerUpdatedWebhookEventDataAddressCountry = "IO"
+	WorkerUpdatedWebhookEventDataAddressCountryIq WorkerUpdatedWebhookEventDataAddressCountry = "IQ"
+	WorkerUpdatedWebhookEventDataAddressCountryIr WorkerUpdatedWebhookEventDataAddressCountry = "IR"
+	WorkerUpdatedWebhookEventDataAddressCountryIs WorkerUpdatedWebhookEventDataAddressCountry = "IS"
+	WorkerUpdatedWebhookEventDataAddressCountryIt WorkerUpdatedWebhookEventDataAddressCountry = "IT"
+	WorkerUpdatedWebhookEventDataAddressCountryJe WorkerUpdatedWebhookEventDataAddressCountry = "JE"
+	WorkerUpdatedWebhookEventDataAddressCountryJm WorkerUpdatedWebhookEventDataAddressCountry = "JM"
+	WorkerUpdatedWebhookEventDataAddressCountryJo WorkerUpdatedWebhookEventDataAddressCountry = "JO"
+	WorkerUpdatedWebhookEventDataAddressCountryJp WorkerUpdatedWebhookEventDataAddressCountry = "JP"
+	WorkerUpdatedWebhookEventDataAddressCountryKe WorkerUpdatedWebhookEventDataAddressCountry = "KE"
+	WorkerUpdatedWebhookEventDataAddressCountryKg WorkerUpdatedWebhookEventDataAddressCountry = "KG"
+	WorkerUpdatedWebhookEventDataAddressCountryKh WorkerUpdatedWebhookEventDataAddressCountry = "KH"
+	WorkerUpdatedWebhookEventDataAddressCountryKi WorkerUpdatedWebhookEventDataAddressCountry = "KI"
+	WorkerUpdatedWebhookEventDataAddressCountryKm WorkerUpdatedWebhookEventDataAddressCountry = "KM"
+	WorkerUpdatedWebhookEventDataAddressCountryKn WorkerUpdatedWebhookEventDataAddressCountry = "KN"
+	WorkerUpdatedWebhookEventDataAddressCountryKp WorkerUpdatedWebhookEventDataAddressCountry = "KP"
+	WorkerUpdatedWebhookEventDataAddressCountryKr WorkerUpdatedWebhookEventDataAddressCountry = "KR"
+	WorkerUpdatedWebhookEventDataAddressCountryKw WorkerUpdatedWebhookEventDataAddressCountry = "KW"
+	WorkerUpdatedWebhookEventDataAddressCountryKy WorkerUpdatedWebhookEventDataAddressCountry = "KY"
+	WorkerUpdatedWebhookEventDataAddressCountryKz WorkerUpdatedWebhookEventDataAddressCountry = "KZ"
+	WorkerUpdatedWebhookEventDataAddressCountryLa WorkerUpdatedWebhookEventDataAddressCountry = "LA"
+	WorkerUpdatedWebhookEventDataAddressCountryLb WorkerUpdatedWebhookEventDataAddressCountry = "LB"
+	WorkerUpdatedWebhookEventDataAddressCountryLc WorkerUpdatedWebhookEventDataAddressCountry = "LC"
+	WorkerUpdatedWebhookEventDataAddressCountryLi WorkerUpdatedWebhookEventDataAddressCountry = "LI"
+	WorkerUpdatedWebhookEventDataAddressCountryLk WorkerUpdatedWebhookEventDataAddressCountry = "LK"
+	WorkerUpdatedWebhookEventDataAddressCountryLr WorkerUpdatedWebhookEventDataAddressCountry = "LR"
+	WorkerUpdatedWebhookEventDataAddressCountryLs WorkerUpdatedWebhookEventDataAddressCountry = "LS"
+	WorkerUpdatedWebhookEventDataAddressCountryLt WorkerUpdatedWebhookEventDataAddressCountry = "LT"
+	WorkerUpdatedWebhookEventDataAddressCountryLu WorkerUpdatedWebhookEventDataAddressCountry = "LU"
+	WorkerUpdatedWebhookEventDataAddressCountryLv WorkerUpdatedWebhookEventDataAddressCountry = "LV"
+	WorkerUpdatedWebhookEventDataAddressCountryLy WorkerUpdatedWebhookEventDataAddressCountry = "LY"
+	WorkerUpdatedWebhookEventDataAddressCountryMa WorkerUpdatedWebhookEventDataAddressCountry = "MA"
+	WorkerUpdatedWebhookEventDataAddressCountryMc WorkerUpdatedWebhookEventDataAddressCountry = "MC"
+	WorkerUpdatedWebhookEventDataAddressCountryMd WorkerUpdatedWebhookEventDataAddressCountry = "MD"
+	WorkerUpdatedWebhookEventDataAddressCountryMe WorkerUpdatedWebhookEventDataAddressCountry = "ME"
+	WorkerUpdatedWebhookEventDataAddressCountryMf WorkerUpdatedWebhookEventDataAddressCountry = "MF"
+	WorkerUpdatedWebhookEventDataAddressCountryMg WorkerUpdatedWebhookEventDataAddressCountry = "MG"
+	WorkerUpdatedWebhookEventDataAddressCountryMh WorkerUpdatedWebhookEventDataAddressCountry = "MH"
+	WorkerUpdatedWebhookEventDataAddressCountryMk WorkerUpdatedWebhookEventDataAddressCountry = "MK"
+	WorkerUpdatedWebhookEventDataAddressCountryMl WorkerUpdatedWebhookEventDataAddressCountry = "ML"
+	WorkerUpdatedWebhookEventDataAddressCountryMm WorkerUpdatedWebhookEventDataAddressCountry = "MM"
+	WorkerUpdatedWebhookEventDataAddressCountryMn WorkerUpdatedWebhookEventDataAddressCountry = "MN"
+	WorkerUpdatedWebhookEventDataAddressCountryMo WorkerUpdatedWebhookEventDataAddressCountry = "MO"
+	WorkerUpdatedWebhookEventDataAddressCountryMp WorkerUpdatedWebhookEventDataAddressCountry = "MP"
+	WorkerUpdatedWebhookEventDataAddressCountryMq WorkerUpdatedWebhookEventDataAddressCountry = "MQ"
+	WorkerUpdatedWebhookEventDataAddressCountryMr WorkerUpdatedWebhookEventDataAddressCountry = "MR"
+	WorkerUpdatedWebhookEventDataAddressCountryMs WorkerUpdatedWebhookEventDataAddressCountry = "MS"
+	WorkerUpdatedWebhookEventDataAddressCountryMt WorkerUpdatedWebhookEventDataAddressCountry = "MT"
+	WorkerUpdatedWebhookEventDataAddressCountryMu WorkerUpdatedWebhookEventDataAddressCountry = "MU"
+	WorkerUpdatedWebhookEventDataAddressCountryMv WorkerUpdatedWebhookEventDataAddressCountry = "MV"
+	WorkerUpdatedWebhookEventDataAddressCountryMw WorkerUpdatedWebhookEventDataAddressCountry = "MW"
+	WorkerUpdatedWebhookEventDataAddressCountryMx WorkerUpdatedWebhookEventDataAddressCountry = "MX"
+	WorkerUpdatedWebhookEventDataAddressCountryMy WorkerUpdatedWebhookEventDataAddressCountry = "MY"
+	WorkerUpdatedWebhookEventDataAddressCountryMz WorkerUpdatedWebhookEventDataAddressCountry = "MZ"
+	WorkerUpdatedWebhookEventDataAddressCountryNa WorkerUpdatedWebhookEventDataAddressCountry = "NA"
+	WorkerUpdatedWebhookEventDataAddressCountryNc WorkerUpdatedWebhookEventDataAddressCountry = "NC"
+	WorkerUpdatedWebhookEventDataAddressCountryNe WorkerUpdatedWebhookEventDataAddressCountry = "NE"
+	WorkerUpdatedWebhookEventDataAddressCountryNf WorkerUpdatedWebhookEventDataAddressCountry = "NF"
+	WorkerUpdatedWebhookEventDataAddressCountryNg WorkerUpdatedWebhookEventDataAddressCountry = "NG"
+	WorkerUpdatedWebhookEventDataAddressCountryNi WorkerUpdatedWebhookEventDataAddressCountry = "NI"
+	WorkerUpdatedWebhookEventDataAddressCountryNl WorkerUpdatedWebhookEventDataAddressCountry = "NL"
+	WorkerUpdatedWebhookEventDataAddressCountryNo WorkerUpdatedWebhookEventDataAddressCountry = "NO"
+	WorkerUpdatedWebhookEventDataAddressCountryNp WorkerUpdatedWebhookEventDataAddressCountry = "NP"
+	WorkerUpdatedWebhookEventDataAddressCountryNr WorkerUpdatedWebhookEventDataAddressCountry = "NR"
+	WorkerUpdatedWebhookEventDataAddressCountryNu WorkerUpdatedWebhookEventDataAddressCountry = "NU"
+	WorkerUpdatedWebhookEventDataAddressCountryNz WorkerUpdatedWebhookEventDataAddressCountry = "NZ"
+	WorkerUpdatedWebhookEventDataAddressCountryOm WorkerUpdatedWebhookEventDataAddressCountry = "OM"
+	WorkerUpdatedWebhookEventDataAddressCountryPa WorkerUpdatedWebhookEventDataAddressCountry = "PA"
+	WorkerUpdatedWebhookEventDataAddressCountryPe WorkerUpdatedWebhookEventDataAddressCountry = "PE"
+	WorkerUpdatedWebhookEventDataAddressCountryPf WorkerUpdatedWebhookEventDataAddressCountry = "PF"
+	WorkerUpdatedWebhookEventDataAddressCountryPg WorkerUpdatedWebhookEventDataAddressCountry = "PG"
+	WorkerUpdatedWebhookEventDataAddressCountryPh WorkerUpdatedWebhookEventDataAddressCountry = "PH"
+	WorkerUpdatedWebhookEventDataAddressCountryPk WorkerUpdatedWebhookEventDataAddressCountry = "PK"
+	WorkerUpdatedWebhookEventDataAddressCountryPl WorkerUpdatedWebhookEventDataAddressCountry = "PL"
+	WorkerUpdatedWebhookEventDataAddressCountryPm WorkerUpdatedWebhookEventDataAddressCountry = "PM"
+	WorkerUpdatedWebhookEventDataAddressCountryPn WorkerUpdatedWebhookEventDataAddressCountry = "PN"
+	WorkerUpdatedWebhookEventDataAddressCountryPr WorkerUpdatedWebhookEventDataAddressCountry = "PR"
+	WorkerUpdatedWebhookEventDataAddressCountryPs WorkerUpdatedWebhookEventDataAddressCountry = "PS"
+	WorkerUpdatedWebhookEventDataAddressCountryPt WorkerUpdatedWebhookEventDataAddressCountry = "PT"
+	WorkerUpdatedWebhookEventDataAddressCountryPw WorkerUpdatedWebhookEventDataAddressCountry = "PW"
+	WorkerUpdatedWebhookEventDataAddressCountryPy WorkerUpdatedWebhookEventDataAddressCountry = "PY"
+	WorkerUpdatedWebhookEventDataAddressCountryQa WorkerUpdatedWebhookEventDataAddressCountry = "QA"
+	WorkerUpdatedWebhookEventDataAddressCountryRe WorkerUpdatedWebhookEventDataAddressCountry = "RE"
+	WorkerUpdatedWebhookEventDataAddressCountryRo WorkerUpdatedWebhookEventDataAddressCountry = "RO"
+	WorkerUpdatedWebhookEventDataAddressCountryRs WorkerUpdatedWebhookEventDataAddressCountry = "RS"
+	WorkerUpdatedWebhookEventDataAddressCountryRu WorkerUpdatedWebhookEventDataAddressCountry = "RU"
+	WorkerUpdatedWebhookEventDataAddressCountryRw WorkerUpdatedWebhookEventDataAddressCountry = "RW"
+	WorkerUpdatedWebhookEventDataAddressCountrySa WorkerUpdatedWebhookEventDataAddressCountry = "SA"
+	WorkerUpdatedWebhookEventDataAddressCountrySb WorkerUpdatedWebhookEventDataAddressCountry = "SB"
+	WorkerUpdatedWebhookEventDataAddressCountrySc WorkerUpdatedWebhookEventDataAddressCountry = "SC"
+	WorkerUpdatedWebhookEventDataAddressCountrySd WorkerUpdatedWebhookEventDataAddressCountry = "SD"
+	WorkerUpdatedWebhookEventDataAddressCountrySe WorkerUpdatedWebhookEventDataAddressCountry = "SE"
+	WorkerUpdatedWebhookEventDataAddressCountrySg WorkerUpdatedWebhookEventDataAddressCountry = "SG"
+	WorkerUpdatedWebhookEventDataAddressCountrySh WorkerUpdatedWebhookEventDataAddressCountry = "SH"
+	WorkerUpdatedWebhookEventDataAddressCountrySi WorkerUpdatedWebhookEventDataAddressCountry = "SI"
+	WorkerUpdatedWebhookEventDataAddressCountrySj WorkerUpdatedWebhookEventDataAddressCountry = "SJ"
+	WorkerUpdatedWebhookEventDataAddressCountrySk WorkerUpdatedWebhookEventDataAddressCountry = "SK"
+	WorkerUpdatedWebhookEventDataAddressCountrySl WorkerUpdatedWebhookEventDataAddressCountry = "SL"
+	WorkerUpdatedWebhookEventDataAddressCountrySm WorkerUpdatedWebhookEventDataAddressCountry = "SM"
+	WorkerUpdatedWebhookEventDataAddressCountrySn WorkerUpdatedWebhookEventDataAddressCountry = "SN"
+	WorkerUpdatedWebhookEventDataAddressCountrySo WorkerUpdatedWebhookEventDataAddressCountry = "SO"
+	WorkerUpdatedWebhookEventDataAddressCountrySr WorkerUpdatedWebhookEventDataAddressCountry = "SR"
+	WorkerUpdatedWebhookEventDataAddressCountrySS WorkerUpdatedWebhookEventDataAddressCountry = "SS"
+	WorkerUpdatedWebhookEventDataAddressCountrySt WorkerUpdatedWebhookEventDataAddressCountry = "ST"
+	WorkerUpdatedWebhookEventDataAddressCountrySv WorkerUpdatedWebhookEventDataAddressCountry = "SV"
+	WorkerUpdatedWebhookEventDataAddressCountrySx WorkerUpdatedWebhookEventDataAddressCountry = "SX"
+	WorkerUpdatedWebhookEventDataAddressCountrySy WorkerUpdatedWebhookEventDataAddressCountry = "SY"
+	WorkerUpdatedWebhookEventDataAddressCountrySz WorkerUpdatedWebhookEventDataAddressCountry = "SZ"
+	WorkerUpdatedWebhookEventDataAddressCountryTc WorkerUpdatedWebhookEventDataAddressCountry = "TC"
+	WorkerUpdatedWebhookEventDataAddressCountryTd WorkerUpdatedWebhookEventDataAddressCountry = "TD"
+	WorkerUpdatedWebhookEventDataAddressCountryTf WorkerUpdatedWebhookEventDataAddressCountry = "TF"
+	WorkerUpdatedWebhookEventDataAddressCountryTg WorkerUpdatedWebhookEventDataAddressCountry = "TG"
+	WorkerUpdatedWebhookEventDataAddressCountryTh WorkerUpdatedWebhookEventDataAddressCountry = "TH"
+	WorkerUpdatedWebhookEventDataAddressCountryTj WorkerUpdatedWebhookEventDataAddressCountry = "TJ"
+	WorkerUpdatedWebhookEventDataAddressCountryTk WorkerUpdatedWebhookEventDataAddressCountry = "TK"
+	WorkerUpdatedWebhookEventDataAddressCountryTl WorkerUpdatedWebhookEventDataAddressCountry = "TL"
+	WorkerUpdatedWebhookEventDataAddressCountryTm WorkerUpdatedWebhookEventDataAddressCountry = "TM"
+	WorkerUpdatedWebhookEventDataAddressCountryTn WorkerUpdatedWebhookEventDataAddressCountry = "TN"
+	WorkerUpdatedWebhookEventDataAddressCountryTo WorkerUpdatedWebhookEventDataAddressCountry = "TO"
+	WorkerUpdatedWebhookEventDataAddressCountryTr WorkerUpdatedWebhookEventDataAddressCountry = "TR"
+	WorkerUpdatedWebhookEventDataAddressCountryTt WorkerUpdatedWebhookEventDataAddressCountry = "TT"
+	WorkerUpdatedWebhookEventDataAddressCountryTv WorkerUpdatedWebhookEventDataAddressCountry = "TV"
+	WorkerUpdatedWebhookEventDataAddressCountryTw WorkerUpdatedWebhookEventDataAddressCountry = "TW"
+	WorkerUpdatedWebhookEventDataAddressCountryTz WorkerUpdatedWebhookEventDataAddressCountry = "TZ"
+	WorkerUpdatedWebhookEventDataAddressCountryUa WorkerUpdatedWebhookEventDataAddressCountry = "UA"
+	WorkerUpdatedWebhookEventDataAddressCountryUg WorkerUpdatedWebhookEventDataAddressCountry = "UG"
+	WorkerUpdatedWebhookEventDataAddressCountryUm WorkerUpdatedWebhookEventDataAddressCountry = "UM"
+	WorkerUpdatedWebhookEventDataAddressCountryUs WorkerUpdatedWebhookEventDataAddressCountry = "US"
+	WorkerUpdatedWebhookEventDataAddressCountryUy WorkerUpdatedWebhookEventDataAddressCountry = "UY"
+	WorkerUpdatedWebhookEventDataAddressCountryUz WorkerUpdatedWebhookEventDataAddressCountry = "UZ"
+	WorkerUpdatedWebhookEventDataAddressCountryVa WorkerUpdatedWebhookEventDataAddressCountry = "VA"
+	WorkerUpdatedWebhookEventDataAddressCountryVc WorkerUpdatedWebhookEventDataAddressCountry = "VC"
+	WorkerUpdatedWebhookEventDataAddressCountryVe WorkerUpdatedWebhookEventDataAddressCountry = "VE"
+	WorkerUpdatedWebhookEventDataAddressCountryVg WorkerUpdatedWebhookEventDataAddressCountry = "VG"
+	WorkerUpdatedWebhookEventDataAddressCountryVi WorkerUpdatedWebhookEventDataAddressCountry = "VI"
+	WorkerUpdatedWebhookEventDataAddressCountryVn WorkerUpdatedWebhookEventDataAddressCountry = "VN"
+	WorkerUpdatedWebhookEventDataAddressCountryVu WorkerUpdatedWebhookEventDataAddressCountry = "VU"
+	WorkerUpdatedWebhookEventDataAddressCountryWf WorkerUpdatedWebhookEventDataAddressCountry = "WF"
+	WorkerUpdatedWebhookEventDataAddressCountryWs WorkerUpdatedWebhookEventDataAddressCountry = "WS"
+	WorkerUpdatedWebhookEventDataAddressCountryXk WorkerUpdatedWebhookEventDataAddressCountry = "XK"
+	WorkerUpdatedWebhookEventDataAddressCountryYe WorkerUpdatedWebhookEventDataAddressCountry = "YE"
+	WorkerUpdatedWebhookEventDataAddressCountryYt WorkerUpdatedWebhookEventDataAddressCountry = "YT"
+	WorkerUpdatedWebhookEventDataAddressCountryZa WorkerUpdatedWebhookEventDataAddressCountry = "ZA"
+	WorkerUpdatedWebhookEventDataAddressCountryZm WorkerUpdatedWebhookEventDataAddressCountry = "ZM"
+	WorkerUpdatedWebhookEventDataAddressCountryZw WorkerUpdatedWebhookEventDataAddressCountry = "ZW"
+)
+
+func (r WorkerUpdatedWebhookEventDataAddressCountry) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventDataAddressCountryAd, WorkerUpdatedWebhookEventDataAddressCountryAe, WorkerUpdatedWebhookEventDataAddressCountryAf, WorkerUpdatedWebhookEventDataAddressCountryAg, WorkerUpdatedWebhookEventDataAddressCountryAI, WorkerUpdatedWebhookEventDataAddressCountryAl, WorkerUpdatedWebhookEventDataAddressCountryAm, WorkerUpdatedWebhookEventDataAddressCountryAo, WorkerUpdatedWebhookEventDataAddressCountryAq, WorkerUpdatedWebhookEventDataAddressCountryAr, WorkerUpdatedWebhookEventDataAddressCountryAs, WorkerUpdatedWebhookEventDataAddressCountryAt, WorkerUpdatedWebhookEventDataAddressCountryAu, WorkerUpdatedWebhookEventDataAddressCountryAw, WorkerUpdatedWebhookEventDataAddressCountryAx, WorkerUpdatedWebhookEventDataAddressCountryAz, WorkerUpdatedWebhookEventDataAddressCountryBa, WorkerUpdatedWebhookEventDataAddressCountryBb, WorkerUpdatedWebhookEventDataAddressCountryBd, WorkerUpdatedWebhookEventDataAddressCountryBe, WorkerUpdatedWebhookEventDataAddressCountryBf, WorkerUpdatedWebhookEventDataAddressCountryBg, WorkerUpdatedWebhookEventDataAddressCountryBh, WorkerUpdatedWebhookEventDataAddressCountryBi, WorkerUpdatedWebhookEventDataAddressCountryBj, WorkerUpdatedWebhookEventDataAddressCountryBl, WorkerUpdatedWebhookEventDataAddressCountryBm, WorkerUpdatedWebhookEventDataAddressCountryBn, WorkerUpdatedWebhookEventDataAddressCountryBo, WorkerUpdatedWebhookEventDataAddressCountryBq, WorkerUpdatedWebhookEventDataAddressCountryBr, WorkerUpdatedWebhookEventDataAddressCountryBs, WorkerUpdatedWebhookEventDataAddressCountryBt, WorkerUpdatedWebhookEventDataAddressCountryBv, WorkerUpdatedWebhookEventDataAddressCountryBw, WorkerUpdatedWebhookEventDataAddressCountryBy, WorkerUpdatedWebhookEventDataAddressCountryBz, WorkerUpdatedWebhookEventDataAddressCountryCa, WorkerUpdatedWebhookEventDataAddressCountryCc, WorkerUpdatedWebhookEventDataAddressCountryCd, WorkerUpdatedWebhookEventDataAddressCountryCf, WorkerUpdatedWebhookEventDataAddressCountryCg, WorkerUpdatedWebhookEventDataAddressCountryCh, WorkerUpdatedWebhookEventDataAddressCountryCi, WorkerUpdatedWebhookEventDataAddressCountryCk, WorkerUpdatedWebhookEventDataAddressCountryCl, WorkerUpdatedWebhookEventDataAddressCountryCm, WorkerUpdatedWebhookEventDataAddressCountryCn, WorkerUpdatedWebhookEventDataAddressCountryCo, WorkerUpdatedWebhookEventDataAddressCountryCr, WorkerUpdatedWebhookEventDataAddressCountryCu, WorkerUpdatedWebhookEventDataAddressCountryCv, WorkerUpdatedWebhookEventDataAddressCountryCw, WorkerUpdatedWebhookEventDataAddressCountryCx, WorkerUpdatedWebhookEventDataAddressCountryCy, WorkerUpdatedWebhookEventDataAddressCountryCz, WorkerUpdatedWebhookEventDataAddressCountryDe, WorkerUpdatedWebhookEventDataAddressCountryDj, WorkerUpdatedWebhookEventDataAddressCountryDk, WorkerUpdatedWebhookEventDataAddressCountryDm, WorkerUpdatedWebhookEventDataAddressCountryDo, WorkerUpdatedWebhookEventDataAddressCountryDz, WorkerUpdatedWebhookEventDataAddressCountryEc, WorkerUpdatedWebhookEventDataAddressCountryEe, WorkerUpdatedWebhookEventDataAddressCountryEg, WorkerUpdatedWebhookEventDataAddressCountryEh, WorkerUpdatedWebhookEventDataAddressCountryEr, WorkerUpdatedWebhookEventDataAddressCountryEs, WorkerUpdatedWebhookEventDataAddressCountryEt, WorkerUpdatedWebhookEventDataAddressCountryFi, WorkerUpdatedWebhookEventDataAddressCountryFj, WorkerUpdatedWebhookEventDataAddressCountryFk, WorkerUpdatedWebhookEventDataAddressCountryFm, WorkerUpdatedWebhookEventDataAddressCountryFo, WorkerUpdatedWebhookEventDataAddressCountryFr, WorkerUpdatedWebhookEventDataAddressCountryGa, WorkerUpdatedWebhookEventDataAddressCountryGB, WorkerUpdatedWebhookEventDataAddressCountryGd, WorkerUpdatedWebhookEventDataAddressCountryGe, WorkerUpdatedWebhookEventDataAddressCountryGf, WorkerUpdatedWebhookEventDataAddressCountryGg, WorkerUpdatedWebhookEventDataAddressCountryGh, WorkerUpdatedWebhookEventDataAddressCountryGi, WorkerUpdatedWebhookEventDataAddressCountryGl, WorkerUpdatedWebhookEventDataAddressCountryGm, WorkerUpdatedWebhookEventDataAddressCountryGn, WorkerUpdatedWebhookEventDataAddressCountryGp, WorkerUpdatedWebhookEventDataAddressCountryGq, WorkerUpdatedWebhookEventDataAddressCountryGr, WorkerUpdatedWebhookEventDataAddressCountryGs, WorkerUpdatedWebhookEventDataAddressCountryGt, WorkerUpdatedWebhookEventDataAddressCountryGu, WorkerUpdatedWebhookEventDataAddressCountryGw, WorkerUpdatedWebhookEventDataAddressCountryGy, WorkerUpdatedWebhookEventDataAddressCountryHk, WorkerUpdatedWebhookEventDataAddressCountryHm, WorkerUpdatedWebhookEventDataAddressCountryHn, WorkerUpdatedWebhookEventDataAddressCountryHr, WorkerUpdatedWebhookEventDataAddressCountryHt, WorkerUpdatedWebhookEventDataAddressCountryHu, WorkerUpdatedWebhookEventDataAddressCountryID, WorkerUpdatedWebhookEventDataAddressCountryIe, WorkerUpdatedWebhookEventDataAddressCountryIl, WorkerUpdatedWebhookEventDataAddressCountryIm, WorkerUpdatedWebhookEventDataAddressCountryIn, WorkerUpdatedWebhookEventDataAddressCountryIo, WorkerUpdatedWebhookEventDataAddressCountryIq, WorkerUpdatedWebhookEventDataAddressCountryIr, WorkerUpdatedWebhookEventDataAddressCountryIs, WorkerUpdatedWebhookEventDataAddressCountryIt, WorkerUpdatedWebhookEventDataAddressCountryJe, WorkerUpdatedWebhookEventDataAddressCountryJm, WorkerUpdatedWebhookEventDataAddressCountryJo, WorkerUpdatedWebhookEventDataAddressCountryJp, WorkerUpdatedWebhookEventDataAddressCountryKe, WorkerUpdatedWebhookEventDataAddressCountryKg, WorkerUpdatedWebhookEventDataAddressCountryKh, WorkerUpdatedWebhookEventDataAddressCountryKi, WorkerUpdatedWebhookEventDataAddressCountryKm, WorkerUpdatedWebhookEventDataAddressCountryKn, WorkerUpdatedWebhookEventDataAddressCountryKp, WorkerUpdatedWebhookEventDataAddressCountryKr, WorkerUpdatedWebhookEventDataAddressCountryKw, WorkerUpdatedWebhookEventDataAddressCountryKy, WorkerUpdatedWebhookEventDataAddressCountryKz, WorkerUpdatedWebhookEventDataAddressCountryLa, WorkerUpdatedWebhookEventDataAddressCountryLb, WorkerUpdatedWebhookEventDataAddressCountryLc, WorkerUpdatedWebhookEventDataAddressCountryLi, WorkerUpdatedWebhookEventDataAddressCountryLk, WorkerUpdatedWebhookEventDataAddressCountryLr, WorkerUpdatedWebhookEventDataAddressCountryLs, WorkerUpdatedWebhookEventDataAddressCountryLt, WorkerUpdatedWebhookEventDataAddressCountryLu, WorkerUpdatedWebhookEventDataAddressCountryLv, WorkerUpdatedWebhookEventDataAddressCountryLy, WorkerUpdatedWebhookEventDataAddressCountryMa, WorkerUpdatedWebhookEventDataAddressCountryMc, WorkerUpdatedWebhookEventDataAddressCountryMd, WorkerUpdatedWebhookEventDataAddressCountryMe, WorkerUpdatedWebhookEventDataAddressCountryMf, WorkerUpdatedWebhookEventDataAddressCountryMg, WorkerUpdatedWebhookEventDataAddressCountryMh, WorkerUpdatedWebhookEventDataAddressCountryMk, WorkerUpdatedWebhookEventDataAddressCountryMl, WorkerUpdatedWebhookEventDataAddressCountryMm, WorkerUpdatedWebhookEventDataAddressCountryMn, WorkerUpdatedWebhookEventDataAddressCountryMo, WorkerUpdatedWebhookEventDataAddressCountryMp, WorkerUpdatedWebhookEventDataAddressCountryMq, WorkerUpdatedWebhookEventDataAddressCountryMr, WorkerUpdatedWebhookEventDataAddressCountryMs, WorkerUpdatedWebhookEventDataAddressCountryMt, WorkerUpdatedWebhookEventDataAddressCountryMu, WorkerUpdatedWebhookEventDataAddressCountryMv, WorkerUpdatedWebhookEventDataAddressCountryMw, WorkerUpdatedWebhookEventDataAddressCountryMx, WorkerUpdatedWebhookEventDataAddressCountryMy, WorkerUpdatedWebhookEventDataAddressCountryMz, WorkerUpdatedWebhookEventDataAddressCountryNa, WorkerUpdatedWebhookEventDataAddressCountryNc, WorkerUpdatedWebhookEventDataAddressCountryNe, WorkerUpdatedWebhookEventDataAddressCountryNf, WorkerUpdatedWebhookEventDataAddressCountryNg, WorkerUpdatedWebhookEventDataAddressCountryNi, WorkerUpdatedWebhookEventDataAddressCountryNl, WorkerUpdatedWebhookEventDataAddressCountryNo, WorkerUpdatedWebhookEventDataAddressCountryNp, WorkerUpdatedWebhookEventDataAddressCountryNr, WorkerUpdatedWebhookEventDataAddressCountryNu, WorkerUpdatedWebhookEventDataAddressCountryNz, WorkerUpdatedWebhookEventDataAddressCountryOm, WorkerUpdatedWebhookEventDataAddressCountryPa, WorkerUpdatedWebhookEventDataAddressCountryPe, WorkerUpdatedWebhookEventDataAddressCountryPf, WorkerUpdatedWebhookEventDataAddressCountryPg, WorkerUpdatedWebhookEventDataAddressCountryPh, WorkerUpdatedWebhookEventDataAddressCountryPk, WorkerUpdatedWebhookEventDataAddressCountryPl, WorkerUpdatedWebhookEventDataAddressCountryPm, WorkerUpdatedWebhookEventDataAddressCountryPn, WorkerUpdatedWebhookEventDataAddressCountryPr, WorkerUpdatedWebhookEventDataAddressCountryPs, WorkerUpdatedWebhookEventDataAddressCountryPt, WorkerUpdatedWebhookEventDataAddressCountryPw, WorkerUpdatedWebhookEventDataAddressCountryPy, WorkerUpdatedWebhookEventDataAddressCountryQa, WorkerUpdatedWebhookEventDataAddressCountryRe, WorkerUpdatedWebhookEventDataAddressCountryRo, WorkerUpdatedWebhookEventDataAddressCountryRs, WorkerUpdatedWebhookEventDataAddressCountryRu, WorkerUpdatedWebhookEventDataAddressCountryRw, WorkerUpdatedWebhookEventDataAddressCountrySa, WorkerUpdatedWebhookEventDataAddressCountrySb, WorkerUpdatedWebhookEventDataAddressCountrySc, WorkerUpdatedWebhookEventDataAddressCountrySd, WorkerUpdatedWebhookEventDataAddressCountrySe, WorkerUpdatedWebhookEventDataAddressCountrySg, WorkerUpdatedWebhookEventDataAddressCountrySh, WorkerUpdatedWebhookEventDataAddressCountrySi, WorkerUpdatedWebhookEventDataAddressCountrySj, WorkerUpdatedWebhookEventDataAddressCountrySk, WorkerUpdatedWebhookEventDataAddressCountrySl, WorkerUpdatedWebhookEventDataAddressCountrySm, WorkerUpdatedWebhookEventDataAddressCountrySn, WorkerUpdatedWebhookEventDataAddressCountrySo, WorkerUpdatedWebhookEventDataAddressCountrySr, WorkerUpdatedWebhookEventDataAddressCountrySS, WorkerUpdatedWebhookEventDataAddressCountrySt, WorkerUpdatedWebhookEventDataAddressCountrySv, WorkerUpdatedWebhookEventDataAddressCountrySx, WorkerUpdatedWebhookEventDataAddressCountrySy, WorkerUpdatedWebhookEventDataAddressCountrySz, WorkerUpdatedWebhookEventDataAddressCountryTc, WorkerUpdatedWebhookEventDataAddressCountryTd, WorkerUpdatedWebhookEventDataAddressCountryTf, WorkerUpdatedWebhookEventDataAddressCountryTg, WorkerUpdatedWebhookEventDataAddressCountryTh, WorkerUpdatedWebhookEventDataAddressCountryTj, WorkerUpdatedWebhookEventDataAddressCountryTk, WorkerUpdatedWebhookEventDataAddressCountryTl, WorkerUpdatedWebhookEventDataAddressCountryTm, WorkerUpdatedWebhookEventDataAddressCountryTn, WorkerUpdatedWebhookEventDataAddressCountryTo, WorkerUpdatedWebhookEventDataAddressCountryTr, WorkerUpdatedWebhookEventDataAddressCountryTt, WorkerUpdatedWebhookEventDataAddressCountryTv, WorkerUpdatedWebhookEventDataAddressCountryTw, WorkerUpdatedWebhookEventDataAddressCountryTz, WorkerUpdatedWebhookEventDataAddressCountryUa, WorkerUpdatedWebhookEventDataAddressCountryUg, WorkerUpdatedWebhookEventDataAddressCountryUm, WorkerUpdatedWebhookEventDataAddressCountryUs, WorkerUpdatedWebhookEventDataAddressCountryUy, WorkerUpdatedWebhookEventDataAddressCountryUz, WorkerUpdatedWebhookEventDataAddressCountryVa, WorkerUpdatedWebhookEventDataAddressCountryVc, WorkerUpdatedWebhookEventDataAddressCountryVe, WorkerUpdatedWebhookEventDataAddressCountryVg, WorkerUpdatedWebhookEventDataAddressCountryVi, WorkerUpdatedWebhookEventDataAddressCountryVn, WorkerUpdatedWebhookEventDataAddressCountryVu, WorkerUpdatedWebhookEventDataAddressCountryWf, WorkerUpdatedWebhookEventDataAddressCountryWs, WorkerUpdatedWebhookEventDataAddressCountryXk, WorkerUpdatedWebhookEventDataAddressCountryYe, WorkerUpdatedWebhookEventDataAddressCountryYt, WorkerUpdatedWebhookEventDataAddressCountryZa, WorkerUpdatedWebhookEventDataAddressCountryZm, WorkerUpdatedWebhookEventDataAddressCountryZw:
+		return true
+	}
+	return false
+}
+
 type WorkerUpdatedWebhookEventDataDepartment struct {
 	// The unique public id of the department
 	ID   string                                      `json:"id" api:"required"`
@@ -5795,6 +9292,46 @@ func (r *WorkerUpdatedWebhookEventDataDepartment) UnmarshalJSON(data []byte) (er
 
 func (r workerUpdatedWebhookEventDataDepartmentJSON) RawJSON() string {
 	return r.raw
+}
+
+type WorkerUpdatedWebhookEventDataPrimaryWorkplace struct {
+	// Public workplace identifier
+	ID   string                                            `json:"id" api:"required"`
+	Name string                                            `json:"name" api:"required"`
+	Type WorkerUpdatedWebhookEventDataPrimaryWorkplaceType `json:"type" api:"required"`
+	JSON workerUpdatedWebhookEventDataPrimaryWorkplaceJSON `json:"-"`
+}
+
+// workerUpdatedWebhookEventDataPrimaryWorkplaceJSON contains the JSON metadata for the struct [WorkerUpdatedWebhookEventDataPrimaryWorkplace]
+type workerUpdatedWebhookEventDataPrimaryWorkplaceJSON struct {
+	ID          apijson.Field
+	Name        apijson.Field
+	Type        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerUpdatedWebhookEventDataPrimaryWorkplace) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerUpdatedWebhookEventDataPrimaryWorkplaceJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerUpdatedWebhookEventDataPrimaryWorkplaceType string
+
+const (
+	WorkerUpdatedWebhookEventDataPrimaryWorkplaceTypeRemote WorkerUpdatedWebhookEventDataPrimaryWorkplaceType = "remote"
+	WorkerUpdatedWebhookEventDataPrimaryWorkplaceTypeOffice WorkerUpdatedWebhookEventDataPrimaryWorkplaceType = "office"
+)
+
+func (r WorkerUpdatedWebhookEventDataPrimaryWorkplaceType) IsKnown() bool {
+	switch r {
+	case WorkerUpdatedWebhookEventDataPrimaryWorkplaceTypeRemote, WorkerUpdatedWebhookEventDataPrimaryWorkplaceTypeOffice:
+		return true
+	}
+	return false
 }
 
 type WorkerUpdatedWebhookEventDataLevel struct {

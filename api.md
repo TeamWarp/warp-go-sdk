@@ -868,7 +868,7 @@ fmt.Println(worker)
 
 ### Get Worker
 
-Get a specific worker by id.
+Get a specific worker by ID.
 
 | Direction | Type |
 | --- | --- |
