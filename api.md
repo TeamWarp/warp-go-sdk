@@ -1,4 +1,4 @@
-# Warp Go API
+# warp Go API
 
 Complete reference of every operation, grouped by resource. See [the README](./README.md) for usage and configuration.
 
@@ -31,12 +31,22 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [List Departments](#list-departments)
   - [Create Department](#create-department)
   - [Update Department](#update-department)
+- [`Levels`](#levels)
+  - [List Job Levels](#list-job-levels)
 - [`Offers`](#offers)
   - [List Offers](#list-offers)
   - [Create Offer](#create-offer)
   - [Void Offer](#void-offer)
   - [Extend Offer Deadline](#extend-offer-deadline)
   - [Resend Offer](#resend-offer)
+- [`PayRates`](#payrates)
+  - [List Pay Rates](#list-pay-rates)
+  - [Get Pay Rate](#get-pay-rate)
+- [`Payroll`](#payroll)
+  - [List Payrolls](#list-payrolls)
+  - [Get Payroll](#get-payroll)
+  - [List Paychecks](#list-paychecks)
+  - [Get Paycheck](#get-paycheck)
 - [`TimeOff`](#timeoff)
   - [List Time Off Assignments](#list-time-off-assignments)
   - [List Time Off Balances](#list-time-off-balances)
@@ -73,6 +83,8 @@ client := sdk.NewClient()
 
 ### `Benefits HealthPlans`
 
+Read-only health plans, retirement plans, and payroll benefit deductions.
+
 #### List Health Plans
 
 List company health plans. Defaults to active plans. A plan whose effectiveEndDate has elapsed is reported and filtered as terminated.
@@ -84,7 +96,8 @@ List company health plans. Defaults to active plans. A plan whose effectiveEndDa
 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
-	Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+	Limit:    sdk.F[string]("limit"),
+	Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 })
 if err != nil {
 	panic(err)
@@ -99,7 +112,7 @@ Get a publicly visible company health plan by id.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`BenefitHealthPlanGetResponse`](./benefithealthplan.go) |
+| Response | [`PublicHealthPlan`](./benefithealthplan.go) |
 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.Get(context.Background(), "chpl_1234")
@@ -112,6 +125,8 @@ fmt.Println(healthPlan)
 
 ### `Benefits RetirementPlans`
 
+Read-only health plans, retirement plans, and payroll benefit deductions.
+
 #### List Retirement Plans
 
 List company retirement plans. Defaults to active plans. A plan whose effectiveEndDate has elapsed is reported and filtered as terminated.
@@ -123,7 +138,8 @@ List company retirement plans. Defaults to active plans. A plan whose effectiveE
 
 ```go
 retirementPlan, err := client.Benefits.RetirementPlans.List(context.Background(), sdk.BenefitRetirementPlanListParams{
-	Statuses: sdk.F[[]sdk.BenefitRetirementPlanListParamsStatus]([]sdk.BenefitRetirementPlanListParamsStatus{"active"}),
+	Limit:    sdk.F[string]("limit"),
+	Statuses: sdk.F[[]sdk.PublicRetirementPlanStatus]([]sdk.PublicRetirementPlanStatus{"active"}),
 })
 if err != nil {
 	panic(err)
@@ -138,7 +154,7 @@ Get a company retirement plan by id, regardless of status.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`BenefitRetirementPlanGetResponse`](./benefitretirementplan.go) |
+| Response | [`PublicRetirementPlan`](./benefitretirementplan.go) |
 
 ```go
 retirementPlan, err := client.Benefits.RetirementPlans.Get(context.Background(), "crpl_1234")
@@ -151,6 +167,8 @@ fmt.Println(retirementPlan)
 
 ### `Benefits Deductions`
 
+Read-only health plans, retirement plans, and payroll benefit deductions.
+
 #### List Benefit Deductions
 
 List current payroll benefit deductions. Defaults to active deductions. A deduction whose effectiveEndDate has elapsed is reported and filtered as terminated.
@@ -162,7 +180,8 @@ List current payroll benefit deductions. Defaults to active deductions. A deduct
 
 ```go
 deduction, err := client.Benefits.Deductions.List(context.Background(), sdk.BenefitDeductionListParams{
-	Statuses: sdk.F[[]sdk.BenefitDeductionListParamsStatus]([]sdk.BenefitDeductionListParamsStatus{"active"}),
+	Limit:    sdk.F[string]("limit"),
+	Statuses: sdk.F[[]sdk.PublicBenefitDeductionStatus]([]sdk.PublicBenefitDeductionStatus{"active"}),
 })
 if err != nil {
 	panic(err)
@@ -177,7 +196,7 @@ Get the current version of a company benefit deduction by id.
 
 | Direction | Type |
 | --- | --- |
-| Response | [`BenefitDeductionGetResponse`](./benefitdeduction.go) |
+| Response | [`PublicBenefitDeduction`](./benefitdeduction.go) |
 
 ```go
 deduction, err := client.Benefits.Deductions.Get(context.Background(), "pbdg_1234")
@@ -189,6 +208,8 @@ fmt.Println(deduction)
 ```
 
 ## `CustomFields`
+
+Company-defined custom fields for workers. Field definitions are administered with the workers:custom_fields permission; each field belongs to a worker-data category whose read/write grants govern its values.
 
 ### List Fields
 
@@ -218,7 +239,7 @@ Create a custom worker field definition. The field type is immutable after creat
 
 ```go
 customField, err := client.CustomFields.New(context.Background(), sdk.CustomFieldNewParams{
-	Name: sdk.F[string](""),
+	Name: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)
@@ -406,6 +427,8 @@ if err != nil {
 
 ## `Departments`
 
+Endpoints for department management. Create, list, and update departments within your company.
+
 ### List Departments
 
 List all departments for your company.
@@ -416,7 +439,9 @@ List all departments for your company.
 | Response | [`DepartmentListResponse`](./department.go) |
 
 ```go
-department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{})
+department, err := client.Departments.List(context.Background(), sdk.DepartmentListParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -435,7 +460,7 @@ Create a new department.
 
 ```go
 department, err := client.Departments.New(context.Background(), sdk.DepartmentNewParams{
-	Name: sdk.F[string](""),
+	Name: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)
@@ -462,7 +487,30 @@ if err != nil {
 fmt.Println(department)
 ```
 
+## `Levels`
+
+Endpoints for reading the job-level framework configured for your company.
+
+### List Job Levels
+
+List the active standard job levels available to your company.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`[]LevelListResponse`](./level.go) |
+
+```go
+level, err := client.Levels.List(context.Background())
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(level)
+```
+
 ## `Offers`
+
+Endpoints for managing candidate offers. Create and send offers, list existing offers, and manage their lifecycle.
 
 ### List Offers
 
@@ -474,7 +522,9 @@ List the candidate offers for your company.
 | Response | [`OfferListResponse`](./offer.go) |
 
 ```go
-offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
+offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -503,7 +553,7 @@ offer, err := client.Offers.New(context.Background(), sdk.OfferNewParams{
 	}),
 	Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
 		Title:     sdk.F[string]("x"),
-		StartDate: sdk.F[string]("2000-01-01"),
+		StartDate: sdk.F[string](""),
 	}),
 })
 if err != nil {
@@ -519,10 +569,11 @@ Void a previously sent offer. Only sent offers can be voided.
 
 | Direction | Type |
 | --- | --- |
+| Request | [`OfferVoidParams`](./offer.go) |
 | Response | [`OfferVoidResponse`](./offer.go) |
 
 ```go
-offer, err := client.Offers.Void(context.Background(), "offr_1234")
+offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{})
 if err != nil {
 	panic(err)
 }
@@ -567,7 +618,128 @@ if err != nil {
 fmt.Println(offer)
 ```
 
+## `PayRates`
+
+Read regular and additional worker pay rates.
+
+### List Pay Rates
+
+List pay rates visible to the API key. Results may be filtered by worker, effective start date, or regular/additional type. US and global worker rates require their corresponding compensation read scopes.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`PayRateListParams`](./payrate.go) |
+| Response | [`PayRateListResponse`](./payrate.go) |
+
+```go
+payRate, err := client.PayRates.List(context.Background(), sdk.PayRateListParams{
+	Limit: sdk.F[string]("limit"),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payRate)
+```
+
+### Get Pay Rate
+
+Get a specific pay rate by id. The API key must have the compensation read scope corresponding to the worker.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`PublicPayRate`](./payrate.go) |
+
+```go
+payRate, err := client.PayRates.Get(context.Background(), "pyr_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payRate)
+```
+
+## `Payroll`
+
+Read-only payrolls and worker-level payroll calculations. Paycheck endpoints use one consistent resource for every worker type; payment execution is outside this API.
+
+### List Payrolls
+
+List payroll summaries newest first with stable cursor ordering. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`PayrollListParams`](./payroll.go) |
+| Response | [`PublicPayrollList`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.List(context.Background(), sdk.PayrollListParams{
+	Limit: sdk.F[string]("limit"),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
+### Get Payroll
+
+Get a payroll by id. Every amount in totals is expressed in fundingCurrency, the currency the employer uses to fund the payroll. Line-derived categories are converted and rounded per paycheck before aggregation, while netPay remains provider-authoritative. Missing, foreign, unauthorized, or unavailable payrolls return 404.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`PublicPayrollDetail`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.Get(context.Background(), "pay_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
+### List Paychecks
+
+List per-worker paycheck summaries newest first with stable cursor ordering. By default, the response includes every worker type visible to the API key, including US W-2 employees, US 1099 contractors, and global contractors; use workerTypes to narrow the results. Payroll type visibility follows the API key permissions. All lifecycle statuses are included unless statuses are provided.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`PayrollListPaychecksParams`](./payroll.go) |
+| Response | [`PublicPaycheckList`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.ListPaychecks(context.Background(), sdk.PayrollListPaychecksParams{
+	Limit: sdk.F[string]("limit"),
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
+### Get Paycheck
+
+Get a paycheck by id. All worker types use the same paycheck schema. Categories that do not apply to a worker are represented by zero-valued totals and empty line-item arrays. For example, a US 1099 contractor with no applicable payroll taxes returns zero `workerTaxes` and `employerTaxes` totals and an empty `taxes` array. Missing, foreign, unauthorized, or unavailable paychecks return 404.
+
+| Direction | Type |
+| --- | --- |
+| Response | [`PublicPaycheckDetail`](./payroll.go) |
+
+```go
+payroll, err := client.Payroll.GetPaycheck(context.Background(), "pyc_1234")
+if err != nil {
+	panic(err)
+}
+
+fmt.Println(payroll)
+```
+
 ## `TimeOff`
+
+Endpoints for worker time off management. See time off requests, which workers are assigned to which policies, or worker remaining balances.
 
 ### List Time Off Assignments
 
@@ -579,7 +751,9 @@ Time off assignments are mappings between workers and time off policies. Useful 
 | Response | [`TimeOffListAssignmentsResponse`](./timeoff.go) |
 
 ```go
-timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -597,7 +771,9 @@ Get worker remaining time-off balances.
 | Response | [`TimeOffListBalancesResponse`](./timeoff.go) |
 
 ```go
-timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
+timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -615,7 +791,9 @@ Get the time off requests that workers in your company have made.
 | Response | [`TimeOffListRequestsResponse`](./timeoff.go) |
 
 ```go
-timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
+timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -625,17 +803,21 @@ fmt.Println(timeOff)
 
 ### `TimeOff Policies`
 
+Endpoints for worker time off management. See time off requests, which workers are assigned to which policies, or worker remaining balances.
+
 #### List Time Off Policies
 
 Get the time off policies for your company
 
 | Direction | Type |
 | --- | --- |
-| Request | [`TimeOffPolicyTimeOffGetParams`](./timeoffpolicy.go) |
-| Response | [`TimeOffPolicyTimeOffGetResponse`](./timeoffpolicy.go) |
+| Request | [`TimeOffPolicyListParams`](./timeoffpolicy.go) |
+| Response | [`TimeOffPolicyListResponse`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.TimeOffGet(context.Background(), sdk.TimeOffPolicyTimeOffGetParams{})
+policy, err := client.TimeOff.Policies.List(context.Background(), sdk.TimeOffPolicyListParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -649,10 +831,10 @@ Get a specific time off policy by id
 
 | Direction | Type |
 | --- | --- |
-| Response | [`TimeOffPolicyTimeOffGet2Response`](./timeoffpolicy.go) |
+| Response | [`TimeOffPolicyGetResponse`](./timeoffpolicy.go) |
 
 ```go
-policy, err := client.TimeOff.Policies.TimeOffGet2(context.Background(), "top_1234")
+policy, err := client.TimeOff.Policies.Get(context.Background(), "top_1234")
 if err != nil {
 	panic(err)
 }
@@ -661,6 +843,8 @@ fmt.Println(policy)
 ```
 
 ## `Workers`
+
+Endpoints for worker management. "Workers" include anyone employed by your company, whether US or international, full-time employees or contractors.
 
 ### List Workers
 
@@ -672,7 +856,9 @@ List all workers. Workers include anyone employed by the company, whether US or 
 | Response | [`WorkerListResponse`](./worker.go) |
 
 ```go
-worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{})
+worker, err := client.Workers.List(context.Background(), sdk.WorkerListParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -682,7 +868,7 @@ fmt.Println(worker)
 
 ### Get Worker
 
-Get a specific worker by id.
+Get a specific worker by ID.
 
 | Direction | Type |
 | --- | --- |
@@ -724,11 +910,11 @@ worker, err := client.Workers.NewEmployee(context.Background(), sdk.WorkerNewEmp
 	}),
 	DepartmentID: sdk.F[string]("dpt_1234"),
 	Email:        sdk.F[string]("john@joinwarp.com"),
-	FirstName:    sdk.F[string](""),
-	LastName:     sdk.F[string](""),
+	FirstName:    sdk.F[string]("Jonathan"),
+	LastName:     sdk.F[string]("Galt"),
 	ManagerID:    sdk.F[string]("wrk_1234"),
-	Position:     sdk.F[string](""),
-	StartDate:    sdk.F[string]("2000-01-01"),
+	Position:     sdk.F[string]("Software Engineer"),
+	StartDate:    sdk.F[string](""),
 	WorkLocation: sdk.F[sdk.WorkerNewEmployeeParamsWorkLocationUnion](sdk.WorkerNewEmployeeParamsWorkLocationOfficeWorkLocation{
 		WorkplaceID: sdk.F[string]("wkp_1234"),
 	}),
@@ -753,11 +939,11 @@ Create a new contractor. The worker will be created in draft status and must be 
 worker, err := client.Workers.NewContractor(context.Background(), sdk.WorkerNewContractorParams{
 	DepartmentID: sdk.F[string]("dpt_1234"),
 	Email:        sdk.F[string]("john@joinwarp.com"),
-	FirstName:    sdk.F[string](""),
-	LastName:     sdk.F[string](""),
+	FirstName:    sdk.F[string]("Melissa"),
+	LastName:     sdk.F[string]("Jones"),
 	ManagerID:    sdk.F[string]("wrk_1234"),
-	Position:     sdk.F[string](""),
-	StartDate:    sdk.F[string]("2000-01-01"),
+	Position:     sdk.F[string]("Design Consultant"),
+	StartDate:    sdk.F[string](""),
 })
 if err != nil {
 	panic(err)
@@ -785,6 +971,8 @@ fmt.Println(worker)
 
 ## `Workplaces`
 
+Endpoints for workplace management. Create, list, and update workplaces within your company.
+
 ### List Workplaces
 
 List all workplaces for your company.
@@ -795,7 +983,9 @@ List all workplaces for your company.
 | Response | [`WorkplaceListResponse`](./workplace.go) |
 
 ```go
-workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{})
+workplace, err := client.Workplaces.List(context.Background(), sdk.WorkplaceListParams{
+	Limit: sdk.F[string]("limit"),
+})
 if err != nil {
 	panic(err)
 }
@@ -819,7 +1009,7 @@ workplace, err := client.Workplaces.New(context.Background(), sdk.WorkplaceNewPa
 		City:       sdk.F[string](""),
 		PostalCode: sdk.F[string](""),
 	}),
-	Name: sdk.F[string](""),
+	Name: sdk.F[string]("x"),
 })
 if err != nil {
 	panic(err)

@@ -1,6 +1,6 @@
-# Warp
+# warp
 
-This library provides convenient access to the Warp REST API from Go.
+This library provides convenient access to the warp REST API from Go.
 
 The full API of this library can be found in [api.md](./api.md).
 
@@ -50,7 +50,8 @@ func main() {
 	)
 
 	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
-		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+		Limit:    sdk.F[string]("limit"),
+		Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -86,6 +87,9 @@ Non-success responses return generated API errors. Error objects expose status, 
 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+	Limit:    sdk.F[string]("limit"),
+	Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
+})
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
@@ -94,7 +98,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "github.com/TeamWarp/warp-go-sdk", "errors", "fmt"
+// imports: "context", "errors", "fmt", sdk "github.com/TeamWarp/warp-go-sdk"
 ```
 
 Documented error statuses: `400`, `401`, `403`, `404`, `409`, `422`, `429`, `500`.

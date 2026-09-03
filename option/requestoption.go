@@ -15,7 +15,7 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-// RequestOption is an option for the requests made by the Warp API Client
+// RequestOption is an option for the requests made by the warp API Client
 // which can be supplied to clients, services, and methods.
 type RequestOption = requestconfig.RequestOption
 
@@ -265,7 +265,7 @@ func WithWebhookSecret(value string) RequestOption {
 
 // WithEnvironmentProduction sets the default base URL to the "production" environment.
 func WithEnvironmentProduction() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://api.joinwarp.com/")
+	return requestconfig.WithDefaultBaseURL("https://api.joinwarp.com/public/")
 }
 
 // WithAPIKey returns a RequestOption that sets the client setting "apiKey".

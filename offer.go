@@ -47,7 +47,9 @@ func NewOfferService(opts ...option.RequestOption) (r *OfferService) {
 //
 // Example:
 //
-//	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{})
+//	offer, err := client.Offers.List(context.Background(), sdk.OfferListParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -85,7 +87,7 @@ func (r *OfferService) List(ctx context.Context, query OfferListParams, opts ...
 //		}),
 //		Position: sdk.F[sdk.OfferNewParamsPosition](sdk.OfferNewParamsPosition{
 //			Title:     sdk.F[string]("x"),
-//			StartDate: sdk.F[string]("2000-01-01"),
+//			StartDate: sdk.F[string](""),
 //		}),
 //	})
 //	if err != nil {
@@ -106,6 +108,7 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 //
 //	ctx: Context for the request.
 //	id: The tag of the offer.
+//	body: OfferVoidParams request parameters.
 //	opts: Options to apply to this request.
 //
 // Returns:
@@ -114,20 +117,20 @@ func (r *OfferService) New(ctx context.Context, body OfferNewParams, opts ...opt
 //
 // Example:
 //
-//	offer, err := client.Offers.Void(context.Background(), "offr_1234")
+//	offer, err := client.Offers.Void(context.Background(), "offr_1234", sdk.OfferVoidParams{})
 //	if err != nil {
 //		panic(err)
 //	}
 //
 //	fmt.Println(offer)
-func (r *OfferService) Void(ctx context.Context, id string, opts ...option.RequestOption) (res *OfferVoidResponse, err error) {
+func (r *OfferService) Void(ctx context.Context, id string, body OfferVoidParams, opts ...option.RequestOption) (res *OfferVoidResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/offers/%s/void", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
+	path := fmt.Sprintf("v1/offers/%s/void", url.PathEscape(id))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
 }
 
@@ -160,7 +163,7 @@ func (r *OfferService) ExtendDeadline(ctx context.Context, id string, body Offer
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/offers/%s/extend-deadline", id)
+	path := fmt.Sprintf("v1/offers/%s/extend-deadline", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return res, err
 }
@@ -191,22 +194,118 @@ func (r *OfferService) Resend(ctx context.Context, id string, opts ...option.Req
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/offers/%s/resend", id)
+	path := fmt.Sprintf("v1/offers/%s/resend", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return res, err
 }
 
+type PublicMoneyAmount struct {
+	// Amount in the currency base unit, e.g. cents for USD.
+	Amount   int64                     `json:"amount" api:"required"`
+	Currency PublicMoneyAmountCurrency `json:"currency" api:"required"`
+	// The server-formatted display string for the amount in its currency.
+	Display string                `json:"display" api:"required"`
+	JSON    publicMoneyAmountJSON `json:"-"`
+}
+
+// publicMoneyAmountJSON contains the JSON metadata for the struct [PublicMoneyAmount]
+type publicMoneyAmountJSON struct {
+	Amount      apijson.Field
+	Currency    apijson.Field
+	Display     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *PublicMoneyAmount) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r publicMoneyAmountJSON) RawJSON() string {
+	return r.raw
+}
+
+type PublicMoneyAmountCurrency string
+
+const (
+	PublicMoneyAmountCurrencyUsd PublicMoneyAmountCurrency = "USD"
+	PublicMoneyAmountCurrencyAud PublicMoneyAmountCurrency = "AUD"
+	PublicMoneyAmountCurrencyBgn PublicMoneyAmountCurrency = "BGN"
+	PublicMoneyAmountCurrencyBrl PublicMoneyAmountCurrency = "BRL"
+	PublicMoneyAmountCurrencyCad PublicMoneyAmountCurrency = "CAD"
+	PublicMoneyAmountCurrencyChf PublicMoneyAmountCurrency = "CHF"
+	PublicMoneyAmountCurrencyCzk PublicMoneyAmountCurrency = "CZK"
+	PublicMoneyAmountCurrencyDkk PublicMoneyAmountCurrency = "DKK"
+	PublicMoneyAmountCurrencyEur PublicMoneyAmountCurrency = "EUR"
+	PublicMoneyAmountCurrencyGbp PublicMoneyAmountCurrency = "GBP"
+	PublicMoneyAmountCurrencyHkd PublicMoneyAmountCurrency = "HKD"
+	PublicMoneyAmountCurrencyHuf PublicMoneyAmountCurrency = "HUF"
+	PublicMoneyAmountCurrencyIdr PublicMoneyAmountCurrency = "IDR"
+	PublicMoneyAmountCurrencyInr PublicMoneyAmountCurrency = "INR"
+	PublicMoneyAmountCurrencyJpy PublicMoneyAmountCurrency = "JPY"
+	PublicMoneyAmountCurrencyMyr PublicMoneyAmountCurrency = "MYR"
+	PublicMoneyAmountCurrencyNok PublicMoneyAmountCurrency = "NOK"
+	PublicMoneyAmountCurrencyNzd PublicMoneyAmountCurrency = "NZD"
+	PublicMoneyAmountCurrencyCny PublicMoneyAmountCurrency = "CNY"
+	PublicMoneyAmountCurrencyPln PublicMoneyAmountCurrency = "PLN"
+	PublicMoneyAmountCurrencyRon PublicMoneyAmountCurrency = "RON"
+	PublicMoneyAmountCurrencyTry PublicMoneyAmountCurrency = "TRY"
+	PublicMoneyAmountCurrencySek PublicMoneyAmountCurrency = "SEK"
+	PublicMoneyAmountCurrencySgd PublicMoneyAmountCurrency = "SGD"
+	PublicMoneyAmountCurrencyAed PublicMoneyAmountCurrency = "AED"
+	PublicMoneyAmountCurrencyArs PublicMoneyAmountCurrency = "ARS"
+	PublicMoneyAmountCurrencyBdt PublicMoneyAmountCurrency = "BDT"
+	PublicMoneyAmountCurrencyBwp PublicMoneyAmountCurrency = "BWP"
+	PublicMoneyAmountCurrencyClp PublicMoneyAmountCurrency = "CLP"
+	PublicMoneyAmountCurrencyCop PublicMoneyAmountCurrency = "COP"
+	PublicMoneyAmountCurrencyCrc PublicMoneyAmountCurrency = "CRC"
+	PublicMoneyAmountCurrencyEgp PublicMoneyAmountCurrency = "EGP"
+	PublicMoneyAmountCurrencyFjd PublicMoneyAmountCurrency = "FJD"
+	PublicMoneyAmountCurrencyGel PublicMoneyAmountCurrency = "GEL"
+	PublicMoneyAmountCurrencyGhs PublicMoneyAmountCurrency = "GHS"
+	PublicMoneyAmountCurrencyIls PublicMoneyAmountCurrency = "ILS"
+	PublicMoneyAmountCurrencyKes PublicMoneyAmountCurrency = "KES"
+	PublicMoneyAmountCurrencyKrw PublicMoneyAmountCurrency = "KRW"
+	PublicMoneyAmountCurrencyLkr PublicMoneyAmountCurrency = "LKR"
+	PublicMoneyAmountCurrencyMad PublicMoneyAmountCurrency = "MAD"
+	PublicMoneyAmountCurrencyMxn PublicMoneyAmountCurrency = "MXN"
+	PublicMoneyAmountCurrencyNpr PublicMoneyAmountCurrency = "NPR"
+	PublicMoneyAmountCurrencyPhp PublicMoneyAmountCurrency = "PHP"
+	PublicMoneyAmountCurrencyPkr PublicMoneyAmountCurrency = "PKR"
+	PublicMoneyAmountCurrencyThb PublicMoneyAmountCurrency = "THB"
+	PublicMoneyAmountCurrencyUah PublicMoneyAmountCurrency = "UAH"
+	PublicMoneyAmountCurrencyUgx PublicMoneyAmountCurrency = "UGX"
+	PublicMoneyAmountCurrencyUyu PublicMoneyAmountCurrency = "UYU"
+	PublicMoneyAmountCurrencyVnd PublicMoneyAmountCurrency = "VND"
+	PublicMoneyAmountCurrencyZar PublicMoneyAmountCurrency = "ZAR"
+	PublicMoneyAmountCurrencyZmw PublicMoneyAmountCurrency = "ZMW"
+	PublicMoneyAmountCurrencyTnd PublicMoneyAmountCurrency = "TND"
+	PublicMoneyAmountCurrencyNgn PublicMoneyAmountCurrency = "NGN"
+	PublicMoneyAmountCurrencyRsd PublicMoneyAmountCurrency = "RSD"
+	PublicMoneyAmountCurrencyTwd PublicMoneyAmountCurrency = "TWD"
+	PublicMoneyAmountCurrencyGtq PublicMoneyAmountCurrency = "GTQ"
+	PublicMoneyAmountCurrencyHnl PublicMoneyAmountCurrency = "HNL"
+	PublicMoneyAmountCurrencyDop PublicMoneyAmountCurrency = "DOP"
+	PublicMoneyAmountCurrencySar PublicMoneyAmountCurrency = "SAR"
+	PublicMoneyAmountCurrencyXaf PublicMoneyAmountCurrency = "XAF"
+	PublicMoneyAmountCurrencyPen PublicMoneyAmountCurrency = "PEN"
+)
+
+func (r PublicMoneyAmountCurrency) IsKnown() bool {
+	switch r {
+	case PublicMoneyAmountCurrencyUsd, PublicMoneyAmountCurrencyAud, PublicMoneyAmountCurrencyBgn, PublicMoneyAmountCurrencyBrl, PublicMoneyAmountCurrencyCad, PublicMoneyAmountCurrencyChf, PublicMoneyAmountCurrencyCzk, PublicMoneyAmountCurrencyDkk, PublicMoneyAmountCurrencyEur, PublicMoneyAmountCurrencyGbp, PublicMoneyAmountCurrencyHkd, PublicMoneyAmountCurrencyHuf, PublicMoneyAmountCurrencyIdr, PublicMoneyAmountCurrencyInr, PublicMoneyAmountCurrencyJpy, PublicMoneyAmountCurrencyMyr, PublicMoneyAmountCurrencyNok, PublicMoneyAmountCurrencyNzd, PublicMoneyAmountCurrencyCny, PublicMoneyAmountCurrencyPln, PublicMoneyAmountCurrencyRon, PublicMoneyAmountCurrencyTry, PublicMoneyAmountCurrencySek, PublicMoneyAmountCurrencySgd, PublicMoneyAmountCurrencyAed, PublicMoneyAmountCurrencyArs, PublicMoneyAmountCurrencyBdt, PublicMoneyAmountCurrencyBwp, PublicMoneyAmountCurrencyClp, PublicMoneyAmountCurrencyCop, PublicMoneyAmountCurrencyCrc, PublicMoneyAmountCurrencyEgp, PublicMoneyAmountCurrencyFjd, PublicMoneyAmountCurrencyGel, PublicMoneyAmountCurrencyGhs, PublicMoneyAmountCurrencyIls, PublicMoneyAmountCurrencyKes, PublicMoneyAmountCurrencyKrw, PublicMoneyAmountCurrencyLkr, PublicMoneyAmountCurrencyMad, PublicMoneyAmountCurrencyMxn, PublicMoneyAmountCurrencyNpr, PublicMoneyAmountCurrencyPhp, PublicMoneyAmountCurrencyPkr, PublicMoneyAmountCurrencyThb, PublicMoneyAmountCurrencyUah, PublicMoneyAmountCurrencyUgx, PublicMoneyAmountCurrencyUyu, PublicMoneyAmountCurrencyVnd, PublicMoneyAmountCurrencyZar, PublicMoneyAmountCurrencyZmw, PublicMoneyAmountCurrencyTnd, PublicMoneyAmountCurrencyNgn, PublicMoneyAmountCurrencyRsd, PublicMoneyAmountCurrencyTwd, PublicMoneyAmountCurrencyGtq, PublicMoneyAmountCurrencyHnl, PublicMoneyAmountCurrencyDop, PublicMoneyAmountCurrencySar, PublicMoneyAmountCurrencyXaf, PublicMoneyAmountCurrencyPen:
+		return true
+	}
+	return false
+}
+
 type OfferListParams struct {
-	// The tag of the offer.
-	AfterID param.Field[string] `query:"afterId"`
-	// The tag of the offer.
-	BeforeID param.Field[string] `query:"beforeId"`
-	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	CandidateEmail param.Field[string] `query:"candidateEmail"`
-	// a number less than or equal to 100
-	Limit       param.Field[string]                      `query:"limit"`
-	Statuses    param.Field[[]OfferListParamsStatus]     `query:"statuses"`
-	WorkerTypes param.Field[[]OfferListParamsWorkerType] `query:"workerTypes"`
+	Limit          param.Field[string]                      `query:"limit" api:"required"`
+	AfterID        param.Field[string]                      `query:"afterId"`
+	BeforeID       param.Field[string]                      `query:"beforeId"`
+	CandidateEmail param.Field[string]                      `query:"candidateEmail" format:"email"`
+	Statuses       param.Field[[]OfferListParamsStatus]     `query:"statuses"`
+	WorkerTypes    param.Field[[]OfferListParamsWorkerType] `query:"workerTypes"`
 }
 
 // URLQuery serializes [OfferListParams]'s query parameters as `url.Values`.
@@ -251,14 +350,16 @@ func (r OfferListParamsWorkerType) IsKnown() bool {
 }
 
 type OfferNewParams struct {
-	Candidate      param.Field[OfferNewParamsCandidate]    `json:"candidate" api:"required"`
-	Compensation   param.Field[OfferNewParamsCompensation] `json:"compensation" api:"required"`
-	Position       param.Field[OfferNewParamsPosition]     `json:"position" api:"required"`
-	WorkerType     param.Field[OfferNewParamsWorkerType]   `json:"workerType" api:"required"`
-	DepartmentID   param.Field[string]                     `json:"departmentId"`
-	ExpirationTime param.Field[string]                     `json:"expirationTime"`
-	ManagerID      param.Field[string]                     `json:"managerId"`
-	WorkplaceID    param.Field[string]                     `json:"workplaceId"`
+	Candidate                   param.Field[OfferNewParamsCandidate]                   `json:"candidate" api:"required"`
+	Compensation                param.Field[OfferNewParamsCompensation]                `json:"compensation" api:"required"`
+	Position                    param.Field[OfferNewParamsPosition]                    `json:"position" api:"required"`
+	WorkerType                  param.Field[OfferNewParamsWorkerType]                  `json:"workerType" api:"required"`
+	BackgroundCheckWorkLocation param.Field[OfferNewParamsBackgroundCheckWorkLocation] `json:"backgroundCheckWorkLocation"`
+	DepartmentID                param.Field[string]                                    `json:"departmentId"`
+	ExpirationTime              param.Field[string]                                    `json:"expirationTime"`
+	LevelID                     param.Field[string]                                    `json:"levelId"`
+	ManagerID                   param.Field[string]                                    `json:"managerId"`
+	WorkplaceID                 param.Field[string]                                    `json:"workplaceId"`
 }
 
 func (r OfferNewParams) MarshalJSON() (data []byte, err error) {
@@ -267,10 +368,8 @@ func (r OfferNewParams) MarshalJSON() (data []byte, err error) {
 
 type OfferNewParamsCandidate struct {
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email param.Field[string] `json:"email" api:"required"`
-	// a non empty string
-	FirstName param.Field[string] `json:"firstName" api:"required"`
-	// a non empty string
+	Email             param.Field[string]                                   `json:"email" api:"required" format:"email"`
+	FirstName         param.Field[string]                                   `json:"firstName" api:"required"`
 	LastName          param.Field[string]                                   `json:"lastName" api:"required"`
 	ContractorDetails param.Field[OfferNewParamsCandidateContractorDetails] `json:"contractorDetails"`
 }
@@ -289,12 +388,8 @@ func (r OfferNewParamsCandidateContractorDetails) MarshalJSON() (data []byte, er
 }
 
 type OfferNewParamsPosition struct {
-	// A date string in the form YYYY-MM-DD
-	StartDate param.Field[string] `json:"startDate" api:"required"`
-	// a non empty string
-	Title param.Field[string] `json:"title" api:"required"`
-	// Required when workerType is global_contractor. Ignored for employee and
-	// us_contractor offers.
+	StartDate   param.Field[string]                        `json:"startDate" api:"required"`
+	Title       param.Field[string]                        `json:"title" api:"required"`
 	Country     param.Field[OfferNewParamsPositionCountry] `json:"country"`
 	ScopeOfWork param.Field[string]                        `json:"scopeOfWork"`
 }
@@ -583,17 +678,16 @@ func (r OfferNewParamsWorkerType) IsKnown() bool {
 }
 
 type OfferNewParamsCompensation struct {
-	PayBasis    param.Field[OfferNewParamsCompensationPayBasis]    `json:"payBasis" api:"required"`
-	PayCurrency param.Field[OfferNewParamsCompensationPayCurrency] `json:"payCurrency" api:"required"`
-	// a positive number
-	PayRate               param.Field[float64]                           `json:"payRate" api:"required"`
-	CliffMonths           param.Field[int64]                             `json:"cliffMonths"`
-	PayType               param.Field[OfferNewParamsCompensationPayType] `json:"payType"`
-	PayVariableRate       param.Field[float64]                           `json:"payVariableRate"`
-	RelocationBonus       param.Field[float64]                           `json:"relocationBonus"`
-	SignOnBonus           param.Field[float64]                           `json:"signOnBonus"`
-	StockOptions          param.Field[int64]                             `json:"stockOptions"`
-	VestingScheduleMonths param.Field[int64]                             `json:"vestingScheduleMonths"`
+	PayBasis              param.Field[OfferNewParamsCompensationPayBasis]    `json:"payBasis" api:"required"`
+	PayCurrency           param.Field[OfferNewParamsCompensationPayCurrency] `json:"payCurrency" api:"required"`
+	PayRate               param.Field[float64]                               `json:"payRate" api:"required"`
+	CliffMonths           param.Field[int64]                                 `json:"cliffMonths"`
+	PayType               param.Field[OfferNewParamsCompensationPayType]     `json:"payType"`
+	PayVariableRate       param.Field[float64]                               `json:"payVariableRate"`
+	RelocationBonus       param.Field[float64]                               `json:"relocationBonus"`
+	SignOnBonus           param.Field[float64]                               `json:"signOnBonus"`
+	StockOptions          param.Field[int64]                                 `json:"stockOptions"`
+	VestingScheduleMonths param.Field[int64]                                 `json:"vestingScheduleMonths"`
 }
 
 func (r OfferNewParamsCompensation) MarshalJSON() (data []byte, err error) {
@@ -707,8 +801,41 @@ func (r OfferNewParamsCompensationPayType) IsKnown() bool {
 	return false
 }
 
+type OfferNewParamsBackgroundCheckWorkLocation struct {
+	City    param.Field[string] `json:"city" api:"required"`
+	Country param.Field[string] `json:"country" api:"required"`
+	State   param.Field[string] `json:"state" api:"required"`
+}
+
+func (r OfferNewParamsBackgroundCheckWorkLocation) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type OfferVoidParams struct {
+	VoidReason param.Field[OfferVoidParamsVoidReason] `json:"voidReason" api:"required"`
+	VoidNotes  param.Field[string]                    `json:"voidNotes"`
+}
+
+func (r OfferVoidParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type OfferVoidParamsVoidReason string
+
+const (
+	OfferVoidParamsVoidReasonCandidateDeclined OfferVoidParamsVoidReason = "candidate_declined"
+	OfferVoidParamsVoidReasonOther             OfferVoidParamsVoidReason = "other"
+)
+
+func (r OfferVoidParamsVoidReason) IsKnown() bool {
+	switch r {
+	case OfferVoidParamsVoidReasonCandidateDeclined, OfferVoidParamsVoidReasonOther:
+		return true
+	}
+	return false
+}
+
 type OfferExtendDeadlineParams struct {
-	// a string to be decoded into a Date
 	ExpirationTime param.Field[string] `json:"expirationTime" api:"required"`
 }
 
@@ -717,11 +844,10 @@ func (r OfferExtendDeadlineParams) MarshalJSON() (data []byte, err error) {
 }
 
 type OfferListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                   `json:"count" api:"required"`
-	Data  []OfferListResponseData `json:"data" api:"required"`
-	JSON  offerListResponseJSON   `json:"-"`
+	HasMore bool                    `json:"hasMore" api:"required"`
+	Count   int64                   `json:"count" api:"required"`
+	Data    []OfferListResponseData `json:"data" api:"required"`
+	JSON    offerListResponseJSON   `json:"-"`
 }
 
 // offerListResponseJSON contains the JSON metadata for the struct [OfferListResponse]
@@ -759,9 +885,11 @@ type OfferNewResponse struct {
 	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
 	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string               `json:"createdAt" api:"required"`
-	JSON      offerNewResponseJSON `json:"-"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferNewResponseLevel `json:"level" api:"nullable"`
+	JSON  offerNewResponseJSON  `json:"-"`
 }
 
 // offerNewResponseJSON contains the JSON metadata for the struct [OfferNewResponse]
@@ -780,6 +908,7 @@ type offerNewResponseJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -810,9 +939,11 @@ type OfferVoidResponse struct {
 	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
 	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                `json:"createdAt" api:"required"`
-	JSON      offerVoidResponseJSON `json:"-"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferVoidResponseLevel `json:"level" api:"nullable"`
+	JSON  offerVoidResponseJSON  `json:"-"`
 }
 
 // offerVoidResponseJSON contains the JSON metadata for the struct [OfferVoidResponse]
@@ -831,6 +962,7 @@ type offerVoidResponseJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -861,9 +993,11 @@ type OfferExtendDeadlineResponse struct {
 	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
 	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                          `json:"createdAt" api:"required"`
-	JSON      offerExtendDeadlineResponseJSON `json:"-"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferExtendDeadlineResponseLevel `json:"level" api:"nullable"`
+	JSON  offerExtendDeadlineResponseJSON  `json:"-"`
 }
 
 // offerExtendDeadlineResponseJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponse]
@@ -882,6 +1016,7 @@ type offerExtendDeadlineResponseJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -912,9 +1047,11 @@ type OfferResendResponse struct {
 	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
 	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                  `json:"createdAt" api:"required"`
-	JSON      offerResendResponseJSON `json:"-"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferResendResponseLevel `json:"level" api:"nullable"`
+	JSON  offerResendResponseJSON  `json:"-"`
 }
 
 // offerResendResponseJSON contains the JSON metadata for the struct [OfferResendResponse]
@@ -933,6 +1070,7 @@ type offerResendResponseJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -963,9 +1101,11 @@ type OfferListResponseData struct {
 	OfferURL       string `json:"offerUrl" api:"required,nullable"`
 	ExpirationTime string `json:"expirationTime" api:"required,nullable"`
 	LastViewedAt   string `json:"lastViewedAt" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt string                    `json:"createdAt" api:"required"`
-	JSON      offerListResponseDataJSON `json:"-"`
+	CreatedAt      string `json:"createdAt" api:"required"`
+	// The offer's job level, or null if unassigned. Omitted when job levels are not
+	// enabled.
+	Level OfferListResponseDataLevel `json:"level" api:"nullable"`
+	JSON  offerListResponseDataJSON  `json:"-"`
 }
 
 // offerListResponseDataJSON contains the JSON metadata for the struct [OfferListResponseData]
@@ -984,6 +1124,7 @@ type offerListResponseDataJSON struct {
 	ExpirationTime apijson.Field
 	LastViewedAt   apijson.Field
 	CreatedAt      apijson.Field
+	Level          apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
@@ -1033,7 +1174,7 @@ type OfferNewResponseCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
 	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email             string                                     `json:"email" api:"required"`
+	Email             string                                     `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferNewResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerNewResponseCandidateJSON              `json:"-"`
 }
@@ -1057,8 +1198,7 @@ func (r offerNewResponseCandidateJSON) RawJSON() string {
 }
 
 type OfferNewResponsePosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                          `json:"title" api:"required"`
 	StartDate   string                          `json:"startDate" api:"required"`
 	Country     OfferNewResponsePositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                          `json:"scopeOfWork" api:"required,nullable"`
@@ -1152,12 +1292,39 @@ func (r offerNewResponseManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferNewResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                     `json:"id" api:"required"`
+	Code  string                     `json:"code" api:"required"`
+	Name  string                     `json:"name" api:"required"`
+	Track OfferNewResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerNewResponseLevelJSON  `json:"-"`
+}
+
+// offerNewResponseLevelJSON contains the JSON metadata for the struct [OfferNewResponseLevel]
+type offerNewResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferNewResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerNewResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferNewResponseCompensation struct {
-	BasePay         OfferNewResponseCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferNewResponseCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferNewResponseCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferNewResponseCompensationStock           `json:"stock" api:"required,nullable"`
-	JSON            offerNewResponseCompensationJSON            `json:"-"`
+	BasePay         OfferNewResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     PublicMoneyAmount                   `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                   `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferNewResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerNewResponseCompensationJSON    `json:"-"`
 }
 
 // offerNewResponseCompensationJSON contains the JSON metadata for the struct [OfferNewResponseCompensation]
@@ -1215,7 +1382,7 @@ type OfferVoidResponseCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
 	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email             string                                      `json:"email" api:"required"`
+	Email             string                                      `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferVoidResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerVoidResponseCandidateJSON              `json:"-"`
 }
@@ -1239,8 +1406,7 @@ func (r offerVoidResponseCandidateJSON) RawJSON() string {
 }
 
 type OfferVoidResponsePosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                           `json:"title" api:"required"`
 	StartDate   string                           `json:"startDate" api:"required"`
 	Country     OfferVoidResponsePositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                           `json:"scopeOfWork" api:"required,nullable"`
@@ -1334,12 +1500,39 @@ func (r offerVoidResponseManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferVoidResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                      `json:"id" api:"required"`
+	Code  string                      `json:"code" api:"required"`
+	Name  string                      `json:"name" api:"required"`
+	Track OfferVoidResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerVoidResponseLevelJSON  `json:"-"`
+}
+
+// offerVoidResponseLevelJSON contains the JSON metadata for the struct [OfferVoidResponseLevel]
+type offerVoidResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferVoidResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerVoidResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferVoidResponseCompensation struct {
-	BasePay         OfferVoidResponseCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferVoidResponseCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferVoidResponseCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferVoidResponseCompensationStock           `json:"stock" api:"required,nullable"`
-	JSON            offerVoidResponseCompensationJSON            `json:"-"`
+	BasePay         OfferVoidResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     PublicMoneyAmount                    `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                    `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferVoidResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerVoidResponseCompensationJSON    `json:"-"`
 }
 
 // offerVoidResponseCompensationJSON contains the JSON metadata for the struct [OfferVoidResponseCompensation]
@@ -1397,7 +1590,7 @@ type OfferExtendDeadlineResponseCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
 	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email             string                                                `json:"email" api:"required"`
+	Email             string                                                `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferExtendDeadlineResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerExtendDeadlineResponseCandidateJSON              `json:"-"`
 }
@@ -1421,8 +1614,7 @@ func (r offerExtendDeadlineResponseCandidateJSON) RawJSON() string {
 }
 
 type OfferExtendDeadlineResponsePosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                                     `json:"title" api:"required"`
 	StartDate   string                                     `json:"startDate" api:"required"`
 	Country     OfferExtendDeadlineResponsePositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                                     `json:"scopeOfWork" api:"required,nullable"`
@@ -1516,12 +1708,39 @@ func (r offerExtendDeadlineResponseManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferExtendDeadlineResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                                `json:"id" api:"required"`
+	Code  string                                `json:"code" api:"required"`
+	Name  string                                `json:"name" api:"required"`
+	Track OfferExtendDeadlineResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerExtendDeadlineResponseLevelJSON  `json:"-"`
+}
+
+// offerExtendDeadlineResponseLevelJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseLevel]
+type offerExtendDeadlineResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferExtendDeadlineResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerExtendDeadlineResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferExtendDeadlineResponseCompensation struct {
-	BasePay         OfferExtendDeadlineResponseCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferExtendDeadlineResponseCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferExtendDeadlineResponseCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferExtendDeadlineResponseCompensationStock           `json:"stock" api:"required,nullable"`
-	JSON            offerExtendDeadlineResponseCompensationJSON            `json:"-"`
+	BasePay         OfferExtendDeadlineResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     PublicMoneyAmount                              `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                              `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferExtendDeadlineResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerExtendDeadlineResponseCompensationJSON    `json:"-"`
 }
 
 // offerExtendDeadlineResponseCompensationJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensation]
@@ -1579,7 +1798,7 @@ type OfferResendResponseCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
 	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email             string                                        `json:"email" api:"required"`
+	Email             string                                        `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferResendResponseCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerResendResponseCandidateJSON              `json:"-"`
 }
@@ -1603,8 +1822,7 @@ func (r offerResendResponseCandidateJSON) RawJSON() string {
 }
 
 type OfferResendResponsePosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                             `json:"title" api:"required"`
 	StartDate   string                             `json:"startDate" api:"required"`
 	Country     OfferResendResponsePositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                             `json:"scopeOfWork" api:"required,nullable"`
@@ -1698,12 +1916,39 @@ func (r offerResendResponseManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferResendResponseLevel struct {
+	// The unique public id of the job level
+	ID    string                        `json:"id" api:"required"`
+	Code  string                        `json:"code" api:"required"`
+	Name  string                        `json:"name" api:"required"`
+	Track OfferResendResponseLevelTrack `json:"track" api:"required"`
+	JSON  offerResendResponseLevelJSON  `json:"-"`
+}
+
+// offerResendResponseLevelJSON contains the JSON metadata for the struct [OfferResendResponseLevel]
+type offerResendResponseLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferResendResponseLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerResendResponseLevelJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferResendResponseCompensation struct {
-	BasePay         OfferResendResponseCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferResendResponseCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferResendResponseCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferResendResponseCompensationStock           `json:"stock" api:"required,nullable"`
-	JSON            offerResendResponseCompensationJSON            `json:"-"`
+	BasePay         OfferResendResponseCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     PublicMoneyAmount                      `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                      `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferResendResponseCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerResendResponseCompensationJSON    `json:"-"`
 }
 
 // offerResendResponseCompensationJSON contains the JSON metadata for the struct [OfferResendResponseCompensation]
@@ -1761,7 +2006,7 @@ type OfferListResponseDataCandidate struct {
 	FirstName string `json:"firstName" api:"required"`
 	LastName  string `json:"lastName" api:"required"`
 	// An email with a reasonably valid regex (based on RFC 5321 atext characters)
-	Email             string                                          `json:"email" api:"required"`
+	Email             string                                          `json:"email" api:"required" format:"email"`
 	ContractorDetails OfferListResponseDataCandidateContractorDetails `json:"contractorDetails" api:"required,nullable"`
 	JSON              offerListResponseDataCandidateJSON              `json:"-"`
 }
@@ -1785,8 +2030,7 @@ func (r offerListResponseDataCandidateJSON) RawJSON() string {
 }
 
 type OfferListResponseDataPosition struct {
-	Title string `json:"title" api:"required"`
-	// A date string in the form YYYY-MM-DD
+	Title       string                               `json:"title" api:"required"`
 	StartDate   string                               `json:"startDate" api:"required"`
 	Country     OfferListResponseDataPositionCountry `json:"country" api:"required"`
 	ScopeOfWork string                               `json:"scopeOfWork" api:"required,nullable"`
@@ -1880,12 +2124,39 @@ func (r offerListResponseDataManagerJSON) RawJSON() string {
 	return r.raw
 }
 
+type OfferListResponseDataLevel struct {
+	// The unique public id of the job level
+	ID    string                          `json:"id" api:"required"`
+	Code  string                          `json:"code" api:"required"`
+	Name  string                          `json:"name" api:"required"`
+	Track OfferListResponseDataLevelTrack `json:"track" api:"required"`
+	JSON  offerListResponseDataLevelJSON  `json:"-"`
+}
+
+// offerListResponseDataLevelJSON contains the JSON metadata for the struct [OfferListResponseDataLevel]
+type offerListResponseDataLevelJSON struct {
+	ID          apijson.Field
+	Code        apijson.Field
+	Name        apijson.Field
+	Track       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *OfferListResponseDataLevel) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r offerListResponseDataLevelJSON) RawJSON() string {
+	return r.raw
+}
+
 type OfferListResponseDataCompensation struct {
-	BasePay         OfferListResponseDataCompensationBasePay         `json:"basePay" api:"required"`
-	SignOnBonus     OfferListResponseDataCompensationSignOnBonus     `json:"signOnBonus" api:"required,nullable"`
-	RelocationBonus OfferListResponseDataCompensationRelocationBonus `json:"relocationBonus" api:"required,nullable"`
-	Stock           OfferListResponseDataCompensationStock           `json:"stock" api:"required,nullable"`
-	JSON            offerListResponseDataCompensationJSON            `json:"-"`
+	BasePay         OfferListResponseDataCompensationBasePay `json:"basePay" api:"required"`
+	SignOnBonus     PublicMoneyAmount                        `json:"signOnBonus" api:"required,nullable"`
+	RelocationBonus PublicMoneyAmount                        `json:"relocationBonus" api:"required,nullable"`
+	Stock           OfferListResponseDataCompensationStock   `json:"stock" api:"required,nullable"`
+	JSON            offerListResponseDataCompensationJSON    `json:"-"`
 }
 
 // offerListResponseDataCompensationJSON contains the JSON metadata for the struct [OfferListResponseDataCompensation]
@@ -2191,13 +2462,29 @@ func (r OfferNewResponsePositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferNewResponseLevelTrack string
+
+const (
+	OfferNewResponseLevelTrackIc        OfferNewResponseLevelTrack = "ic"
+	OfferNewResponseLevelTrackManager   OfferNewResponseLevelTrack = "manager"
+	OfferNewResponseLevelTrackExecutive OfferNewResponseLevelTrack = "executive"
+)
+
+func (r OfferNewResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferNewResponseLevelTrackIc, OfferNewResponseLevelTrackManager, OfferNewResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferNewResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       OfferNewResponseCompensationBasePayAmount       `json:"amount" api:"required"`
-	Basis        OfferNewResponseCompensationBasePayBasis        `json:"basis" api:"required"`
-	Type         OfferNewResponseCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferNewResponseCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON         offerNewResponseCompensationBasePayJSON         `json:"-"`
+	Amount       PublicMoneyAmount                        `json:"amount" api:"required"`
+	Basis        OfferNewResponseCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferNewResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                        `json:"variableRate" api:"required,nullable"`
+	JSON         offerNewResponseCompensationBasePayJSON  `json:"-"`
 }
 
 // offerNewResponseCompensationBasePayJSON contains the JSON metadata for the struct [OfferNewResponseCompensationBasePay]
@@ -2218,60 +2505,7 @@ func (r offerNewResponseCompensationBasePayJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferNewResponseCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                           `json:"amount" api:"required"`
-	Currency OfferNewResponseCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                      `json:"display" api:"required"`
-	JSON    offerNewResponseCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerNewResponseCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferNewResponseCompensationSignOnBonus]
-type offerNewResponseCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferNewResponseCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferNewResponseCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                               `json:"amount" api:"required"`
-	Currency OfferNewResponseCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                          `json:"display" api:"required"`
-	JSON    offerNewResponseCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerNewResponseCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferNewResponseCompensationRelocationBonus]
-type offerNewResponseCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferNewResponseCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
 type OfferNewResponseCompensationStock struct {
-	// a non-negative number
 	Options               int64                                 `json:"options" api:"required"`
 	VestingScheduleMonths int64                                 `json:"vestingScheduleMonths" api:"required,nullable"`
 	CliffMonths           int64                                 `json:"cliffMonths" api:"required,nullable"`
@@ -2580,13 +2814,29 @@ func (r OfferVoidResponsePositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferVoidResponseLevelTrack string
+
+const (
+	OfferVoidResponseLevelTrackIc        OfferVoidResponseLevelTrack = "ic"
+	OfferVoidResponseLevelTrackManager   OfferVoidResponseLevelTrack = "manager"
+	OfferVoidResponseLevelTrackExecutive OfferVoidResponseLevelTrack = "executive"
+)
+
+func (r OfferVoidResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferVoidResponseLevelTrackIc, OfferVoidResponseLevelTrackManager, OfferVoidResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferVoidResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       OfferVoidResponseCompensationBasePayAmount       `json:"amount" api:"required"`
-	Basis        OfferVoidResponseCompensationBasePayBasis        `json:"basis" api:"required"`
-	Type         OfferVoidResponseCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferVoidResponseCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON         offerVoidResponseCompensationBasePayJSON         `json:"-"`
+	Amount       PublicMoneyAmount                         `json:"amount" api:"required"`
+	Basis        OfferVoidResponseCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferVoidResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                         `json:"variableRate" api:"required,nullable"`
+	JSON         offerVoidResponseCompensationBasePayJSON  `json:"-"`
 }
 
 // offerVoidResponseCompensationBasePayJSON contains the JSON metadata for the struct [OfferVoidResponseCompensationBasePay]
@@ -2607,60 +2857,7 @@ func (r offerVoidResponseCompensationBasePayJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferVoidResponseCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                            `json:"amount" api:"required"`
-	Currency OfferVoidResponseCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                       `json:"display" api:"required"`
-	JSON    offerVoidResponseCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerVoidResponseCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferVoidResponseCompensationSignOnBonus]
-type offerVoidResponseCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidResponseCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponseCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidResponseCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                `json:"amount" api:"required"`
-	Currency OfferVoidResponseCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                           `json:"display" api:"required"`
-	JSON    offerVoidResponseCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerVoidResponseCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferVoidResponseCompensationRelocationBonus]
-type offerVoidResponseCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidResponseCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponseCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
 type OfferVoidResponseCompensationStock struct {
-	// a non-negative number
 	Options               int64                                  `json:"options" api:"required"`
 	VestingScheduleMonths int64                                  `json:"vestingScheduleMonths" api:"required,nullable"`
 	CliffMonths           int64                                  `json:"cliffMonths" api:"required,nullable"`
@@ -2969,13 +3166,29 @@ func (r OfferExtendDeadlineResponsePositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferExtendDeadlineResponseLevelTrack string
+
+const (
+	OfferExtendDeadlineResponseLevelTrackIc        OfferExtendDeadlineResponseLevelTrack = "ic"
+	OfferExtendDeadlineResponseLevelTrackManager   OfferExtendDeadlineResponseLevelTrack = "manager"
+	OfferExtendDeadlineResponseLevelTrackExecutive OfferExtendDeadlineResponseLevelTrack = "executive"
+)
+
+func (r OfferExtendDeadlineResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferExtendDeadlineResponseLevelTrackIc, OfferExtendDeadlineResponseLevelTrackManager, OfferExtendDeadlineResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferExtendDeadlineResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       OfferExtendDeadlineResponseCompensationBasePayAmount       `json:"amount" api:"required"`
-	Basis        OfferExtendDeadlineResponseCompensationBasePayBasis        `json:"basis" api:"required"`
-	Type         OfferExtendDeadlineResponseCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferExtendDeadlineResponseCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON         offerExtendDeadlineResponseCompensationBasePayJSON         `json:"-"`
+	Amount       PublicMoneyAmount                                   `json:"amount" api:"required"`
+	Basis        OfferExtendDeadlineResponseCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferExtendDeadlineResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                                   `json:"variableRate" api:"required,nullable"`
+	JSON         offerExtendDeadlineResponseCompensationBasePayJSON  `json:"-"`
 }
 
 // offerExtendDeadlineResponseCompensationBasePayJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensationBasePay]
@@ -2996,60 +3209,7 @@ func (r offerExtendDeadlineResponseCompensationBasePayJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferExtendDeadlineResponseCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                      `json:"amount" api:"required"`
-	Currency OfferExtendDeadlineResponseCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                 `json:"display" api:"required"`
-	JSON    offerExtendDeadlineResponseCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerExtendDeadlineResponseCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensationSignOnBonus]
-type offerExtendDeadlineResponseCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponseCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponseCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                          `json:"amount" api:"required"`
-	Currency OfferExtendDeadlineResponseCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                     `json:"display" api:"required"`
-	JSON    offerExtendDeadlineResponseCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerExtendDeadlineResponseCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensationRelocationBonus]
-type offerExtendDeadlineResponseCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponseCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
 type OfferExtendDeadlineResponseCompensationStock struct {
-	// a non-negative number
 	Options               int64                                            `json:"options" api:"required"`
 	VestingScheduleMonths int64                                            `json:"vestingScheduleMonths" api:"required,nullable"`
 	CliffMonths           int64                                            `json:"cliffMonths" api:"required,nullable"`
@@ -3358,13 +3518,29 @@ func (r OfferResendResponsePositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferResendResponseLevelTrack string
+
+const (
+	OfferResendResponseLevelTrackIc        OfferResendResponseLevelTrack = "ic"
+	OfferResendResponseLevelTrackManager   OfferResendResponseLevelTrack = "manager"
+	OfferResendResponseLevelTrackExecutive OfferResendResponseLevelTrack = "executive"
+)
+
+func (r OfferResendResponseLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferResendResponseLevelTrackIc, OfferResendResponseLevelTrackManager, OfferResendResponseLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferResendResponseCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       OfferResendResponseCompensationBasePayAmount       `json:"amount" api:"required"`
-	Basis        OfferResendResponseCompensationBasePayBasis        `json:"basis" api:"required"`
-	Type         OfferResendResponseCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferResendResponseCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON         offerResendResponseCompensationBasePayJSON         `json:"-"`
+	Amount       PublicMoneyAmount                           `json:"amount" api:"required"`
+	Basis        OfferResendResponseCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferResendResponseCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                           `json:"variableRate" api:"required,nullable"`
+	JSON         offerResendResponseCompensationBasePayJSON  `json:"-"`
 }
 
 // offerResendResponseCompensationBasePayJSON contains the JSON metadata for the struct [OfferResendResponseCompensationBasePay]
@@ -3385,60 +3561,7 @@ func (r offerResendResponseCompensationBasePayJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferResendResponseCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                              `json:"amount" api:"required"`
-	Currency OfferResendResponseCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                         `json:"display" api:"required"`
-	JSON    offerResendResponseCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerResendResponseCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferResendResponseCompensationSignOnBonus]
-type offerResendResponseCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferResendResponseCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponseCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                  `json:"amount" api:"required"`
-	Currency OfferResendResponseCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                             `json:"display" api:"required"`
-	JSON    offerResendResponseCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerResendResponseCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferResendResponseCompensationRelocationBonus]
-type offerResendResponseCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferResendResponseCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
 type OfferResendResponseCompensationStock struct {
-	// a non-negative number
 	Options               int64                                    `json:"options" api:"required"`
 	VestingScheduleMonths int64                                    `json:"vestingScheduleMonths" api:"required,nullable"`
 	CliffMonths           int64                                    `json:"cliffMonths" api:"required,nullable"`
@@ -3747,13 +3870,29 @@ func (r OfferListResponseDataPositionCountry) IsKnown() bool {
 	return false
 }
 
+type OfferListResponseDataLevelTrack string
+
+const (
+	OfferListResponseDataLevelTrackIc        OfferListResponseDataLevelTrack = "ic"
+	OfferListResponseDataLevelTrackManager   OfferListResponseDataLevelTrack = "manager"
+	OfferListResponseDataLevelTrackExecutive OfferListResponseDataLevelTrack = "executive"
+)
+
+func (r OfferListResponseDataLevelTrack) IsKnown() bool {
+	switch r {
+	case OfferListResponseDataLevelTrackIc, OfferListResponseDataLevelTrackManager, OfferListResponseDataLevelTrackExecutive:
+		return true
+	}
+	return false
+}
+
 type OfferListResponseDataCompensationBasePay struct {
 	// A monetary amount with its currency and server-formatted display value.
-	Amount       OfferListResponseDataCompensationBasePayAmount       `json:"amount" api:"required"`
-	Basis        OfferListResponseDataCompensationBasePayBasis        `json:"basis" api:"required"`
-	Type         OfferListResponseDataCompensationBasePayType         `json:"type" api:"required,nullable"`
-	VariableRate OfferListResponseDataCompensationBasePayVariableRate `json:"variableRate" api:"required,nullable"`
-	JSON         offerListResponseDataCompensationBasePayJSON         `json:"-"`
+	Amount       PublicMoneyAmount                             `json:"amount" api:"required"`
+	Basis        OfferListResponseDataCompensationBasePayBasis `json:"basis" api:"required"`
+	Type         OfferListResponseDataCompensationBasePayType  `json:"type" api:"required,nullable"`
+	VariableRate PublicMoneyAmount                             `json:"variableRate" api:"required,nullable"`
+	JSON         offerListResponseDataCompensationBasePayJSON  `json:"-"`
 }
 
 // offerListResponseDataCompensationBasePayJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationBasePay]
@@ -3774,60 +3913,7 @@ func (r offerListResponseDataCompensationBasePayJSON) RawJSON() string {
 	return r.raw
 }
 
-type OfferListResponseDataCompensationSignOnBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                `json:"amount" api:"required"`
-	Currency OfferListResponseDataCompensationSignOnBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                           `json:"display" api:"required"`
-	JSON    offerListResponseDataCompensationSignOnBonusJSON `json:"-"`
-}
-
-// offerListResponseDataCompensationSignOnBonusJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationSignOnBonus]
-type offerListResponseDataCompensationSignOnBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferListResponseDataCompensationSignOnBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerListResponseDataCompensationSignOnBonusJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferListResponseDataCompensationRelocationBonus struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                    `json:"amount" api:"required"`
-	Currency OfferListResponseDataCompensationRelocationBonusCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                               `json:"display" api:"required"`
-	JSON    offerListResponseDataCompensationRelocationBonusJSON `json:"-"`
-}
-
-// offerListResponseDataCompensationRelocationBonusJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationRelocationBonus]
-type offerListResponseDataCompensationRelocationBonusJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferListResponseDataCompensationRelocationBonus) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerListResponseDataCompensationRelocationBonusJSON) RawJSON() string {
-	return r.raw
-}
-
 type OfferListResponseDataCompensationStock struct {
-	// a non-negative number
 	Options               int64                                      `json:"options" api:"required"`
 	VestingScheduleMonths int64                                      `json:"vestingScheduleMonths" api:"required,nullable"`
 	CliffMonths           int64                                      `json:"cliffMonths" api:"required,nullable"`
@@ -3884,206 +3970,6 @@ func (r OfferNewResponseCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
-type OfferNewResponseCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                             `json:"amount" api:"required"`
-	Currency OfferNewResponseCompensationBasePayAmountCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                        `json:"display" api:"required"`
-	JSON    offerNewResponseCompensationBasePayAmountJSON `json:"-"`
-}
-
-// offerNewResponseCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferNewResponseCompensationBasePayAmount]
-type offerNewResponseCompensationBasePayAmountJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferNewResponseCompensationBasePayAmount) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCompensationBasePayAmountJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferNewResponseCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                   `json:"amount" api:"required"`
-	Currency OfferNewResponseCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                              `json:"display" api:"required"`
-	JSON    offerNewResponseCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerNewResponseCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferNewResponseCompensationBasePayVariableRate]
-type offerNewResponseCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferNewResponseCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerNewResponseCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferNewResponseCompensationSignOnBonusCurrency string
-
-const (
-	OfferNewResponseCompensationSignOnBonusCurrencyUsd OfferNewResponseCompensationSignOnBonusCurrency = "USD"
-	OfferNewResponseCompensationSignOnBonusCurrencyAud OfferNewResponseCompensationSignOnBonusCurrency = "AUD"
-	OfferNewResponseCompensationSignOnBonusCurrencyBgn OfferNewResponseCompensationSignOnBonusCurrency = "BGN"
-	OfferNewResponseCompensationSignOnBonusCurrencyBrl OfferNewResponseCompensationSignOnBonusCurrency = "BRL"
-	OfferNewResponseCompensationSignOnBonusCurrencyCad OfferNewResponseCompensationSignOnBonusCurrency = "CAD"
-	OfferNewResponseCompensationSignOnBonusCurrencyChf OfferNewResponseCompensationSignOnBonusCurrency = "CHF"
-	OfferNewResponseCompensationSignOnBonusCurrencyCzk OfferNewResponseCompensationSignOnBonusCurrency = "CZK"
-	OfferNewResponseCompensationSignOnBonusCurrencyDkk OfferNewResponseCompensationSignOnBonusCurrency = "DKK"
-	OfferNewResponseCompensationSignOnBonusCurrencyEur OfferNewResponseCompensationSignOnBonusCurrency = "EUR"
-	OfferNewResponseCompensationSignOnBonusCurrencyGbp OfferNewResponseCompensationSignOnBonusCurrency = "GBP"
-	OfferNewResponseCompensationSignOnBonusCurrencyHkd OfferNewResponseCompensationSignOnBonusCurrency = "HKD"
-	OfferNewResponseCompensationSignOnBonusCurrencyHuf OfferNewResponseCompensationSignOnBonusCurrency = "HUF"
-	OfferNewResponseCompensationSignOnBonusCurrencyIdr OfferNewResponseCompensationSignOnBonusCurrency = "IDR"
-	OfferNewResponseCompensationSignOnBonusCurrencyInr OfferNewResponseCompensationSignOnBonusCurrency = "INR"
-	OfferNewResponseCompensationSignOnBonusCurrencyJpy OfferNewResponseCompensationSignOnBonusCurrency = "JPY"
-	OfferNewResponseCompensationSignOnBonusCurrencyMyr OfferNewResponseCompensationSignOnBonusCurrency = "MYR"
-	OfferNewResponseCompensationSignOnBonusCurrencyNok OfferNewResponseCompensationSignOnBonusCurrency = "NOK"
-	OfferNewResponseCompensationSignOnBonusCurrencyNzd OfferNewResponseCompensationSignOnBonusCurrency = "NZD"
-	OfferNewResponseCompensationSignOnBonusCurrencyCny OfferNewResponseCompensationSignOnBonusCurrency = "CNY"
-	OfferNewResponseCompensationSignOnBonusCurrencyPln OfferNewResponseCompensationSignOnBonusCurrency = "PLN"
-	OfferNewResponseCompensationSignOnBonusCurrencyRon OfferNewResponseCompensationSignOnBonusCurrency = "RON"
-	OfferNewResponseCompensationSignOnBonusCurrencyTry OfferNewResponseCompensationSignOnBonusCurrency = "TRY"
-	OfferNewResponseCompensationSignOnBonusCurrencySek OfferNewResponseCompensationSignOnBonusCurrency = "SEK"
-	OfferNewResponseCompensationSignOnBonusCurrencySgd OfferNewResponseCompensationSignOnBonusCurrency = "SGD"
-	OfferNewResponseCompensationSignOnBonusCurrencyAed OfferNewResponseCompensationSignOnBonusCurrency = "AED"
-	OfferNewResponseCompensationSignOnBonusCurrencyArs OfferNewResponseCompensationSignOnBonusCurrency = "ARS"
-	OfferNewResponseCompensationSignOnBonusCurrencyBdt OfferNewResponseCompensationSignOnBonusCurrency = "BDT"
-	OfferNewResponseCompensationSignOnBonusCurrencyBwp OfferNewResponseCompensationSignOnBonusCurrency = "BWP"
-	OfferNewResponseCompensationSignOnBonusCurrencyClp OfferNewResponseCompensationSignOnBonusCurrency = "CLP"
-	OfferNewResponseCompensationSignOnBonusCurrencyCop OfferNewResponseCompensationSignOnBonusCurrency = "COP"
-	OfferNewResponseCompensationSignOnBonusCurrencyCrc OfferNewResponseCompensationSignOnBonusCurrency = "CRC"
-	OfferNewResponseCompensationSignOnBonusCurrencyEgp OfferNewResponseCompensationSignOnBonusCurrency = "EGP"
-	OfferNewResponseCompensationSignOnBonusCurrencyFjd OfferNewResponseCompensationSignOnBonusCurrency = "FJD"
-	OfferNewResponseCompensationSignOnBonusCurrencyGel OfferNewResponseCompensationSignOnBonusCurrency = "GEL"
-	OfferNewResponseCompensationSignOnBonusCurrencyGhs OfferNewResponseCompensationSignOnBonusCurrency = "GHS"
-	OfferNewResponseCompensationSignOnBonusCurrencyIls OfferNewResponseCompensationSignOnBonusCurrency = "ILS"
-	OfferNewResponseCompensationSignOnBonusCurrencyKes OfferNewResponseCompensationSignOnBonusCurrency = "KES"
-	OfferNewResponseCompensationSignOnBonusCurrencyKrw OfferNewResponseCompensationSignOnBonusCurrency = "KRW"
-	OfferNewResponseCompensationSignOnBonusCurrencyLkr OfferNewResponseCompensationSignOnBonusCurrency = "LKR"
-	OfferNewResponseCompensationSignOnBonusCurrencyMad OfferNewResponseCompensationSignOnBonusCurrency = "MAD"
-	OfferNewResponseCompensationSignOnBonusCurrencyMxn OfferNewResponseCompensationSignOnBonusCurrency = "MXN"
-	OfferNewResponseCompensationSignOnBonusCurrencyNpr OfferNewResponseCompensationSignOnBonusCurrency = "NPR"
-	OfferNewResponseCompensationSignOnBonusCurrencyPhp OfferNewResponseCompensationSignOnBonusCurrency = "PHP"
-	OfferNewResponseCompensationSignOnBonusCurrencyPkr OfferNewResponseCompensationSignOnBonusCurrency = "PKR"
-	OfferNewResponseCompensationSignOnBonusCurrencyThb OfferNewResponseCompensationSignOnBonusCurrency = "THB"
-	OfferNewResponseCompensationSignOnBonusCurrencyUah OfferNewResponseCompensationSignOnBonusCurrency = "UAH"
-	OfferNewResponseCompensationSignOnBonusCurrencyUgx OfferNewResponseCompensationSignOnBonusCurrency = "UGX"
-	OfferNewResponseCompensationSignOnBonusCurrencyUyu OfferNewResponseCompensationSignOnBonusCurrency = "UYU"
-	OfferNewResponseCompensationSignOnBonusCurrencyVnd OfferNewResponseCompensationSignOnBonusCurrency = "VND"
-	OfferNewResponseCompensationSignOnBonusCurrencyZar OfferNewResponseCompensationSignOnBonusCurrency = "ZAR"
-	OfferNewResponseCompensationSignOnBonusCurrencyZmw OfferNewResponseCompensationSignOnBonusCurrency = "ZMW"
-	OfferNewResponseCompensationSignOnBonusCurrencyTnd OfferNewResponseCompensationSignOnBonusCurrency = "TND"
-	OfferNewResponseCompensationSignOnBonusCurrencyNgn OfferNewResponseCompensationSignOnBonusCurrency = "NGN"
-	OfferNewResponseCompensationSignOnBonusCurrencyRsd OfferNewResponseCompensationSignOnBonusCurrency = "RSD"
-	OfferNewResponseCompensationSignOnBonusCurrencyTwd OfferNewResponseCompensationSignOnBonusCurrency = "TWD"
-	OfferNewResponseCompensationSignOnBonusCurrencyGtq OfferNewResponseCompensationSignOnBonusCurrency = "GTQ"
-	OfferNewResponseCompensationSignOnBonusCurrencyHnl OfferNewResponseCompensationSignOnBonusCurrency = "HNL"
-	OfferNewResponseCompensationSignOnBonusCurrencyDop OfferNewResponseCompensationSignOnBonusCurrency = "DOP"
-	OfferNewResponseCompensationSignOnBonusCurrencySar OfferNewResponseCompensationSignOnBonusCurrency = "SAR"
-	OfferNewResponseCompensationSignOnBonusCurrencyXaf OfferNewResponseCompensationSignOnBonusCurrency = "XAF"
-	OfferNewResponseCompensationSignOnBonusCurrencyPen OfferNewResponseCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferNewResponseCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferNewResponseCompensationSignOnBonusCurrencyUsd, OfferNewResponseCompensationSignOnBonusCurrencyAud, OfferNewResponseCompensationSignOnBonusCurrencyBgn, OfferNewResponseCompensationSignOnBonusCurrencyBrl, OfferNewResponseCompensationSignOnBonusCurrencyCad, OfferNewResponseCompensationSignOnBonusCurrencyChf, OfferNewResponseCompensationSignOnBonusCurrencyCzk, OfferNewResponseCompensationSignOnBonusCurrencyDkk, OfferNewResponseCompensationSignOnBonusCurrencyEur, OfferNewResponseCompensationSignOnBonusCurrencyGbp, OfferNewResponseCompensationSignOnBonusCurrencyHkd, OfferNewResponseCompensationSignOnBonusCurrencyHuf, OfferNewResponseCompensationSignOnBonusCurrencyIdr, OfferNewResponseCompensationSignOnBonusCurrencyInr, OfferNewResponseCompensationSignOnBonusCurrencyJpy, OfferNewResponseCompensationSignOnBonusCurrencyMyr, OfferNewResponseCompensationSignOnBonusCurrencyNok, OfferNewResponseCompensationSignOnBonusCurrencyNzd, OfferNewResponseCompensationSignOnBonusCurrencyCny, OfferNewResponseCompensationSignOnBonusCurrencyPln, OfferNewResponseCompensationSignOnBonusCurrencyRon, OfferNewResponseCompensationSignOnBonusCurrencyTry, OfferNewResponseCompensationSignOnBonusCurrencySek, OfferNewResponseCompensationSignOnBonusCurrencySgd, OfferNewResponseCompensationSignOnBonusCurrencyAed, OfferNewResponseCompensationSignOnBonusCurrencyArs, OfferNewResponseCompensationSignOnBonusCurrencyBdt, OfferNewResponseCompensationSignOnBonusCurrencyBwp, OfferNewResponseCompensationSignOnBonusCurrencyClp, OfferNewResponseCompensationSignOnBonusCurrencyCop, OfferNewResponseCompensationSignOnBonusCurrencyCrc, OfferNewResponseCompensationSignOnBonusCurrencyEgp, OfferNewResponseCompensationSignOnBonusCurrencyFjd, OfferNewResponseCompensationSignOnBonusCurrencyGel, OfferNewResponseCompensationSignOnBonusCurrencyGhs, OfferNewResponseCompensationSignOnBonusCurrencyIls, OfferNewResponseCompensationSignOnBonusCurrencyKes, OfferNewResponseCompensationSignOnBonusCurrencyKrw, OfferNewResponseCompensationSignOnBonusCurrencyLkr, OfferNewResponseCompensationSignOnBonusCurrencyMad, OfferNewResponseCompensationSignOnBonusCurrencyMxn, OfferNewResponseCompensationSignOnBonusCurrencyNpr, OfferNewResponseCompensationSignOnBonusCurrencyPhp, OfferNewResponseCompensationSignOnBonusCurrencyPkr, OfferNewResponseCompensationSignOnBonusCurrencyThb, OfferNewResponseCompensationSignOnBonusCurrencyUah, OfferNewResponseCompensationSignOnBonusCurrencyUgx, OfferNewResponseCompensationSignOnBonusCurrencyUyu, OfferNewResponseCompensationSignOnBonusCurrencyVnd, OfferNewResponseCompensationSignOnBonusCurrencyZar, OfferNewResponseCompensationSignOnBonusCurrencyZmw, OfferNewResponseCompensationSignOnBonusCurrencyTnd, OfferNewResponseCompensationSignOnBonusCurrencyNgn, OfferNewResponseCompensationSignOnBonusCurrencyRsd, OfferNewResponseCompensationSignOnBonusCurrencyTwd, OfferNewResponseCompensationSignOnBonusCurrencyGtq, OfferNewResponseCompensationSignOnBonusCurrencyHnl, OfferNewResponseCompensationSignOnBonusCurrencyDop, OfferNewResponseCompensationSignOnBonusCurrencySar, OfferNewResponseCompensationSignOnBonusCurrencyXaf, OfferNewResponseCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferNewResponseCompensationRelocationBonusCurrency string
-
-const (
-	OfferNewResponseCompensationRelocationBonusCurrencyUsd OfferNewResponseCompensationRelocationBonusCurrency = "USD"
-	OfferNewResponseCompensationRelocationBonusCurrencyAud OfferNewResponseCompensationRelocationBonusCurrency = "AUD"
-	OfferNewResponseCompensationRelocationBonusCurrencyBgn OfferNewResponseCompensationRelocationBonusCurrency = "BGN"
-	OfferNewResponseCompensationRelocationBonusCurrencyBrl OfferNewResponseCompensationRelocationBonusCurrency = "BRL"
-	OfferNewResponseCompensationRelocationBonusCurrencyCad OfferNewResponseCompensationRelocationBonusCurrency = "CAD"
-	OfferNewResponseCompensationRelocationBonusCurrencyChf OfferNewResponseCompensationRelocationBonusCurrency = "CHF"
-	OfferNewResponseCompensationRelocationBonusCurrencyCzk OfferNewResponseCompensationRelocationBonusCurrency = "CZK"
-	OfferNewResponseCompensationRelocationBonusCurrencyDkk OfferNewResponseCompensationRelocationBonusCurrency = "DKK"
-	OfferNewResponseCompensationRelocationBonusCurrencyEur OfferNewResponseCompensationRelocationBonusCurrency = "EUR"
-	OfferNewResponseCompensationRelocationBonusCurrencyGbp OfferNewResponseCompensationRelocationBonusCurrency = "GBP"
-	OfferNewResponseCompensationRelocationBonusCurrencyHkd OfferNewResponseCompensationRelocationBonusCurrency = "HKD"
-	OfferNewResponseCompensationRelocationBonusCurrencyHuf OfferNewResponseCompensationRelocationBonusCurrency = "HUF"
-	OfferNewResponseCompensationRelocationBonusCurrencyIdr OfferNewResponseCompensationRelocationBonusCurrency = "IDR"
-	OfferNewResponseCompensationRelocationBonusCurrencyInr OfferNewResponseCompensationRelocationBonusCurrency = "INR"
-	OfferNewResponseCompensationRelocationBonusCurrencyJpy OfferNewResponseCompensationRelocationBonusCurrency = "JPY"
-	OfferNewResponseCompensationRelocationBonusCurrencyMyr OfferNewResponseCompensationRelocationBonusCurrency = "MYR"
-	OfferNewResponseCompensationRelocationBonusCurrencyNok OfferNewResponseCompensationRelocationBonusCurrency = "NOK"
-	OfferNewResponseCompensationRelocationBonusCurrencyNzd OfferNewResponseCompensationRelocationBonusCurrency = "NZD"
-	OfferNewResponseCompensationRelocationBonusCurrencyCny OfferNewResponseCompensationRelocationBonusCurrency = "CNY"
-	OfferNewResponseCompensationRelocationBonusCurrencyPln OfferNewResponseCompensationRelocationBonusCurrency = "PLN"
-	OfferNewResponseCompensationRelocationBonusCurrencyRon OfferNewResponseCompensationRelocationBonusCurrency = "RON"
-	OfferNewResponseCompensationRelocationBonusCurrencyTry OfferNewResponseCompensationRelocationBonusCurrency = "TRY"
-	OfferNewResponseCompensationRelocationBonusCurrencySek OfferNewResponseCompensationRelocationBonusCurrency = "SEK"
-	OfferNewResponseCompensationRelocationBonusCurrencySgd OfferNewResponseCompensationRelocationBonusCurrency = "SGD"
-	OfferNewResponseCompensationRelocationBonusCurrencyAed OfferNewResponseCompensationRelocationBonusCurrency = "AED"
-	OfferNewResponseCompensationRelocationBonusCurrencyArs OfferNewResponseCompensationRelocationBonusCurrency = "ARS"
-	OfferNewResponseCompensationRelocationBonusCurrencyBdt OfferNewResponseCompensationRelocationBonusCurrency = "BDT"
-	OfferNewResponseCompensationRelocationBonusCurrencyBwp OfferNewResponseCompensationRelocationBonusCurrency = "BWP"
-	OfferNewResponseCompensationRelocationBonusCurrencyClp OfferNewResponseCompensationRelocationBonusCurrency = "CLP"
-	OfferNewResponseCompensationRelocationBonusCurrencyCop OfferNewResponseCompensationRelocationBonusCurrency = "COP"
-	OfferNewResponseCompensationRelocationBonusCurrencyCrc OfferNewResponseCompensationRelocationBonusCurrency = "CRC"
-	OfferNewResponseCompensationRelocationBonusCurrencyEgp OfferNewResponseCompensationRelocationBonusCurrency = "EGP"
-	OfferNewResponseCompensationRelocationBonusCurrencyFjd OfferNewResponseCompensationRelocationBonusCurrency = "FJD"
-	OfferNewResponseCompensationRelocationBonusCurrencyGel OfferNewResponseCompensationRelocationBonusCurrency = "GEL"
-	OfferNewResponseCompensationRelocationBonusCurrencyGhs OfferNewResponseCompensationRelocationBonusCurrency = "GHS"
-	OfferNewResponseCompensationRelocationBonusCurrencyIls OfferNewResponseCompensationRelocationBonusCurrency = "ILS"
-	OfferNewResponseCompensationRelocationBonusCurrencyKes OfferNewResponseCompensationRelocationBonusCurrency = "KES"
-	OfferNewResponseCompensationRelocationBonusCurrencyKrw OfferNewResponseCompensationRelocationBonusCurrency = "KRW"
-	OfferNewResponseCompensationRelocationBonusCurrencyLkr OfferNewResponseCompensationRelocationBonusCurrency = "LKR"
-	OfferNewResponseCompensationRelocationBonusCurrencyMad OfferNewResponseCompensationRelocationBonusCurrency = "MAD"
-	OfferNewResponseCompensationRelocationBonusCurrencyMxn OfferNewResponseCompensationRelocationBonusCurrency = "MXN"
-	OfferNewResponseCompensationRelocationBonusCurrencyNpr OfferNewResponseCompensationRelocationBonusCurrency = "NPR"
-	OfferNewResponseCompensationRelocationBonusCurrencyPhp OfferNewResponseCompensationRelocationBonusCurrency = "PHP"
-	OfferNewResponseCompensationRelocationBonusCurrencyPkr OfferNewResponseCompensationRelocationBonusCurrency = "PKR"
-	OfferNewResponseCompensationRelocationBonusCurrencyThb OfferNewResponseCompensationRelocationBonusCurrency = "THB"
-	OfferNewResponseCompensationRelocationBonusCurrencyUah OfferNewResponseCompensationRelocationBonusCurrency = "UAH"
-	OfferNewResponseCompensationRelocationBonusCurrencyUgx OfferNewResponseCompensationRelocationBonusCurrency = "UGX"
-	OfferNewResponseCompensationRelocationBonusCurrencyUyu OfferNewResponseCompensationRelocationBonusCurrency = "UYU"
-	OfferNewResponseCompensationRelocationBonusCurrencyVnd OfferNewResponseCompensationRelocationBonusCurrency = "VND"
-	OfferNewResponseCompensationRelocationBonusCurrencyZar OfferNewResponseCompensationRelocationBonusCurrency = "ZAR"
-	OfferNewResponseCompensationRelocationBonusCurrencyZmw OfferNewResponseCompensationRelocationBonusCurrency = "ZMW"
-	OfferNewResponseCompensationRelocationBonusCurrencyTnd OfferNewResponseCompensationRelocationBonusCurrency = "TND"
-	OfferNewResponseCompensationRelocationBonusCurrencyNgn OfferNewResponseCompensationRelocationBonusCurrency = "NGN"
-	OfferNewResponseCompensationRelocationBonusCurrencyRsd OfferNewResponseCompensationRelocationBonusCurrency = "RSD"
-	OfferNewResponseCompensationRelocationBonusCurrencyTwd OfferNewResponseCompensationRelocationBonusCurrency = "TWD"
-	OfferNewResponseCompensationRelocationBonusCurrencyGtq OfferNewResponseCompensationRelocationBonusCurrency = "GTQ"
-	OfferNewResponseCompensationRelocationBonusCurrencyHnl OfferNewResponseCompensationRelocationBonusCurrency = "HNL"
-	OfferNewResponseCompensationRelocationBonusCurrencyDop OfferNewResponseCompensationRelocationBonusCurrency = "DOP"
-	OfferNewResponseCompensationRelocationBonusCurrencySar OfferNewResponseCompensationRelocationBonusCurrency = "SAR"
-	OfferNewResponseCompensationRelocationBonusCurrencyXaf OfferNewResponseCompensationRelocationBonusCurrency = "XAF"
-	OfferNewResponseCompensationRelocationBonusCurrencyPen OfferNewResponseCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferNewResponseCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferNewResponseCompensationRelocationBonusCurrencyUsd, OfferNewResponseCompensationRelocationBonusCurrencyAud, OfferNewResponseCompensationRelocationBonusCurrencyBgn, OfferNewResponseCompensationRelocationBonusCurrencyBrl, OfferNewResponseCompensationRelocationBonusCurrencyCad, OfferNewResponseCompensationRelocationBonusCurrencyChf, OfferNewResponseCompensationRelocationBonusCurrencyCzk, OfferNewResponseCompensationRelocationBonusCurrencyDkk, OfferNewResponseCompensationRelocationBonusCurrencyEur, OfferNewResponseCompensationRelocationBonusCurrencyGbp, OfferNewResponseCompensationRelocationBonusCurrencyHkd, OfferNewResponseCompensationRelocationBonusCurrencyHuf, OfferNewResponseCompensationRelocationBonusCurrencyIdr, OfferNewResponseCompensationRelocationBonusCurrencyInr, OfferNewResponseCompensationRelocationBonusCurrencyJpy, OfferNewResponseCompensationRelocationBonusCurrencyMyr, OfferNewResponseCompensationRelocationBonusCurrencyNok, OfferNewResponseCompensationRelocationBonusCurrencyNzd, OfferNewResponseCompensationRelocationBonusCurrencyCny, OfferNewResponseCompensationRelocationBonusCurrencyPln, OfferNewResponseCompensationRelocationBonusCurrencyRon, OfferNewResponseCompensationRelocationBonusCurrencyTry, OfferNewResponseCompensationRelocationBonusCurrencySek, OfferNewResponseCompensationRelocationBonusCurrencySgd, OfferNewResponseCompensationRelocationBonusCurrencyAed, OfferNewResponseCompensationRelocationBonusCurrencyArs, OfferNewResponseCompensationRelocationBonusCurrencyBdt, OfferNewResponseCompensationRelocationBonusCurrencyBwp, OfferNewResponseCompensationRelocationBonusCurrencyClp, OfferNewResponseCompensationRelocationBonusCurrencyCop, OfferNewResponseCompensationRelocationBonusCurrencyCrc, OfferNewResponseCompensationRelocationBonusCurrencyEgp, OfferNewResponseCompensationRelocationBonusCurrencyFjd, OfferNewResponseCompensationRelocationBonusCurrencyGel, OfferNewResponseCompensationRelocationBonusCurrencyGhs, OfferNewResponseCompensationRelocationBonusCurrencyIls, OfferNewResponseCompensationRelocationBonusCurrencyKes, OfferNewResponseCompensationRelocationBonusCurrencyKrw, OfferNewResponseCompensationRelocationBonusCurrencyLkr, OfferNewResponseCompensationRelocationBonusCurrencyMad, OfferNewResponseCompensationRelocationBonusCurrencyMxn, OfferNewResponseCompensationRelocationBonusCurrencyNpr, OfferNewResponseCompensationRelocationBonusCurrencyPhp, OfferNewResponseCompensationRelocationBonusCurrencyPkr, OfferNewResponseCompensationRelocationBonusCurrencyThb, OfferNewResponseCompensationRelocationBonusCurrencyUah, OfferNewResponseCompensationRelocationBonusCurrencyUgx, OfferNewResponseCompensationRelocationBonusCurrencyUyu, OfferNewResponseCompensationRelocationBonusCurrencyVnd, OfferNewResponseCompensationRelocationBonusCurrencyZar, OfferNewResponseCompensationRelocationBonusCurrencyZmw, OfferNewResponseCompensationRelocationBonusCurrencyTnd, OfferNewResponseCompensationRelocationBonusCurrencyNgn, OfferNewResponseCompensationRelocationBonusCurrencyRsd, OfferNewResponseCompensationRelocationBonusCurrencyTwd, OfferNewResponseCompensationRelocationBonusCurrencyGtq, OfferNewResponseCompensationRelocationBonusCurrencyHnl, OfferNewResponseCompensationRelocationBonusCurrencyDop, OfferNewResponseCompensationRelocationBonusCurrencySar, OfferNewResponseCompensationRelocationBonusCurrencyXaf, OfferNewResponseCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferVoidResponseCompensationBasePayBasis string
 
 const (
@@ -4112,206 +3998,6 @@ const (
 func (r OfferVoidResponseCompensationBasePayType) IsKnown() bool {
 	switch r {
 	case OfferVoidResponseCompensationBasePayTypeFixed, OfferVoidResponseCompensationBasePayTypePayAsYouGo:
-		return true
-	}
-	return false
-}
-
-type OfferVoidResponseCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                              `json:"amount" api:"required"`
-	Currency OfferVoidResponseCompensationBasePayAmountCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                         `json:"display" api:"required"`
-	JSON    offerVoidResponseCompensationBasePayAmountJSON `json:"-"`
-}
-
-// offerVoidResponseCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferVoidResponseCompensationBasePayAmount]
-type offerVoidResponseCompensationBasePayAmountJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidResponseCompensationBasePayAmount) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponseCompensationBasePayAmountJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidResponseCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                    `json:"amount" api:"required"`
-	Currency OfferVoidResponseCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                               `json:"display" api:"required"`
-	JSON    offerVoidResponseCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerVoidResponseCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferVoidResponseCompensationBasePayVariableRate]
-type offerVoidResponseCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferVoidResponseCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerVoidResponseCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferVoidResponseCompensationSignOnBonusCurrency string
-
-const (
-	OfferVoidResponseCompensationSignOnBonusCurrencyUsd OfferVoidResponseCompensationSignOnBonusCurrency = "USD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyAud OfferVoidResponseCompensationSignOnBonusCurrency = "AUD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyBgn OfferVoidResponseCompensationSignOnBonusCurrency = "BGN"
-	OfferVoidResponseCompensationSignOnBonusCurrencyBrl OfferVoidResponseCompensationSignOnBonusCurrency = "BRL"
-	OfferVoidResponseCompensationSignOnBonusCurrencyCad OfferVoidResponseCompensationSignOnBonusCurrency = "CAD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyChf OfferVoidResponseCompensationSignOnBonusCurrency = "CHF"
-	OfferVoidResponseCompensationSignOnBonusCurrencyCzk OfferVoidResponseCompensationSignOnBonusCurrency = "CZK"
-	OfferVoidResponseCompensationSignOnBonusCurrencyDkk OfferVoidResponseCompensationSignOnBonusCurrency = "DKK"
-	OfferVoidResponseCompensationSignOnBonusCurrencyEur OfferVoidResponseCompensationSignOnBonusCurrency = "EUR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyGbp OfferVoidResponseCompensationSignOnBonusCurrency = "GBP"
-	OfferVoidResponseCompensationSignOnBonusCurrencyHkd OfferVoidResponseCompensationSignOnBonusCurrency = "HKD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyHuf OfferVoidResponseCompensationSignOnBonusCurrency = "HUF"
-	OfferVoidResponseCompensationSignOnBonusCurrencyIdr OfferVoidResponseCompensationSignOnBonusCurrency = "IDR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyInr OfferVoidResponseCompensationSignOnBonusCurrency = "INR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyJpy OfferVoidResponseCompensationSignOnBonusCurrency = "JPY"
-	OfferVoidResponseCompensationSignOnBonusCurrencyMyr OfferVoidResponseCompensationSignOnBonusCurrency = "MYR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyNok OfferVoidResponseCompensationSignOnBonusCurrency = "NOK"
-	OfferVoidResponseCompensationSignOnBonusCurrencyNzd OfferVoidResponseCompensationSignOnBonusCurrency = "NZD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyCny OfferVoidResponseCompensationSignOnBonusCurrency = "CNY"
-	OfferVoidResponseCompensationSignOnBonusCurrencyPln OfferVoidResponseCompensationSignOnBonusCurrency = "PLN"
-	OfferVoidResponseCompensationSignOnBonusCurrencyRon OfferVoidResponseCompensationSignOnBonusCurrency = "RON"
-	OfferVoidResponseCompensationSignOnBonusCurrencyTry OfferVoidResponseCompensationSignOnBonusCurrency = "TRY"
-	OfferVoidResponseCompensationSignOnBonusCurrencySek OfferVoidResponseCompensationSignOnBonusCurrency = "SEK"
-	OfferVoidResponseCompensationSignOnBonusCurrencySgd OfferVoidResponseCompensationSignOnBonusCurrency = "SGD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyAed OfferVoidResponseCompensationSignOnBonusCurrency = "AED"
-	OfferVoidResponseCompensationSignOnBonusCurrencyArs OfferVoidResponseCompensationSignOnBonusCurrency = "ARS"
-	OfferVoidResponseCompensationSignOnBonusCurrencyBdt OfferVoidResponseCompensationSignOnBonusCurrency = "BDT"
-	OfferVoidResponseCompensationSignOnBonusCurrencyBwp OfferVoidResponseCompensationSignOnBonusCurrency = "BWP"
-	OfferVoidResponseCompensationSignOnBonusCurrencyClp OfferVoidResponseCompensationSignOnBonusCurrency = "CLP"
-	OfferVoidResponseCompensationSignOnBonusCurrencyCop OfferVoidResponseCompensationSignOnBonusCurrency = "COP"
-	OfferVoidResponseCompensationSignOnBonusCurrencyCrc OfferVoidResponseCompensationSignOnBonusCurrency = "CRC"
-	OfferVoidResponseCompensationSignOnBonusCurrencyEgp OfferVoidResponseCompensationSignOnBonusCurrency = "EGP"
-	OfferVoidResponseCompensationSignOnBonusCurrencyFjd OfferVoidResponseCompensationSignOnBonusCurrency = "FJD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyGel OfferVoidResponseCompensationSignOnBonusCurrency = "GEL"
-	OfferVoidResponseCompensationSignOnBonusCurrencyGhs OfferVoidResponseCompensationSignOnBonusCurrency = "GHS"
-	OfferVoidResponseCompensationSignOnBonusCurrencyIls OfferVoidResponseCompensationSignOnBonusCurrency = "ILS"
-	OfferVoidResponseCompensationSignOnBonusCurrencyKes OfferVoidResponseCompensationSignOnBonusCurrency = "KES"
-	OfferVoidResponseCompensationSignOnBonusCurrencyKrw OfferVoidResponseCompensationSignOnBonusCurrency = "KRW"
-	OfferVoidResponseCompensationSignOnBonusCurrencyLkr OfferVoidResponseCompensationSignOnBonusCurrency = "LKR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyMad OfferVoidResponseCompensationSignOnBonusCurrency = "MAD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyMxn OfferVoidResponseCompensationSignOnBonusCurrency = "MXN"
-	OfferVoidResponseCompensationSignOnBonusCurrencyNpr OfferVoidResponseCompensationSignOnBonusCurrency = "NPR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyPhp OfferVoidResponseCompensationSignOnBonusCurrency = "PHP"
-	OfferVoidResponseCompensationSignOnBonusCurrencyPkr OfferVoidResponseCompensationSignOnBonusCurrency = "PKR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyThb OfferVoidResponseCompensationSignOnBonusCurrency = "THB"
-	OfferVoidResponseCompensationSignOnBonusCurrencyUah OfferVoidResponseCompensationSignOnBonusCurrency = "UAH"
-	OfferVoidResponseCompensationSignOnBonusCurrencyUgx OfferVoidResponseCompensationSignOnBonusCurrency = "UGX"
-	OfferVoidResponseCompensationSignOnBonusCurrencyUyu OfferVoidResponseCompensationSignOnBonusCurrency = "UYU"
-	OfferVoidResponseCompensationSignOnBonusCurrencyVnd OfferVoidResponseCompensationSignOnBonusCurrency = "VND"
-	OfferVoidResponseCompensationSignOnBonusCurrencyZar OfferVoidResponseCompensationSignOnBonusCurrency = "ZAR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyZmw OfferVoidResponseCompensationSignOnBonusCurrency = "ZMW"
-	OfferVoidResponseCompensationSignOnBonusCurrencyTnd OfferVoidResponseCompensationSignOnBonusCurrency = "TND"
-	OfferVoidResponseCompensationSignOnBonusCurrencyNgn OfferVoidResponseCompensationSignOnBonusCurrency = "NGN"
-	OfferVoidResponseCompensationSignOnBonusCurrencyRsd OfferVoidResponseCompensationSignOnBonusCurrency = "RSD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyTwd OfferVoidResponseCompensationSignOnBonusCurrency = "TWD"
-	OfferVoidResponseCompensationSignOnBonusCurrencyGtq OfferVoidResponseCompensationSignOnBonusCurrency = "GTQ"
-	OfferVoidResponseCompensationSignOnBonusCurrencyHnl OfferVoidResponseCompensationSignOnBonusCurrency = "HNL"
-	OfferVoidResponseCompensationSignOnBonusCurrencyDop OfferVoidResponseCompensationSignOnBonusCurrency = "DOP"
-	OfferVoidResponseCompensationSignOnBonusCurrencySar OfferVoidResponseCompensationSignOnBonusCurrency = "SAR"
-	OfferVoidResponseCompensationSignOnBonusCurrencyXaf OfferVoidResponseCompensationSignOnBonusCurrency = "XAF"
-	OfferVoidResponseCompensationSignOnBonusCurrencyPen OfferVoidResponseCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferVoidResponseCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidResponseCompensationSignOnBonusCurrencyUsd, OfferVoidResponseCompensationSignOnBonusCurrencyAud, OfferVoidResponseCompensationSignOnBonusCurrencyBgn, OfferVoidResponseCompensationSignOnBonusCurrencyBrl, OfferVoidResponseCompensationSignOnBonusCurrencyCad, OfferVoidResponseCompensationSignOnBonusCurrencyChf, OfferVoidResponseCompensationSignOnBonusCurrencyCzk, OfferVoidResponseCompensationSignOnBonusCurrencyDkk, OfferVoidResponseCompensationSignOnBonusCurrencyEur, OfferVoidResponseCompensationSignOnBonusCurrencyGbp, OfferVoidResponseCompensationSignOnBonusCurrencyHkd, OfferVoidResponseCompensationSignOnBonusCurrencyHuf, OfferVoidResponseCompensationSignOnBonusCurrencyIdr, OfferVoidResponseCompensationSignOnBonusCurrencyInr, OfferVoidResponseCompensationSignOnBonusCurrencyJpy, OfferVoidResponseCompensationSignOnBonusCurrencyMyr, OfferVoidResponseCompensationSignOnBonusCurrencyNok, OfferVoidResponseCompensationSignOnBonusCurrencyNzd, OfferVoidResponseCompensationSignOnBonusCurrencyCny, OfferVoidResponseCompensationSignOnBonusCurrencyPln, OfferVoidResponseCompensationSignOnBonusCurrencyRon, OfferVoidResponseCompensationSignOnBonusCurrencyTry, OfferVoidResponseCompensationSignOnBonusCurrencySek, OfferVoidResponseCompensationSignOnBonusCurrencySgd, OfferVoidResponseCompensationSignOnBonusCurrencyAed, OfferVoidResponseCompensationSignOnBonusCurrencyArs, OfferVoidResponseCompensationSignOnBonusCurrencyBdt, OfferVoidResponseCompensationSignOnBonusCurrencyBwp, OfferVoidResponseCompensationSignOnBonusCurrencyClp, OfferVoidResponseCompensationSignOnBonusCurrencyCop, OfferVoidResponseCompensationSignOnBonusCurrencyCrc, OfferVoidResponseCompensationSignOnBonusCurrencyEgp, OfferVoidResponseCompensationSignOnBonusCurrencyFjd, OfferVoidResponseCompensationSignOnBonusCurrencyGel, OfferVoidResponseCompensationSignOnBonusCurrencyGhs, OfferVoidResponseCompensationSignOnBonusCurrencyIls, OfferVoidResponseCompensationSignOnBonusCurrencyKes, OfferVoidResponseCompensationSignOnBonusCurrencyKrw, OfferVoidResponseCompensationSignOnBonusCurrencyLkr, OfferVoidResponseCompensationSignOnBonusCurrencyMad, OfferVoidResponseCompensationSignOnBonusCurrencyMxn, OfferVoidResponseCompensationSignOnBonusCurrencyNpr, OfferVoidResponseCompensationSignOnBonusCurrencyPhp, OfferVoidResponseCompensationSignOnBonusCurrencyPkr, OfferVoidResponseCompensationSignOnBonusCurrencyThb, OfferVoidResponseCompensationSignOnBonusCurrencyUah, OfferVoidResponseCompensationSignOnBonusCurrencyUgx, OfferVoidResponseCompensationSignOnBonusCurrencyUyu, OfferVoidResponseCompensationSignOnBonusCurrencyVnd, OfferVoidResponseCompensationSignOnBonusCurrencyZar, OfferVoidResponseCompensationSignOnBonusCurrencyZmw, OfferVoidResponseCompensationSignOnBonusCurrencyTnd, OfferVoidResponseCompensationSignOnBonusCurrencyNgn, OfferVoidResponseCompensationSignOnBonusCurrencyRsd, OfferVoidResponseCompensationSignOnBonusCurrencyTwd, OfferVoidResponseCompensationSignOnBonusCurrencyGtq, OfferVoidResponseCompensationSignOnBonusCurrencyHnl, OfferVoidResponseCompensationSignOnBonusCurrencyDop, OfferVoidResponseCompensationSignOnBonusCurrencySar, OfferVoidResponseCompensationSignOnBonusCurrencyXaf, OfferVoidResponseCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferVoidResponseCompensationRelocationBonusCurrency string
-
-const (
-	OfferVoidResponseCompensationRelocationBonusCurrencyUsd OfferVoidResponseCompensationRelocationBonusCurrency = "USD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyAud OfferVoidResponseCompensationRelocationBonusCurrency = "AUD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyBgn OfferVoidResponseCompensationRelocationBonusCurrency = "BGN"
-	OfferVoidResponseCompensationRelocationBonusCurrencyBrl OfferVoidResponseCompensationRelocationBonusCurrency = "BRL"
-	OfferVoidResponseCompensationRelocationBonusCurrencyCad OfferVoidResponseCompensationRelocationBonusCurrency = "CAD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyChf OfferVoidResponseCompensationRelocationBonusCurrency = "CHF"
-	OfferVoidResponseCompensationRelocationBonusCurrencyCzk OfferVoidResponseCompensationRelocationBonusCurrency = "CZK"
-	OfferVoidResponseCompensationRelocationBonusCurrencyDkk OfferVoidResponseCompensationRelocationBonusCurrency = "DKK"
-	OfferVoidResponseCompensationRelocationBonusCurrencyEur OfferVoidResponseCompensationRelocationBonusCurrency = "EUR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyGbp OfferVoidResponseCompensationRelocationBonusCurrency = "GBP"
-	OfferVoidResponseCompensationRelocationBonusCurrencyHkd OfferVoidResponseCompensationRelocationBonusCurrency = "HKD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyHuf OfferVoidResponseCompensationRelocationBonusCurrency = "HUF"
-	OfferVoidResponseCompensationRelocationBonusCurrencyIdr OfferVoidResponseCompensationRelocationBonusCurrency = "IDR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyInr OfferVoidResponseCompensationRelocationBonusCurrency = "INR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyJpy OfferVoidResponseCompensationRelocationBonusCurrency = "JPY"
-	OfferVoidResponseCompensationRelocationBonusCurrencyMyr OfferVoidResponseCompensationRelocationBonusCurrency = "MYR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyNok OfferVoidResponseCompensationRelocationBonusCurrency = "NOK"
-	OfferVoidResponseCompensationRelocationBonusCurrencyNzd OfferVoidResponseCompensationRelocationBonusCurrency = "NZD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyCny OfferVoidResponseCompensationRelocationBonusCurrency = "CNY"
-	OfferVoidResponseCompensationRelocationBonusCurrencyPln OfferVoidResponseCompensationRelocationBonusCurrency = "PLN"
-	OfferVoidResponseCompensationRelocationBonusCurrencyRon OfferVoidResponseCompensationRelocationBonusCurrency = "RON"
-	OfferVoidResponseCompensationRelocationBonusCurrencyTry OfferVoidResponseCompensationRelocationBonusCurrency = "TRY"
-	OfferVoidResponseCompensationRelocationBonusCurrencySek OfferVoidResponseCompensationRelocationBonusCurrency = "SEK"
-	OfferVoidResponseCompensationRelocationBonusCurrencySgd OfferVoidResponseCompensationRelocationBonusCurrency = "SGD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyAed OfferVoidResponseCompensationRelocationBonusCurrency = "AED"
-	OfferVoidResponseCompensationRelocationBonusCurrencyArs OfferVoidResponseCompensationRelocationBonusCurrency = "ARS"
-	OfferVoidResponseCompensationRelocationBonusCurrencyBdt OfferVoidResponseCompensationRelocationBonusCurrency = "BDT"
-	OfferVoidResponseCompensationRelocationBonusCurrencyBwp OfferVoidResponseCompensationRelocationBonusCurrency = "BWP"
-	OfferVoidResponseCompensationRelocationBonusCurrencyClp OfferVoidResponseCompensationRelocationBonusCurrency = "CLP"
-	OfferVoidResponseCompensationRelocationBonusCurrencyCop OfferVoidResponseCompensationRelocationBonusCurrency = "COP"
-	OfferVoidResponseCompensationRelocationBonusCurrencyCrc OfferVoidResponseCompensationRelocationBonusCurrency = "CRC"
-	OfferVoidResponseCompensationRelocationBonusCurrencyEgp OfferVoidResponseCompensationRelocationBonusCurrency = "EGP"
-	OfferVoidResponseCompensationRelocationBonusCurrencyFjd OfferVoidResponseCompensationRelocationBonusCurrency = "FJD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyGel OfferVoidResponseCompensationRelocationBonusCurrency = "GEL"
-	OfferVoidResponseCompensationRelocationBonusCurrencyGhs OfferVoidResponseCompensationRelocationBonusCurrency = "GHS"
-	OfferVoidResponseCompensationRelocationBonusCurrencyIls OfferVoidResponseCompensationRelocationBonusCurrency = "ILS"
-	OfferVoidResponseCompensationRelocationBonusCurrencyKes OfferVoidResponseCompensationRelocationBonusCurrency = "KES"
-	OfferVoidResponseCompensationRelocationBonusCurrencyKrw OfferVoidResponseCompensationRelocationBonusCurrency = "KRW"
-	OfferVoidResponseCompensationRelocationBonusCurrencyLkr OfferVoidResponseCompensationRelocationBonusCurrency = "LKR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyMad OfferVoidResponseCompensationRelocationBonusCurrency = "MAD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyMxn OfferVoidResponseCompensationRelocationBonusCurrency = "MXN"
-	OfferVoidResponseCompensationRelocationBonusCurrencyNpr OfferVoidResponseCompensationRelocationBonusCurrency = "NPR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyPhp OfferVoidResponseCompensationRelocationBonusCurrency = "PHP"
-	OfferVoidResponseCompensationRelocationBonusCurrencyPkr OfferVoidResponseCompensationRelocationBonusCurrency = "PKR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyThb OfferVoidResponseCompensationRelocationBonusCurrency = "THB"
-	OfferVoidResponseCompensationRelocationBonusCurrencyUah OfferVoidResponseCompensationRelocationBonusCurrency = "UAH"
-	OfferVoidResponseCompensationRelocationBonusCurrencyUgx OfferVoidResponseCompensationRelocationBonusCurrency = "UGX"
-	OfferVoidResponseCompensationRelocationBonusCurrencyUyu OfferVoidResponseCompensationRelocationBonusCurrency = "UYU"
-	OfferVoidResponseCompensationRelocationBonusCurrencyVnd OfferVoidResponseCompensationRelocationBonusCurrency = "VND"
-	OfferVoidResponseCompensationRelocationBonusCurrencyZar OfferVoidResponseCompensationRelocationBonusCurrency = "ZAR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyZmw OfferVoidResponseCompensationRelocationBonusCurrency = "ZMW"
-	OfferVoidResponseCompensationRelocationBonusCurrencyTnd OfferVoidResponseCompensationRelocationBonusCurrency = "TND"
-	OfferVoidResponseCompensationRelocationBonusCurrencyNgn OfferVoidResponseCompensationRelocationBonusCurrency = "NGN"
-	OfferVoidResponseCompensationRelocationBonusCurrencyRsd OfferVoidResponseCompensationRelocationBonusCurrency = "RSD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyTwd OfferVoidResponseCompensationRelocationBonusCurrency = "TWD"
-	OfferVoidResponseCompensationRelocationBonusCurrencyGtq OfferVoidResponseCompensationRelocationBonusCurrency = "GTQ"
-	OfferVoidResponseCompensationRelocationBonusCurrencyHnl OfferVoidResponseCompensationRelocationBonusCurrency = "HNL"
-	OfferVoidResponseCompensationRelocationBonusCurrencyDop OfferVoidResponseCompensationRelocationBonusCurrency = "DOP"
-	OfferVoidResponseCompensationRelocationBonusCurrencySar OfferVoidResponseCompensationRelocationBonusCurrency = "SAR"
-	OfferVoidResponseCompensationRelocationBonusCurrencyXaf OfferVoidResponseCompensationRelocationBonusCurrency = "XAF"
-	OfferVoidResponseCompensationRelocationBonusCurrencyPen OfferVoidResponseCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferVoidResponseCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidResponseCompensationRelocationBonusCurrencyUsd, OfferVoidResponseCompensationRelocationBonusCurrencyAud, OfferVoidResponseCompensationRelocationBonusCurrencyBgn, OfferVoidResponseCompensationRelocationBonusCurrencyBrl, OfferVoidResponseCompensationRelocationBonusCurrencyCad, OfferVoidResponseCompensationRelocationBonusCurrencyChf, OfferVoidResponseCompensationRelocationBonusCurrencyCzk, OfferVoidResponseCompensationRelocationBonusCurrencyDkk, OfferVoidResponseCompensationRelocationBonusCurrencyEur, OfferVoidResponseCompensationRelocationBonusCurrencyGbp, OfferVoidResponseCompensationRelocationBonusCurrencyHkd, OfferVoidResponseCompensationRelocationBonusCurrencyHuf, OfferVoidResponseCompensationRelocationBonusCurrencyIdr, OfferVoidResponseCompensationRelocationBonusCurrencyInr, OfferVoidResponseCompensationRelocationBonusCurrencyJpy, OfferVoidResponseCompensationRelocationBonusCurrencyMyr, OfferVoidResponseCompensationRelocationBonusCurrencyNok, OfferVoidResponseCompensationRelocationBonusCurrencyNzd, OfferVoidResponseCompensationRelocationBonusCurrencyCny, OfferVoidResponseCompensationRelocationBonusCurrencyPln, OfferVoidResponseCompensationRelocationBonusCurrencyRon, OfferVoidResponseCompensationRelocationBonusCurrencyTry, OfferVoidResponseCompensationRelocationBonusCurrencySek, OfferVoidResponseCompensationRelocationBonusCurrencySgd, OfferVoidResponseCompensationRelocationBonusCurrencyAed, OfferVoidResponseCompensationRelocationBonusCurrencyArs, OfferVoidResponseCompensationRelocationBonusCurrencyBdt, OfferVoidResponseCompensationRelocationBonusCurrencyBwp, OfferVoidResponseCompensationRelocationBonusCurrencyClp, OfferVoidResponseCompensationRelocationBonusCurrencyCop, OfferVoidResponseCompensationRelocationBonusCurrencyCrc, OfferVoidResponseCompensationRelocationBonusCurrencyEgp, OfferVoidResponseCompensationRelocationBonusCurrencyFjd, OfferVoidResponseCompensationRelocationBonusCurrencyGel, OfferVoidResponseCompensationRelocationBonusCurrencyGhs, OfferVoidResponseCompensationRelocationBonusCurrencyIls, OfferVoidResponseCompensationRelocationBonusCurrencyKes, OfferVoidResponseCompensationRelocationBonusCurrencyKrw, OfferVoidResponseCompensationRelocationBonusCurrencyLkr, OfferVoidResponseCompensationRelocationBonusCurrencyMad, OfferVoidResponseCompensationRelocationBonusCurrencyMxn, OfferVoidResponseCompensationRelocationBonusCurrencyNpr, OfferVoidResponseCompensationRelocationBonusCurrencyPhp, OfferVoidResponseCompensationRelocationBonusCurrencyPkr, OfferVoidResponseCompensationRelocationBonusCurrencyThb, OfferVoidResponseCompensationRelocationBonusCurrencyUah, OfferVoidResponseCompensationRelocationBonusCurrencyUgx, OfferVoidResponseCompensationRelocationBonusCurrencyUyu, OfferVoidResponseCompensationRelocationBonusCurrencyVnd, OfferVoidResponseCompensationRelocationBonusCurrencyZar, OfferVoidResponseCompensationRelocationBonusCurrencyZmw, OfferVoidResponseCompensationRelocationBonusCurrencyTnd, OfferVoidResponseCompensationRelocationBonusCurrencyNgn, OfferVoidResponseCompensationRelocationBonusCurrencyRsd, OfferVoidResponseCompensationRelocationBonusCurrencyTwd, OfferVoidResponseCompensationRelocationBonusCurrencyGtq, OfferVoidResponseCompensationRelocationBonusCurrencyHnl, OfferVoidResponseCompensationRelocationBonusCurrencyDop, OfferVoidResponseCompensationRelocationBonusCurrencySar, OfferVoidResponseCompensationRelocationBonusCurrencyXaf, OfferVoidResponseCompensationRelocationBonusCurrencyPen:
 		return true
 	}
 	return false
@@ -4350,206 +4036,6 @@ func (r OfferExtendDeadlineResponseCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
-type OfferExtendDeadlineResponseCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                        `json:"amount" api:"required"`
-	Currency OfferExtendDeadlineResponseCompensationBasePayAmountCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                   `json:"display" api:"required"`
-	JSON    offerExtendDeadlineResponseCompensationBasePayAmountJSON `json:"-"`
-}
-
-// offerExtendDeadlineResponseCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensationBasePayAmount]
-type offerExtendDeadlineResponseCompensationBasePayAmountJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponseCompensationBasePayAmount) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseCompensationBasePayAmountJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponseCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                              `json:"amount" api:"required"`
-	Currency OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                         `json:"display" api:"required"`
-	JSON    offerExtendDeadlineResponseCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerExtendDeadlineResponseCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferExtendDeadlineResponseCompensationBasePayVariableRate]
-type offerExtendDeadlineResponseCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferExtendDeadlineResponseCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerExtendDeadlineResponseCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferExtendDeadlineResponseCompensationSignOnBonusCurrency string
-
-const (
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUsd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "USD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyAud OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "AUD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBgn OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "BGN"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBrl OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "BRL"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCad OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "CAD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyChf OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "CHF"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCzk OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "CZK"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyDkk OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "DKK"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyEur OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "EUR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGbp OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "GBP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyHkd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "HKD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyHuf OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "HUF"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyIdr OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "IDR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyInr OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "INR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyJpy OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "JPY"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyMyr OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "MYR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNok OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "NOK"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNzd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "NZD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCny OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "CNY"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPln OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "PLN"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyRon OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "RON"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyTry OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "TRY"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencySek OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "SEK"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencySgd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "SGD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyAed OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "AED"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyArs OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "ARS"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBdt OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "BDT"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBwp OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "BWP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyClp OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "CLP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCop OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "COP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCrc OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "CRC"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyEgp OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "EGP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyFjd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "FJD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGel OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "GEL"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGhs OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "GHS"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyIls OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "ILS"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyKes OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "KES"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyKrw OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "KRW"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyLkr OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "LKR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyMad OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "MAD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyMxn OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "MXN"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNpr OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "NPR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPhp OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "PHP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPkr OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "PKR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyThb OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "THB"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUah OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "UAH"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUgx OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "UGX"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUyu OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "UYU"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyVnd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "VND"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyZar OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "ZAR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyZmw OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "ZMW"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyTnd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "TND"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNgn OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "NGN"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyRsd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "RSD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyTwd OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "TWD"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGtq OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "GTQ"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyHnl OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "HNL"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyDop OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "DOP"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencySar OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "SAR"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyXaf OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "XAF"
-	OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPen OfferExtendDeadlineResponseCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferExtendDeadlineResponseCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUsd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyAud, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBgn, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBrl, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCad, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyChf, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCzk, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyDkk, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyEur, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGbp, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyHkd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyHuf, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyIdr, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyInr, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyJpy, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyMyr, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNok, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNzd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCny, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPln, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyRon, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyTry, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencySek, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencySgd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyAed, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyArs, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBdt, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyBwp, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyClp, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCop, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyCrc, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyEgp, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyFjd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGel, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGhs, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyIls, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyKes, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyKrw, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyLkr, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyMad, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyMxn, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNpr, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPhp, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPkr, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyThb, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUah, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUgx, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyUyu, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyVnd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyZar, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyZmw, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyTnd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyNgn, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyRsd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyTwd, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyGtq, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyHnl, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyDop, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencySar, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyXaf, OfferExtendDeadlineResponseCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferExtendDeadlineResponseCompensationRelocationBonusCurrency string
-
-const (
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUsd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "USD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyAud OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "AUD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBgn OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "BGN"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBrl OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "BRL"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCad OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "CAD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyChf OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "CHF"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCzk OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "CZK"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyDkk OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "DKK"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyEur OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "EUR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGbp OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "GBP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyHkd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "HKD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyHuf OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "HUF"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyIdr OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "IDR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyInr OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "INR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyJpy OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "JPY"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyMyr OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "MYR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNok OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "NOK"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNzd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "NZD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCny OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "CNY"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPln OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "PLN"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyRon OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "RON"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyTry OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "TRY"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencySek OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "SEK"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencySgd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "SGD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyAed OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "AED"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyArs OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "ARS"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBdt OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "BDT"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBwp OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "BWP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyClp OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "CLP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCop OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "COP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCrc OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "CRC"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyEgp OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "EGP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyFjd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "FJD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGel OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "GEL"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGhs OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "GHS"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyIls OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "ILS"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyKes OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "KES"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyKrw OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "KRW"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyLkr OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "LKR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyMad OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "MAD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyMxn OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "MXN"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNpr OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "NPR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPhp OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "PHP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPkr OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "PKR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyThb OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "THB"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUah OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "UAH"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUgx OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "UGX"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUyu OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "UYU"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyVnd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "VND"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyZar OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "ZAR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyZmw OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "ZMW"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyTnd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "TND"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNgn OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "NGN"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyRsd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "RSD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyTwd OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "TWD"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGtq OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "GTQ"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyHnl OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "HNL"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyDop OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "DOP"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencySar OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "SAR"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyXaf OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "XAF"
-	OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPen OfferExtendDeadlineResponseCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferExtendDeadlineResponseCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUsd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyAud, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBgn, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBrl, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCad, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyChf, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCzk, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyDkk, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyEur, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGbp, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyHkd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyHuf, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyIdr, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyInr, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyJpy, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyMyr, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNok, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNzd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCny, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPln, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyRon, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyTry, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencySek, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencySgd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyAed, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyArs, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBdt, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyBwp, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyClp, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCop, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyCrc, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyEgp, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyFjd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGel, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGhs, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyIls, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyKes, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyKrw, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyLkr, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyMad, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyMxn, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNpr, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPhp, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPkr, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyThb, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUah, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUgx, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyUyu, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyVnd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyZar, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyZmw, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyTnd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyNgn, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyRsd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyTwd, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyGtq, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyHnl, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyDop, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencySar, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyXaf, OfferExtendDeadlineResponseCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferResendResponseCompensationBasePayBasis string
 
 const (
@@ -4583,206 +4069,6 @@ func (r OfferResendResponseCompensationBasePayType) IsKnown() bool {
 	return false
 }
 
-type OfferResendResponseCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                `json:"amount" api:"required"`
-	Currency OfferResendResponseCompensationBasePayAmountCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                           `json:"display" api:"required"`
-	JSON    offerResendResponseCompensationBasePayAmountJSON `json:"-"`
-}
-
-// offerResendResponseCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferResendResponseCompensationBasePayAmount]
-type offerResendResponseCompensationBasePayAmountJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferResendResponseCompensationBasePayAmount) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseCompensationBasePayAmountJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponseCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                      `json:"amount" api:"required"`
-	Currency OfferResendResponseCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                 `json:"display" api:"required"`
-	JSON    offerResendResponseCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerResendResponseCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferResendResponseCompensationBasePayVariableRate]
-type offerResendResponseCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferResendResponseCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerResendResponseCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferResendResponseCompensationSignOnBonusCurrency string
-
-const (
-	OfferResendResponseCompensationSignOnBonusCurrencyUsd OfferResendResponseCompensationSignOnBonusCurrency = "USD"
-	OfferResendResponseCompensationSignOnBonusCurrencyAud OfferResendResponseCompensationSignOnBonusCurrency = "AUD"
-	OfferResendResponseCompensationSignOnBonusCurrencyBgn OfferResendResponseCompensationSignOnBonusCurrency = "BGN"
-	OfferResendResponseCompensationSignOnBonusCurrencyBrl OfferResendResponseCompensationSignOnBonusCurrency = "BRL"
-	OfferResendResponseCompensationSignOnBonusCurrencyCad OfferResendResponseCompensationSignOnBonusCurrency = "CAD"
-	OfferResendResponseCompensationSignOnBonusCurrencyChf OfferResendResponseCompensationSignOnBonusCurrency = "CHF"
-	OfferResendResponseCompensationSignOnBonusCurrencyCzk OfferResendResponseCompensationSignOnBonusCurrency = "CZK"
-	OfferResendResponseCompensationSignOnBonusCurrencyDkk OfferResendResponseCompensationSignOnBonusCurrency = "DKK"
-	OfferResendResponseCompensationSignOnBonusCurrencyEur OfferResendResponseCompensationSignOnBonusCurrency = "EUR"
-	OfferResendResponseCompensationSignOnBonusCurrencyGbp OfferResendResponseCompensationSignOnBonusCurrency = "GBP"
-	OfferResendResponseCompensationSignOnBonusCurrencyHkd OfferResendResponseCompensationSignOnBonusCurrency = "HKD"
-	OfferResendResponseCompensationSignOnBonusCurrencyHuf OfferResendResponseCompensationSignOnBonusCurrency = "HUF"
-	OfferResendResponseCompensationSignOnBonusCurrencyIdr OfferResendResponseCompensationSignOnBonusCurrency = "IDR"
-	OfferResendResponseCompensationSignOnBonusCurrencyInr OfferResendResponseCompensationSignOnBonusCurrency = "INR"
-	OfferResendResponseCompensationSignOnBonusCurrencyJpy OfferResendResponseCompensationSignOnBonusCurrency = "JPY"
-	OfferResendResponseCompensationSignOnBonusCurrencyMyr OfferResendResponseCompensationSignOnBonusCurrency = "MYR"
-	OfferResendResponseCompensationSignOnBonusCurrencyNok OfferResendResponseCompensationSignOnBonusCurrency = "NOK"
-	OfferResendResponseCompensationSignOnBonusCurrencyNzd OfferResendResponseCompensationSignOnBonusCurrency = "NZD"
-	OfferResendResponseCompensationSignOnBonusCurrencyCny OfferResendResponseCompensationSignOnBonusCurrency = "CNY"
-	OfferResendResponseCompensationSignOnBonusCurrencyPln OfferResendResponseCompensationSignOnBonusCurrency = "PLN"
-	OfferResendResponseCompensationSignOnBonusCurrencyRon OfferResendResponseCompensationSignOnBonusCurrency = "RON"
-	OfferResendResponseCompensationSignOnBonusCurrencyTry OfferResendResponseCompensationSignOnBonusCurrency = "TRY"
-	OfferResendResponseCompensationSignOnBonusCurrencySek OfferResendResponseCompensationSignOnBonusCurrency = "SEK"
-	OfferResendResponseCompensationSignOnBonusCurrencySgd OfferResendResponseCompensationSignOnBonusCurrency = "SGD"
-	OfferResendResponseCompensationSignOnBonusCurrencyAed OfferResendResponseCompensationSignOnBonusCurrency = "AED"
-	OfferResendResponseCompensationSignOnBonusCurrencyArs OfferResendResponseCompensationSignOnBonusCurrency = "ARS"
-	OfferResendResponseCompensationSignOnBonusCurrencyBdt OfferResendResponseCompensationSignOnBonusCurrency = "BDT"
-	OfferResendResponseCompensationSignOnBonusCurrencyBwp OfferResendResponseCompensationSignOnBonusCurrency = "BWP"
-	OfferResendResponseCompensationSignOnBonusCurrencyClp OfferResendResponseCompensationSignOnBonusCurrency = "CLP"
-	OfferResendResponseCompensationSignOnBonusCurrencyCop OfferResendResponseCompensationSignOnBonusCurrency = "COP"
-	OfferResendResponseCompensationSignOnBonusCurrencyCrc OfferResendResponseCompensationSignOnBonusCurrency = "CRC"
-	OfferResendResponseCompensationSignOnBonusCurrencyEgp OfferResendResponseCompensationSignOnBonusCurrency = "EGP"
-	OfferResendResponseCompensationSignOnBonusCurrencyFjd OfferResendResponseCompensationSignOnBonusCurrency = "FJD"
-	OfferResendResponseCompensationSignOnBonusCurrencyGel OfferResendResponseCompensationSignOnBonusCurrency = "GEL"
-	OfferResendResponseCompensationSignOnBonusCurrencyGhs OfferResendResponseCompensationSignOnBonusCurrency = "GHS"
-	OfferResendResponseCompensationSignOnBonusCurrencyIls OfferResendResponseCompensationSignOnBonusCurrency = "ILS"
-	OfferResendResponseCompensationSignOnBonusCurrencyKes OfferResendResponseCompensationSignOnBonusCurrency = "KES"
-	OfferResendResponseCompensationSignOnBonusCurrencyKrw OfferResendResponseCompensationSignOnBonusCurrency = "KRW"
-	OfferResendResponseCompensationSignOnBonusCurrencyLkr OfferResendResponseCompensationSignOnBonusCurrency = "LKR"
-	OfferResendResponseCompensationSignOnBonusCurrencyMad OfferResendResponseCompensationSignOnBonusCurrency = "MAD"
-	OfferResendResponseCompensationSignOnBonusCurrencyMxn OfferResendResponseCompensationSignOnBonusCurrency = "MXN"
-	OfferResendResponseCompensationSignOnBonusCurrencyNpr OfferResendResponseCompensationSignOnBonusCurrency = "NPR"
-	OfferResendResponseCompensationSignOnBonusCurrencyPhp OfferResendResponseCompensationSignOnBonusCurrency = "PHP"
-	OfferResendResponseCompensationSignOnBonusCurrencyPkr OfferResendResponseCompensationSignOnBonusCurrency = "PKR"
-	OfferResendResponseCompensationSignOnBonusCurrencyThb OfferResendResponseCompensationSignOnBonusCurrency = "THB"
-	OfferResendResponseCompensationSignOnBonusCurrencyUah OfferResendResponseCompensationSignOnBonusCurrency = "UAH"
-	OfferResendResponseCompensationSignOnBonusCurrencyUgx OfferResendResponseCompensationSignOnBonusCurrency = "UGX"
-	OfferResendResponseCompensationSignOnBonusCurrencyUyu OfferResendResponseCompensationSignOnBonusCurrency = "UYU"
-	OfferResendResponseCompensationSignOnBonusCurrencyVnd OfferResendResponseCompensationSignOnBonusCurrency = "VND"
-	OfferResendResponseCompensationSignOnBonusCurrencyZar OfferResendResponseCompensationSignOnBonusCurrency = "ZAR"
-	OfferResendResponseCompensationSignOnBonusCurrencyZmw OfferResendResponseCompensationSignOnBonusCurrency = "ZMW"
-	OfferResendResponseCompensationSignOnBonusCurrencyTnd OfferResendResponseCompensationSignOnBonusCurrency = "TND"
-	OfferResendResponseCompensationSignOnBonusCurrencyNgn OfferResendResponseCompensationSignOnBonusCurrency = "NGN"
-	OfferResendResponseCompensationSignOnBonusCurrencyRsd OfferResendResponseCompensationSignOnBonusCurrency = "RSD"
-	OfferResendResponseCompensationSignOnBonusCurrencyTwd OfferResendResponseCompensationSignOnBonusCurrency = "TWD"
-	OfferResendResponseCompensationSignOnBonusCurrencyGtq OfferResendResponseCompensationSignOnBonusCurrency = "GTQ"
-	OfferResendResponseCompensationSignOnBonusCurrencyHnl OfferResendResponseCompensationSignOnBonusCurrency = "HNL"
-	OfferResendResponseCompensationSignOnBonusCurrencyDop OfferResendResponseCompensationSignOnBonusCurrency = "DOP"
-	OfferResendResponseCompensationSignOnBonusCurrencySar OfferResendResponseCompensationSignOnBonusCurrency = "SAR"
-	OfferResendResponseCompensationSignOnBonusCurrencyXaf OfferResendResponseCompensationSignOnBonusCurrency = "XAF"
-	OfferResendResponseCompensationSignOnBonusCurrencyPen OfferResendResponseCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferResendResponseCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferResendResponseCompensationSignOnBonusCurrencyUsd, OfferResendResponseCompensationSignOnBonusCurrencyAud, OfferResendResponseCompensationSignOnBonusCurrencyBgn, OfferResendResponseCompensationSignOnBonusCurrencyBrl, OfferResendResponseCompensationSignOnBonusCurrencyCad, OfferResendResponseCompensationSignOnBonusCurrencyChf, OfferResendResponseCompensationSignOnBonusCurrencyCzk, OfferResendResponseCompensationSignOnBonusCurrencyDkk, OfferResendResponseCompensationSignOnBonusCurrencyEur, OfferResendResponseCompensationSignOnBonusCurrencyGbp, OfferResendResponseCompensationSignOnBonusCurrencyHkd, OfferResendResponseCompensationSignOnBonusCurrencyHuf, OfferResendResponseCompensationSignOnBonusCurrencyIdr, OfferResendResponseCompensationSignOnBonusCurrencyInr, OfferResendResponseCompensationSignOnBonusCurrencyJpy, OfferResendResponseCompensationSignOnBonusCurrencyMyr, OfferResendResponseCompensationSignOnBonusCurrencyNok, OfferResendResponseCompensationSignOnBonusCurrencyNzd, OfferResendResponseCompensationSignOnBonusCurrencyCny, OfferResendResponseCompensationSignOnBonusCurrencyPln, OfferResendResponseCompensationSignOnBonusCurrencyRon, OfferResendResponseCompensationSignOnBonusCurrencyTry, OfferResendResponseCompensationSignOnBonusCurrencySek, OfferResendResponseCompensationSignOnBonusCurrencySgd, OfferResendResponseCompensationSignOnBonusCurrencyAed, OfferResendResponseCompensationSignOnBonusCurrencyArs, OfferResendResponseCompensationSignOnBonusCurrencyBdt, OfferResendResponseCompensationSignOnBonusCurrencyBwp, OfferResendResponseCompensationSignOnBonusCurrencyClp, OfferResendResponseCompensationSignOnBonusCurrencyCop, OfferResendResponseCompensationSignOnBonusCurrencyCrc, OfferResendResponseCompensationSignOnBonusCurrencyEgp, OfferResendResponseCompensationSignOnBonusCurrencyFjd, OfferResendResponseCompensationSignOnBonusCurrencyGel, OfferResendResponseCompensationSignOnBonusCurrencyGhs, OfferResendResponseCompensationSignOnBonusCurrencyIls, OfferResendResponseCompensationSignOnBonusCurrencyKes, OfferResendResponseCompensationSignOnBonusCurrencyKrw, OfferResendResponseCompensationSignOnBonusCurrencyLkr, OfferResendResponseCompensationSignOnBonusCurrencyMad, OfferResendResponseCompensationSignOnBonusCurrencyMxn, OfferResendResponseCompensationSignOnBonusCurrencyNpr, OfferResendResponseCompensationSignOnBonusCurrencyPhp, OfferResendResponseCompensationSignOnBonusCurrencyPkr, OfferResendResponseCompensationSignOnBonusCurrencyThb, OfferResendResponseCompensationSignOnBonusCurrencyUah, OfferResendResponseCompensationSignOnBonusCurrencyUgx, OfferResendResponseCompensationSignOnBonusCurrencyUyu, OfferResendResponseCompensationSignOnBonusCurrencyVnd, OfferResendResponseCompensationSignOnBonusCurrencyZar, OfferResendResponseCompensationSignOnBonusCurrencyZmw, OfferResendResponseCompensationSignOnBonusCurrencyTnd, OfferResendResponseCompensationSignOnBonusCurrencyNgn, OfferResendResponseCompensationSignOnBonusCurrencyRsd, OfferResendResponseCompensationSignOnBonusCurrencyTwd, OfferResendResponseCompensationSignOnBonusCurrencyGtq, OfferResendResponseCompensationSignOnBonusCurrencyHnl, OfferResendResponseCompensationSignOnBonusCurrencyDop, OfferResendResponseCompensationSignOnBonusCurrencySar, OfferResendResponseCompensationSignOnBonusCurrencyXaf, OfferResendResponseCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferResendResponseCompensationRelocationBonusCurrency string
-
-const (
-	OfferResendResponseCompensationRelocationBonusCurrencyUsd OfferResendResponseCompensationRelocationBonusCurrency = "USD"
-	OfferResendResponseCompensationRelocationBonusCurrencyAud OfferResendResponseCompensationRelocationBonusCurrency = "AUD"
-	OfferResendResponseCompensationRelocationBonusCurrencyBgn OfferResendResponseCompensationRelocationBonusCurrency = "BGN"
-	OfferResendResponseCompensationRelocationBonusCurrencyBrl OfferResendResponseCompensationRelocationBonusCurrency = "BRL"
-	OfferResendResponseCompensationRelocationBonusCurrencyCad OfferResendResponseCompensationRelocationBonusCurrency = "CAD"
-	OfferResendResponseCompensationRelocationBonusCurrencyChf OfferResendResponseCompensationRelocationBonusCurrency = "CHF"
-	OfferResendResponseCompensationRelocationBonusCurrencyCzk OfferResendResponseCompensationRelocationBonusCurrency = "CZK"
-	OfferResendResponseCompensationRelocationBonusCurrencyDkk OfferResendResponseCompensationRelocationBonusCurrency = "DKK"
-	OfferResendResponseCompensationRelocationBonusCurrencyEur OfferResendResponseCompensationRelocationBonusCurrency = "EUR"
-	OfferResendResponseCompensationRelocationBonusCurrencyGbp OfferResendResponseCompensationRelocationBonusCurrency = "GBP"
-	OfferResendResponseCompensationRelocationBonusCurrencyHkd OfferResendResponseCompensationRelocationBonusCurrency = "HKD"
-	OfferResendResponseCompensationRelocationBonusCurrencyHuf OfferResendResponseCompensationRelocationBonusCurrency = "HUF"
-	OfferResendResponseCompensationRelocationBonusCurrencyIdr OfferResendResponseCompensationRelocationBonusCurrency = "IDR"
-	OfferResendResponseCompensationRelocationBonusCurrencyInr OfferResendResponseCompensationRelocationBonusCurrency = "INR"
-	OfferResendResponseCompensationRelocationBonusCurrencyJpy OfferResendResponseCompensationRelocationBonusCurrency = "JPY"
-	OfferResendResponseCompensationRelocationBonusCurrencyMyr OfferResendResponseCompensationRelocationBonusCurrency = "MYR"
-	OfferResendResponseCompensationRelocationBonusCurrencyNok OfferResendResponseCompensationRelocationBonusCurrency = "NOK"
-	OfferResendResponseCompensationRelocationBonusCurrencyNzd OfferResendResponseCompensationRelocationBonusCurrency = "NZD"
-	OfferResendResponseCompensationRelocationBonusCurrencyCny OfferResendResponseCompensationRelocationBonusCurrency = "CNY"
-	OfferResendResponseCompensationRelocationBonusCurrencyPln OfferResendResponseCompensationRelocationBonusCurrency = "PLN"
-	OfferResendResponseCompensationRelocationBonusCurrencyRon OfferResendResponseCompensationRelocationBonusCurrency = "RON"
-	OfferResendResponseCompensationRelocationBonusCurrencyTry OfferResendResponseCompensationRelocationBonusCurrency = "TRY"
-	OfferResendResponseCompensationRelocationBonusCurrencySek OfferResendResponseCompensationRelocationBonusCurrency = "SEK"
-	OfferResendResponseCompensationRelocationBonusCurrencySgd OfferResendResponseCompensationRelocationBonusCurrency = "SGD"
-	OfferResendResponseCompensationRelocationBonusCurrencyAed OfferResendResponseCompensationRelocationBonusCurrency = "AED"
-	OfferResendResponseCompensationRelocationBonusCurrencyArs OfferResendResponseCompensationRelocationBonusCurrency = "ARS"
-	OfferResendResponseCompensationRelocationBonusCurrencyBdt OfferResendResponseCompensationRelocationBonusCurrency = "BDT"
-	OfferResendResponseCompensationRelocationBonusCurrencyBwp OfferResendResponseCompensationRelocationBonusCurrency = "BWP"
-	OfferResendResponseCompensationRelocationBonusCurrencyClp OfferResendResponseCompensationRelocationBonusCurrency = "CLP"
-	OfferResendResponseCompensationRelocationBonusCurrencyCop OfferResendResponseCompensationRelocationBonusCurrency = "COP"
-	OfferResendResponseCompensationRelocationBonusCurrencyCrc OfferResendResponseCompensationRelocationBonusCurrency = "CRC"
-	OfferResendResponseCompensationRelocationBonusCurrencyEgp OfferResendResponseCompensationRelocationBonusCurrency = "EGP"
-	OfferResendResponseCompensationRelocationBonusCurrencyFjd OfferResendResponseCompensationRelocationBonusCurrency = "FJD"
-	OfferResendResponseCompensationRelocationBonusCurrencyGel OfferResendResponseCompensationRelocationBonusCurrency = "GEL"
-	OfferResendResponseCompensationRelocationBonusCurrencyGhs OfferResendResponseCompensationRelocationBonusCurrency = "GHS"
-	OfferResendResponseCompensationRelocationBonusCurrencyIls OfferResendResponseCompensationRelocationBonusCurrency = "ILS"
-	OfferResendResponseCompensationRelocationBonusCurrencyKes OfferResendResponseCompensationRelocationBonusCurrency = "KES"
-	OfferResendResponseCompensationRelocationBonusCurrencyKrw OfferResendResponseCompensationRelocationBonusCurrency = "KRW"
-	OfferResendResponseCompensationRelocationBonusCurrencyLkr OfferResendResponseCompensationRelocationBonusCurrency = "LKR"
-	OfferResendResponseCompensationRelocationBonusCurrencyMad OfferResendResponseCompensationRelocationBonusCurrency = "MAD"
-	OfferResendResponseCompensationRelocationBonusCurrencyMxn OfferResendResponseCompensationRelocationBonusCurrency = "MXN"
-	OfferResendResponseCompensationRelocationBonusCurrencyNpr OfferResendResponseCompensationRelocationBonusCurrency = "NPR"
-	OfferResendResponseCompensationRelocationBonusCurrencyPhp OfferResendResponseCompensationRelocationBonusCurrency = "PHP"
-	OfferResendResponseCompensationRelocationBonusCurrencyPkr OfferResendResponseCompensationRelocationBonusCurrency = "PKR"
-	OfferResendResponseCompensationRelocationBonusCurrencyThb OfferResendResponseCompensationRelocationBonusCurrency = "THB"
-	OfferResendResponseCompensationRelocationBonusCurrencyUah OfferResendResponseCompensationRelocationBonusCurrency = "UAH"
-	OfferResendResponseCompensationRelocationBonusCurrencyUgx OfferResendResponseCompensationRelocationBonusCurrency = "UGX"
-	OfferResendResponseCompensationRelocationBonusCurrencyUyu OfferResendResponseCompensationRelocationBonusCurrency = "UYU"
-	OfferResendResponseCompensationRelocationBonusCurrencyVnd OfferResendResponseCompensationRelocationBonusCurrency = "VND"
-	OfferResendResponseCompensationRelocationBonusCurrencyZar OfferResendResponseCompensationRelocationBonusCurrency = "ZAR"
-	OfferResendResponseCompensationRelocationBonusCurrencyZmw OfferResendResponseCompensationRelocationBonusCurrency = "ZMW"
-	OfferResendResponseCompensationRelocationBonusCurrencyTnd OfferResendResponseCompensationRelocationBonusCurrency = "TND"
-	OfferResendResponseCompensationRelocationBonusCurrencyNgn OfferResendResponseCompensationRelocationBonusCurrency = "NGN"
-	OfferResendResponseCompensationRelocationBonusCurrencyRsd OfferResendResponseCompensationRelocationBonusCurrency = "RSD"
-	OfferResendResponseCompensationRelocationBonusCurrencyTwd OfferResendResponseCompensationRelocationBonusCurrency = "TWD"
-	OfferResendResponseCompensationRelocationBonusCurrencyGtq OfferResendResponseCompensationRelocationBonusCurrency = "GTQ"
-	OfferResendResponseCompensationRelocationBonusCurrencyHnl OfferResendResponseCompensationRelocationBonusCurrency = "HNL"
-	OfferResendResponseCompensationRelocationBonusCurrencyDop OfferResendResponseCompensationRelocationBonusCurrency = "DOP"
-	OfferResendResponseCompensationRelocationBonusCurrencySar OfferResendResponseCompensationRelocationBonusCurrency = "SAR"
-	OfferResendResponseCompensationRelocationBonusCurrencyXaf OfferResendResponseCompensationRelocationBonusCurrency = "XAF"
-	OfferResendResponseCompensationRelocationBonusCurrencyPen OfferResendResponseCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferResendResponseCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferResendResponseCompensationRelocationBonusCurrencyUsd, OfferResendResponseCompensationRelocationBonusCurrencyAud, OfferResendResponseCompensationRelocationBonusCurrencyBgn, OfferResendResponseCompensationRelocationBonusCurrencyBrl, OfferResendResponseCompensationRelocationBonusCurrencyCad, OfferResendResponseCompensationRelocationBonusCurrencyChf, OfferResendResponseCompensationRelocationBonusCurrencyCzk, OfferResendResponseCompensationRelocationBonusCurrencyDkk, OfferResendResponseCompensationRelocationBonusCurrencyEur, OfferResendResponseCompensationRelocationBonusCurrencyGbp, OfferResendResponseCompensationRelocationBonusCurrencyHkd, OfferResendResponseCompensationRelocationBonusCurrencyHuf, OfferResendResponseCompensationRelocationBonusCurrencyIdr, OfferResendResponseCompensationRelocationBonusCurrencyInr, OfferResendResponseCompensationRelocationBonusCurrencyJpy, OfferResendResponseCompensationRelocationBonusCurrencyMyr, OfferResendResponseCompensationRelocationBonusCurrencyNok, OfferResendResponseCompensationRelocationBonusCurrencyNzd, OfferResendResponseCompensationRelocationBonusCurrencyCny, OfferResendResponseCompensationRelocationBonusCurrencyPln, OfferResendResponseCompensationRelocationBonusCurrencyRon, OfferResendResponseCompensationRelocationBonusCurrencyTry, OfferResendResponseCompensationRelocationBonusCurrencySek, OfferResendResponseCompensationRelocationBonusCurrencySgd, OfferResendResponseCompensationRelocationBonusCurrencyAed, OfferResendResponseCompensationRelocationBonusCurrencyArs, OfferResendResponseCompensationRelocationBonusCurrencyBdt, OfferResendResponseCompensationRelocationBonusCurrencyBwp, OfferResendResponseCompensationRelocationBonusCurrencyClp, OfferResendResponseCompensationRelocationBonusCurrencyCop, OfferResendResponseCompensationRelocationBonusCurrencyCrc, OfferResendResponseCompensationRelocationBonusCurrencyEgp, OfferResendResponseCompensationRelocationBonusCurrencyFjd, OfferResendResponseCompensationRelocationBonusCurrencyGel, OfferResendResponseCompensationRelocationBonusCurrencyGhs, OfferResendResponseCompensationRelocationBonusCurrencyIls, OfferResendResponseCompensationRelocationBonusCurrencyKes, OfferResendResponseCompensationRelocationBonusCurrencyKrw, OfferResendResponseCompensationRelocationBonusCurrencyLkr, OfferResendResponseCompensationRelocationBonusCurrencyMad, OfferResendResponseCompensationRelocationBonusCurrencyMxn, OfferResendResponseCompensationRelocationBonusCurrencyNpr, OfferResendResponseCompensationRelocationBonusCurrencyPhp, OfferResendResponseCompensationRelocationBonusCurrencyPkr, OfferResendResponseCompensationRelocationBonusCurrencyThb, OfferResendResponseCompensationRelocationBonusCurrencyUah, OfferResendResponseCompensationRelocationBonusCurrencyUgx, OfferResendResponseCompensationRelocationBonusCurrencyUyu, OfferResendResponseCompensationRelocationBonusCurrencyVnd, OfferResendResponseCompensationRelocationBonusCurrencyZar, OfferResendResponseCompensationRelocationBonusCurrencyZmw, OfferResendResponseCompensationRelocationBonusCurrencyTnd, OfferResendResponseCompensationRelocationBonusCurrencyNgn, OfferResendResponseCompensationRelocationBonusCurrencyRsd, OfferResendResponseCompensationRelocationBonusCurrencyTwd, OfferResendResponseCompensationRelocationBonusCurrencyGtq, OfferResendResponseCompensationRelocationBonusCurrencyHnl, OfferResendResponseCompensationRelocationBonusCurrencyDop, OfferResendResponseCompensationRelocationBonusCurrencySar, OfferResendResponseCompensationRelocationBonusCurrencyXaf, OfferResendResponseCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
 type OfferListResponseDataCompensationBasePayBasis string
 
 const (
@@ -4811,946 +4097,6 @@ const (
 func (r OfferListResponseDataCompensationBasePayType) IsKnown() bool {
 	switch r {
 	case OfferListResponseDataCompensationBasePayTypeFixed, OfferListResponseDataCompensationBasePayTypePayAsYouGo:
-		return true
-	}
-	return false
-}
-
-type OfferListResponseDataCompensationBasePayAmount struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                  `json:"amount" api:"required"`
-	Currency OfferListResponseDataCompensationBasePayAmountCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                             `json:"display" api:"required"`
-	JSON    offerListResponseDataCompensationBasePayAmountJSON `json:"-"`
-}
-
-// offerListResponseDataCompensationBasePayAmountJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationBasePayAmount]
-type offerListResponseDataCompensationBasePayAmountJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferListResponseDataCompensationBasePayAmount) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerListResponseDataCompensationBasePayAmountJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferListResponseDataCompensationBasePayVariableRate struct {
-	// Amount in the currency base unit, e.g. cents for USD.
-	Amount   int64                                                        `json:"amount" api:"required"`
-	Currency OfferListResponseDataCompensationBasePayVariableRateCurrency `json:"currency" api:"required"`
-	// The server-formatted display string for the amount in its currency.
-	Display string                                                   `json:"display" api:"required"`
-	JSON    offerListResponseDataCompensationBasePayVariableRateJSON `json:"-"`
-}
-
-// offerListResponseDataCompensationBasePayVariableRateJSON contains the JSON metadata for the struct [OfferListResponseDataCompensationBasePayVariableRate]
-type offerListResponseDataCompensationBasePayVariableRateJSON struct {
-	Amount      apijson.Field
-	Currency    apijson.Field
-	Display     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *OfferListResponseDataCompensationBasePayVariableRate) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r offerListResponseDataCompensationBasePayVariableRateJSON) RawJSON() string {
-	return r.raw
-}
-
-type OfferListResponseDataCompensationSignOnBonusCurrency string
-
-const (
-	OfferListResponseDataCompensationSignOnBonusCurrencyUsd OfferListResponseDataCompensationSignOnBonusCurrency = "USD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyAud OfferListResponseDataCompensationSignOnBonusCurrency = "AUD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyBgn OfferListResponseDataCompensationSignOnBonusCurrency = "BGN"
-	OfferListResponseDataCompensationSignOnBonusCurrencyBrl OfferListResponseDataCompensationSignOnBonusCurrency = "BRL"
-	OfferListResponseDataCompensationSignOnBonusCurrencyCad OfferListResponseDataCompensationSignOnBonusCurrency = "CAD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyChf OfferListResponseDataCompensationSignOnBonusCurrency = "CHF"
-	OfferListResponseDataCompensationSignOnBonusCurrencyCzk OfferListResponseDataCompensationSignOnBonusCurrency = "CZK"
-	OfferListResponseDataCompensationSignOnBonusCurrencyDkk OfferListResponseDataCompensationSignOnBonusCurrency = "DKK"
-	OfferListResponseDataCompensationSignOnBonusCurrencyEur OfferListResponseDataCompensationSignOnBonusCurrency = "EUR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyGbp OfferListResponseDataCompensationSignOnBonusCurrency = "GBP"
-	OfferListResponseDataCompensationSignOnBonusCurrencyHkd OfferListResponseDataCompensationSignOnBonusCurrency = "HKD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyHuf OfferListResponseDataCompensationSignOnBonusCurrency = "HUF"
-	OfferListResponseDataCompensationSignOnBonusCurrencyIdr OfferListResponseDataCompensationSignOnBonusCurrency = "IDR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyInr OfferListResponseDataCompensationSignOnBonusCurrency = "INR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyJpy OfferListResponseDataCompensationSignOnBonusCurrency = "JPY"
-	OfferListResponseDataCompensationSignOnBonusCurrencyMyr OfferListResponseDataCompensationSignOnBonusCurrency = "MYR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyNok OfferListResponseDataCompensationSignOnBonusCurrency = "NOK"
-	OfferListResponseDataCompensationSignOnBonusCurrencyNzd OfferListResponseDataCompensationSignOnBonusCurrency = "NZD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyCny OfferListResponseDataCompensationSignOnBonusCurrency = "CNY"
-	OfferListResponseDataCompensationSignOnBonusCurrencyPln OfferListResponseDataCompensationSignOnBonusCurrency = "PLN"
-	OfferListResponseDataCompensationSignOnBonusCurrencyRon OfferListResponseDataCompensationSignOnBonusCurrency = "RON"
-	OfferListResponseDataCompensationSignOnBonusCurrencyTry OfferListResponseDataCompensationSignOnBonusCurrency = "TRY"
-	OfferListResponseDataCompensationSignOnBonusCurrencySek OfferListResponseDataCompensationSignOnBonusCurrency = "SEK"
-	OfferListResponseDataCompensationSignOnBonusCurrencySgd OfferListResponseDataCompensationSignOnBonusCurrency = "SGD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyAed OfferListResponseDataCompensationSignOnBonusCurrency = "AED"
-	OfferListResponseDataCompensationSignOnBonusCurrencyArs OfferListResponseDataCompensationSignOnBonusCurrency = "ARS"
-	OfferListResponseDataCompensationSignOnBonusCurrencyBdt OfferListResponseDataCompensationSignOnBonusCurrency = "BDT"
-	OfferListResponseDataCompensationSignOnBonusCurrencyBwp OfferListResponseDataCompensationSignOnBonusCurrency = "BWP"
-	OfferListResponseDataCompensationSignOnBonusCurrencyClp OfferListResponseDataCompensationSignOnBonusCurrency = "CLP"
-	OfferListResponseDataCompensationSignOnBonusCurrencyCop OfferListResponseDataCompensationSignOnBonusCurrency = "COP"
-	OfferListResponseDataCompensationSignOnBonusCurrencyCrc OfferListResponseDataCompensationSignOnBonusCurrency = "CRC"
-	OfferListResponseDataCompensationSignOnBonusCurrencyEgp OfferListResponseDataCompensationSignOnBonusCurrency = "EGP"
-	OfferListResponseDataCompensationSignOnBonusCurrencyFjd OfferListResponseDataCompensationSignOnBonusCurrency = "FJD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyGel OfferListResponseDataCompensationSignOnBonusCurrency = "GEL"
-	OfferListResponseDataCompensationSignOnBonusCurrencyGhs OfferListResponseDataCompensationSignOnBonusCurrency = "GHS"
-	OfferListResponseDataCompensationSignOnBonusCurrencyIls OfferListResponseDataCompensationSignOnBonusCurrency = "ILS"
-	OfferListResponseDataCompensationSignOnBonusCurrencyKes OfferListResponseDataCompensationSignOnBonusCurrency = "KES"
-	OfferListResponseDataCompensationSignOnBonusCurrencyKrw OfferListResponseDataCompensationSignOnBonusCurrency = "KRW"
-	OfferListResponseDataCompensationSignOnBonusCurrencyLkr OfferListResponseDataCompensationSignOnBonusCurrency = "LKR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyMad OfferListResponseDataCompensationSignOnBonusCurrency = "MAD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyMxn OfferListResponseDataCompensationSignOnBonusCurrency = "MXN"
-	OfferListResponseDataCompensationSignOnBonusCurrencyNpr OfferListResponseDataCompensationSignOnBonusCurrency = "NPR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyPhp OfferListResponseDataCompensationSignOnBonusCurrency = "PHP"
-	OfferListResponseDataCompensationSignOnBonusCurrencyPkr OfferListResponseDataCompensationSignOnBonusCurrency = "PKR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyThb OfferListResponseDataCompensationSignOnBonusCurrency = "THB"
-	OfferListResponseDataCompensationSignOnBonusCurrencyUah OfferListResponseDataCompensationSignOnBonusCurrency = "UAH"
-	OfferListResponseDataCompensationSignOnBonusCurrencyUgx OfferListResponseDataCompensationSignOnBonusCurrency = "UGX"
-	OfferListResponseDataCompensationSignOnBonusCurrencyUyu OfferListResponseDataCompensationSignOnBonusCurrency = "UYU"
-	OfferListResponseDataCompensationSignOnBonusCurrencyVnd OfferListResponseDataCompensationSignOnBonusCurrency = "VND"
-	OfferListResponseDataCompensationSignOnBonusCurrencyZar OfferListResponseDataCompensationSignOnBonusCurrency = "ZAR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyZmw OfferListResponseDataCompensationSignOnBonusCurrency = "ZMW"
-	OfferListResponseDataCompensationSignOnBonusCurrencyTnd OfferListResponseDataCompensationSignOnBonusCurrency = "TND"
-	OfferListResponseDataCompensationSignOnBonusCurrencyNgn OfferListResponseDataCompensationSignOnBonusCurrency = "NGN"
-	OfferListResponseDataCompensationSignOnBonusCurrencyRsd OfferListResponseDataCompensationSignOnBonusCurrency = "RSD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyTwd OfferListResponseDataCompensationSignOnBonusCurrency = "TWD"
-	OfferListResponseDataCompensationSignOnBonusCurrencyGtq OfferListResponseDataCompensationSignOnBonusCurrency = "GTQ"
-	OfferListResponseDataCompensationSignOnBonusCurrencyHnl OfferListResponseDataCompensationSignOnBonusCurrency = "HNL"
-	OfferListResponseDataCompensationSignOnBonusCurrencyDop OfferListResponseDataCompensationSignOnBonusCurrency = "DOP"
-	OfferListResponseDataCompensationSignOnBonusCurrencySar OfferListResponseDataCompensationSignOnBonusCurrency = "SAR"
-	OfferListResponseDataCompensationSignOnBonusCurrencyXaf OfferListResponseDataCompensationSignOnBonusCurrency = "XAF"
-	OfferListResponseDataCompensationSignOnBonusCurrencyPen OfferListResponseDataCompensationSignOnBonusCurrency = "PEN"
-)
-
-func (r OfferListResponseDataCompensationSignOnBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferListResponseDataCompensationSignOnBonusCurrencyUsd, OfferListResponseDataCompensationSignOnBonusCurrencyAud, OfferListResponseDataCompensationSignOnBonusCurrencyBgn, OfferListResponseDataCompensationSignOnBonusCurrencyBrl, OfferListResponseDataCompensationSignOnBonusCurrencyCad, OfferListResponseDataCompensationSignOnBonusCurrencyChf, OfferListResponseDataCompensationSignOnBonusCurrencyCzk, OfferListResponseDataCompensationSignOnBonusCurrencyDkk, OfferListResponseDataCompensationSignOnBonusCurrencyEur, OfferListResponseDataCompensationSignOnBonusCurrencyGbp, OfferListResponseDataCompensationSignOnBonusCurrencyHkd, OfferListResponseDataCompensationSignOnBonusCurrencyHuf, OfferListResponseDataCompensationSignOnBonusCurrencyIdr, OfferListResponseDataCompensationSignOnBonusCurrencyInr, OfferListResponseDataCompensationSignOnBonusCurrencyJpy, OfferListResponseDataCompensationSignOnBonusCurrencyMyr, OfferListResponseDataCompensationSignOnBonusCurrencyNok, OfferListResponseDataCompensationSignOnBonusCurrencyNzd, OfferListResponseDataCompensationSignOnBonusCurrencyCny, OfferListResponseDataCompensationSignOnBonusCurrencyPln, OfferListResponseDataCompensationSignOnBonusCurrencyRon, OfferListResponseDataCompensationSignOnBonusCurrencyTry, OfferListResponseDataCompensationSignOnBonusCurrencySek, OfferListResponseDataCompensationSignOnBonusCurrencySgd, OfferListResponseDataCompensationSignOnBonusCurrencyAed, OfferListResponseDataCompensationSignOnBonusCurrencyArs, OfferListResponseDataCompensationSignOnBonusCurrencyBdt, OfferListResponseDataCompensationSignOnBonusCurrencyBwp, OfferListResponseDataCompensationSignOnBonusCurrencyClp, OfferListResponseDataCompensationSignOnBonusCurrencyCop, OfferListResponseDataCompensationSignOnBonusCurrencyCrc, OfferListResponseDataCompensationSignOnBonusCurrencyEgp, OfferListResponseDataCompensationSignOnBonusCurrencyFjd, OfferListResponseDataCompensationSignOnBonusCurrencyGel, OfferListResponseDataCompensationSignOnBonusCurrencyGhs, OfferListResponseDataCompensationSignOnBonusCurrencyIls, OfferListResponseDataCompensationSignOnBonusCurrencyKes, OfferListResponseDataCompensationSignOnBonusCurrencyKrw, OfferListResponseDataCompensationSignOnBonusCurrencyLkr, OfferListResponseDataCompensationSignOnBonusCurrencyMad, OfferListResponseDataCompensationSignOnBonusCurrencyMxn, OfferListResponseDataCompensationSignOnBonusCurrencyNpr, OfferListResponseDataCompensationSignOnBonusCurrencyPhp, OfferListResponseDataCompensationSignOnBonusCurrencyPkr, OfferListResponseDataCompensationSignOnBonusCurrencyThb, OfferListResponseDataCompensationSignOnBonusCurrencyUah, OfferListResponseDataCompensationSignOnBonusCurrencyUgx, OfferListResponseDataCompensationSignOnBonusCurrencyUyu, OfferListResponseDataCompensationSignOnBonusCurrencyVnd, OfferListResponseDataCompensationSignOnBonusCurrencyZar, OfferListResponseDataCompensationSignOnBonusCurrencyZmw, OfferListResponseDataCompensationSignOnBonusCurrencyTnd, OfferListResponseDataCompensationSignOnBonusCurrencyNgn, OfferListResponseDataCompensationSignOnBonusCurrencyRsd, OfferListResponseDataCompensationSignOnBonusCurrencyTwd, OfferListResponseDataCompensationSignOnBonusCurrencyGtq, OfferListResponseDataCompensationSignOnBonusCurrencyHnl, OfferListResponseDataCompensationSignOnBonusCurrencyDop, OfferListResponseDataCompensationSignOnBonusCurrencySar, OfferListResponseDataCompensationSignOnBonusCurrencyXaf, OfferListResponseDataCompensationSignOnBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferListResponseDataCompensationRelocationBonusCurrency string
-
-const (
-	OfferListResponseDataCompensationRelocationBonusCurrencyUsd OfferListResponseDataCompensationRelocationBonusCurrency = "USD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyAud OfferListResponseDataCompensationRelocationBonusCurrency = "AUD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyBgn OfferListResponseDataCompensationRelocationBonusCurrency = "BGN"
-	OfferListResponseDataCompensationRelocationBonusCurrencyBrl OfferListResponseDataCompensationRelocationBonusCurrency = "BRL"
-	OfferListResponseDataCompensationRelocationBonusCurrencyCad OfferListResponseDataCompensationRelocationBonusCurrency = "CAD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyChf OfferListResponseDataCompensationRelocationBonusCurrency = "CHF"
-	OfferListResponseDataCompensationRelocationBonusCurrencyCzk OfferListResponseDataCompensationRelocationBonusCurrency = "CZK"
-	OfferListResponseDataCompensationRelocationBonusCurrencyDkk OfferListResponseDataCompensationRelocationBonusCurrency = "DKK"
-	OfferListResponseDataCompensationRelocationBonusCurrencyEur OfferListResponseDataCompensationRelocationBonusCurrency = "EUR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyGbp OfferListResponseDataCompensationRelocationBonusCurrency = "GBP"
-	OfferListResponseDataCompensationRelocationBonusCurrencyHkd OfferListResponseDataCompensationRelocationBonusCurrency = "HKD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyHuf OfferListResponseDataCompensationRelocationBonusCurrency = "HUF"
-	OfferListResponseDataCompensationRelocationBonusCurrencyIdr OfferListResponseDataCompensationRelocationBonusCurrency = "IDR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyInr OfferListResponseDataCompensationRelocationBonusCurrency = "INR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyJpy OfferListResponseDataCompensationRelocationBonusCurrency = "JPY"
-	OfferListResponseDataCompensationRelocationBonusCurrencyMyr OfferListResponseDataCompensationRelocationBonusCurrency = "MYR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyNok OfferListResponseDataCompensationRelocationBonusCurrency = "NOK"
-	OfferListResponseDataCompensationRelocationBonusCurrencyNzd OfferListResponseDataCompensationRelocationBonusCurrency = "NZD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyCny OfferListResponseDataCompensationRelocationBonusCurrency = "CNY"
-	OfferListResponseDataCompensationRelocationBonusCurrencyPln OfferListResponseDataCompensationRelocationBonusCurrency = "PLN"
-	OfferListResponseDataCompensationRelocationBonusCurrencyRon OfferListResponseDataCompensationRelocationBonusCurrency = "RON"
-	OfferListResponseDataCompensationRelocationBonusCurrencyTry OfferListResponseDataCompensationRelocationBonusCurrency = "TRY"
-	OfferListResponseDataCompensationRelocationBonusCurrencySek OfferListResponseDataCompensationRelocationBonusCurrency = "SEK"
-	OfferListResponseDataCompensationRelocationBonusCurrencySgd OfferListResponseDataCompensationRelocationBonusCurrency = "SGD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyAed OfferListResponseDataCompensationRelocationBonusCurrency = "AED"
-	OfferListResponseDataCompensationRelocationBonusCurrencyArs OfferListResponseDataCompensationRelocationBonusCurrency = "ARS"
-	OfferListResponseDataCompensationRelocationBonusCurrencyBdt OfferListResponseDataCompensationRelocationBonusCurrency = "BDT"
-	OfferListResponseDataCompensationRelocationBonusCurrencyBwp OfferListResponseDataCompensationRelocationBonusCurrency = "BWP"
-	OfferListResponseDataCompensationRelocationBonusCurrencyClp OfferListResponseDataCompensationRelocationBonusCurrency = "CLP"
-	OfferListResponseDataCompensationRelocationBonusCurrencyCop OfferListResponseDataCompensationRelocationBonusCurrency = "COP"
-	OfferListResponseDataCompensationRelocationBonusCurrencyCrc OfferListResponseDataCompensationRelocationBonusCurrency = "CRC"
-	OfferListResponseDataCompensationRelocationBonusCurrencyEgp OfferListResponseDataCompensationRelocationBonusCurrency = "EGP"
-	OfferListResponseDataCompensationRelocationBonusCurrencyFjd OfferListResponseDataCompensationRelocationBonusCurrency = "FJD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyGel OfferListResponseDataCompensationRelocationBonusCurrency = "GEL"
-	OfferListResponseDataCompensationRelocationBonusCurrencyGhs OfferListResponseDataCompensationRelocationBonusCurrency = "GHS"
-	OfferListResponseDataCompensationRelocationBonusCurrencyIls OfferListResponseDataCompensationRelocationBonusCurrency = "ILS"
-	OfferListResponseDataCompensationRelocationBonusCurrencyKes OfferListResponseDataCompensationRelocationBonusCurrency = "KES"
-	OfferListResponseDataCompensationRelocationBonusCurrencyKrw OfferListResponseDataCompensationRelocationBonusCurrency = "KRW"
-	OfferListResponseDataCompensationRelocationBonusCurrencyLkr OfferListResponseDataCompensationRelocationBonusCurrency = "LKR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyMad OfferListResponseDataCompensationRelocationBonusCurrency = "MAD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyMxn OfferListResponseDataCompensationRelocationBonusCurrency = "MXN"
-	OfferListResponseDataCompensationRelocationBonusCurrencyNpr OfferListResponseDataCompensationRelocationBonusCurrency = "NPR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyPhp OfferListResponseDataCompensationRelocationBonusCurrency = "PHP"
-	OfferListResponseDataCompensationRelocationBonusCurrencyPkr OfferListResponseDataCompensationRelocationBonusCurrency = "PKR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyThb OfferListResponseDataCompensationRelocationBonusCurrency = "THB"
-	OfferListResponseDataCompensationRelocationBonusCurrencyUah OfferListResponseDataCompensationRelocationBonusCurrency = "UAH"
-	OfferListResponseDataCompensationRelocationBonusCurrencyUgx OfferListResponseDataCompensationRelocationBonusCurrency = "UGX"
-	OfferListResponseDataCompensationRelocationBonusCurrencyUyu OfferListResponseDataCompensationRelocationBonusCurrency = "UYU"
-	OfferListResponseDataCompensationRelocationBonusCurrencyVnd OfferListResponseDataCompensationRelocationBonusCurrency = "VND"
-	OfferListResponseDataCompensationRelocationBonusCurrencyZar OfferListResponseDataCompensationRelocationBonusCurrency = "ZAR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyZmw OfferListResponseDataCompensationRelocationBonusCurrency = "ZMW"
-	OfferListResponseDataCompensationRelocationBonusCurrencyTnd OfferListResponseDataCompensationRelocationBonusCurrency = "TND"
-	OfferListResponseDataCompensationRelocationBonusCurrencyNgn OfferListResponseDataCompensationRelocationBonusCurrency = "NGN"
-	OfferListResponseDataCompensationRelocationBonusCurrencyRsd OfferListResponseDataCompensationRelocationBonusCurrency = "RSD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyTwd OfferListResponseDataCompensationRelocationBonusCurrency = "TWD"
-	OfferListResponseDataCompensationRelocationBonusCurrencyGtq OfferListResponseDataCompensationRelocationBonusCurrency = "GTQ"
-	OfferListResponseDataCompensationRelocationBonusCurrencyHnl OfferListResponseDataCompensationRelocationBonusCurrency = "HNL"
-	OfferListResponseDataCompensationRelocationBonusCurrencyDop OfferListResponseDataCompensationRelocationBonusCurrency = "DOP"
-	OfferListResponseDataCompensationRelocationBonusCurrencySar OfferListResponseDataCompensationRelocationBonusCurrency = "SAR"
-	OfferListResponseDataCompensationRelocationBonusCurrencyXaf OfferListResponseDataCompensationRelocationBonusCurrency = "XAF"
-	OfferListResponseDataCompensationRelocationBonusCurrencyPen OfferListResponseDataCompensationRelocationBonusCurrency = "PEN"
-)
-
-func (r OfferListResponseDataCompensationRelocationBonusCurrency) IsKnown() bool {
-	switch r {
-	case OfferListResponseDataCompensationRelocationBonusCurrencyUsd, OfferListResponseDataCompensationRelocationBonusCurrencyAud, OfferListResponseDataCompensationRelocationBonusCurrencyBgn, OfferListResponseDataCompensationRelocationBonusCurrencyBrl, OfferListResponseDataCompensationRelocationBonusCurrencyCad, OfferListResponseDataCompensationRelocationBonusCurrencyChf, OfferListResponseDataCompensationRelocationBonusCurrencyCzk, OfferListResponseDataCompensationRelocationBonusCurrencyDkk, OfferListResponseDataCompensationRelocationBonusCurrencyEur, OfferListResponseDataCompensationRelocationBonusCurrencyGbp, OfferListResponseDataCompensationRelocationBonusCurrencyHkd, OfferListResponseDataCompensationRelocationBonusCurrencyHuf, OfferListResponseDataCompensationRelocationBonusCurrencyIdr, OfferListResponseDataCompensationRelocationBonusCurrencyInr, OfferListResponseDataCompensationRelocationBonusCurrencyJpy, OfferListResponseDataCompensationRelocationBonusCurrencyMyr, OfferListResponseDataCompensationRelocationBonusCurrencyNok, OfferListResponseDataCompensationRelocationBonusCurrencyNzd, OfferListResponseDataCompensationRelocationBonusCurrencyCny, OfferListResponseDataCompensationRelocationBonusCurrencyPln, OfferListResponseDataCompensationRelocationBonusCurrencyRon, OfferListResponseDataCompensationRelocationBonusCurrencyTry, OfferListResponseDataCompensationRelocationBonusCurrencySek, OfferListResponseDataCompensationRelocationBonusCurrencySgd, OfferListResponseDataCompensationRelocationBonusCurrencyAed, OfferListResponseDataCompensationRelocationBonusCurrencyArs, OfferListResponseDataCompensationRelocationBonusCurrencyBdt, OfferListResponseDataCompensationRelocationBonusCurrencyBwp, OfferListResponseDataCompensationRelocationBonusCurrencyClp, OfferListResponseDataCompensationRelocationBonusCurrencyCop, OfferListResponseDataCompensationRelocationBonusCurrencyCrc, OfferListResponseDataCompensationRelocationBonusCurrencyEgp, OfferListResponseDataCompensationRelocationBonusCurrencyFjd, OfferListResponseDataCompensationRelocationBonusCurrencyGel, OfferListResponseDataCompensationRelocationBonusCurrencyGhs, OfferListResponseDataCompensationRelocationBonusCurrencyIls, OfferListResponseDataCompensationRelocationBonusCurrencyKes, OfferListResponseDataCompensationRelocationBonusCurrencyKrw, OfferListResponseDataCompensationRelocationBonusCurrencyLkr, OfferListResponseDataCompensationRelocationBonusCurrencyMad, OfferListResponseDataCompensationRelocationBonusCurrencyMxn, OfferListResponseDataCompensationRelocationBonusCurrencyNpr, OfferListResponseDataCompensationRelocationBonusCurrencyPhp, OfferListResponseDataCompensationRelocationBonusCurrencyPkr, OfferListResponseDataCompensationRelocationBonusCurrencyThb, OfferListResponseDataCompensationRelocationBonusCurrencyUah, OfferListResponseDataCompensationRelocationBonusCurrencyUgx, OfferListResponseDataCompensationRelocationBonusCurrencyUyu, OfferListResponseDataCompensationRelocationBonusCurrencyVnd, OfferListResponseDataCompensationRelocationBonusCurrencyZar, OfferListResponseDataCompensationRelocationBonusCurrencyZmw, OfferListResponseDataCompensationRelocationBonusCurrencyTnd, OfferListResponseDataCompensationRelocationBonusCurrencyNgn, OfferListResponseDataCompensationRelocationBonusCurrencyRsd, OfferListResponseDataCompensationRelocationBonusCurrencyTwd, OfferListResponseDataCompensationRelocationBonusCurrencyGtq, OfferListResponseDataCompensationRelocationBonusCurrencyHnl, OfferListResponseDataCompensationRelocationBonusCurrencyDop, OfferListResponseDataCompensationRelocationBonusCurrencySar, OfferListResponseDataCompensationRelocationBonusCurrencyXaf, OfferListResponseDataCompensationRelocationBonusCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferNewResponseCompensationBasePayAmountCurrency string
-
-const (
-	OfferNewResponseCompensationBasePayAmountCurrencyUsd OfferNewResponseCompensationBasePayAmountCurrency = "USD"
-	OfferNewResponseCompensationBasePayAmountCurrencyAud OfferNewResponseCompensationBasePayAmountCurrency = "AUD"
-	OfferNewResponseCompensationBasePayAmountCurrencyBgn OfferNewResponseCompensationBasePayAmountCurrency = "BGN"
-	OfferNewResponseCompensationBasePayAmountCurrencyBrl OfferNewResponseCompensationBasePayAmountCurrency = "BRL"
-	OfferNewResponseCompensationBasePayAmountCurrencyCad OfferNewResponseCompensationBasePayAmountCurrency = "CAD"
-	OfferNewResponseCompensationBasePayAmountCurrencyChf OfferNewResponseCompensationBasePayAmountCurrency = "CHF"
-	OfferNewResponseCompensationBasePayAmountCurrencyCzk OfferNewResponseCompensationBasePayAmountCurrency = "CZK"
-	OfferNewResponseCompensationBasePayAmountCurrencyDkk OfferNewResponseCompensationBasePayAmountCurrency = "DKK"
-	OfferNewResponseCompensationBasePayAmountCurrencyEur OfferNewResponseCompensationBasePayAmountCurrency = "EUR"
-	OfferNewResponseCompensationBasePayAmountCurrencyGbp OfferNewResponseCompensationBasePayAmountCurrency = "GBP"
-	OfferNewResponseCompensationBasePayAmountCurrencyHkd OfferNewResponseCompensationBasePayAmountCurrency = "HKD"
-	OfferNewResponseCompensationBasePayAmountCurrencyHuf OfferNewResponseCompensationBasePayAmountCurrency = "HUF"
-	OfferNewResponseCompensationBasePayAmountCurrencyIdr OfferNewResponseCompensationBasePayAmountCurrency = "IDR"
-	OfferNewResponseCompensationBasePayAmountCurrencyInr OfferNewResponseCompensationBasePayAmountCurrency = "INR"
-	OfferNewResponseCompensationBasePayAmountCurrencyJpy OfferNewResponseCompensationBasePayAmountCurrency = "JPY"
-	OfferNewResponseCompensationBasePayAmountCurrencyMyr OfferNewResponseCompensationBasePayAmountCurrency = "MYR"
-	OfferNewResponseCompensationBasePayAmountCurrencyNok OfferNewResponseCompensationBasePayAmountCurrency = "NOK"
-	OfferNewResponseCompensationBasePayAmountCurrencyNzd OfferNewResponseCompensationBasePayAmountCurrency = "NZD"
-	OfferNewResponseCompensationBasePayAmountCurrencyCny OfferNewResponseCompensationBasePayAmountCurrency = "CNY"
-	OfferNewResponseCompensationBasePayAmountCurrencyPln OfferNewResponseCompensationBasePayAmountCurrency = "PLN"
-	OfferNewResponseCompensationBasePayAmountCurrencyRon OfferNewResponseCompensationBasePayAmountCurrency = "RON"
-	OfferNewResponseCompensationBasePayAmountCurrencyTry OfferNewResponseCompensationBasePayAmountCurrency = "TRY"
-	OfferNewResponseCompensationBasePayAmountCurrencySek OfferNewResponseCompensationBasePayAmountCurrency = "SEK"
-	OfferNewResponseCompensationBasePayAmountCurrencySgd OfferNewResponseCompensationBasePayAmountCurrency = "SGD"
-	OfferNewResponseCompensationBasePayAmountCurrencyAed OfferNewResponseCompensationBasePayAmountCurrency = "AED"
-	OfferNewResponseCompensationBasePayAmountCurrencyArs OfferNewResponseCompensationBasePayAmountCurrency = "ARS"
-	OfferNewResponseCompensationBasePayAmountCurrencyBdt OfferNewResponseCompensationBasePayAmountCurrency = "BDT"
-	OfferNewResponseCompensationBasePayAmountCurrencyBwp OfferNewResponseCompensationBasePayAmountCurrency = "BWP"
-	OfferNewResponseCompensationBasePayAmountCurrencyClp OfferNewResponseCompensationBasePayAmountCurrency = "CLP"
-	OfferNewResponseCompensationBasePayAmountCurrencyCop OfferNewResponseCompensationBasePayAmountCurrency = "COP"
-	OfferNewResponseCompensationBasePayAmountCurrencyCrc OfferNewResponseCompensationBasePayAmountCurrency = "CRC"
-	OfferNewResponseCompensationBasePayAmountCurrencyEgp OfferNewResponseCompensationBasePayAmountCurrency = "EGP"
-	OfferNewResponseCompensationBasePayAmountCurrencyFjd OfferNewResponseCompensationBasePayAmountCurrency = "FJD"
-	OfferNewResponseCompensationBasePayAmountCurrencyGel OfferNewResponseCompensationBasePayAmountCurrency = "GEL"
-	OfferNewResponseCompensationBasePayAmountCurrencyGhs OfferNewResponseCompensationBasePayAmountCurrency = "GHS"
-	OfferNewResponseCompensationBasePayAmountCurrencyIls OfferNewResponseCompensationBasePayAmountCurrency = "ILS"
-	OfferNewResponseCompensationBasePayAmountCurrencyKes OfferNewResponseCompensationBasePayAmountCurrency = "KES"
-	OfferNewResponseCompensationBasePayAmountCurrencyKrw OfferNewResponseCompensationBasePayAmountCurrency = "KRW"
-	OfferNewResponseCompensationBasePayAmountCurrencyLkr OfferNewResponseCompensationBasePayAmountCurrency = "LKR"
-	OfferNewResponseCompensationBasePayAmountCurrencyMad OfferNewResponseCompensationBasePayAmountCurrency = "MAD"
-	OfferNewResponseCompensationBasePayAmountCurrencyMxn OfferNewResponseCompensationBasePayAmountCurrency = "MXN"
-	OfferNewResponseCompensationBasePayAmountCurrencyNpr OfferNewResponseCompensationBasePayAmountCurrency = "NPR"
-	OfferNewResponseCompensationBasePayAmountCurrencyPhp OfferNewResponseCompensationBasePayAmountCurrency = "PHP"
-	OfferNewResponseCompensationBasePayAmountCurrencyPkr OfferNewResponseCompensationBasePayAmountCurrency = "PKR"
-	OfferNewResponseCompensationBasePayAmountCurrencyThb OfferNewResponseCompensationBasePayAmountCurrency = "THB"
-	OfferNewResponseCompensationBasePayAmountCurrencyUah OfferNewResponseCompensationBasePayAmountCurrency = "UAH"
-	OfferNewResponseCompensationBasePayAmountCurrencyUgx OfferNewResponseCompensationBasePayAmountCurrency = "UGX"
-	OfferNewResponseCompensationBasePayAmountCurrencyUyu OfferNewResponseCompensationBasePayAmountCurrency = "UYU"
-	OfferNewResponseCompensationBasePayAmountCurrencyVnd OfferNewResponseCompensationBasePayAmountCurrency = "VND"
-	OfferNewResponseCompensationBasePayAmountCurrencyZar OfferNewResponseCompensationBasePayAmountCurrency = "ZAR"
-	OfferNewResponseCompensationBasePayAmountCurrencyZmw OfferNewResponseCompensationBasePayAmountCurrency = "ZMW"
-	OfferNewResponseCompensationBasePayAmountCurrencyTnd OfferNewResponseCompensationBasePayAmountCurrency = "TND"
-	OfferNewResponseCompensationBasePayAmountCurrencyNgn OfferNewResponseCompensationBasePayAmountCurrency = "NGN"
-	OfferNewResponseCompensationBasePayAmountCurrencyRsd OfferNewResponseCompensationBasePayAmountCurrency = "RSD"
-	OfferNewResponseCompensationBasePayAmountCurrencyTwd OfferNewResponseCompensationBasePayAmountCurrency = "TWD"
-	OfferNewResponseCompensationBasePayAmountCurrencyGtq OfferNewResponseCompensationBasePayAmountCurrency = "GTQ"
-	OfferNewResponseCompensationBasePayAmountCurrencyHnl OfferNewResponseCompensationBasePayAmountCurrency = "HNL"
-	OfferNewResponseCompensationBasePayAmountCurrencyDop OfferNewResponseCompensationBasePayAmountCurrency = "DOP"
-	OfferNewResponseCompensationBasePayAmountCurrencySar OfferNewResponseCompensationBasePayAmountCurrency = "SAR"
-	OfferNewResponseCompensationBasePayAmountCurrencyXaf OfferNewResponseCompensationBasePayAmountCurrency = "XAF"
-	OfferNewResponseCompensationBasePayAmountCurrencyPen OfferNewResponseCompensationBasePayAmountCurrency = "PEN"
-)
-
-func (r OfferNewResponseCompensationBasePayAmountCurrency) IsKnown() bool {
-	switch r {
-	case OfferNewResponseCompensationBasePayAmountCurrencyUsd, OfferNewResponseCompensationBasePayAmountCurrencyAud, OfferNewResponseCompensationBasePayAmountCurrencyBgn, OfferNewResponseCompensationBasePayAmountCurrencyBrl, OfferNewResponseCompensationBasePayAmountCurrencyCad, OfferNewResponseCompensationBasePayAmountCurrencyChf, OfferNewResponseCompensationBasePayAmountCurrencyCzk, OfferNewResponseCompensationBasePayAmountCurrencyDkk, OfferNewResponseCompensationBasePayAmountCurrencyEur, OfferNewResponseCompensationBasePayAmountCurrencyGbp, OfferNewResponseCompensationBasePayAmountCurrencyHkd, OfferNewResponseCompensationBasePayAmountCurrencyHuf, OfferNewResponseCompensationBasePayAmountCurrencyIdr, OfferNewResponseCompensationBasePayAmountCurrencyInr, OfferNewResponseCompensationBasePayAmountCurrencyJpy, OfferNewResponseCompensationBasePayAmountCurrencyMyr, OfferNewResponseCompensationBasePayAmountCurrencyNok, OfferNewResponseCompensationBasePayAmountCurrencyNzd, OfferNewResponseCompensationBasePayAmountCurrencyCny, OfferNewResponseCompensationBasePayAmountCurrencyPln, OfferNewResponseCompensationBasePayAmountCurrencyRon, OfferNewResponseCompensationBasePayAmountCurrencyTry, OfferNewResponseCompensationBasePayAmountCurrencySek, OfferNewResponseCompensationBasePayAmountCurrencySgd, OfferNewResponseCompensationBasePayAmountCurrencyAed, OfferNewResponseCompensationBasePayAmountCurrencyArs, OfferNewResponseCompensationBasePayAmountCurrencyBdt, OfferNewResponseCompensationBasePayAmountCurrencyBwp, OfferNewResponseCompensationBasePayAmountCurrencyClp, OfferNewResponseCompensationBasePayAmountCurrencyCop, OfferNewResponseCompensationBasePayAmountCurrencyCrc, OfferNewResponseCompensationBasePayAmountCurrencyEgp, OfferNewResponseCompensationBasePayAmountCurrencyFjd, OfferNewResponseCompensationBasePayAmountCurrencyGel, OfferNewResponseCompensationBasePayAmountCurrencyGhs, OfferNewResponseCompensationBasePayAmountCurrencyIls, OfferNewResponseCompensationBasePayAmountCurrencyKes, OfferNewResponseCompensationBasePayAmountCurrencyKrw, OfferNewResponseCompensationBasePayAmountCurrencyLkr, OfferNewResponseCompensationBasePayAmountCurrencyMad, OfferNewResponseCompensationBasePayAmountCurrencyMxn, OfferNewResponseCompensationBasePayAmountCurrencyNpr, OfferNewResponseCompensationBasePayAmountCurrencyPhp, OfferNewResponseCompensationBasePayAmountCurrencyPkr, OfferNewResponseCompensationBasePayAmountCurrencyThb, OfferNewResponseCompensationBasePayAmountCurrencyUah, OfferNewResponseCompensationBasePayAmountCurrencyUgx, OfferNewResponseCompensationBasePayAmountCurrencyUyu, OfferNewResponseCompensationBasePayAmountCurrencyVnd, OfferNewResponseCompensationBasePayAmountCurrencyZar, OfferNewResponseCompensationBasePayAmountCurrencyZmw, OfferNewResponseCompensationBasePayAmountCurrencyTnd, OfferNewResponseCompensationBasePayAmountCurrencyNgn, OfferNewResponseCompensationBasePayAmountCurrencyRsd, OfferNewResponseCompensationBasePayAmountCurrencyTwd, OfferNewResponseCompensationBasePayAmountCurrencyGtq, OfferNewResponseCompensationBasePayAmountCurrencyHnl, OfferNewResponseCompensationBasePayAmountCurrencyDop, OfferNewResponseCompensationBasePayAmountCurrencySar, OfferNewResponseCompensationBasePayAmountCurrencyXaf, OfferNewResponseCompensationBasePayAmountCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferNewResponseCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferNewResponseCompensationBasePayVariableRateCurrencyUsd OfferNewResponseCompensationBasePayVariableRateCurrency = "USD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyAud OfferNewResponseCompensationBasePayVariableRateCurrency = "AUD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyBgn OfferNewResponseCompensationBasePayVariableRateCurrency = "BGN"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyBrl OfferNewResponseCompensationBasePayVariableRateCurrency = "BRL"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyCad OfferNewResponseCompensationBasePayVariableRateCurrency = "CAD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyChf OfferNewResponseCompensationBasePayVariableRateCurrency = "CHF"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyCzk OfferNewResponseCompensationBasePayVariableRateCurrency = "CZK"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyDkk OfferNewResponseCompensationBasePayVariableRateCurrency = "DKK"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyEur OfferNewResponseCompensationBasePayVariableRateCurrency = "EUR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyGbp OfferNewResponseCompensationBasePayVariableRateCurrency = "GBP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyHkd OfferNewResponseCompensationBasePayVariableRateCurrency = "HKD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyHuf OfferNewResponseCompensationBasePayVariableRateCurrency = "HUF"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyIdr OfferNewResponseCompensationBasePayVariableRateCurrency = "IDR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyInr OfferNewResponseCompensationBasePayVariableRateCurrency = "INR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyJpy OfferNewResponseCompensationBasePayVariableRateCurrency = "JPY"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyMyr OfferNewResponseCompensationBasePayVariableRateCurrency = "MYR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyNok OfferNewResponseCompensationBasePayVariableRateCurrency = "NOK"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyNzd OfferNewResponseCompensationBasePayVariableRateCurrency = "NZD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyCny OfferNewResponseCompensationBasePayVariableRateCurrency = "CNY"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyPln OfferNewResponseCompensationBasePayVariableRateCurrency = "PLN"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyRon OfferNewResponseCompensationBasePayVariableRateCurrency = "RON"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyTry OfferNewResponseCompensationBasePayVariableRateCurrency = "TRY"
-	OfferNewResponseCompensationBasePayVariableRateCurrencySek OfferNewResponseCompensationBasePayVariableRateCurrency = "SEK"
-	OfferNewResponseCompensationBasePayVariableRateCurrencySgd OfferNewResponseCompensationBasePayVariableRateCurrency = "SGD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyAed OfferNewResponseCompensationBasePayVariableRateCurrency = "AED"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyArs OfferNewResponseCompensationBasePayVariableRateCurrency = "ARS"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyBdt OfferNewResponseCompensationBasePayVariableRateCurrency = "BDT"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyBwp OfferNewResponseCompensationBasePayVariableRateCurrency = "BWP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyClp OfferNewResponseCompensationBasePayVariableRateCurrency = "CLP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyCop OfferNewResponseCompensationBasePayVariableRateCurrency = "COP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyCrc OfferNewResponseCompensationBasePayVariableRateCurrency = "CRC"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyEgp OfferNewResponseCompensationBasePayVariableRateCurrency = "EGP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyFjd OfferNewResponseCompensationBasePayVariableRateCurrency = "FJD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyGel OfferNewResponseCompensationBasePayVariableRateCurrency = "GEL"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyGhs OfferNewResponseCompensationBasePayVariableRateCurrency = "GHS"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyIls OfferNewResponseCompensationBasePayVariableRateCurrency = "ILS"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyKes OfferNewResponseCompensationBasePayVariableRateCurrency = "KES"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyKrw OfferNewResponseCompensationBasePayVariableRateCurrency = "KRW"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyLkr OfferNewResponseCompensationBasePayVariableRateCurrency = "LKR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyMad OfferNewResponseCompensationBasePayVariableRateCurrency = "MAD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyMxn OfferNewResponseCompensationBasePayVariableRateCurrency = "MXN"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyNpr OfferNewResponseCompensationBasePayVariableRateCurrency = "NPR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyPhp OfferNewResponseCompensationBasePayVariableRateCurrency = "PHP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyPkr OfferNewResponseCompensationBasePayVariableRateCurrency = "PKR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyThb OfferNewResponseCompensationBasePayVariableRateCurrency = "THB"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyUah OfferNewResponseCompensationBasePayVariableRateCurrency = "UAH"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyUgx OfferNewResponseCompensationBasePayVariableRateCurrency = "UGX"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyUyu OfferNewResponseCompensationBasePayVariableRateCurrency = "UYU"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyVnd OfferNewResponseCompensationBasePayVariableRateCurrency = "VND"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyZar OfferNewResponseCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyZmw OfferNewResponseCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyTnd OfferNewResponseCompensationBasePayVariableRateCurrency = "TND"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyNgn OfferNewResponseCompensationBasePayVariableRateCurrency = "NGN"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyRsd OfferNewResponseCompensationBasePayVariableRateCurrency = "RSD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyTwd OfferNewResponseCompensationBasePayVariableRateCurrency = "TWD"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyGtq OfferNewResponseCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyHnl OfferNewResponseCompensationBasePayVariableRateCurrency = "HNL"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyDop OfferNewResponseCompensationBasePayVariableRateCurrency = "DOP"
-	OfferNewResponseCompensationBasePayVariableRateCurrencySar OfferNewResponseCompensationBasePayVariableRateCurrency = "SAR"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyXaf OfferNewResponseCompensationBasePayVariableRateCurrency = "XAF"
-	OfferNewResponseCompensationBasePayVariableRateCurrencyPen OfferNewResponseCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferNewResponseCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferNewResponseCompensationBasePayVariableRateCurrencyUsd, OfferNewResponseCompensationBasePayVariableRateCurrencyAud, OfferNewResponseCompensationBasePayVariableRateCurrencyBgn, OfferNewResponseCompensationBasePayVariableRateCurrencyBrl, OfferNewResponseCompensationBasePayVariableRateCurrencyCad, OfferNewResponseCompensationBasePayVariableRateCurrencyChf, OfferNewResponseCompensationBasePayVariableRateCurrencyCzk, OfferNewResponseCompensationBasePayVariableRateCurrencyDkk, OfferNewResponseCompensationBasePayVariableRateCurrencyEur, OfferNewResponseCompensationBasePayVariableRateCurrencyGbp, OfferNewResponseCompensationBasePayVariableRateCurrencyHkd, OfferNewResponseCompensationBasePayVariableRateCurrencyHuf, OfferNewResponseCompensationBasePayVariableRateCurrencyIdr, OfferNewResponseCompensationBasePayVariableRateCurrencyInr, OfferNewResponseCompensationBasePayVariableRateCurrencyJpy, OfferNewResponseCompensationBasePayVariableRateCurrencyMyr, OfferNewResponseCompensationBasePayVariableRateCurrencyNok, OfferNewResponseCompensationBasePayVariableRateCurrencyNzd, OfferNewResponseCompensationBasePayVariableRateCurrencyCny, OfferNewResponseCompensationBasePayVariableRateCurrencyPln, OfferNewResponseCompensationBasePayVariableRateCurrencyRon, OfferNewResponseCompensationBasePayVariableRateCurrencyTry, OfferNewResponseCompensationBasePayVariableRateCurrencySek, OfferNewResponseCompensationBasePayVariableRateCurrencySgd, OfferNewResponseCompensationBasePayVariableRateCurrencyAed, OfferNewResponseCompensationBasePayVariableRateCurrencyArs, OfferNewResponseCompensationBasePayVariableRateCurrencyBdt, OfferNewResponseCompensationBasePayVariableRateCurrencyBwp, OfferNewResponseCompensationBasePayVariableRateCurrencyClp, OfferNewResponseCompensationBasePayVariableRateCurrencyCop, OfferNewResponseCompensationBasePayVariableRateCurrencyCrc, OfferNewResponseCompensationBasePayVariableRateCurrencyEgp, OfferNewResponseCompensationBasePayVariableRateCurrencyFjd, OfferNewResponseCompensationBasePayVariableRateCurrencyGel, OfferNewResponseCompensationBasePayVariableRateCurrencyGhs, OfferNewResponseCompensationBasePayVariableRateCurrencyIls, OfferNewResponseCompensationBasePayVariableRateCurrencyKes, OfferNewResponseCompensationBasePayVariableRateCurrencyKrw, OfferNewResponseCompensationBasePayVariableRateCurrencyLkr, OfferNewResponseCompensationBasePayVariableRateCurrencyMad, OfferNewResponseCompensationBasePayVariableRateCurrencyMxn, OfferNewResponseCompensationBasePayVariableRateCurrencyNpr, OfferNewResponseCompensationBasePayVariableRateCurrencyPhp, OfferNewResponseCompensationBasePayVariableRateCurrencyPkr, OfferNewResponseCompensationBasePayVariableRateCurrencyThb, OfferNewResponseCompensationBasePayVariableRateCurrencyUah, OfferNewResponseCompensationBasePayVariableRateCurrencyUgx, OfferNewResponseCompensationBasePayVariableRateCurrencyUyu, OfferNewResponseCompensationBasePayVariableRateCurrencyVnd, OfferNewResponseCompensationBasePayVariableRateCurrencyZar, OfferNewResponseCompensationBasePayVariableRateCurrencyZmw, OfferNewResponseCompensationBasePayVariableRateCurrencyTnd, OfferNewResponseCompensationBasePayVariableRateCurrencyNgn, OfferNewResponseCompensationBasePayVariableRateCurrencyRsd, OfferNewResponseCompensationBasePayVariableRateCurrencyTwd, OfferNewResponseCompensationBasePayVariableRateCurrencyGtq, OfferNewResponseCompensationBasePayVariableRateCurrencyHnl, OfferNewResponseCompensationBasePayVariableRateCurrencyDop, OfferNewResponseCompensationBasePayVariableRateCurrencySar, OfferNewResponseCompensationBasePayVariableRateCurrencyXaf, OfferNewResponseCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferVoidResponseCompensationBasePayAmountCurrency string
-
-const (
-	OfferVoidResponseCompensationBasePayAmountCurrencyUsd OfferVoidResponseCompensationBasePayAmountCurrency = "USD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyAud OfferVoidResponseCompensationBasePayAmountCurrency = "AUD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyBgn OfferVoidResponseCompensationBasePayAmountCurrency = "BGN"
-	OfferVoidResponseCompensationBasePayAmountCurrencyBrl OfferVoidResponseCompensationBasePayAmountCurrency = "BRL"
-	OfferVoidResponseCompensationBasePayAmountCurrencyCad OfferVoidResponseCompensationBasePayAmountCurrency = "CAD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyChf OfferVoidResponseCompensationBasePayAmountCurrency = "CHF"
-	OfferVoidResponseCompensationBasePayAmountCurrencyCzk OfferVoidResponseCompensationBasePayAmountCurrency = "CZK"
-	OfferVoidResponseCompensationBasePayAmountCurrencyDkk OfferVoidResponseCompensationBasePayAmountCurrency = "DKK"
-	OfferVoidResponseCompensationBasePayAmountCurrencyEur OfferVoidResponseCompensationBasePayAmountCurrency = "EUR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyGbp OfferVoidResponseCompensationBasePayAmountCurrency = "GBP"
-	OfferVoidResponseCompensationBasePayAmountCurrencyHkd OfferVoidResponseCompensationBasePayAmountCurrency = "HKD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyHuf OfferVoidResponseCompensationBasePayAmountCurrency = "HUF"
-	OfferVoidResponseCompensationBasePayAmountCurrencyIdr OfferVoidResponseCompensationBasePayAmountCurrency = "IDR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyInr OfferVoidResponseCompensationBasePayAmountCurrency = "INR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyJpy OfferVoidResponseCompensationBasePayAmountCurrency = "JPY"
-	OfferVoidResponseCompensationBasePayAmountCurrencyMyr OfferVoidResponseCompensationBasePayAmountCurrency = "MYR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyNok OfferVoidResponseCompensationBasePayAmountCurrency = "NOK"
-	OfferVoidResponseCompensationBasePayAmountCurrencyNzd OfferVoidResponseCompensationBasePayAmountCurrency = "NZD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyCny OfferVoidResponseCompensationBasePayAmountCurrency = "CNY"
-	OfferVoidResponseCompensationBasePayAmountCurrencyPln OfferVoidResponseCompensationBasePayAmountCurrency = "PLN"
-	OfferVoidResponseCompensationBasePayAmountCurrencyRon OfferVoidResponseCompensationBasePayAmountCurrency = "RON"
-	OfferVoidResponseCompensationBasePayAmountCurrencyTry OfferVoidResponseCompensationBasePayAmountCurrency = "TRY"
-	OfferVoidResponseCompensationBasePayAmountCurrencySek OfferVoidResponseCompensationBasePayAmountCurrency = "SEK"
-	OfferVoidResponseCompensationBasePayAmountCurrencySgd OfferVoidResponseCompensationBasePayAmountCurrency = "SGD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyAed OfferVoidResponseCompensationBasePayAmountCurrency = "AED"
-	OfferVoidResponseCompensationBasePayAmountCurrencyArs OfferVoidResponseCompensationBasePayAmountCurrency = "ARS"
-	OfferVoidResponseCompensationBasePayAmountCurrencyBdt OfferVoidResponseCompensationBasePayAmountCurrency = "BDT"
-	OfferVoidResponseCompensationBasePayAmountCurrencyBwp OfferVoidResponseCompensationBasePayAmountCurrency = "BWP"
-	OfferVoidResponseCompensationBasePayAmountCurrencyClp OfferVoidResponseCompensationBasePayAmountCurrency = "CLP"
-	OfferVoidResponseCompensationBasePayAmountCurrencyCop OfferVoidResponseCompensationBasePayAmountCurrency = "COP"
-	OfferVoidResponseCompensationBasePayAmountCurrencyCrc OfferVoidResponseCompensationBasePayAmountCurrency = "CRC"
-	OfferVoidResponseCompensationBasePayAmountCurrencyEgp OfferVoidResponseCompensationBasePayAmountCurrency = "EGP"
-	OfferVoidResponseCompensationBasePayAmountCurrencyFjd OfferVoidResponseCompensationBasePayAmountCurrency = "FJD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyGel OfferVoidResponseCompensationBasePayAmountCurrency = "GEL"
-	OfferVoidResponseCompensationBasePayAmountCurrencyGhs OfferVoidResponseCompensationBasePayAmountCurrency = "GHS"
-	OfferVoidResponseCompensationBasePayAmountCurrencyIls OfferVoidResponseCompensationBasePayAmountCurrency = "ILS"
-	OfferVoidResponseCompensationBasePayAmountCurrencyKes OfferVoidResponseCompensationBasePayAmountCurrency = "KES"
-	OfferVoidResponseCompensationBasePayAmountCurrencyKrw OfferVoidResponseCompensationBasePayAmountCurrency = "KRW"
-	OfferVoidResponseCompensationBasePayAmountCurrencyLkr OfferVoidResponseCompensationBasePayAmountCurrency = "LKR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyMad OfferVoidResponseCompensationBasePayAmountCurrency = "MAD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyMxn OfferVoidResponseCompensationBasePayAmountCurrency = "MXN"
-	OfferVoidResponseCompensationBasePayAmountCurrencyNpr OfferVoidResponseCompensationBasePayAmountCurrency = "NPR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyPhp OfferVoidResponseCompensationBasePayAmountCurrency = "PHP"
-	OfferVoidResponseCompensationBasePayAmountCurrencyPkr OfferVoidResponseCompensationBasePayAmountCurrency = "PKR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyThb OfferVoidResponseCompensationBasePayAmountCurrency = "THB"
-	OfferVoidResponseCompensationBasePayAmountCurrencyUah OfferVoidResponseCompensationBasePayAmountCurrency = "UAH"
-	OfferVoidResponseCompensationBasePayAmountCurrencyUgx OfferVoidResponseCompensationBasePayAmountCurrency = "UGX"
-	OfferVoidResponseCompensationBasePayAmountCurrencyUyu OfferVoidResponseCompensationBasePayAmountCurrency = "UYU"
-	OfferVoidResponseCompensationBasePayAmountCurrencyVnd OfferVoidResponseCompensationBasePayAmountCurrency = "VND"
-	OfferVoidResponseCompensationBasePayAmountCurrencyZar OfferVoidResponseCompensationBasePayAmountCurrency = "ZAR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyZmw OfferVoidResponseCompensationBasePayAmountCurrency = "ZMW"
-	OfferVoidResponseCompensationBasePayAmountCurrencyTnd OfferVoidResponseCompensationBasePayAmountCurrency = "TND"
-	OfferVoidResponseCompensationBasePayAmountCurrencyNgn OfferVoidResponseCompensationBasePayAmountCurrency = "NGN"
-	OfferVoidResponseCompensationBasePayAmountCurrencyRsd OfferVoidResponseCompensationBasePayAmountCurrency = "RSD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyTwd OfferVoidResponseCompensationBasePayAmountCurrency = "TWD"
-	OfferVoidResponseCompensationBasePayAmountCurrencyGtq OfferVoidResponseCompensationBasePayAmountCurrency = "GTQ"
-	OfferVoidResponseCompensationBasePayAmountCurrencyHnl OfferVoidResponseCompensationBasePayAmountCurrency = "HNL"
-	OfferVoidResponseCompensationBasePayAmountCurrencyDop OfferVoidResponseCompensationBasePayAmountCurrency = "DOP"
-	OfferVoidResponseCompensationBasePayAmountCurrencySar OfferVoidResponseCompensationBasePayAmountCurrency = "SAR"
-	OfferVoidResponseCompensationBasePayAmountCurrencyXaf OfferVoidResponseCompensationBasePayAmountCurrency = "XAF"
-	OfferVoidResponseCompensationBasePayAmountCurrencyPen OfferVoidResponseCompensationBasePayAmountCurrency = "PEN"
-)
-
-func (r OfferVoidResponseCompensationBasePayAmountCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidResponseCompensationBasePayAmountCurrencyUsd, OfferVoidResponseCompensationBasePayAmountCurrencyAud, OfferVoidResponseCompensationBasePayAmountCurrencyBgn, OfferVoidResponseCompensationBasePayAmountCurrencyBrl, OfferVoidResponseCompensationBasePayAmountCurrencyCad, OfferVoidResponseCompensationBasePayAmountCurrencyChf, OfferVoidResponseCompensationBasePayAmountCurrencyCzk, OfferVoidResponseCompensationBasePayAmountCurrencyDkk, OfferVoidResponseCompensationBasePayAmountCurrencyEur, OfferVoidResponseCompensationBasePayAmountCurrencyGbp, OfferVoidResponseCompensationBasePayAmountCurrencyHkd, OfferVoidResponseCompensationBasePayAmountCurrencyHuf, OfferVoidResponseCompensationBasePayAmountCurrencyIdr, OfferVoidResponseCompensationBasePayAmountCurrencyInr, OfferVoidResponseCompensationBasePayAmountCurrencyJpy, OfferVoidResponseCompensationBasePayAmountCurrencyMyr, OfferVoidResponseCompensationBasePayAmountCurrencyNok, OfferVoidResponseCompensationBasePayAmountCurrencyNzd, OfferVoidResponseCompensationBasePayAmountCurrencyCny, OfferVoidResponseCompensationBasePayAmountCurrencyPln, OfferVoidResponseCompensationBasePayAmountCurrencyRon, OfferVoidResponseCompensationBasePayAmountCurrencyTry, OfferVoidResponseCompensationBasePayAmountCurrencySek, OfferVoidResponseCompensationBasePayAmountCurrencySgd, OfferVoidResponseCompensationBasePayAmountCurrencyAed, OfferVoidResponseCompensationBasePayAmountCurrencyArs, OfferVoidResponseCompensationBasePayAmountCurrencyBdt, OfferVoidResponseCompensationBasePayAmountCurrencyBwp, OfferVoidResponseCompensationBasePayAmountCurrencyClp, OfferVoidResponseCompensationBasePayAmountCurrencyCop, OfferVoidResponseCompensationBasePayAmountCurrencyCrc, OfferVoidResponseCompensationBasePayAmountCurrencyEgp, OfferVoidResponseCompensationBasePayAmountCurrencyFjd, OfferVoidResponseCompensationBasePayAmountCurrencyGel, OfferVoidResponseCompensationBasePayAmountCurrencyGhs, OfferVoidResponseCompensationBasePayAmountCurrencyIls, OfferVoidResponseCompensationBasePayAmountCurrencyKes, OfferVoidResponseCompensationBasePayAmountCurrencyKrw, OfferVoidResponseCompensationBasePayAmountCurrencyLkr, OfferVoidResponseCompensationBasePayAmountCurrencyMad, OfferVoidResponseCompensationBasePayAmountCurrencyMxn, OfferVoidResponseCompensationBasePayAmountCurrencyNpr, OfferVoidResponseCompensationBasePayAmountCurrencyPhp, OfferVoidResponseCompensationBasePayAmountCurrencyPkr, OfferVoidResponseCompensationBasePayAmountCurrencyThb, OfferVoidResponseCompensationBasePayAmountCurrencyUah, OfferVoidResponseCompensationBasePayAmountCurrencyUgx, OfferVoidResponseCompensationBasePayAmountCurrencyUyu, OfferVoidResponseCompensationBasePayAmountCurrencyVnd, OfferVoidResponseCompensationBasePayAmountCurrencyZar, OfferVoidResponseCompensationBasePayAmountCurrencyZmw, OfferVoidResponseCompensationBasePayAmountCurrencyTnd, OfferVoidResponseCompensationBasePayAmountCurrencyNgn, OfferVoidResponseCompensationBasePayAmountCurrencyRsd, OfferVoidResponseCompensationBasePayAmountCurrencyTwd, OfferVoidResponseCompensationBasePayAmountCurrencyGtq, OfferVoidResponseCompensationBasePayAmountCurrencyHnl, OfferVoidResponseCompensationBasePayAmountCurrencyDop, OfferVoidResponseCompensationBasePayAmountCurrencySar, OfferVoidResponseCompensationBasePayAmountCurrencyXaf, OfferVoidResponseCompensationBasePayAmountCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferVoidResponseCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyUsd OfferVoidResponseCompensationBasePayVariableRateCurrency = "USD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyAud OfferVoidResponseCompensationBasePayVariableRateCurrency = "AUD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyBgn OfferVoidResponseCompensationBasePayVariableRateCurrency = "BGN"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyBrl OfferVoidResponseCompensationBasePayVariableRateCurrency = "BRL"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyCad OfferVoidResponseCompensationBasePayVariableRateCurrency = "CAD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyChf OfferVoidResponseCompensationBasePayVariableRateCurrency = "CHF"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyCzk OfferVoidResponseCompensationBasePayVariableRateCurrency = "CZK"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyDkk OfferVoidResponseCompensationBasePayVariableRateCurrency = "DKK"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyEur OfferVoidResponseCompensationBasePayVariableRateCurrency = "EUR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyGbp OfferVoidResponseCompensationBasePayVariableRateCurrency = "GBP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyHkd OfferVoidResponseCompensationBasePayVariableRateCurrency = "HKD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyHuf OfferVoidResponseCompensationBasePayVariableRateCurrency = "HUF"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyIdr OfferVoidResponseCompensationBasePayVariableRateCurrency = "IDR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyInr OfferVoidResponseCompensationBasePayVariableRateCurrency = "INR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyJpy OfferVoidResponseCompensationBasePayVariableRateCurrency = "JPY"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyMyr OfferVoidResponseCompensationBasePayVariableRateCurrency = "MYR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyNok OfferVoidResponseCompensationBasePayVariableRateCurrency = "NOK"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyNzd OfferVoidResponseCompensationBasePayVariableRateCurrency = "NZD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyCny OfferVoidResponseCompensationBasePayVariableRateCurrency = "CNY"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyPln OfferVoidResponseCompensationBasePayVariableRateCurrency = "PLN"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyRon OfferVoidResponseCompensationBasePayVariableRateCurrency = "RON"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyTry OfferVoidResponseCompensationBasePayVariableRateCurrency = "TRY"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencySek OfferVoidResponseCompensationBasePayVariableRateCurrency = "SEK"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencySgd OfferVoidResponseCompensationBasePayVariableRateCurrency = "SGD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyAed OfferVoidResponseCompensationBasePayVariableRateCurrency = "AED"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyArs OfferVoidResponseCompensationBasePayVariableRateCurrency = "ARS"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyBdt OfferVoidResponseCompensationBasePayVariableRateCurrency = "BDT"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyBwp OfferVoidResponseCompensationBasePayVariableRateCurrency = "BWP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyClp OfferVoidResponseCompensationBasePayVariableRateCurrency = "CLP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyCop OfferVoidResponseCompensationBasePayVariableRateCurrency = "COP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyCrc OfferVoidResponseCompensationBasePayVariableRateCurrency = "CRC"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyEgp OfferVoidResponseCompensationBasePayVariableRateCurrency = "EGP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyFjd OfferVoidResponseCompensationBasePayVariableRateCurrency = "FJD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyGel OfferVoidResponseCompensationBasePayVariableRateCurrency = "GEL"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyGhs OfferVoidResponseCompensationBasePayVariableRateCurrency = "GHS"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyIls OfferVoidResponseCompensationBasePayVariableRateCurrency = "ILS"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyKes OfferVoidResponseCompensationBasePayVariableRateCurrency = "KES"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyKrw OfferVoidResponseCompensationBasePayVariableRateCurrency = "KRW"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyLkr OfferVoidResponseCompensationBasePayVariableRateCurrency = "LKR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyMad OfferVoidResponseCompensationBasePayVariableRateCurrency = "MAD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyMxn OfferVoidResponseCompensationBasePayVariableRateCurrency = "MXN"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyNpr OfferVoidResponseCompensationBasePayVariableRateCurrency = "NPR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyPhp OfferVoidResponseCompensationBasePayVariableRateCurrency = "PHP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyPkr OfferVoidResponseCompensationBasePayVariableRateCurrency = "PKR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyThb OfferVoidResponseCompensationBasePayVariableRateCurrency = "THB"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyUah OfferVoidResponseCompensationBasePayVariableRateCurrency = "UAH"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyUgx OfferVoidResponseCompensationBasePayVariableRateCurrency = "UGX"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyUyu OfferVoidResponseCompensationBasePayVariableRateCurrency = "UYU"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyVnd OfferVoidResponseCompensationBasePayVariableRateCurrency = "VND"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyZar OfferVoidResponseCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyZmw OfferVoidResponseCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyTnd OfferVoidResponseCompensationBasePayVariableRateCurrency = "TND"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyNgn OfferVoidResponseCompensationBasePayVariableRateCurrency = "NGN"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyRsd OfferVoidResponseCompensationBasePayVariableRateCurrency = "RSD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyTwd OfferVoidResponseCompensationBasePayVariableRateCurrency = "TWD"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyGtq OfferVoidResponseCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyHnl OfferVoidResponseCompensationBasePayVariableRateCurrency = "HNL"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyDop OfferVoidResponseCompensationBasePayVariableRateCurrency = "DOP"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencySar OfferVoidResponseCompensationBasePayVariableRateCurrency = "SAR"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyXaf OfferVoidResponseCompensationBasePayVariableRateCurrency = "XAF"
-	OfferVoidResponseCompensationBasePayVariableRateCurrencyPen OfferVoidResponseCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferVoidResponseCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferVoidResponseCompensationBasePayVariableRateCurrencyUsd, OfferVoidResponseCompensationBasePayVariableRateCurrencyAud, OfferVoidResponseCompensationBasePayVariableRateCurrencyBgn, OfferVoidResponseCompensationBasePayVariableRateCurrencyBrl, OfferVoidResponseCompensationBasePayVariableRateCurrencyCad, OfferVoidResponseCompensationBasePayVariableRateCurrencyChf, OfferVoidResponseCompensationBasePayVariableRateCurrencyCzk, OfferVoidResponseCompensationBasePayVariableRateCurrencyDkk, OfferVoidResponseCompensationBasePayVariableRateCurrencyEur, OfferVoidResponseCompensationBasePayVariableRateCurrencyGbp, OfferVoidResponseCompensationBasePayVariableRateCurrencyHkd, OfferVoidResponseCompensationBasePayVariableRateCurrencyHuf, OfferVoidResponseCompensationBasePayVariableRateCurrencyIdr, OfferVoidResponseCompensationBasePayVariableRateCurrencyInr, OfferVoidResponseCompensationBasePayVariableRateCurrencyJpy, OfferVoidResponseCompensationBasePayVariableRateCurrencyMyr, OfferVoidResponseCompensationBasePayVariableRateCurrencyNok, OfferVoidResponseCompensationBasePayVariableRateCurrencyNzd, OfferVoidResponseCompensationBasePayVariableRateCurrencyCny, OfferVoidResponseCompensationBasePayVariableRateCurrencyPln, OfferVoidResponseCompensationBasePayVariableRateCurrencyRon, OfferVoidResponseCompensationBasePayVariableRateCurrencyTry, OfferVoidResponseCompensationBasePayVariableRateCurrencySek, OfferVoidResponseCompensationBasePayVariableRateCurrencySgd, OfferVoidResponseCompensationBasePayVariableRateCurrencyAed, OfferVoidResponseCompensationBasePayVariableRateCurrencyArs, OfferVoidResponseCompensationBasePayVariableRateCurrencyBdt, OfferVoidResponseCompensationBasePayVariableRateCurrencyBwp, OfferVoidResponseCompensationBasePayVariableRateCurrencyClp, OfferVoidResponseCompensationBasePayVariableRateCurrencyCop, OfferVoidResponseCompensationBasePayVariableRateCurrencyCrc, OfferVoidResponseCompensationBasePayVariableRateCurrencyEgp, OfferVoidResponseCompensationBasePayVariableRateCurrencyFjd, OfferVoidResponseCompensationBasePayVariableRateCurrencyGel, OfferVoidResponseCompensationBasePayVariableRateCurrencyGhs, OfferVoidResponseCompensationBasePayVariableRateCurrencyIls, OfferVoidResponseCompensationBasePayVariableRateCurrencyKes, OfferVoidResponseCompensationBasePayVariableRateCurrencyKrw, OfferVoidResponseCompensationBasePayVariableRateCurrencyLkr, OfferVoidResponseCompensationBasePayVariableRateCurrencyMad, OfferVoidResponseCompensationBasePayVariableRateCurrencyMxn, OfferVoidResponseCompensationBasePayVariableRateCurrencyNpr, OfferVoidResponseCompensationBasePayVariableRateCurrencyPhp, OfferVoidResponseCompensationBasePayVariableRateCurrencyPkr, OfferVoidResponseCompensationBasePayVariableRateCurrencyThb, OfferVoidResponseCompensationBasePayVariableRateCurrencyUah, OfferVoidResponseCompensationBasePayVariableRateCurrencyUgx, OfferVoidResponseCompensationBasePayVariableRateCurrencyUyu, OfferVoidResponseCompensationBasePayVariableRateCurrencyVnd, OfferVoidResponseCompensationBasePayVariableRateCurrencyZar, OfferVoidResponseCompensationBasePayVariableRateCurrencyZmw, OfferVoidResponseCompensationBasePayVariableRateCurrencyTnd, OfferVoidResponseCompensationBasePayVariableRateCurrencyNgn, OfferVoidResponseCompensationBasePayVariableRateCurrencyRsd, OfferVoidResponseCompensationBasePayVariableRateCurrencyTwd, OfferVoidResponseCompensationBasePayVariableRateCurrencyGtq, OfferVoidResponseCompensationBasePayVariableRateCurrencyHnl, OfferVoidResponseCompensationBasePayVariableRateCurrencyDop, OfferVoidResponseCompensationBasePayVariableRateCurrencySar, OfferVoidResponseCompensationBasePayVariableRateCurrencyXaf, OfferVoidResponseCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferExtendDeadlineResponseCompensationBasePayAmountCurrency string
-
-const (
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUsd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "USD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyAud OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "AUD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBgn OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "BGN"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBrl OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "BRL"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCad OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "CAD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyChf OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "CHF"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCzk OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "CZK"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyDkk OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "DKK"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyEur OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "EUR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGbp OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "GBP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyHkd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "HKD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyHuf OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "HUF"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyIdr OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "IDR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyInr OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "INR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyJpy OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "JPY"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyMyr OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "MYR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNok OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "NOK"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNzd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "NZD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCny OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "CNY"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPln OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "PLN"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyRon OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "RON"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyTry OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "TRY"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencySek OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "SEK"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencySgd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "SGD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyAed OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "AED"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyArs OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "ARS"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBdt OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "BDT"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBwp OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "BWP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyClp OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "CLP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCop OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "COP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCrc OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "CRC"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyEgp OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "EGP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyFjd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "FJD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGel OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "GEL"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGhs OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "GHS"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyIls OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "ILS"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyKes OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "KES"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyKrw OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "KRW"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyLkr OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "LKR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyMad OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "MAD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyMxn OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "MXN"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNpr OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "NPR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPhp OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "PHP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPkr OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "PKR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyThb OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "THB"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUah OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "UAH"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUgx OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "UGX"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUyu OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "UYU"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyVnd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "VND"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyZar OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "ZAR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyZmw OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "ZMW"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyTnd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "TND"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNgn OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "NGN"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyRsd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "RSD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyTwd OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "TWD"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGtq OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "GTQ"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyHnl OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "HNL"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyDop OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "DOP"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencySar OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "SAR"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyXaf OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "XAF"
-	OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPen OfferExtendDeadlineResponseCompensationBasePayAmountCurrency = "PEN"
-)
-
-func (r OfferExtendDeadlineResponseCompensationBasePayAmountCurrency) IsKnown() bool {
-	switch r {
-	case OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUsd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyAud, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBgn, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBrl, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCad, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyChf, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCzk, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyDkk, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyEur, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGbp, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyHkd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyHuf, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyIdr, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyInr, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyJpy, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyMyr, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNok, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNzd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCny, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPln, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyRon, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyTry, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencySek, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencySgd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyAed, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyArs, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBdt, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyBwp, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyClp, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCop, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyCrc, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyEgp, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyFjd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGel, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGhs, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyIls, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyKes, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyKrw, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyLkr, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyMad, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyMxn, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNpr, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPhp, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPkr, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyThb, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUah, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUgx, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyUyu, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyVnd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyZar, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyZmw, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyTnd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyNgn, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyRsd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyTwd, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyGtq, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyHnl, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyDop, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencySar, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyXaf, OfferExtendDeadlineResponseCompensationBasePayAmountCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUsd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "USD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyAud OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "AUD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBgn OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "BGN"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBrl OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "BRL"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCad OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "CAD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyChf OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "CHF"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCzk OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "CZK"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyDkk OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "DKK"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyEur OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "EUR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGbp OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "GBP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyHkd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "HKD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyHuf OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "HUF"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyIdr OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "IDR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyInr OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "INR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyJpy OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "JPY"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyMyr OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "MYR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNok OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "NOK"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNzd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "NZD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCny OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "CNY"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPln OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "PLN"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyRon OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "RON"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyTry OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "TRY"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencySek OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "SEK"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencySgd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "SGD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyAed OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "AED"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyArs OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "ARS"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBdt OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "BDT"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBwp OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "BWP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyClp OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "CLP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCop OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "COP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCrc OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "CRC"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyEgp OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "EGP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyFjd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "FJD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGel OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "GEL"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGhs OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "GHS"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyIls OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "ILS"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyKes OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "KES"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyKrw OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "KRW"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyLkr OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "LKR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyMad OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "MAD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyMxn OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "MXN"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNpr OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "NPR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPhp OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "PHP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPkr OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "PKR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyThb OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "THB"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUah OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "UAH"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUgx OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "UGX"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUyu OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "UYU"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyVnd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "VND"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyZar OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyZmw OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyTnd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "TND"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNgn OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "NGN"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyRsd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "RSD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyTwd OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "TWD"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGtq OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyHnl OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "HNL"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyDop OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "DOP"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencySar OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "SAR"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyXaf OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "XAF"
-	OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPen OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUsd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyAud, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBgn, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBrl, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCad, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyChf, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCzk, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyDkk, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyEur, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGbp, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyHkd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyHuf, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyIdr, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyInr, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyJpy, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyMyr, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNok, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNzd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCny, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPln, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyRon, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyTry, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencySek, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencySgd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyAed, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyArs, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBdt, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyBwp, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyClp, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCop, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyCrc, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyEgp, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyFjd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGel, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGhs, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyIls, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyKes, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyKrw, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyLkr, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyMad, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyMxn, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNpr, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPhp, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPkr, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyThb, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUah, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUgx, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyUyu, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyVnd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyZar, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyZmw, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyTnd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyNgn, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyRsd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyTwd, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyGtq, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyHnl, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyDop, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencySar, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyXaf, OfferExtendDeadlineResponseCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferResendResponseCompensationBasePayAmountCurrency string
-
-const (
-	OfferResendResponseCompensationBasePayAmountCurrencyUsd OfferResendResponseCompensationBasePayAmountCurrency = "USD"
-	OfferResendResponseCompensationBasePayAmountCurrencyAud OfferResendResponseCompensationBasePayAmountCurrency = "AUD"
-	OfferResendResponseCompensationBasePayAmountCurrencyBgn OfferResendResponseCompensationBasePayAmountCurrency = "BGN"
-	OfferResendResponseCompensationBasePayAmountCurrencyBrl OfferResendResponseCompensationBasePayAmountCurrency = "BRL"
-	OfferResendResponseCompensationBasePayAmountCurrencyCad OfferResendResponseCompensationBasePayAmountCurrency = "CAD"
-	OfferResendResponseCompensationBasePayAmountCurrencyChf OfferResendResponseCompensationBasePayAmountCurrency = "CHF"
-	OfferResendResponseCompensationBasePayAmountCurrencyCzk OfferResendResponseCompensationBasePayAmountCurrency = "CZK"
-	OfferResendResponseCompensationBasePayAmountCurrencyDkk OfferResendResponseCompensationBasePayAmountCurrency = "DKK"
-	OfferResendResponseCompensationBasePayAmountCurrencyEur OfferResendResponseCompensationBasePayAmountCurrency = "EUR"
-	OfferResendResponseCompensationBasePayAmountCurrencyGbp OfferResendResponseCompensationBasePayAmountCurrency = "GBP"
-	OfferResendResponseCompensationBasePayAmountCurrencyHkd OfferResendResponseCompensationBasePayAmountCurrency = "HKD"
-	OfferResendResponseCompensationBasePayAmountCurrencyHuf OfferResendResponseCompensationBasePayAmountCurrency = "HUF"
-	OfferResendResponseCompensationBasePayAmountCurrencyIdr OfferResendResponseCompensationBasePayAmountCurrency = "IDR"
-	OfferResendResponseCompensationBasePayAmountCurrencyInr OfferResendResponseCompensationBasePayAmountCurrency = "INR"
-	OfferResendResponseCompensationBasePayAmountCurrencyJpy OfferResendResponseCompensationBasePayAmountCurrency = "JPY"
-	OfferResendResponseCompensationBasePayAmountCurrencyMyr OfferResendResponseCompensationBasePayAmountCurrency = "MYR"
-	OfferResendResponseCompensationBasePayAmountCurrencyNok OfferResendResponseCompensationBasePayAmountCurrency = "NOK"
-	OfferResendResponseCompensationBasePayAmountCurrencyNzd OfferResendResponseCompensationBasePayAmountCurrency = "NZD"
-	OfferResendResponseCompensationBasePayAmountCurrencyCny OfferResendResponseCompensationBasePayAmountCurrency = "CNY"
-	OfferResendResponseCompensationBasePayAmountCurrencyPln OfferResendResponseCompensationBasePayAmountCurrency = "PLN"
-	OfferResendResponseCompensationBasePayAmountCurrencyRon OfferResendResponseCompensationBasePayAmountCurrency = "RON"
-	OfferResendResponseCompensationBasePayAmountCurrencyTry OfferResendResponseCompensationBasePayAmountCurrency = "TRY"
-	OfferResendResponseCompensationBasePayAmountCurrencySek OfferResendResponseCompensationBasePayAmountCurrency = "SEK"
-	OfferResendResponseCompensationBasePayAmountCurrencySgd OfferResendResponseCompensationBasePayAmountCurrency = "SGD"
-	OfferResendResponseCompensationBasePayAmountCurrencyAed OfferResendResponseCompensationBasePayAmountCurrency = "AED"
-	OfferResendResponseCompensationBasePayAmountCurrencyArs OfferResendResponseCompensationBasePayAmountCurrency = "ARS"
-	OfferResendResponseCompensationBasePayAmountCurrencyBdt OfferResendResponseCompensationBasePayAmountCurrency = "BDT"
-	OfferResendResponseCompensationBasePayAmountCurrencyBwp OfferResendResponseCompensationBasePayAmountCurrency = "BWP"
-	OfferResendResponseCompensationBasePayAmountCurrencyClp OfferResendResponseCompensationBasePayAmountCurrency = "CLP"
-	OfferResendResponseCompensationBasePayAmountCurrencyCop OfferResendResponseCompensationBasePayAmountCurrency = "COP"
-	OfferResendResponseCompensationBasePayAmountCurrencyCrc OfferResendResponseCompensationBasePayAmountCurrency = "CRC"
-	OfferResendResponseCompensationBasePayAmountCurrencyEgp OfferResendResponseCompensationBasePayAmountCurrency = "EGP"
-	OfferResendResponseCompensationBasePayAmountCurrencyFjd OfferResendResponseCompensationBasePayAmountCurrency = "FJD"
-	OfferResendResponseCompensationBasePayAmountCurrencyGel OfferResendResponseCompensationBasePayAmountCurrency = "GEL"
-	OfferResendResponseCompensationBasePayAmountCurrencyGhs OfferResendResponseCompensationBasePayAmountCurrency = "GHS"
-	OfferResendResponseCompensationBasePayAmountCurrencyIls OfferResendResponseCompensationBasePayAmountCurrency = "ILS"
-	OfferResendResponseCompensationBasePayAmountCurrencyKes OfferResendResponseCompensationBasePayAmountCurrency = "KES"
-	OfferResendResponseCompensationBasePayAmountCurrencyKrw OfferResendResponseCompensationBasePayAmountCurrency = "KRW"
-	OfferResendResponseCompensationBasePayAmountCurrencyLkr OfferResendResponseCompensationBasePayAmountCurrency = "LKR"
-	OfferResendResponseCompensationBasePayAmountCurrencyMad OfferResendResponseCompensationBasePayAmountCurrency = "MAD"
-	OfferResendResponseCompensationBasePayAmountCurrencyMxn OfferResendResponseCompensationBasePayAmountCurrency = "MXN"
-	OfferResendResponseCompensationBasePayAmountCurrencyNpr OfferResendResponseCompensationBasePayAmountCurrency = "NPR"
-	OfferResendResponseCompensationBasePayAmountCurrencyPhp OfferResendResponseCompensationBasePayAmountCurrency = "PHP"
-	OfferResendResponseCompensationBasePayAmountCurrencyPkr OfferResendResponseCompensationBasePayAmountCurrency = "PKR"
-	OfferResendResponseCompensationBasePayAmountCurrencyThb OfferResendResponseCompensationBasePayAmountCurrency = "THB"
-	OfferResendResponseCompensationBasePayAmountCurrencyUah OfferResendResponseCompensationBasePayAmountCurrency = "UAH"
-	OfferResendResponseCompensationBasePayAmountCurrencyUgx OfferResendResponseCompensationBasePayAmountCurrency = "UGX"
-	OfferResendResponseCompensationBasePayAmountCurrencyUyu OfferResendResponseCompensationBasePayAmountCurrency = "UYU"
-	OfferResendResponseCompensationBasePayAmountCurrencyVnd OfferResendResponseCompensationBasePayAmountCurrency = "VND"
-	OfferResendResponseCompensationBasePayAmountCurrencyZar OfferResendResponseCompensationBasePayAmountCurrency = "ZAR"
-	OfferResendResponseCompensationBasePayAmountCurrencyZmw OfferResendResponseCompensationBasePayAmountCurrency = "ZMW"
-	OfferResendResponseCompensationBasePayAmountCurrencyTnd OfferResendResponseCompensationBasePayAmountCurrency = "TND"
-	OfferResendResponseCompensationBasePayAmountCurrencyNgn OfferResendResponseCompensationBasePayAmountCurrency = "NGN"
-	OfferResendResponseCompensationBasePayAmountCurrencyRsd OfferResendResponseCompensationBasePayAmountCurrency = "RSD"
-	OfferResendResponseCompensationBasePayAmountCurrencyTwd OfferResendResponseCompensationBasePayAmountCurrency = "TWD"
-	OfferResendResponseCompensationBasePayAmountCurrencyGtq OfferResendResponseCompensationBasePayAmountCurrency = "GTQ"
-	OfferResendResponseCompensationBasePayAmountCurrencyHnl OfferResendResponseCompensationBasePayAmountCurrency = "HNL"
-	OfferResendResponseCompensationBasePayAmountCurrencyDop OfferResendResponseCompensationBasePayAmountCurrency = "DOP"
-	OfferResendResponseCompensationBasePayAmountCurrencySar OfferResendResponseCompensationBasePayAmountCurrency = "SAR"
-	OfferResendResponseCompensationBasePayAmountCurrencyXaf OfferResendResponseCompensationBasePayAmountCurrency = "XAF"
-	OfferResendResponseCompensationBasePayAmountCurrencyPen OfferResendResponseCompensationBasePayAmountCurrency = "PEN"
-)
-
-func (r OfferResendResponseCompensationBasePayAmountCurrency) IsKnown() bool {
-	switch r {
-	case OfferResendResponseCompensationBasePayAmountCurrencyUsd, OfferResendResponseCompensationBasePayAmountCurrencyAud, OfferResendResponseCompensationBasePayAmountCurrencyBgn, OfferResendResponseCompensationBasePayAmountCurrencyBrl, OfferResendResponseCompensationBasePayAmountCurrencyCad, OfferResendResponseCompensationBasePayAmountCurrencyChf, OfferResendResponseCompensationBasePayAmountCurrencyCzk, OfferResendResponseCompensationBasePayAmountCurrencyDkk, OfferResendResponseCompensationBasePayAmountCurrencyEur, OfferResendResponseCompensationBasePayAmountCurrencyGbp, OfferResendResponseCompensationBasePayAmountCurrencyHkd, OfferResendResponseCompensationBasePayAmountCurrencyHuf, OfferResendResponseCompensationBasePayAmountCurrencyIdr, OfferResendResponseCompensationBasePayAmountCurrencyInr, OfferResendResponseCompensationBasePayAmountCurrencyJpy, OfferResendResponseCompensationBasePayAmountCurrencyMyr, OfferResendResponseCompensationBasePayAmountCurrencyNok, OfferResendResponseCompensationBasePayAmountCurrencyNzd, OfferResendResponseCompensationBasePayAmountCurrencyCny, OfferResendResponseCompensationBasePayAmountCurrencyPln, OfferResendResponseCompensationBasePayAmountCurrencyRon, OfferResendResponseCompensationBasePayAmountCurrencyTry, OfferResendResponseCompensationBasePayAmountCurrencySek, OfferResendResponseCompensationBasePayAmountCurrencySgd, OfferResendResponseCompensationBasePayAmountCurrencyAed, OfferResendResponseCompensationBasePayAmountCurrencyArs, OfferResendResponseCompensationBasePayAmountCurrencyBdt, OfferResendResponseCompensationBasePayAmountCurrencyBwp, OfferResendResponseCompensationBasePayAmountCurrencyClp, OfferResendResponseCompensationBasePayAmountCurrencyCop, OfferResendResponseCompensationBasePayAmountCurrencyCrc, OfferResendResponseCompensationBasePayAmountCurrencyEgp, OfferResendResponseCompensationBasePayAmountCurrencyFjd, OfferResendResponseCompensationBasePayAmountCurrencyGel, OfferResendResponseCompensationBasePayAmountCurrencyGhs, OfferResendResponseCompensationBasePayAmountCurrencyIls, OfferResendResponseCompensationBasePayAmountCurrencyKes, OfferResendResponseCompensationBasePayAmountCurrencyKrw, OfferResendResponseCompensationBasePayAmountCurrencyLkr, OfferResendResponseCompensationBasePayAmountCurrencyMad, OfferResendResponseCompensationBasePayAmountCurrencyMxn, OfferResendResponseCompensationBasePayAmountCurrencyNpr, OfferResendResponseCompensationBasePayAmountCurrencyPhp, OfferResendResponseCompensationBasePayAmountCurrencyPkr, OfferResendResponseCompensationBasePayAmountCurrencyThb, OfferResendResponseCompensationBasePayAmountCurrencyUah, OfferResendResponseCompensationBasePayAmountCurrencyUgx, OfferResendResponseCompensationBasePayAmountCurrencyUyu, OfferResendResponseCompensationBasePayAmountCurrencyVnd, OfferResendResponseCompensationBasePayAmountCurrencyZar, OfferResendResponseCompensationBasePayAmountCurrencyZmw, OfferResendResponseCompensationBasePayAmountCurrencyTnd, OfferResendResponseCompensationBasePayAmountCurrencyNgn, OfferResendResponseCompensationBasePayAmountCurrencyRsd, OfferResendResponseCompensationBasePayAmountCurrencyTwd, OfferResendResponseCompensationBasePayAmountCurrencyGtq, OfferResendResponseCompensationBasePayAmountCurrencyHnl, OfferResendResponseCompensationBasePayAmountCurrencyDop, OfferResendResponseCompensationBasePayAmountCurrencySar, OfferResendResponseCompensationBasePayAmountCurrencyXaf, OfferResendResponseCompensationBasePayAmountCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferResendResponseCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferResendResponseCompensationBasePayVariableRateCurrencyUsd OfferResendResponseCompensationBasePayVariableRateCurrency = "USD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyAud OfferResendResponseCompensationBasePayVariableRateCurrency = "AUD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyBgn OfferResendResponseCompensationBasePayVariableRateCurrency = "BGN"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyBrl OfferResendResponseCompensationBasePayVariableRateCurrency = "BRL"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyCad OfferResendResponseCompensationBasePayVariableRateCurrency = "CAD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyChf OfferResendResponseCompensationBasePayVariableRateCurrency = "CHF"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyCzk OfferResendResponseCompensationBasePayVariableRateCurrency = "CZK"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyDkk OfferResendResponseCompensationBasePayVariableRateCurrency = "DKK"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyEur OfferResendResponseCompensationBasePayVariableRateCurrency = "EUR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyGbp OfferResendResponseCompensationBasePayVariableRateCurrency = "GBP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyHkd OfferResendResponseCompensationBasePayVariableRateCurrency = "HKD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyHuf OfferResendResponseCompensationBasePayVariableRateCurrency = "HUF"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyIdr OfferResendResponseCompensationBasePayVariableRateCurrency = "IDR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyInr OfferResendResponseCompensationBasePayVariableRateCurrency = "INR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyJpy OfferResendResponseCompensationBasePayVariableRateCurrency = "JPY"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyMyr OfferResendResponseCompensationBasePayVariableRateCurrency = "MYR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyNok OfferResendResponseCompensationBasePayVariableRateCurrency = "NOK"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyNzd OfferResendResponseCompensationBasePayVariableRateCurrency = "NZD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyCny OfferResendResponseCompensationBasePayVariableRateCurrency = "CNY"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyPln OfferResendResponseCompensationBasePayVariableRateCurrency = "PLN"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyRon OfferResendResponseCompensationBasePayVariableRateCurrency = "RON"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyTry OfferResendResponseCompensationBasePayVariableRateCurrency = "TRY"
-	OfferResendResponseCompensationBasePayVariableRateCurrencySek OfferResendResponseCompensationBasePayVariableRateCurrency = "SEK"
-	OfferResendResponseCompensationBasePayVariableRateCurrencySgd OfferResendResponseCompensationBasePayVariableRateCurrency = "SGD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyAed OfferResendResponseCompensationBasePayVariableRateCurrency = "AED"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyArs OfferResendResponseCompensationBasePayVariableRateCurrency = "ARS"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyBdt OfferResendResponseCompensationBasePayVariableRateCurrency = "BDT"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyBwp OfferResendResponseCompensationBasePayVariableRateCurrency = "BWP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyClp OfferResendResponseCompensationBasePayVariableRateCurrency = "CLP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyCop OfferResendResponseCompensationBasePayVariableRateCurrency = "COP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyCrc OfferResendResponseCompensationBasePayVariableRateCurrency = "CRC"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyEgp OfferResendResponseCompensationBasePayVariableRateCurrency = "EGP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyFjd OfferResendResponseCompensationBasePayVariableRateCurrency = "FJD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyGel OfferResendResponseCompensationBasePayVariableRateCurrency = "GEL"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyGhs OfferResendResponseCompensationBasePayVariableRateCurrency = "GHS"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyIls OfferResendResponseCompensationBasePayVariableRateCurrency = "ILS"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyKes OfferResendResponseCompensationBasePayVariableRateCurrency = "KES"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyKrw OfferResendResponseCompensationBasePayVariableRateCurrency = "KRW"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyLkr OfferResendResponseCompensationBasePayVariableRateCurrency = "LKR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyMad OfferResendResponseCompensationBasePayVariableRateCurrency = "MAD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyMxn OfferResendResponseCompensationBasePayVariableRateCurrency = "MXN"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyNpr OfferResendResponseCompensationBasePayVariableRateCurrency = "NPR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyPhp OfferResendResponseCompensationBasePayVariableRateCurrency = "PHP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyPkr OfferResendResponseCompensationBasePayVariableRateCurrency = "PKR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyThb OfferResendResponseCompensationBasePayVariableRateCurrency = "THB"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyUah OfferResendResponseCompensationBasePayVariableRateCurrency = "UAH"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyUgx OfferResendResponseCompensationBasePayVariableRateCurrency = "UGX"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyUyu OfferResendResponseCompensationBasePayVariableRateCurrency = "UYU"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyVnd OfferResendResponseCompensationBasePayVariableRateCurrency = "VND"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyZar OfferResendResponseCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyZmw OfferResendResponseCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyTnd OfferResendResponseCompensationBasePayVariableRateCurrency = "TND"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyNgn OfferResendResponseCompensationBasePayVariableRateCurrency = "NGN"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyRsd OfferResendResponseCompensationBasePayVariableRateCurrency = "RSD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyTwd OfferResendResponseCompensationBasePayVariableRateCurrency = "TWD"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyGtq OfferResendResponseCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyHnl OfferResendResponseCompensationBasePayVariableRateCurrency = "HNL"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyDop OfferResendResponseCompensationBasePayVariableRateCurrency = "DOP"
-	OfferResendResponseCompensationBasePayVariableRateCurrencySar OfferResendResponseCompensationBasePayVariableRateCurrency = "SAR"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyXaf OfferResendResponseCompensationBasePayVariableRateCurrency = "XAF"
-	OfferResendResponseCompensationBasePayVariableRateCurrencyPen OfferResendResponseCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferResendResponseCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferResendResponseCompensationBasePayVariableRateCurrencyUsd, OfferResendResponseCompensationBasePayVariableRateCurrencyAud, OfferResendResponseCompensationBasePayVariableRateCurrencyBgn, OfferResendResponseCompensationBasePayVariableRateCurrencyBrl, OfferResendResponseCompensationBasePayVariableRateCurrencyCad, OfferResendResponseCompensationBasePayVariableRateCurrencyChf, OfferResendResponseCompensationBasePayVariableRateCurrencyCzk, OfferResendResponseCompensationBasePayVariableRateCurrencyDkk, OfferResendResponseCompensationBasePayVariableRateCurrencyEur, OfferResendResponseCompensationBasePayVariableRateCurrencyGbp, OfferResendResponseCompensationBasePayVariableRateCurrencyHkd, OfferResendResponseCompensationBasePayVariableRateCurrencyHuf, OfferResendResponseCompensationBasePayVariableRateCurrencyIdr, OfferResendResponseCompensationBasePayVariableRateCurrencyInr, OfferResendResponseCompensationBasePayVariableRateCurrencyJpy, OfferResendResponseCompensationBasePayVariableRateCurrencyMyr, OfferResendResponseCompensationBasePayVariableRateCurrencyNok, OfferResendResponseCompensationBasePayVariableRateCurrencyNzd, OfferResendResponseCompensationBasePayVariableRateCurrencyCny, OfferResendResponseCompensationBasePayVariableRateCurrencyPln, OfferResendResponseCompensationBasePayVariableRateCurrencyRon, OfferResendResponseCompensationBasePayVariableRateCurrencyTry, OfferResendResponseCompensationBasePayVariableRateCurrencySek, OfferResendResponseCompensationBasePayVariableRateCurrencySgd, OfferResendResponseCompensationBasePayVariableRateCurrencyAed, OfferResendResponseCompensationBasePayVariableRateCurrencyArs, OfferResendResponseCompensationBasePayVariableRateCurrencyBdt, OfferResendResponseCompensationBasePayVariableRateCurrencyBwp, OfferResendResponseCompensationBasePayVariableRateCurrencyClp, OfferResendResponseCompensationBasePayVariableRateCurrencyCop, OfferResendResponseCompensationBasePayVariableRateCurrencyCrc, OfferResendResponseCompensationBasePayVariableRateCurrencyEgp, OfferResendResponseCompensationBasePayVariableRateCurrencyFjd, OfferResendResponseCompensationBasePayVariableRateCurrencyGel, OfferResendResponseCompensationBasePayVariableRateCurrencyGhs, OfferResendResponseCompensationBasePayVariableRateCurrencyIls, OfferResendResponseCompensationBasePayVariableRateCurrencyKes, OfferResendResponseCompensationBasePayVariableRateCurrencyKrw, OfferResendResponseCompensationBasePayVariableRateCurrencyLkr, OfferResendResponseCompensationBasePayVariableRateCurrencyMad, OfferResendResponseCompensationBasePayVariableRateCurrencyMxn, OfferResendResponseCompensationBasePayVariableRateCurrencyNpr, OfferResendResponseCompensationBasePayVariableRateCurrencyPhp, OfferResendResponseCompensationBasePayVariableRateCurrencyPkr, OfferResendResponseCompensationBasePayVariableRateCurrencyThb, OfferResendResponseCompensationBasePayVariableRateCurrencyUah, OfferResendResponseCompensationBasePayVariableRateCurrencyUgx, OfferResendResponseCompensationBasePayVariableRateCurrencyUyu, OfferResendResponseCompensationBasePayVariableRateCurrencyVnd, OfferResendResponseCompensationBasePayVariableRateCurrencyZar, OfferResendResponseCompensationBasePayVariableRateCurrencyZmw, OfferResendResponseCompensationBasePayVariableRateCurrencyTnd, OfferResendResponseCompensationBasePayVariableRateCurrencyNgn, OfferResendResponseCompensationBasePayVariableRateCurrencyRsd, OfferResendResponseCompensationBasePayVariableRateCurrencyTwd, OfferResendResponseCompensationBasePayVariableRateCurrencyGtq, OfferResendResponseCompensationBasePayVariableRateCurrencyHnl, OfferResendResponseCompensationBasePayVariableRateCurrencyDop, OfferResendResponseCompensationBasePayVariableRateCurrencySar, OfferResendResponseCompensationBasePayVariableRateCurrencyXaf, OfferResendResponseCompensationBasePayVariableRateCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferListResponseDataCompensationBasePayAmountCurrency string
-
-const (
-	OfferListResponseDataCompensationBasePayAmountCurrencyUsd OfferListResponseDataCompensationBasePayAmountCurrency = "USD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyAud OfferListResponseDataCompensationBasePayAmountCurrency = "AUD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyBgn OfferListResponseDataCompensationBasePayAmountCurrency = "BGN"
-	OfferListResponseDataCompensationBasePayAmountCurrencyBrl OfferListResponseDataCompensationBasePayAmountCurrency = "BRL"
-	OfferListResponseDataCompensationBasePayAmountCurrencyCad OfferListResponseDataCompensationBasePayAmountCurrency = "CAD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyChf OfferListResponseDataCompensationBasePayAmountCurrency = "CHF"
-	OfferListResponseDataCompensationBasePayAmountCurrencyCzk OfferListResponseDataCompensationBasePayAmountCurrency = "CZK"
-	OfferListResponseDataCompensationBasePayAmountCurrencyDkk OfferListResponseDataCompensationBasePayAmountCurrency = "DKK"
-	OfferListResponseDataCompensationBasePayAmountCurrencyEur OfferListResponseDataCompensationBasePayAmountCurrency = "EUR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyGbp OfferListResponseDataCompensationBasePayAmountCurrency = "GBP"
-	OfferListResponseDataCompensationBasePayAmountCurrencyHkd OfferListResponseDataCompensationBasePayAmountCurrency = "HKD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyHuf OfferListResponseDataCompensationBasePayAmountCurrency = "HUF"
-	OfferListResponseDataCompensationBasePayAmountCurrencyIdr OfferListResponseDataCompensationBasePayAmountCurrency = "IDR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyInr OfferListResponseDataCompensationBasePayAmountCurrency = "INR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyJpy OfferListResponseDataCompensationBasePayAmountCurrency = "JPY"
-	OfferListResponseDataCompensationBasePayAmountCurrencyMyr OfferListResponseDataCompensationBasePayAmountCurrency = "MYR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyNok OfferListResponseDataCompensationBasePayAmountCurrency = "NOK"
-	OfferListResponseDataCompensationBasePayAmountCurrencyNzd OfferListResponseDataCompensationBasePayAmountCurrency = "NZD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyCny OfferListResponseDataCompensationBasePayAmountCurrency = "CNY"
-	OfferListResponseDataCompensationBasePayAmountCurrencyPln OfferListResponseDataCompensationBasePayAmountCurrency = "PLN"
-	OfferListResponseDataCompensationBasePayAmountCurrencyRon OfferListResponseDataCompensationBasePayAmountCurrency = "RON"
-	OfferListResponseDataCompensationBasePayAmountCurrencyTry OfferListResponseDataCompensationBasePayAmountCurrency = "TRY"
-	OfferListResponseDataCompensationBasePayAmountCurrencySek OfferListResponseDataCompensationBasePayAmountCurrency = "SEK"
-	OfferListResponseDataCompensationBasePayAmountCurrencySgd OfferListResponseDataCompensationBasePayAmountCurrency = "SGD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyAed OfferListResponseDataCompensationBasePayAmountCurrency = "AED"
-	OfferListResponseDataCompensationBasePayAmountCurrencyArs OfferListResponseDataCompensationBasePayAmountCurrency = "ARS"
-	OfferListResponseDataCompensationBasePayAmountCurrencyBdt OfferListResponseDataCompensationBasePayAmountCurrency = "BDT"
-	OfferListResponseDataCompensationBasePayAmountCurrencyBwp OfferListResponseDataCompensationBasePayAmountCurrency = "BWP"
-	OfferListResponseDataCompensationBasePayAmountCurrencyClp OfferListResponseDataCompensationBasePayAmountCurrency = "CLP"
-	OfferListResponseDataCompensationBasePayAmountCurrencyCop OfferListResponseDataCompensationBasePayAmountCurrency = "COP"
-	OfferListResponseDataCompensationBasePayAmountCurrencyCrc OfferListResponseDataCompensationBasePayAmountCurrency = "CRC"
-	OfferListResponseDataCompensationBasePayAmountCurrencyEgp OfferListResponseDataCompensationBasePayAmountCurrency = "EGP"
-	OfferListResponseDataCompensationBasePayAmountCurrencyFjd OfferListResponseDataCompensationBasePayAmountCurrency = "FJD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyGel OfferListResponseDataCompensationBasePayAmountCurrency = "GEL"
-	OfferListResponseDataCompensationBasePayAmountCurrencyGhs OfferListResponseDataCompensationBasePayAmountCurrency = "GHS"
-	OfferListResponseDataCompensationBasePayAmountCurrencyIls OfferListResponseDataCompensationBasePayAmountCurrency = "ILS"
-	OfferListResponseDataCompensationBasePayAmountCurrencyKes OfferListResponseDataCompensationBasePayAmountCurrency = "KES"
-	OfferListResponseDataCompensationBasePayAmountCurrencyKrw OfferListResponseDataCompensationBasePayAmountCurrency = "KRW"
-	OfferListResponseDataCompensationBasePayAmountCurrencyLkr OfferListResponseDataCompensationBasePayAmountCurrency = "LKR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyMad OfferListResponseDataCompensationBasePayAmountCurrency = "MAD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyMxn OfferListResponseDataCompensationBasePayAmountCurrency = "MXN"
-	OfferListResponseDataCompensationBasePayAmountCurrencyNpr OfferListResponseDataCompensationBasePayAmountCurrency = "NPR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyPhp OfferListResponseDataCompensationBasePayAmountCurrency = "PHP"
-	OfferListResponseDataCompensationBasePayAmountCurrencyPkr OfferListResponseDataCompensationBasePayAmountCurrency = "PKR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyThb OfferListResponseDataCompensationBasePayAmountCurrency = "THB"
-	OfferListResponseDataCompensationBasePayAmountCurrencyUah OfferListResponseDataCompensationBasePayAmountCurrency = "UAH"
-	OfferListResponseDataCompensationBasePayAmountCurrencyUgx OfferListResponseDataCompensationBasePayAmountCurrency = "UGX"
-	OfferListResponseDataCompensationBasePayAmountCurrencyUyu OfferListResponseDataCompensationBasePayAmountCurrency = "UYU"
-	OfferListResponseDataCompensationBasePayAmountCurrencyVnd OfferListResponseDataCompensationBasePayAmountCurrency = "VND"
-	OfferListResponseDataCompensationBasePayAmountCurrencyZar OfferListResponseDataCompensationBasePayAmountCurrency = "ZAR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyZmw OfferListResponseDataCompensationBasePayAmountCurrency = "ZMW"
-	OfferListResponseDataCompensationBasePayAmountCurrencyTnd OfferListResponseDataCompensationBasePayAmountCurrency = "TND"
-	OfferListResponseDataCompensationBasePayAmountCurrencyNgn OfferListResponseDataCompensationBasePayAmountCurrency = "NGN"
-	OfferListResponseDataCompensationBasePayAmountCurrencyRsd OfferListResponseDataCompensationBasePayAmountCurrency = "RSD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyTwd OfferListResponseDataCompensationBasePayAmountCurrency = "TWD"
-	OfferListResponseDataCompensationBasePayAmountCurrencyGtq OfferListResponseDataCompensationBasePayAmountCurrency = "GTQ"
-	OfferListResponseDataCompensationBasePayAmountCurrencyHnl OfferListResponseDataCompensationBasePayAmountCurrency = "HNL"
-	OfferListResponseDataCompensationBasePayAmountCurrencyDop OfferListResponseDataCompensationBasePayAmountCurrency = "DOP"
-	OfferListResponseDataCompensationBasePayAmountCurrencySar OfferListResponseDataCompensationBasePayAmountCurrency = "SAR"
-	OfferListResponseDataCompensationBasePayAmountCurrencyXaf OfferListResponseDataCompensationBasePayAmountCurrency = "XAF"
-	OfferListResponseDataCompensationBasePayAmountCurrencyPen OfferListResponseDataCompensationBasePayAmountCurrency = "PEN"
-)
-
-func (r OfferListResponseDataCompensationBasePayAmountCurrency) IsKnown() bool {
-	switch r {
-	case OfferListResponseDataCompensationBasePayAmountCurrencyUsd, OfferListResponseDataCompensationBasePayAmountCurrencyAud, OfferListResponseDataCompensationBasePayAmountCurrencyBgn, OfferListResponseDataCompensationBasePayAmountCurrencyBrl, OfferListResponseDataCompensationBasePayAmountCurrencyCad, OfferListResponseDataCompensationBasePayAmountCurrencyChf, OfferListResponseDataCompensationBasePayAmountCurrencyCzk, OfferListResponseDataCompensationBasePayAmountCurrencyDkk, OfferListResponseDataCompensationBasePayAmountCurrencyEur, OfferListResponseDataCompensationBasePayAmountCurrencyGbp, OfferListResponseDataCompensationBasePayAmountCurrencyHkd, OfferListResponseDataCompensationBasePayAmountCurrencyHuf, OfferListResponseDataCompensationBasePayAmountCurrencyIdr, OfferListResponseDataCompensationBasePayAmountCurrencyInr, OfferListResponseDataCompensationBasePayAmountCurrencyJpy, OfferListResponseDataCompensationBasePayAmountCurrencyMyr, OfferListResponseDataCompensationBasePayAmountCurrencyNok, OfferListResponseDataCompensationBasePayAmountCurrencyNzd, OfferListResponseDataCompensationBasePayAmountCurrencyCny, OfferListResponseDataCompensationBasePayAmountCurrencyPln, OfferListResponseDataCompensationBasePayAmountCurrencyRon, OfferListResponseDataCompensationBasePayAmountCurrencyTry, OfferListResponseDataCompensationBasePayAmountCurrencySek, OfferListResponseDataCompensationBasePayAmountCurrencySgd, OfferListResponseDataCompensationBasePayAmountCurrencyAed, OfferListResponseDataCompensationBasePayAmountCurrencyArs, OfferListResponseDataCompensationBasePayAmountCurrencyBdt, OfferListResponseDataCompensationBasePayAmountCurrencyBwp, OfferListResponseDataCompensationBasePayAmountCurrencyClp, OfferListResponseDataCompensationBasePayAmountCurrencyCop, OfferListResponseDataCompensationBasePayAmountCurrencyCrc, OfferListResponseDataCompensationBasePayAmountCurrencyEgp, OfferListResponseDataCompensationBasePayAmountCurrencyFjd, OfferListResponseDataCompensationBasePayAmountCurrencyGel, OfferListResponseDataCompensationBasePayAmountCurrencyGhs, OfferListResponseDataCompensationBasePayAmountCurrencyIls, OfferListResponseDataCompensationBasePayAmountCurrencyKes, OfferListResponseDataCompensationBasePayAmountCurrencyKrw, OfferListResponseDataCompensationBasePayAmountCurrencyLkr, OfferListResponseDataCompensationBasePayAmountCurrencyMad, OfferListResponseDataCompensationBasePayAmountCurrencyMxn, OfferListResponseDataCompensationBasePayAmountCurrencyNpr, OfferListResponseDataCompensationBasePayAmountCurrencyPhp, OfferListResponseDataCompensationBasePayAmountCurrencyPkr, OfferListResponseDataCompensationBasePayAmountCurrencyThb, OfferListResponseDataCompensationBasePayAmountCurrencyUah, OfferListResponseDataCompensationBasePayAmountCurrencyUgx, OfferListResponseDataCompensationBasePayAmountCurrencyUyu, OfferListResponseDataCompensationBasePayAmountCurrencyVnd, OfferListResponseDataCompensationBasePayAmountCurrencyZar, OfferListResponseDataCompensationBasePayAmountCurrencyZmw, OfferListResponseDataCompensationBasePayAmountCurrencyTnd, OfferListResponseDataCompensationBasePayAmountCurrencyNgn, OfferListResponseDataCompensationBasePayAmountCurrencyRsd, OfferListResponseDataCompensationBasePayAmountCurrencyTwd, OfferListResponseDataCompensationBasePayAmountCurrencyGtq, OfferListResponseDataCompensationBasePayAmountCurrencyHnl, OfferListResponseDataCompensationBasePayAmountCurrencyDop, OfferListResponseDataCompensationBasePayAmountCurrencySar, OfferListResponseDataCompensationBasePayAmountCurrencyXaf, OfferListResponseDataCompensationBasePayAmountCurrencyPen:
-		return true
-	}
-	return false
-}
-
-type OfferListResponseDataCompensationBasePayVariableRateCurrency string
-
-const (
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyUsd OfferListResponseDataCompensationBasePayVariableRateCurrency = "USD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyAud OfferListResponseDataCompensationBasePayVariableRateCurrency = "AUD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyBgn OfferListResponseDataCompensationBasePayVariableRateCurrency = "BGN"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyBrl OfferListResponseDataCompensationBasePayVariableRateCurrency = "BRL"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyCad OfferListResponseDataCompensationBasePayVariableRateCurrency = "CAD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyChf OfferListResponseDataCompensationBasePayVariableRateCurrency = "CHF"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyCzk OfferListResponseDataCompensationBasePayVariableRateCurrency = "CZK"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyDkk OfferListResponseDataCompensationBasePayVariableRateCurrency = "DKK"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyEur OfferListResponseDataCompensationBasePayVariableRateCurrency = "EUR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyGbp OfferListResponseDataCompensationBasePayVariableRateCurrency = "GBP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyHkd OfferListResponseDataCompensationBasePayVariableRateCurrency = "HKD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyHuf OfferListResponseDataCompensationBasePayVariableRateCurrency = "HUF"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyIdr OfferListResponseDataCompensationBasePayVariableRateCurrency = "IDR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyInr OfferListResponseDataCompensationBasePayVariableRateCurrency = "INR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyJpy OfferListResponseDataCompensationBasePayVariableRateCurrency = "JPY"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyMyr OfferListResponseDataCompensationBasePayVariableRateCurrency = "MYR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyNok OfferListResponseDataCompensationBasePayVariableRateCurrency = "NOK"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyNzd OfferListResponseDataCompensationBasePayVariableRateCurrency = "NZD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyCny OfferListResponseDataCompensationBasePayVariableRateCurrency = "CNY"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyPln OfferListResponseDataCompensationBasePayVariableRateCurrency = "PLN"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyRon OfferListResponseDataCompensationBasePayVariableRateCurrency = "RON"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyTry OfferListResponseDataCompensationBasePayVariableRateCurrency = "TRY"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencySek OfferListResponseDataCompensationBasePayVariableRateCurrency = "SEK"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencySgd OfferListResponseDataCompensationBasePayVariableRateCurrency = "SGD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyAed OfferListResponseDataCompensationBasePayVariableRateCurrency = "AED"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyArs OfferListResponseDataCompensationBasePayVariableRateCurrency = "ARS"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyBdt OfferListResponseDataCompensationBasePayVariableRateCurrency = "BDT"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyBwp OfferListResponseDataCompensationBasePayVariableRateCurrency = "BWP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyClp OfferListResponseDataCompensationBasePayVariableRateCurrency = "CLP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyCop OfferListResponseDataCompensationBasePayVariableRateCurrency = "COP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyCrc OfferListResponseDataCompensationBasePayVariableRateCurrency = "CRC"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyEgp OfferListResponseDataCompensationBasePayVariableRateCurrency = "EGP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyFjd OfferListResponseDataCompensationBasePayVariableRateCurrency = "FJD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyGel OfferListResponseDataCompensationBasePayVariableRateCurrency = "GEL"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyGhs OfferListResponseDataCompensationBasePayVariableRateCurrency = "GHS"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyIls OfferListResponseDataCompensationBasePayVariableRateCurrency = "ILS"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyKes OfferListResponseDataCompensationBasePayVariableRateCurrency = "KES"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyKrw OfferListResponseDataCompensationBasePayVariableRateCurrency = "KRW"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyLkr OfferListResponseDataCompensationBasePayVariableRateCurrency = "LKR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyMad OfferListResponseDataCompensationBasePayVariableRateCurrency = "MAD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyMxn OfferListResponseDataCompensationBasePayVariableRateCurrency = "MXN"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyNpr OfferListResponseDataCompensationBasePayVariableRateCurrency = "NPR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyPhp OfferListResponseDataCompensationBasePayVariableRateCurrency = "PHP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyPkr OfferListResponseDataCompensationBasePayVariableRateCurrency = "PKR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyThb OfferListResponseDataCompensationBasePayVariableRateCurrency = "THB"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyUah OfferListResponseDataCompensationBasePayVariableRateCurrency = "UAH"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyUgx OfferListResponseDataCompensationBasePayVariableRateCurrency = "UGX"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyUyu OfferListResponseDataCompensationBasePayVariableRateCurrency = "UYU"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyVnd OfferListResponseDataCompensationBasePayVariableRateCurrency = "VND"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyZar OfferListResponseDataCompensationBasePayVariableRateCurrency = "ZAR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyZmw OfferListResponseDataCompensationBasePayVariableRateCurrency = "ZMW"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyTnd OfferListResponseDataCompensationBasePayVariableRateCurrency = "TND"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyNgn OfferListResponseDataCompensationBasePayVariableRateCurrency = "NGN"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyRsd OfferListResponseDataCompensationBasePayVariableRateCurrency = "RSD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyTwd OfferListResponseDataCompensationBasePayVariableRateCurrency = "TWD"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyGtq OfferListResponseDataCompensationBasePayVariableRateCurrency = "GTQ"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyHnl OfferListResponseDataCompensationBasePayVariableRateCurrency = "HNL"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyDop OfferListResponseDataCompensationBasePayVariableRateCurrency = "DOP"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencySar OfferListResponseDataCompensationBasePayVariableRateCurrency = "SAR"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyXaf OfferListResponseDataCompensationBasePayVariableRateCurrency = "XAF"
-	OfferListResponseDataCompensationBasePayVariableRateCurrencyPen OfferListResponseDataCompensationBasePayVariableRateCurrency = "PEN"
-)
-
-func (r OfferListResponseDataCompensationBasePayVariableRateCurrency) IsKnown() bool {
-	switch r {
-	case OfferListResponseDataCompensationBasePayVariableRateCurrencyUsd, OfferListResponseDataCompensationBasePayVariableRateCurrencyAud, OfferListResponseDataCompensationBasePayVariableRateCurrencyBgn, OfferListResponseDataCompensationBasePayVariableRateCurrencyBrl, OfferListResponseDataCompensationBasePayVariableRateCurrencyCad, OfferListResponseDataCompensationBasePayVariableRateCurrencyChf, OfferListResponseDataCompensationBasePayVariableRateCurrencyCzk, OfferListResponseDataCompensationBasePayVariableRateCurrencyDkk, OfferListResponseDataCompensationBasePayVariableRateCurrencyEur, OfferListResponseDataCompensationBasePayVariableRateCurrencyGbp, OfferListResponseDataCompensationBasePayVariableRateCurrencyHkd, OfferListResponseDataCompensationBasePayVariableRateCurrencyHuf, OfferListResponseDataCompensationBasePayVariableRateCurrencyIdr, OfferListResponseDataCompensationBasePayVariableRateCurrencyInr, OfferListResponseDataCompensationBasePayVariableRateCurrencyJpy, OfferListResponseDataCompensationBasePayVariableRateCurrencyMyr, OfferListResponseDataCompensationBasePayVariableRateCurrencyNok, OfferListResponseDataCompensationBasePayVariableRateCurrencyNzd, OfferListResponseDataCompensationBasePayVariableRateCurrencyCny, OfferListResponseDataCompensationBasePayVariableRateCurrencyPln, OfferListResponseDataCompensationBasePayVariableRateCurrencyRon, OfferListResponseDataCompensationBasePayVariableRateCurrencyTry, OfferListResponseDataCompensationBasePayVariableRateCurrencySek, OfferListResponseDataCompensationBasePayVariableRateCurrencySgd, OfferListResponseDataCompensationBasePayVariableRateCurrencyAed, OfferListResponseDataCompensationBasePayVariableRateCurrencyArs, OfferListResponseDataCompensationBasePayVariableRateCurrencyBdt, OfferListResponseDataCompensationBasePayVariableRateCurrencyBwp, OfferListResponseDataCompensationBasePayVariableRateCurrencyClp, OfferListResponseDataCompensationBasePayVariableRateCurrencyCop, OfferListResponseDataCompensationBasePayVariableRateCurrencyCrc, OfferListResponseDataCompensationBasePayVariableRateCurrencyEgp, OfferListResponseDataCompensationBasePayVariableRateCurrencyFjd, OfferListResponseDataCompensationBasePayVariableRateCurrencyGel, OfferListResponseDataCompensationBasePayVariableRateCurrencyGhs, OfferListResponseDataCompensationBasePayVariableRateCurrencyIls, OfferListResponseDataCompensationBasePayVariableRateCurrencyKes, OfferListResponseDataCompensationBasePayVariableRateCurrencyKrw, OfferListResponseDataCompensationBasePayVariableRateCurrencyLkr, OfferListResponseDataCompensationBasePayVariableRateCurrencyMad, OfferListResponseDataCompensationBasePayVariableRateCurrencyMxn, OfferListResponseDataCompensationBasePayVariableRateCurrencyNpr, OfferListResponseDataCompensationBasePayVariableRateCurrencyPhp, OfferListResponseDataCompensationBasePayVariableRateCurrencyPkr, OfferListResponseDataCompensationBasePayVariableRateCurrencyThb, OfferListResponseDataCompensationBasePayVariableRateCurrencyUah, OfferListResponseDataCompensationBasePayVariableRateCurrencyUgx, OfferListResponseDataCompensationBasePayVariableRateCurrencyUyu, OfferListResponseDataCompensationBasePayVariableRateCurrencyVnd, OfferListResponseDataCompensationBasePayVariableRateCurrencyZar, OfferListResponseDataCompensationBasePayVariableRateCurrencyZmw, OfferListResponseDataCompensationBasePayVariableRateCurrencyTnd, OfferListResponseDataCompensationBasePayVariableRateCurrencyNgn, OfferListResponseDataCompensationBasePayVariableRateCurrencyRsd, OfferListResponseDataCompensationBasePayVariableRateCurrencyTwd, OfferListResponseDataCompensationBasePayVariableRateCurrencyGtq, OfferListResponseDataCompensationBasePayVariableRateCurrencyHnl, OfferListResponseDataCompensationBasePayVariableRateCurrencyDop, OfferListResponseDataCompensationBasePayVariableRateCurrencySar, OfferListResponseDataCompensationBasePayVariableRateCurrencyXaf, OfferListResponseDataCompensationBasePayVariableRateCurrencyPen:
 		return true
 	}
 	return false

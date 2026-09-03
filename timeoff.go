@@ -47,7 +47,9 @@ func NewTimeOffService(opts ...option.RequestOption) (r *TimeOffService) {
 //
 // Example:
 //
-//	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{})
+//	timeOff, err := client.TimeOff.ListAssignments(context.Background(), sdk.TimeOffListAssignmentsParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -74,7 +76,9 @@ func (r *TimeOffService) ListAssignments(ctx context.Context, query TimeOffListA
 //
 // Example:
 //
-//	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{})
+//	timeOff, err := client.TimeOff.ListBalances(context.Background(), sdk.TimeOffListBalancesParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -101,7 +105,9 @@ func (r *TimeOffService) ListBalances(ctx context.Context, query TimeOffListBala
 //
 // Example:
 //
-//	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{})
+//	timeOff, err := client.TimeOff.ListRequests(context.Background(), sdk.TimeOffListRequestsParams{
+//		Limit: sdk.F[string]("limit"),
+//	})
 //	if err != nil {
 //		panic(err)
 //	}
@@ -115,10 +121,9 @@ func (r *TimeOffService) ListRequests(ctx context.Context, query TimeOffListRequ
 }
 
 type TimeOffListAssignmentsParams struct {
-	AfterID  param.Field[string] `query:"afterId"`
-	BeforeID param.Field[string] `query:"beforeId"`
-	// a number less than or equal to 100
-	Limit     param.Field[string]   `query:"limit"`
+	Limit     param.Field[string]   `query:"limit" api:"required"`
+	AfterID   param.Field[string]   `query:"afterId"`
+	BeforeID  param.Field[string]   `query:"beforeId"`
 	PolicyIDs param.Field[[]string] `query:"policyIds"`
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
@@ -132,14 +137,11 @@ func (r TimeOffListAssignmentsParams) URLQuery() (v url.Values) {
 }
 
 type TimeOffListBalancesParams struct {
-	AfterID  param.Field[string] `query:"afterId"`
-	BeforeID param.Field[string] `query:"beforeId"`
-	// a string to be decoded into a Date
-	EndDate param.Field[string] `query:"endDate"`
-	// a number less than or equal to 100
-	Limit     param.Field[string]   `query:"limit"`
+	Limit     param.Field[string]   `query:"limit" api:"required"`
+	AfterID   param.Field[string]   `query:"afterId"`
+	BeforeID  param.Field[string]   `query:"beforeId"`
+	EndDate   param.Field[string]   `query:"endDate"`
 	PolicyIDs param.Field[[]string] `query:"policyIds"`
-	// a string to be decoded into a Date
 	StartDate param.Field[string]   `query:"startDate"`
 	WorkerIDs param.Field[[]string] `query:"workerIds"`
 }
@@ -153,18 +155,13 @@ func (r TimeOffListBalancesParams) URLQuery() (v url.Values) {
 }
 
 type TimeOffListRequestsParams struct {
-	AfterID  param.Field[string] `query:"afterId"`
-	BeforeID param.Field[string] `query:"beforeId"`
-	// a string to be decoded into a Date
-	EndsBefore param.Field[string] `query:"endsBefore"`
-	// a string to be decoded into a Date
-	EndsOnOrAfter param.Field[string] `query:"endsOnOrAfter"`
-	// a number less than or equal to 100
-	Limit     param.Field[string]   `query:"limit"`
-	PolicyIDs param.Field[[]string] `query:"policyIds"`
-	// a string to be decoded into a Date
-	StartsBefore param.Field[string] `query:"startsBefore"`
-	// a string to be decoded into a Date
+	Limit           param.Field[string]                            `query:"limit" api:"required"`
+	AfterID         param.Field[string]                            `query:"afterId"`
+	BeforeID        param.Field[string]                            `query:"beforeId"`
+	EndsBefore      param.Field[string]                            `query:"endsBefore"`
+	EndsOnOrAfter   param.Field[string]                            `query:"endsOnOrAfter"`
+	PolicyIDs       param.Field[[]string]                          `query:"policyIds"`
+	StartsBefore    param.Field[string]                            `query:"startsBefore"`
 	StartsOnOrAfter param.Field[string]                            `query:"startsOnOrAfter"`
 	Statuses        param.Field[[]TimeOffListRequestsParamsStatus] `query:"statuses"`
 	WorkerIDs       param.Field[[]string]                          `query:"workerIds"`
@@ -195,11 +192,10 @@ func (r TimeOffListRequestsParamsStatus) IsKnown() bool {
 }
 
 type TimeOffListAssignmentsResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                                `json:"count" api:"required"`
-	Data  []TimeOffListAssignmentsResponseData `json:"data" api:"required"`
-	JSON  timeOffListAssignmentsResponseJSON   `json:"-"`
+	HasMore bool                                 `json:"hasMore" api:"required"`
+	Count   int64                                `json:"count" api:"required"`
+	Data    []TimeOffListAssignmentsResponseData `json:"data" api:"required"`
+	JSON    timeOffListAssignmentsResponseJSON   `json:"-"`
 }
 
 // timeOffListAssignmentsResponseJSON contains the JSON metadata for the struct [TimeOffListAssignmentsResponse]
@@ -220,11 +216,10 @@ func (r timeOffListAssignmentsResponseJSON) RawJSON() string {
 }
 
 type TimeOffListBalancesResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                             `json:"count" api:"required"`
-	Data  []TimeOffListBalancesResponseData `json:"data" api:"required"`
-	JSON  timeOffListBalancesResponseJSON   `json:"-"`
+	HasMore bool                              `json:"hasMore" api:"required"`
+	Count   int64                             `json:"count" api:"required"`
+	Data    []TimeOffListBalancesResponseData `json:"data" api:"required"`
+	JSON    timeOffListBalancesResponseJSON   `json:"-"`
 }
 
 // timeOffListBalancesResponseJSON contains the JSON metadata for the struct [TimeOffListBalancesResponse]
@@ -245,11 +240,10 @@ func (r timeOffListBalancesResponseJSON) RawJSON() string {
 }
 
 type TimeOffListRequestsResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                             `json:"count" api:"required"`
-	Data  []TimeOffListRequestsResponseData `json:"data" api:"required"`
-	JSON  timeOffListRequestsResponseJSON   `json:"-"`
+	HasMore bool                              `json:"hasMore" api:"required"`
+	Count   int64                             `json:"count" api:"required"`
+	Data    []TimeOffListRequestsResponseData `json:"data" api:"required"`
+	JSON    timeOffListRequestsResponseJSON   `json:"-"`
 }
 
 // timeOffListRequestsResponseJSON contains the JSON metadata for the struct [TimeOffListRequestsResponse]
@@ -270,12 +264,11 @@ func (r timeOffListRequestsResponseJSON) RawJSON() string {
 }
 
 type TimeOffListAssignmentsResponseData struct {
-	ID string `json:"id" api:"required"`
-	// a string starting with "top_"
+	// The external-facing id of the worker assignment.
+	ID       string `json:"id" api:"required"`
 	PolicyID string `json:"policyId" api:"required"`
 	// The id of the worker.
-	WorkerID string `json:"workerId" api:"required"`
-	// a string to be decoded into a Date
+	WorkerID   string                                 `json:"workerId" api:"required"`
 	AssignedAt string                                 `json:"assignedAt" api:"required"`
 	JSON       timeOffListAssignmentsResponseDataJSON `json:"-"`
 }
@@ -299,15 +292,15 @@ func (r timeOffListAssignmentsResponseDataJSON) RawJSON() string {
 }
 
 type TimeOffListBalancesResponseData struct {
-	ID string `json:"id" api:"required"`
-	// a string starting with "top_"
+	// The external-facing id of the worker assignment.
+	ID              string                              `json:"id" api:"required"`
 	PolicyID        string                              `json:"policyId" api:"required"`
 	LegacyWorkerID  string                              `json:"legacyWorkerId" api:"required"`
-	AccruedUnlocked float64                             `json:"accruedUnlocked" api:"required"`
-	AccruedLocked   float64                             `json:"accruedLocked" api:"required"`
-	Used            float64                             `json:"used" api:"required"`
-	Holds           float64                             `json:"holds" api:"required"`
-	Available       float64                             `json:"available" api:"required"`
+	AccruedUnlocked interface{}                         `json:"accruedUnlocked" api:"required"`
+	AccruedLocked   interface{}                         `json:"accruedLocked" api:"required"`
+	Used            interface{}                         `json:"used" api:"required"`
+	Holds           interface{}                         `json:"holds" api:"required"`
+	Available       interface{}                         `json:"available" api:"required"`
 	JSON            timeOffListBalancesResponseDataJSON `json:"-"`
 }
 
@@ -334,22 +327,18 @@ func (r timeOffListBalancesResponseDataJSON) RawJSON() string {
 }
 
 type TimeOffListRequestsResponseData struct {
-	ID string `json:"id" api:"required"`
-	// a string starting with "top_"
+	ID              string `json:"id" api:"required"`
 	TimeOffPolicyID string `json:"timeOffPolicyId" api:"required"`
 	// The id of the worker.
-	WorkerID string                                `json:"workerId" api:"required"`
-	Status   TimeOffListRequestsResponseDataStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	StartAt        string                                        `json:"startAt" api:"required"`
-	StartRangeType TimeOffListRequestsResponseDataStartRangeType `json:"startRangeType" api:"required"`
-	// a string to be decoded into a Date
-	EndAt        string                                      `json:"endAt" api:"required"`
-	EndRangeType TimeOffListRequestsResponseDataEndRangeType `json:"endRangeType" api:"required"`
-	Reason       string                                      `json:"reason" api:"required,nullable"`
-	// a string to be decoded into a Date
-	CreatedAt        string  `json:"createdAt" api:"required"`
-	RequestedMinutes float64 `json:"requestedMinutes" api:"required"`
+	WorkerID         string                                        `json:"workerId" api:"required"`
+	Status           TimeOffListRequestsResponseDataStatus         `json:"status" api:"required"`
+	StartAt          string                                        `json:"startAt" api:"required"`
+	StartRangeType   TimeOffListRequestsResponseDataStartRangeType `json:"startRangeType" api:"required"`
+	EndAt            string                                        `json:"endAt" api:"required"`
+	EndRangeType     TimeOffListRequestsResponseDataEndRangeType   `json:"endRangeType" api:"required"`
+	Reason           string                                        `json:"reason" api:"required,nullable"`
+	CreatedAt        string                                        `json:"createdAt" api:"required"`
+	RequestedMinutes interface{}                                   `json:"requestedMinutes" api:"required"`
 	// The time zone that the worker is requesting time off in.
 	TimeZone string                              `json:"timeZone" api:"required,nullable"`
 	JSON     timeOffListRequestsResponseDataJSON `json:"-"`

@@ -48,7 +48,8 @@ func NewBenefitHealthPlanService(opts ...option.RequestOption) (r *BenefitHealth
 // Example:
 //
 //	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
-//		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+//		Limit:    sdk.F[string]("limit"),
+//		Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 //	})
 //	if err != nil {
 //		panic(err)
@@ -72,7 +73,7 @@ func (r *BenefitHealthPlanService) List(ctx context.Context, query BenefitHealth
 //
 // Returns:
 //
-//	*BenefitHealthPlanGetResponse: A company health plan available through Warp.
+//	*PublicHealthPlan: A company health plan available through Warp.
 //
 // Example:
 //
@@ -82,13 +83,13 @@ func (r *BenefitHealthPlanService) List(ctx context.Context, query BenefitHealth
 //	}
 //
 //	fmt.Println(healthPlan)
-func (r *BenefitHealthPlanService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *BenefitHealthPlanGetResponse, err error) {
+func (r *BenefitHealthPlanService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *PublicHealthPlan, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return nil, err
 	}
-	path := fmt.Sprintf("v1/benefits/health_plans/%s", id)
+	path := fmt.Sprintf("v1/benefits/health_plans/%s", url.PathEscape(id))
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return res, err
 }
@@ -105,17 +106,14 @@ type PublicHealthPlan struct {
 	// The carrier-assigned group number.
 	GroupNumber string `json:"groupNumber" api:"required,nullable"`
 	// The plan network structure.
-	NetworkType PublicHealthPlanNetworkType `json:"networkType" api:"required,nullable"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
+	NetworkType        PublicHealthPlanNetworkType `json:"networkType" api:"required,nullable"`
+	EffectiveStartDate string                      `json:"effectiveStartDate" api:"required"`
+	EffectiveEndDate   string                      `json:"effectiveEndDate" api:"required,nullable"`
 	// The public lifecycle status of a health plan.
-	Status PublicHealthPlanStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string               `json:"updatedAt" api:"required"`
-	JSON      publicHealthPlanJSON `json:"-"`
+	Status    PublicHealthPlanStatus `json:"status" api:"required"`
+	CreatedAt string                 `json:"createdAt" api:"required"`
+	UpdatedAt string                 `json:"updatedAt" api:"required"`
+	JSON      publicHealthPlanJSON   `json:"-"`
 }
 
 // publicHealthPlanJSON contains the JSON metadata for the struct [PublicHealthPlan]
@@ -181,21 +179,6 @@ func (r PublicHealthPlanNetworkType) IsKnown() bool {
 	return false
 }
 
-type PublicHealthPlanStatus string
-
-const (
-	PublicHealthPlanStatusActive     PublicHealthPlanStatus = "active"
-	PublicHealthPlanStatusTerminated PublicHealthPlanStatus = "terminated"
-)
-
-func (r PublicHealthPlanStatus) IsKnown() bool {
-	switch r {
-	case PublicHealthPlanStatusActive, PublicHealthPlanStatusTerminated:
-		return true
-	}
-	return false
-}
-
 type PublicHealthPlanCarrier struct {
 	// The tag of a carrier.
 	ID string `json:"id" api:"required"`
@@ -220,121 +203,28 @@ func (r publicHealthPlanCarrierJSON) RawJSON() string {
 	return r.raw
 }
 
-type BenefitHealthPlanGetResponse struct {
-	// The tag of a company health plan.
-	ID string `json:"id" api:"required"`
-	// The insurance carrier underwriting the health plan.
-	Carrier PublicHealthPlanCarrier `json:"carrier" api:"required"`
-	// The health coverage type.
-	Type BenefitHealthPlanGetResponseType `json:"type" api:"required"`
-	// The company-facing plan name.
-	Name string `json:"name" api:"required"`
-	// The carrier-assigned group number.
-	GroupNumber string `json:"groupNumber" api:"required,nullable"`
-	// The plan network structure.
-	NetworkType BenefitHealthPlanGetResponseNetworkType `json:"networkType" api:"required,nullable"`
-	// A date string in the form YYYY-MM-DD
-	EffectiveStartDate string `json:"effectiveStartDate" api:"required"`
-	EffectiveEndDate   string `json:"effectiveEndDate" api:"required,nullable"`
-	// The public lifecycle status of a health plan.
-	Status BenefitHealthPlanGetResponseStatus `json:"status" api:"required"`
-	// a string to be decoded into a Date
-	CreatedAt string `json:"createdAt" api:"required"`
-	// a string to be decoded into a Date
-	UpdatedAt string                           `json:"updatedAt" api:"required"`
-	JSON      benefitHealthPlanGetResponseJSON `json:"-"`
-}
-
-// benefitHealthPlanGetResponseJSON contains the JSON metadata for the struct [BenefitHealthPlanGetResponse]
-type benefitHealthPlanGetResponseJSON struct {
-	ID                 apijson.Field
-	Carrier            apijson.Field
-	Type               apijson.Field
-	Name               apijson.Field
-	GroupNumber        apijson.Field
-	NetworkType        apijson.Field
-	EffectiveStartDate apijson.Field
-	EffectiveEndDate   apijson.Field
-	Status             apijson.Field
-	CreatedAt          apijson.Field
-	UpdatedAt          apijson.Field
-	raw                string
-	ExtraFields        map[string]apijson.Field
-}
-
-func (r *BenefitHealthPlanGetResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r benefitHealthPlanGetResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BenefitHealthPlanGetResponseType string
+type PublicHealthPlanStatus string
 
 const (
-	BenefitHealthPlanGetResponseTypeMedical             BenefitHealthPlanGetResponseType = "medical"
-	BenefitHealthPlanGetResponseTypeDental              BenefitHealthPlanGetResponseType = "dental"
-	BenefitHealthPlanGetResponseTypeVision              BenefitHealthPlanGetResponseType = "vision"
-	BenefitHealthPlanGetResponseTypeLife                BenefitHealthPlanGetResponseType = "life"
-	BenefitHealthPlanGetResponseTypeShortTermDisability BenefitHealthPlanGetResponseType = "short_term_disability"
-	BenefitHealthPlanGetResponseTypeLongTermDisability  BenefitHealthPlanGetResponseType = "long_term_disability"
+	PublicHealthPlanStatusActive     PublicHealthPlanStatus = "active"
+	PublicHealthPlanStatusTerminated PublicHealthPlanStatus = "terminated"
 )
 
-func (r BenefitHealthPlanGetResponseType) IsKnown() bool {
+func (r PublicHealthPlanStatus) IsKnown() bool {
 	switch r {
-	case BenefitHealthPlanGetResponseTypeMedical, BenefitHealthPlanGetResponseTypeDental, BenefitHealthPlanGetResponseTypeVision, BenefitHealthPlanGetResponseTypeLife, BenefitHealthPlanGetResponseTypeShortTermDisability, BenefitHealthPlanGetResponseTypeLongTermDisability:
-		return true
-	}
-	return false
-}
-
-type BenefitHealthPlanGetResponseNetworkType string
-
-const (
-	BenefitHealthPlanGetResponseNetworkTypeHmo       BenefitHealthPlanGetResponseNetworkType = "hmo"
-	BenefitHealthPlanGetResponseNetworkTypePpo       BenefitHealthPlanGetResponseNetworkType = "ppo"
-	BenefitHealthPlanGetResponseNetworkTypeEpo       BenefitHealthPlanGetResponseNetworkType = "epo"
-	BenefitHealthPlanGetResponseNetworkTypePos       BenefitHealthPlanGetResponseNetworkType = "pos"
-	BenefitHealthPlanGetResponseNetworkTypeHdhp      BenefitHealthPlanGetResponseNetworkType = "hdhp"
-	BenefitHealthPlanGetResponseNetworkTypeIndemnity BenefitHealthPlanGetResponseNetworkType = "indemnity"
-)
-
-func (r BenefitHealthPlanGetResponseNetworkType) IsKnown() bool {
-	switch r {
-	case BenefitHealthPlanGetResponseNetworkTypeHmo, BenefitHealthPlanGetResponseNetworkTypePpo, BenefitHealthPlanGetResponseNetworkTypeEpo, BenefitHealthPlanGetResponseNetworkTypePos, BenefitHealthPlanGetResponseNetworkTypeHdhp, BenefitHealthPlanGetResponseNetworkTypeIndemnity:
-		return true
-	}
-	return false
-}
-
-type BenefitHealthPlanGetResponseStatus string
-
-const (
-	BenefitHealthPlanGetResponseStatusActive     BenefitHealthPlanGetResponseStatus = "active"
-	BenefitHealthPlanGetResponseStatusTerminated BenefitHealthPlanGetResponseStatus = "terminated"
-)
-
-func (r BenefitHealthPlanGetResponseStatus) IsKnown() bool {
-	switch r {
-	case BenefitHealthPlanGetResponseStatusActive, BenefitHealthPlanGetResponseStatusTerminated:
+	case PublicHealthPlanStatusActive, PublicHealthPlanStatusTerminated:
 		return true
 	}
 	return false
 }
 
 type BenefitHealthPlanListParams struct {
-	// The tag of a company health plan.
-	AfterID param.Field[string] `query:"afterId"`
-	// The tag of a company health plan.
-	BeforeID   param.Field[string]   `query:"beforeId"`
-	CarrierIDs param.Field[[]string] `query:"carrierIds"`
-	// a number less than or equal to 100
-	Limit param.Field[string] `query:"limit"`
-	// Statuses to include. Defaults to ["active"]. An elapsed effectiveEndDate is
-	// reported and filtered as "terminated".
-	Statuses param.Field[[]BenefitHealthPlanListParamsStatus] `query:"statuses"`
-	Types    param.Field[[]BenefitHealthPlanListParamsType]   `query:"types"`
+	Limit      param.Field[string]                            `query:"limit" api:"required"`
+	Statuses   param.Field[[]PublicHealthPlanStatus]          `query:"statuses" api:"required"`
+	AfterID    param.Field[string]                            `query:"afterId"`
+	BeforeID   param.Field[string]                            `query:"beforeId"`
+	CarrierIDs param.Field[[]string]                          `query:"carrierIds"`
+	Types      param.Field[[]BenefitHealthPlanListParamsType] `query:"types"`
 }
 
 // URLQuery serializes [BenefitHealthPlanListParams]'s query parameters as `url.Values`.
@@ -364,27 +254,11 @@ func (r BenefitHealthPlanListParamsType) IsKnown() bool {
 	return false
 }
 
-type BenefitHealthPlanListParamsStatus string
-
-const (
-	BenefitHealthPlanListParamsStatusActive     BenefitHealthPlanListParamsStatus = "active"
-	BenefitHealthPlanListParamsStatusTerminated BenefitHealthPlanListParamsStatus = "terminated"
-)
-
-func (r BenefitHealthPlanListParamsStatus) IsKnown() bool {
-	switch r {
-	case BenefitHealthPlanListParamsStatusActive, BenefitHealthPlanListParamsStatusTerminated:
-		return true
-	}
-	return false
-}
-
 type BenefitHealthPlanListResponse struct {
-	HasMore bool `json:"hasMore" api:"required"`
-	// an integer
-	Count int64                             `json:"count" api:"required"`
-	Data  []PublicHealthPlan                `json:"data" api:"required"`
-	JSON  benefitHealthPlanListResponseJSON `json:"-"`
+	HasMore bool                              `json:"hasMore" api:"required"`
+	Count   int64                             `json:"count" api:"required"`
+	Data    []PublicHealthPlan                `json:"data" api:"required"`
+	JSON    benefitHealthPlanListResponseJSON `json:"-"`
 }
 
 // benefitHealthPlanListResponseJSON contains the JSON metadata for the struct [BenefitHealthPlanListResponse]

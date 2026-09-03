@@ -1,11 +1,11 @@
 ---
 name: warp-go-sdk
-description: "Go SDK for Warp API. Use when writing Go code that calls Warp API with the github.com/TeamWarp/warp-go-sdk package: installing it, constructing and authenticating the client, and calling API operations."
+description: "Go SDK for warp API. Use when writing Go code that calls warp API with the github.com/TeamWarp/warp-go-sdk package: installing it, constructing and authenticating the client, and calling API operations."
 ---
 
-# Warp Go SDK
+# warp Go SDK
 
-Generated Go client for Warp API, published as `github.com/TeamWarp/warp-go-sdk`. Use the generated client instead of hand-writing HTTP requests.
+Generated Go client for warp API, published as `github.com/TeamWarp/warp-go-sdk`. Use the generated client instead of hand-writing HTTP requests.
 
 ## Install
 
@@ -50,7 +50,8 @@ func main() {
 	)
 
 	healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
-		Statuses: sdk.F[[]sdk.BenefitHealthPlanListParamsStatus]([]sdk.BenefitHealthPlanListParamsStatus{"active"}),
+		Limit:    sdk.F[string]("limit"),
+		Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
 	})
 	if err != nil {
 		panic(err)
@@ -68,6 +69,9 @@ Non-success responses return generated API errors. Error objects expose status, 
 
 ```go
 healthPlan, err := client.Benefits.HealthPlans.List(context.Background(), sdk.BenefitHealthPlanListParams{
+	Limit:    sdk.F[string]("limit"),
+	Statuses: sdk.F[[]sdk.PublicHealthPlanStatus]([]sdk.PublicHealthPlanStatus{"active"}),
+})
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
@@ -76,7 +80,7 @@ if err != nil {
 	panic(err)
 }
 
-// imports: sdk "github.com/TeamWarp/warp-go-sdk", "errors", "fmt"
+// imports: "context", "errors", "fmt", sdk "github.com/TeamWarp/warp-go-sdk"
 ```
 
 ## Requirements

@@ -14,14 +14,17 @@ import (
 )
 
 // Client creates a struct with services and top level methods that help with
-// interacting with the Warp API. You should not instantiate this client
+// interacting with the warp API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
 	Options      []option.RequestOption
 	Benefits     *BenefitService
 	CustomFields *CustomFieldService
 	Departments  *DepartmentService
+	Levels       *LevelService
 	Offers       *OfferService
+	PayRates     *PayRateService
+	Payroll      *PayrollService
 	TimeOff      *TimeOffService
 	Workers      *WorkerService
 	Workplaces   *WorkplaceService
@@ -64,7 +67,10 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Benefits = NewBenefitService(opts...)
 	r.CustomFields = NewCustomFieldService(opts...)
 	r.Departments = NewDepartmentService(opts...)
+	r.Levels = NewLevelService(opts...)
 	r.Offers = NewOfferService(opts...)
+	r.PayRates = NewPayRateService(opts...)
+	r.Payroll = NewPayrollService(opts...)
 	r.TimeOff = NewTimeOffService(opts...)
 	r.Workers = NewWorkerService(opts...)
 	r.Workplaces = NewWorkplaceService(opts...)
