@@ -4040,8 +4040,9 @@ type WorkerCreatedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation             `json:"compensation" api:"required,nullable"`
-	Manager      WorkerCreatedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerCreatedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerCreatedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -4672,8 +4673,9 @@ type WorkerDeletedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation             `json:"compensation" api:"required,nullable"`
-	Manager      WorkerDeletedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerDeletedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerDeletedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -5304,8 +5306,9 @@ type WorkerInviteAcceptedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation                    `json:"compensation" api:"required,nullable"`
-	Manager      WorkerInviteAcceptedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerInviteAcceptedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerInviteAcceptedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -5936,8 +5939,9 @@ type WorkerInviteSentWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation                `json:"compensation" api:"required,nullable"`
-	Manager      WorkerInviteSentWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerInviteSentWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerInviteSentWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -6568,8 +6572,9 @@ type WorkerOffboardedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation                `json:"compensation" api:"required,nullable"`
-	Manager      WorkerOffboardedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerOffboardedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerOffboardedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -7200,8 +7205,9 @@ type WorkerOffboardingStartedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation                        `json:"compensation" api:"required,nullable"`
-	Manager      WorkerOffboardingStartedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerOffboardingStartedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerOffboardingStartedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -7832,8 +7838,9 @@ type WorkerOnboardingCompletedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation                         `json:"compensation" api:"required,nullable"`
-	Manager      WorkerOnboardingCompletedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerOnboardingCompletedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerOnboardingCompletedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -8464,8 +8471,9 @@ type WorkerReactivatedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation                 `json:"compensation" api:"required,nullable"`
-	Manager      WorkerReactivatedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerReactivatedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerReactivatedWebhookEventDataLevel `json:"level" api:"nullable"`
@@ -9096,8 +9104,9 @@ type WorkerUpdatedWebhookEventData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation             `json:"compensation" api:"required,nullable"`
-	Manager      WorkerUpdatedWebhookEventDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerUpdatedWebhookEventDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerUpdatedWebhookEventDataLevel `json:"level" api:"nullable"`
