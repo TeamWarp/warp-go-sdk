@@ -1706,7 +1706,8 @@ type WorkerGetResponse struct {
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
 	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
-	Manager      WorkerGetResponseManager `json:"manager" api:"nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerGetResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerGetResponseLevel    `json:"level" api:"nullable"`
@@ -1802,8 +1803,9 @@ type WorkerNewEmployeeResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation         `json:"compensation" api:"required,nullable"`
-	Manager      WorkerNewEmployeeResponseManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerNewEmployeeResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerNewEmployeeResponseLevel `json:"level" api:"nullable"`
@@ -1899,8 +1901,9 @@ type WorkerNewContractorResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation           `json:"compensation" api:"required,nullable"`
-	Manager      WorkerNewContractorResponseManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerNewContractorResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerNewContractorResponseLevel `json:"level" api:"nullable"`
@@ -1996,8 +1999,9 @@ type WorkerInviteResponse struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation    `json:"compensation" api:"required,nullable"`
-	Manager      WorkerInviteResponseManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerInviteResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerInviteResponseLevel `json:"level" api:"nullable"`
@@ -2219,8 +2223,9 @@ type WorkerListResponseData struct {
 	// The worker's current regular compensation, or the rate effective on a future
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
-	Compensation PublicWorkerCompensation      `json:"compensation" api:"required,nullable"`
-	Manager      WorkerListResponseDataManager `json:"manager" api:"nullable"`
+	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerListResponseDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerListResponseDataLevel `json:"level" api:"nullable"`
