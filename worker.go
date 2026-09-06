@@ -1706,6 +1706,8 @@ type WorkerGetResponse struct {
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
 	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerGetResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerGetResponseLevel    `json:"level" api:"nullable"`
@@ -1741,6 +1743,7 @@ type workerGetResponseJSON struct {
 	TerminationReason apijson.Field
 	UpdatedAt         apijson.Field
 	Compensation      apijson.Field
+	Manager           apijson.Field
 	Level             apijson.Field
 	CustomFields      apijson.Field
 	raw               string
@@ -1801,6 +1804,8 @@ type WorkerNewEmployeeResponse struct {
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
 	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerNewEmployeeResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerNewEmployeeResponseLevel `json:"level" api:"nullable"`
@@ -1836,6 +1841,7 @@ type workerNewEmployeeResponseJSON struct {
 	TerminationReason apijson.Field
 	UpdatedAt         apijson.Field
 	Compensation      apijson.Field
+	Manager           apijson.Field
 	Level             apijson.Field
 	CustomFields      apijson.Field
 	raw               string
@@ -1896,6 +1902,8 @@ type WorkerNewContractorResponse struct {
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
 	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerNewContractorResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerNewContractorResponseLevel `json:"level" api:"nullable"`
@@ -1931,6 +1939,7 @@ type workerNewContractorResponseJSON struct {
 	TerminationReason apijson.Field
 	UpdatedAt         apijson.Field
 	Compensation      apijson.Field
+	Manager           apijson.Field
 	Level             apijson.Field
 	CustomFields      apijson.Field
 	raw               string
@@ -1991,6 +2000,8 @@ type WorkerInviteResponse struct {
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
 	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerInviteResponseManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerInviteResponseLevel `json:"level" api:"nullable"`
@@ -2026,6 +2037,7 @@ type workerInviteResponseJSON struct {
 	TerminationReason apijson.Field
 	UpdatedAt         apijson.Field
 	Compensation      apijson.Field
+	Manager           apijson.Field
 	Level             apijson.Field
 	CustomFields      apijson.Field
 	raw               string
@@ -2212,6 +2224,8 @@ type WorkerListResponseData struct {
 	// start date. Null when the worker has no applicable regular pay rate or the API
 	// key lacks the corresponding compensation read scope.
 	Compensation PublicWorkerCompensation `json:"compensation" api:"required,nullable"`
+	// The worker's manager, or null if unassigned.
+	Manager WorkerListResponseDataManager `json:"manager" api:"nullable"`
 	// The worker's assigned job level, or null if unassigned. Omitted when job levels
 	// are not enabled.
 	Level        WorkerListResponseDataLevel `json:"level" api:"nullable"`
@@ -2247,6 +2261,7 @@ type workerListResponseDataJSON struct {
 	TerminationReason apijson.Field
 	UpdatedAt         apijson.Field
 	Compensation      apijson.Field
+	Manager           apijson.Field
 	Level             apijson.Field
 	CustomFields      apijson.Field
 	raw               string
@@ -2352,6 +2367,33 @@ func (r *WorkerGetResponseAddress) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r workerGetResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerGetResponseManager struct {
+	// The id of the worker.
+	ID          string                       `json:"id" api:"required"`
+	FirstName   string                       `json:"firstName" api:"required"`
+	LastName    string                       `json:"lastName" api:"required"`
+	DisplayName string                       `json:"displayName" api:"required"`
+	JSON        workerGetResponseManagerJSON `json:"-"`
+}
+
+// workerGetResponseManagerJSON contains the JSON metadata for the struct [WorkerGetResponseManager]
+type workerGetResponseManagerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	DisplayName apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerGetResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerGetResponseManagerJSON) RawJSON() string {
 	return r.raw
 }
 
@@ -2524,6 +2566,33 @@ func (r workerNewEmployeeResponseAddressJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerNewEmployeeResponseManager struct {
+	// The id of the worker.
+	ID          string                               `json:"id" api:"required"`
+	FirstName   string                               `json:"firstName" api:"required"`
+	LastName    string                               `json:"lastName" api:"required"`
+	DisplayName string                               `json:"displayName" api:"required"`
+	JSON        workerNewEmployeeResponseManagerJSON `json:"-"`
+}
+
+// workerNewEmployeeResponseManagerJSON contains the JSON metadata for the struct [WorkerNewEmployeeResponseManager]
+type workerNewEmployeeResponseManagerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	DisplayName apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewEmployeeResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewEmployeeResponseManagerJSON) RawJSON() string {
+	return r.raw
+}
+
 type WorkerNewEmployeeResponseDepartment struct {
 	// The unique public id of the department
 	ID   string                                  `json:"id" api:"required"`
@@ -2693,6 +2762,33 @@ func (r workerNewContractorResponseAddressJSON) RawJSON() string {
 	return r.raw
 }
 
+type WorkerNewContractorResponseManager struct {
+	// The id of the worker.
+	ID          string                                 `json:"id" api:"required"`
+	FirstName   string                                 `json:"firstName" api:"required"`
+	LastName    string                                 `json:"lastName" api:"required"`
+	DisplayName string                                 `json:"displayName" api:"required"`
+	JSON        workerNewContractorResponseManagerJSON `json:"-"`
+}
+
+// workerNewContractorResponseManagerJSON contains the JSON metadata for the struct [WorkerNewContractorResponseManager]
+type workerNewContractorResponseManagerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	DisplayName apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerNewContractorResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerNewContractorResponseManagerJSON) RawJSON() string {
+	return r.raw
+}
+
 type WorkerNewContractorResponseDepartment struct {
 	// The unique public id of the department
 	ID   string                                    `json:"id" api:"required"`
@@ -2859,6 +2955,33 @@ func (r *WorkerInviteResponseAddress) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r workerInviteResponseAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerInviteResponseManager struct {
+	// The id of the worker.
+	ID          string                          `json:"id" api:"required"`
+	FirstName   string                          `json:"firstName" api:"required"`
+	LastName    string                          `json:"lastName" api:"required"`
+	DisplayName string                          `json:"displayName" api:"required"`
+	JSON        workerInviteResponseManagerJSON `json:"-"`
+}
+
+// workerInviteResponseManagerJSON contains the JSON metadata for the struct [WorkerInviteResponseManager]
+type workerInviteResponseManagerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	DisplayName apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerInviteResponseManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerInviteResponseManagerJSON) RawJSON() string {
 	return r.raw
 }
 
@@ -3204,6 +3327,33 @@ func (r *WorkerListResponseDataAddress) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r workerListResponseDataAddressJSON) RawJSON() string {
+	return r.raw
+}
+
+type WorkerListResponseDataManager struct {
+	// The id of the worker.
+	ID          string                            `json:"id" api:"required"`
+	FirstName   string                            `json:"firstName" api:"required"`
+	LastName    string                            `json:"lastName" api:"required"`
+	DisplayName string                            `json:"displayName" api:"required"`
+	JSON        workerListResponseDataManagerJSON `json:"-"`
+}
+
+// workerListResponseDataManagerJSON contains the JSON metadata for the struct [WorkerListResponseDataManager]
+type workerListResponseDataManagerJSON struct {
+	ID          apijson.Field
+	FirstName   apijson.Field
+	LastName    apijson.Field
+	DisplayName apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *WorkerListResponseDataManager) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r workerListResponseDataManagerJSON) RawJSON() string {
 	return r.raw
 }
 
